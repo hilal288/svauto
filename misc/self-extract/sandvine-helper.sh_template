@@ -214,17 +214,13 @@ fi
 if [ "$LIBVIRT_INSTALL_IMAGES" == "yes" ]
 then
 
-	PTS_STATE=`virsh dominfo $SVPTS | grep State | awk $'{print $2}'`
-	SDE_STATE=`virsh dominfo $SVSDE | grep State | awk $'{print $2}'`
-	SPB_STATE=`virsh dominfo $SVSPB | grep State | awk $'{print $2}'`
-
-	if [ "$PTS_STATE" == "running" ] || [ "$SDE_STATE" == "running" ] || [ "SPB_STATE" == "running" ]
+	if [ -f /var/lib/libvirt/images/$SVPTS-disk1.qcow2 ] || [ -f /var/lib/libvirt/images/$SVSDE-disk1.qcow2  ] || [ -f /var/lib/libvirt/images/$SVSPB-disk1.qcow2 ]
 	then
 
 		echo
-		echo "Warning! The Virtual Machines are running, aborting images installation."
+	        echo "ERROR: There already seem to be PTS, SDE, or SPB disk images in </var/lib/libvirt/images>, aborting...."
 
-		exit 1
+	        exit 1
 
 	fi
 
