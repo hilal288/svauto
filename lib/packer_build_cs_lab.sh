@@ -31,8 +31,8 @@ packer_build_cs_lab()
 		--roles=cloud-init,bootstrap,grub-conf,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,sandvine-auto-config,vmware-tools,labify,post-cleanup-image $DRY_RUN_OPT \
 		--packer-max-tries=3
 
-	# SPB 6.60 on CentOS 6 + Cloud Services - Labified
-	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svspb --version=6.60 --product-variant=cs-1 --operation=cloud-services --qcow2 --vmdk --vhd --vm-xml --sha256sum \
+	# SPB 6.65 on CentOS 6 + Cloud Services - Labified
+	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svspb --version=6.65 --product-variant=cs-1 --operation=cloud-services --qcow2 --vmdk --vhd --vm-xml --sha256sum \
 		--roles=cloud-init,bootstrap,grub-conf,svspb,svmcdtext,svreports,svcs-svspb,sandvine-auto-config,vmware-tools,labify,post-cleanup-image,power-cycle $DRY_RUN_OPT \
 		--packer-max-tries=3
 

@@ -31,8 +31,8 @@ packer_build_cs()
 		--roles=cloud-init,bootstrap,grub-conf,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3
 
-	# SPB 6.60 on CentOS 6 + Cloud Services
-	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svspb --version=6.60 --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+	# SPB 6.65 on CentOS 6 + Cloud Services
+	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svspb --version=6.65 --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
 		--roles=cloud-init,bootstrap,grub-conf,svspb,svmcdtext,svreports,svcs-svspb,sandvine-auto-config,vmware-tools,post-cleanup-image,power-cycle $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3
 
