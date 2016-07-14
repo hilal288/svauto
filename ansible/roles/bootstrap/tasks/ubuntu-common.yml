@@ -69,6 +69,7 @@
     - pm-utils
     - xfsprogs
     - dos2unix
+    - ppa-purge
     - conntrack
     - iptraf-ng
     - hugepages
