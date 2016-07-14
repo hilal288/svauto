@@ -40,4 +40,4 @@ echo
 echo "Deploying Sandvine Platform from RPM packages:"
 echo
 cd ~/svauto
-./svauto.sh --freebsd-pts=yes --stack=demo
+./svauto.sh --freebsd-pts --os-project=demo --os-stack=demo --operation=cloud-services --cloud-services-mode=default

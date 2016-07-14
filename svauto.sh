@@ -229,7 +229,7 @@ then
 	echo "Installing SVAuto dependencies via APT:"
 	echo
 
-	sudo ~/svauto/scripts/bootstrap-svauto.sh
+	sudo ~/svauto/scripts/bootstrap-svauto-server.sh
 
 	exit 0
 

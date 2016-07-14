@@ -48,7 +48,7 @@ done
 
 BUILD_RAND=$(openssl rand -hex 4)
 
-PLAYBOOK_FILE="playbook-"$BUILD_RAND"-"$ALL_ROLES".yml"
+PLAYBOOK_FILE="playbook-"$BUILD_RAND".yml"
 
 
 # O.S. Detector
@@ -132,7 +132,7 @@ echo
 echo "Building Ansible top-level Playbook..."
 
 echo
-ansible_playbook_builder --base-os="$BASE_OS" --ansible-hosts="localhost" --roles="$ALL_ROLES" > ansible/tmp/$PLAYBOOK_FILE
+ansible_playbook_builder --ansible-remote-user=\"root\" --ansible-hosts="localhost" --roles="$ALL_ROLES" > ansible/tmp/$PLAYBOOK_FILE
 
 
 echo
