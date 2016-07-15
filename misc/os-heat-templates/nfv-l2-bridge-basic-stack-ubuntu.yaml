@@ -59,13 +59,13 @@ parameters:
     type: string
     label: "NFV L2 Bridge Image (default 'nfv')"
     description: "NFV Image"
-    default: "Ubuntu 14.04.3 LTS - Trusty Tahr - 64-bit - Cloud Based Image"
+    default: "Ubuntu 16.04 LTS - Xenial Xerus - 64-bit - Cloud Based Image"
 
   ubuntusrv1_image:
     type: string
     label: "Ubuntu Server - 64-bit"
-    description: "Ubuntu - Trusty Thar - LTS"
-    default: "Ubuntu 14.04.3 LTS - Trusty Tahr - 64-bit - Cloud Based Image"
+    description: "Ubuntu - Xenial Xerus - LTS"
+    default: "Ubuntu 16.04 LTS - Xenial Xerus - 64-bit - Cloud Based Image"
 
 resources:
   rtr:
@@ -201,7 +201,7 @@ resources:
         #cloud-config
         system_info:
           default_user:
-            name: "cloud"
+            name: "sandvine"
 
   ubuntusrv1:
     type: OS::Nova::Server
@@ -217,7 +217,7 @@ resources:
         #cloud-config
         system_info:
           default_user:
-            name: "cloud"
+            name: "sandvine"
 
 outputs:
   nfv_floating_ip:
