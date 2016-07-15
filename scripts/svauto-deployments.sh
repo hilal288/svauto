@@ -69,20 +69,32 @@ case $OS in
 	Ubuntu|Debian)
 
 		echo
+
+		sudo apt -y install software-properties-common
+
+		sudo add-apt-repository -y ppa:sandvine/packages
+
+		sudo apt update
+
 		sudo apt -y install git ansible
+
 		;;
 
 	RedHat|CentOS)
 
 		echo
+
 		sudo yum --enablerepo=epel-testing -y install git ansible libselinux-python
+
 		;;
 
 	*)
 
                 echo
                 echo "Operation System not detected, aborting!"
+
                 exit 1
+
                 ;;
 
 esac

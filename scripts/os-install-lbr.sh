@@ -29,7 +29,13 @@ echo
 echo
 echo "Installing Git and Ansible..."
 echo
-sudo apt -y install git ansible python-pycurl
+sudo apt -y install software-properties-common
+
+sudo add-apt-repository -y ppa:sandvine/packages
+
+sudo apt update
+
+sudo apt -y install git ansible
 
 
 echo

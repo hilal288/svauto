@@ -38,7 +38,7 @@
         mode=0644
         backup=yes
   when: item.os_project == "glance"
-  with_items: mysql_databases
+  with_items: '{{mysql_databases}}'
   notify: restart-glance
 
 
@@ -50,7 +50,7 @@
         mode=0644
         backup=yes
   when: item.os_project == "glance"
-  with_items: mysql_databases
+  with_items: '{{mysql_databases}}'
   notify: restart-glance
 
 

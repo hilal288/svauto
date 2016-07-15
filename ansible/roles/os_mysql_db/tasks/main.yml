@@ -14,7 +14,7 @@
 
 - name: Creating OpenStack MySQL databases
   mysql_db: name={{item.db_name}} state=present
-  with_items: mysql_databases
+  with_items: '{{mysql_databases}}'
 
   
 - name: Creating OpenStack MySQL users 
@@ -24,4 +24,4 @@
     password="{{item.db_pass}}"
     priv="{{item.db_name}}.*:ALL,GRANT"
     state=present
-  with_items: mysql_databases
+  with_items: '{{mysql_databases}}'

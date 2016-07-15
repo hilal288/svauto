@@ -17,6 +17,10 @@
   when: base_os_upgrade == 'yes'
 
 
+- name: ubuntu - add Sandvine's PPA Repository
+  apt_repository: repo='ppa:sandvine/packages'
+
+
 - name: ubuntu - apt installing basic tools
   apt: name={{item}} state=latest update_cache=yes
   with_items:
@@ -86,7 +90,7 @@
     - command-not-found
     - linux-image-generic
     - ubuntu-cloud-keyring
-
+    - software-properties-common
 
 
 - name: ubuntu - apt installing Server tools
@@ -152,7 +156,3 @@
 - name: ubuntu - vim as default for editor
   alternatives: name=editor path=/usr/bin/vim
   when: ubuntu_install == 'desktop'
-
-
-- name: ubuntu - add Sandvine's PPA Repository
-  apt_repository: repo='ppa:sandvine/packages'

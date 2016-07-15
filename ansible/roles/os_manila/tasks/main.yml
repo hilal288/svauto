@@ -40,7 +40,7 @@
         mode=0640
         backup=yes
   when: item.os_project == "manila"
-  with_items: mysql_databases
+  with_items: '{{mysql_databases}}'
   notify: restart-manila
 
 
