@@ -89,7 +89,7 @@
 
 {% if setup_sub_option == 'mdm' %}
         <!-- Configuration for cloud service mobile device management -->
-	<MobileDeviceManagement>
+	<MobileDataManagement>
 		<!-- Address to access SDE SOAP Server -->
 		<SDEAddr>http://{{ sde_srvc_ip }}:7504</SDEAddr>
 		<!-- Provide a list of home mobile country code -->
@@ -97,7 +97,7 @@
 		<!-- Provide a list of default group -->
 		<DefaultPlan group="Basic" default="Basic1"/>
 		<DefaultPlan group="NoQuota" default="NoQuota1"/>
-	</MobileDeviceManagement>
+	</MobileDataManagement>
 {% endif %}
 
 </CloudServices>
