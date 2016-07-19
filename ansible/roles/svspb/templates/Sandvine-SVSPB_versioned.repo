@@ -1,11 +1,11 @@
-# Sandvine-SPB.repo
+# Sandvine-SVSPB.repo
 #
 #
 
-[sandvine-spb]
-name=Sandvine-$releasever - SPB
+[sandvine-svspb]
+name=Sandvine - SVSPB
 # New, sane URL, for Yum versioned Repo:
-baseurl=ftp://{{ packages_server }}/centos/{{ release_code_name }}/$releasever/svrepos/$basearch/svspb-{{spb_version}}
+baseurl=ftp://{{ packages_server }}/centos/{{ release_code_name }}/$releasever/svrepos/$basearch/svspb-{{ spb_version }}
 # Packages are from (old URL format):
 # - ftp://{{ packages_server }}/images/Linux/CENTOS6-x64/SPB/svspb-X.XX.XXXX
 enabled=1

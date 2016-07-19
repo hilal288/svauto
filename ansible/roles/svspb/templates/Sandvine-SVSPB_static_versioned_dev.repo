@@ -3,8 +3,8 @@
 #
 
 [sandvine-svspb]
-name=Sandvine-$releasever - SVSPB
-baseurl=ftp://{{ static_packages_server }}/images/Linux/CENTOS6-x64/SPB/svspb-{{spb_version}}
+name=Sandvine - SVSPB
+baseurl=ftp://{{ static_packages_server }}/images/Linux/CENTOS6-x64/SPB/svspb-{{ spb_version }}
 enabled=1
 protect=0
 gpgcheck=0

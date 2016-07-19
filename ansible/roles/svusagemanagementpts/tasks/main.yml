@@ -12,18 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Creating Sandvine Usage Management for PTS Repository - Production
-  template: src=Sandvine-UM-PTS.repo
-            dest=/etc/yum.repos.d/Sandvine-UM-PTS.repo
+- name: Creating Sandvine Usage Management for SVPTS Repository - Production
+  template: src=Sandvine-SVUM-SVPTS.repo
+            dest=/etc/yum.repos.d/Sandvine-SVUM-SVPTS.repo
             owner=root
             group=root
             mode=0644
   when: release == 'prod'
 
 
-- name: Creating Sandvine Usage Management for PTS Repository - Development
-  template: src=Sandvine-UM-PTS_dev.repo
-            dest=/etc/yum.repos.d/Sandvine-UM-PTS.repo
+- name: Creating Sandvine Usage Management for SVPTS Repository - Development
+  template: src=Sandvine-SVUM-SVPTS_dev.repo
+            dest=/etc/yum.repos.d/Sandvine-SVUM-SVPTS.repo
             owner=root
             group=root
             mode=0644

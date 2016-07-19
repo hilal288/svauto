@@ -1,10 +1,10 @@
-# Sandvine-PTS.repo
+# Sandvine-SVPTS.repo
 #
 #
 
-[sandvine-pts]
-name=Sandvine-$releasever - PTS (Policy Traffic Switch)
-baseurl=ftp://{{ftp_username}}:{{ftp_password}}@ftp.support.sandvine.com/release/CloudServices/centos/$releasever/os/$basearch/svpts
+[sandvine-svpts]
+name=Sandvine - SVPTS (Policy Traffic Switch)
+baseurl=ftp://{{ftp_username}}:{{ftp_password}}@ftp.support.sandvine.com/release/centos/{{ release_code_number }}/$releasever/os/$basearch/svpts
 enabled=1
 protect=0
 gpgcheck=0

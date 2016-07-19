@@ -13,8 +13,8 @@
 # limitations under the License.
 
 - name: Creating Sandvine Usage Management Repository - Production
-  template: src=Sandvine-UM.repo
-            dest=/etc/yum.repos.d/Sandvine-UM.repo
+  template: src=Sandvine-SVUM.repo
+            dest=/etc/yum.repos.d/Sandvine-SVUM.repo
             owner=root
             group=root
             mode=0644
@@ -22,8 +22,8 @@
 
 
 - name: Creating Sandvine Usage Management Repository - Development
-  template: src=Sandvine-UM_dev.repo
-            dest=/etc/yum.repos.d/Sandvine-UM.repo
+  template: src=Sandvine-SVUM_dev.repo
+            dest=/etc/yum.repos.d/Sandvine-SVUM.repo
             owner=root
             group=root
             mode=0644

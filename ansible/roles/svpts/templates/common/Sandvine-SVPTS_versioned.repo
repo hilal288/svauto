@@ -1,11 +1,11 @@
-# Sandvine-PTS.repo
+# Sandvine-SVPTS.repo
 #
 #
 
-[sandvine-pts]
-name=Sandvine-$releasever - PTS (Policy Traffic Switch)
+[sandvine-svpts]
+name=Sandvine - SVPTS (Policy Traffic Switch)
 # New, sane URL, for Yum versioned Repo:
-baseurl=ftp://{{ packages_server }}/centos/{{ release_code_name }}/$releasever/svrepos/$basearch/svpts-{{pts_version}}
+baseurl=ftp://{{ packages_server }}/centos/{{ release_code_name }}/$releasever/svrepos/$basearch/svpts-{{ pts_version }}
 # Packages are from (old URL format):
 # - ftp://{{ packages_server }}/images/Linux/CENTOS6-x64/SVPTS/svpts-LNX-X.XX.XXXX
 # - ftp://{{ packages_server }}/images/Linux/CENTOS7-x64/SVPTS/svpts-LNX-X.XX.XXXX

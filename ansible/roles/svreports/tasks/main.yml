@@ -13,16 +13,16 @@
 # limitations under the License.
 
 - name: Creating Sandvine NDS Repository - Production
-  template: src=Sandvine-NDS.repo
-            dest=/etc/yum.repos.d/Sandvine-NDS.repo
+  template: src=Sandvine-SVNDS.repo
+            dest=/etc/yum.repos.d/Sandvine-SVNDS.repo
             owner=root
             group=root
             mode=0644
   when: release == 'prod'
 
 - name: Creating Sandvine NDS Repository - Development
-  template: src=Sandvine-NDS_dev.repo
-            dest=/etc/yum.repos.d/Sandvine-NDS.repo
+  template: src=Sandvine-SVNDS_dev.repo
+            dest=/etc/yum.repos.d/Sandvine-SVNDS.repo
             owner=root
             group=root
             mode=0644

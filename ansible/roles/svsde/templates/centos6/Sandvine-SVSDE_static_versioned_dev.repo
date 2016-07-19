@@ -3,8 +3,8 @@
 #
 
 [sandvine-svsde]
-name=Sandvine-$releasever - SVSDE (Sandvine Service Delivery Engine)
-baseurl=ftp://{{ static_packages_server }}/images/Linux/CENTOS6-x64/SDE/svsde-LNX-{{sde_version}}
+name=Sandvine - SVSDE (Sandvine Service Delivery Engine)
+baseurl=ftp://{{ static_packages_server }}/images/Linux/CENTOS6-x64/SDE/svsde-LNX-{{ sde_version }}
 enabled=1
 protect=0
 gpgcheck=0

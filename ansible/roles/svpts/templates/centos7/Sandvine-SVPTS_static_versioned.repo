@@ -3,8 +3,8 @@
 #
 
 [sandvine-svpts]
-name=Sandvine-$releasever - SVPTS (Sandvine Policy Traffic Switch)
-baseurl=ftp://{{ftp_username}}:{{ftp_password}}@ftp.support.sandvine.com/release/PTS/PTSVPL/{{pts_version}}/software/linux-rpm/repo/$releasever/$basearch
+name=Sandvine - SVPTS (Sandvine Policy Traffic Switch)
+baseurl=ftp://{{ftp_username}}:{{ftp_password}}@ftp.support.sandvine.com/release/PTS/PTSVPL/{{ pts_version }}/software/linux-rpm/repo/$releasever/$basearch
 enabled=1
 protect=0
 gpgcheck=0

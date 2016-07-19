@@ -3,8 +3,8 @@
 #
 
 [sandvine-svproto]
-name=Sandvine-$releasever - PTS (Policy Traffic Switch) - Protocols
-baseurl=ftp://{{ftp_username}}:{{ftp_password}}@ftp.support.sandvine.com/release/CloudServices/centos/$releasever/os/$basearch/svprotocols
+name=Sandvine - SVPTS (Policy Traffic Switch) - Protocols
+baseurl=ftp://{{ftp_username}}:{{ftp_password}}@ftp.support.sandvine.com/release/centos/{{ release_code_number }}/$releasever/os/$basearch/svprotocols
 enabled=1
 protect=0
 gpgcheck=0

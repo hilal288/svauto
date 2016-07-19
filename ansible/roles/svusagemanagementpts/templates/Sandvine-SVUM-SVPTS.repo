@@ -1,0 +1,11 @@
+# Sandvine-SVUM-SVPTS.repo
+#
+#
+
+[sandvine-svum-svpts]
+name=Sandvine - SVUM (Usage Management) - SVPTS
+baseurl=ftp://{{ftp_username}}:{{ftp_password}}@ftp.support.sandvine.com/release/centos/{{ release_code_number }}/$releasever/os/$basearch/svusagemanagementpts
+enabled=1
+protect=0
+gpgcheck=0
+sslverify=0

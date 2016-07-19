@@ -13,8 +13,8 @@
 # limitations under the License.
 
 - name: Creating Sandvine Subscriber Mapping Repository - Production
-  template: src=Sandvine-SM.repo
-            dest=/etc/yum.repos.d/Sandvine-SM.repo
+  template: src=Sandvine-SVSM.repo
+            dest=/etc/yum.repos.d/Sandvine-SVSM.repo
             owner=root
             group=root
             mode=0644
@@ -22,8 +22,8 @@
 
 
 - name: Creating Sandvine Subscriber Mapping Repository - Development
-  template: src=Sandvine-SM_dev.repo
-            dest=/etc/yum.repos.d/Sandvine-SM.repo
+  template: src=Sandvine-SVSM_dev.repo
+            dest=/etc/yum.repos.d/Sandvine-SVSM.repo
             owner=root
             group=root
             mode=0644
@@ -31,8 +31,8 @@
 
 
 - name: Creating Sandvine Subscriber Mapping Repository - Development - Versioned
-  template: src=Sandvine-SM_versioned.repo
-            dest=/etc/yum.repos.d/Sandvine-SM.repo
+  template: src=Sandvine-SVSM_versioned.repo
+            dest=/etc/yum.repos.d/Sandvine-SVSM.repo
             owner=root
             group=root
             mode=0644

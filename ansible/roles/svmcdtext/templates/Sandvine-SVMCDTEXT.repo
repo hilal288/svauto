@@ -3,8 +3,8 @@
 #
 
 [sandvine-svmcdtext]
-name=Sandvine-$releasever - SVMCDTEXT
-baseurl=ftp://{{ftp_username}}:{{ftp_password}}@ftp.support.sandvine.com/release/CloudServices/centos/$releasever/os/$basearch/svmcdtext
+name=Sandvine - SVMCDTEXT
+baseurl=ftp://{{ftp_username}}:{{ftp_password}}@ftp.support.sandvine.com/release/centos/{{ release_code_number }}/$releasever/os/$basearch/svmcdtext
 enabled=1
 protect=0
 gpgcheck=0

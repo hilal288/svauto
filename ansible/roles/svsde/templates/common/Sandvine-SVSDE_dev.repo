@@ -1,14 +1,14 @@
-# Sandvine-SDE.repo
+# Sandvine-SVSDE.repo
 #
 #
 
-[sandvine-sde]
-name=Sandvine-$releasever - SDE (Service Delivery Engine)
+[sandvine-svsde]
+name=Sandvine - SVSDE (Service Delivery Engine)
 # New, sane URL, for Yum Repo:
 # DEV URL:
 baseurl=ftp://{{ packages_server }}/centos/{{ release_code_name }}/$releasever/svrepos/$basearch/svsde
 # PROD URL:
-#baseurl=ftp://{{ftp_username}}:{{ftp_password}}@ftp.support.sandvine.com/release/CloudServices/centos/$releasever/os/$basearch/svsde
+#baseurl=ftp://{{ftp_username}}:{{ftp_password}}@ftp.support.sandvine.com/release/centos/{{ release_code_number }}/$releasever/os/$basearch/svsde
 # Packages are from (old URL format):
 # - ftp://{{ packages_server }}/images/Linux/CENTOS6-x64/SDE/svsde-LNX-7.20.0512
 # - ftp://{{ packages_server }}/images/Linux/RHEL7-x64/SDE/svsde-LNX-7.45.0005

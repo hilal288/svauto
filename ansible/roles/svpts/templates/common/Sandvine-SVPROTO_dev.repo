@@ -3,12 +3,12 @@
 #
 
 [sandvine-svproto]
-name=Sandvine-$releasever - PTS (Policy Traffic Switch) - Protocols
+name=Sandvine - SVPTS (Policy Traffic Switch) - Protocols
 # New, sane URL, for Yum Repo:
 # DEV URL:
-baseurl=ftp://{{ packages_server }}/centos/rolling/$releasever/svrepos/$basearch/svprotocols
+baseurl=ftp://{{ packages_server }}/centos/{{ release_code_name }}/$releasever/svrepos/$basearch/svprotocols
 # PROD URL:
-#baseurl=ftp://{{ftp_username}}:{{ftp_password}}@ftp.support.sandvine.com/release/CloudServices/centos/$releasever/os/$basearch/svprotocols
+#baseurl=ftp://{{ftp_username}}:{{ftp_password}}@ftp.support.sandvine.com/release/centos/{{ release_code_number }}/$releasever/os/$basearch/svprotocols
 # Packages are from (old URL format):
 # - ftp://ftp.support.sandvine.com/release/GENERAL/Protocols/15.12.02
 enabled=1

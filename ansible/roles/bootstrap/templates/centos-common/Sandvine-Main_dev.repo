@@ -3,11 +3,11 @@
 #
 
 [sandvine]
-name=Sandvine-$releasever - Main
+name=Sandvine - Main
 # DEV URL:
 baseurl=ftp://{{ packages_server }}/centos/{{ release_code_name }}/$releasever/os/$basearch
 # PROD URL:
-#baseurl=ftp://{{ftp_username}}:{{ftp_password}}@ftp.support.sandvine.com/release/CloudServices/centos-main/$releasever/os/$basearch
+#baseurl=ftp://{{ftp_username}}:{{ftp_password}}@ftp.support.sandvine.com/release/centos/{{ release_code_number }}/$releasever/os/$basearch
 enabled=1
 protect=0
 gpgcheck=0

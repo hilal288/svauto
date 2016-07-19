@@ -3,8 +3,8 @@
 #
 
 [sandvine-svreports]
-name=Sandvine-$releasever - NDS
-baseurl=ftp://{{ftp_username}}:{{ftp_password}}@ftp.support.sandvine.com/release/CloudServices/centos/$releasever/os/$basearch/svreports
+name=Sandvine - SVNDS
+baseurl=ftp://{{ftp_username}}:{{ftp_password}}@ftp.support.sandvine.com/release/centos/{{ release_code_number }}/$releasever/os/$basearch/svreports
 enabled=1
 protect=0
 gpgcheck=0
