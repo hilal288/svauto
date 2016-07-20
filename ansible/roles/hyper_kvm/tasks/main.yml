@@ -28,6 +28,13 @@
   when: ubuntu_install == 'desktop'
 
 
+- name: ubuntu - service enabling Libvirt daemons
+  service: name={{item}} state=started enabled=yes
+  with_items:
+     - libvirt-bin
+     - virtlogd
+
+
 # Review:
 #- name: "Reconfiguring Libvirt and enabling VHOST_NET + KSM at the Compute Node (QEmu-KVM)"
 #  command: "{{item}}"
