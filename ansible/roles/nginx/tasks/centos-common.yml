@@ -12,7 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: centos7 - yum installing NGINX
-  yum: pkg={{item}} state=latest
+- name: centos - yum configuring NGINX repository
+  copy: src=nginx.repo.j2
+        dest=/etc/yum.repos.d/nginx.repo
+        owner=root
+        group=root
+        mode=0644
+
+
+- name: centos - yum install NGINX
+  yum: pkg={{item}} state=latest update_cache=yes
   with_items:
     - nginx
