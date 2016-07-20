@@ -24,29 +24,12 @@
   when: is_container != 'yes'
 
 
-- name: centos - copy Sandvine Main Repository - Production
-  template: src=centos-common/Sandvine-Main.repo
+- name: centos - copy Sandvine Main Repository
+  template: src=centos-common/Sandvine-Main.repo.j2
             dest=/etc/yum.repos.d/Sandvine-Main.repo
             owner=root
             group=root
             mode=0644
-  when: release == 'prod'
-
-- name: centos - copy Sandvine Main Repository - Development
-  template: src=centos-common/Sandvine-Main_dev.repo
-            dest=/etc/yum.repos.d/Sandvine-Main.repo
-            owner=root
-            group=root
-            mode=0644
-  when: release == 'dev'
-
-- name: centos - copy Sandvine Main Repository - Experimental
-  template: src=centos-common/Sandvine-Main_dev_experimental.repo
-            dest=/etc/yum.repos.d/Sandvine-Main.repo
-            owner=root
-            group=root
-            mode=0644
-  when: release == 'dev' and is_experimental == 'yes'
 
 
 - name: centos - sudo members of wheel group without password

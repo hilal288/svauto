@@ -1,0 +1,19 @@
+#
+# Sandvine-SVSM.repo
+#
+
+[sandvine-svsm]
+name=Sandvine - Subscriber Mapping - SM
+{% if release == 'prod' %}
+baseurl=ftp://{{ftp_username}}:{{ftp_password}}@ftp.support.sandvine.com/release/centos/{{ release_code_number }}/$releasever/os/$basearch/svsubscribermapping
+{% endif %}
+{% if release == 'dev' %}
+baseurl=ftp://{{ packages_server }}/centos/{{ release_code_name }}/$releasever/svrepos/$basearch/svsubscribermapping
+{% endif %}
+{% if (versioned_repo == 'true' and release == 'dev') %}
+baseurl=ftp://{{ packages_server }}/centos/{{ release_code_name }}/$releasever/svrepos/$basearch/svsubscribermapping-{{ sde_version }}
+{% endif %}
+enabled=1
+protect=0
+gpgcheck=0
+sslverify=0

@@ -12,25 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Creating Sandvine Usage Management for SVPTS Repository - Production
-  template: src=Sandvine-SVUM-SVPTS.repo
+- name: copy Sandvine Usage Management for SVPTS repository
+  template: src=Sandvine-SVUM-SVPTS.repo.j2
             dest=/etc/yum.repos.d/Sandvine-SVUM-SVPTS.repo
             owner=root
             group=root
             mode=0644
-  when: release == 'prod'
 
 
-- name: Creating Sandvine Usage Management for SVPTS Repository - Development
-  template: src=Sandvine-SVUM-SVPTS_dev.repo
-            dest=/etc/yum.repos.d/Sandvine-SVUM-SVPTS.repo
-            owner=root
-            group=root
-            mode=0644
-  when: release == 'dev'
-
-
-- name: Installing Usage Management packages
-  yum: pkg={{item}} state=latest
+- name: yum installing Usage Management
+  yum: pkg={{item}} state=latest update_cache=yes
   with_items:
     - usage_management_pts

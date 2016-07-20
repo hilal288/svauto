@@ -1,0 +1,25 @@
+#
+# Sandvine-SVSPB.repo
+#
+
+[sandvine-svspb]
+name=Sandvine - SVSPB
+{% if release == 'prod' %}
+baseurl=ftp://{{ftp_username}}:{{ftp_password}}@ftp.support.sandvine.com/release/centos/{{ release_code_number }}/$releasever/os/$basearch/svspb
+{% endif %}
+{% if (release == 'dev' and static_repo != 'true') %}
+baseurl=ftp://{{ packages_server }}/centos/{{ release_code_name }}/$releasever/svrepos/$basearch/svspb
+{% endif %}
+{% if (versioned_repo == 'true' and release == 'dev' and static_repo != 'true') %}
+baseurl=ftp://{{ static_packages_server }}/images/Linux/CENTOS6-x64/SPB/svspb-{{ spb_version }}
+{% endif %}
+{% if (base_os == 'centos6' and static_repo == 'true' and versioned_repo == 'true' and release == 'prod') %}
+baseurl=ftp://{{ftp_username}}:{{ftp_password}}@ftp.support.sandvine.com/release/SRP-SPB/SPB/{{ spb_version }}/software/linux-rpm/repo/$releasever/$basearch
+{% endif %}
+{% if (static_repo == 'true' and versioned_repo == 'true' and release == 'dev') %}
+baseurl=ftp://{{ packages_server }}/centos/{{ release_code_name }}/$releasever/svrepos/$basearch/svspb-{{ spb_version }}
+{% endif %}
+enabled=1
+protect=0
+gpgcheck=0
+sslverify=0

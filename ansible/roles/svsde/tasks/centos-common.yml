@@ -12,43 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: centos - copy Sandvine SVPTS repository
-  template: src=centos-common/Sandvine-SVPTS.repo.j2
-            dest=/etc/yum.repos.d/Sandvine-SVPTS.repo
+
+- name: centos - copy Sandvine SVSDE repository
+  template: src=centos-common/Sandvine-SVSDE.repo.j2
+            dest=/etc/yum.repos.d/Sandvine-SVSDE.repo
             owner=root
             group=root
             mode=0644
 
 
-- name: centos - copy Sandvine SVPTS Protocols repository
-  template: src=centos-common/Sandvine-SVPROTO.repo.j2
-            dest=/etc/yum.repos.d/Sandvine-SVPROTO.repo
-            owner=root
-            group=root
-            mode=0644
-  when: disable_autoconf != 'yes'
-
-
-- name: centos - creating /d2 subdirectory
-  file: path=/d2
-        state=directory
-        owner=root
-        group=root
-        mode=0755
-
-
-- name: centos - creating /d2/tmp subdirectory
-  file: path=/d2/tmp
-        state=directory
-        owner=root
-        group=root
-        mode=1777
-
-
-- name: centos - yum installing the SVPTS
+- name: centos - yum installing the SVSDE
   yum: pkg={{item}} state=latest update_cache=yes
   with_items:
-    - svpts
+    - sde
+    - perl-libs
+    - perl-XML-Parser
+    - perl-XML-Simple
+    - perl-libwww-perl
+
+
+- name: centos - yum cleanup local cache
+  command: yum clean all
 
 
 - name: centos - copy Sandvine SVSDE login logo generator
@@ -62,5 +46,5 @@
   command: /tmp/sandvine-motd-issue-banner.sh
 
 
-- name: centos - yum excluding the kernel out from upgrades (DPDK issue)
-  lineinfile: dest=/etc/yum.conf line="exclude=kernel* dpdk"
+# Adding support for running Linux SVSDE on CentOS 7 without systemd:
+# - include: c6_7-no-systemd.yml

@@ -1,0 +1,18 @@
+# Sandvine-Main.repo
+#
+#
+
+[sandvine]
+name=Sandvine - Main
+{% if release == 'prod' %}
+baseurl=ftp://{{ftp_username}}:{{ftp_password}}@ftp.support.sandvine.com/release/centos/{{ release_code_number }}/$releasever/os/$basearch
+{% endif %}
+{% if (release == 'dev' and is_experimental == 'yes') %}
+baseurl=ftp://{{ packages_server }}/centos/{{ release_code_name }}/$releasever/os-experimental/$basearch
+{% else %}
+baseurl=ftp://{{ packages_server }}/centos/{{ release_code_name }}/$releasever/os/$basearch
+{% endif %}
+enabled=1
+protect=0
+gpgcheck=0
+sslverify=0

@@ -12,25 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Creating Sandvine SVMCDTEXT Repository - Production
-  template: src=Sandvine-SVMCDTEXT.repo
+- name: copy Sandvine SVMCDTEXT Repository
+  template: src=Sandvine-SVMCDTEXT.repo.j2
             dest=/etc/yum.repos.d/Sandvine-SVMCDTEXT.repo
             owner=root
             group=root
             mode=0644
-  when: release == 'prod'
-
-- name: Creating Sandvine SVMCDTEXT Repository - Development
-  template: src=Sandvine-SVMCDTEXT_dev.repo
-            dest=/etc/yum.repos.d/Sandvine-SVMCDTEXT.repo
-            owner=root
-            group=root
-            mode=0644
-  when: release == 'dev'
 
 
-- name: Installing required SVMCDTEXT packages
-  yum: pkg={{item}} state=latest state=latest
+- name: yum installing required SVMCDTEXT
+  yum: pkg={{item}} state=latest update_cache=yes
   with_items:
     - perl-XML-Simple
     - svmcdtext

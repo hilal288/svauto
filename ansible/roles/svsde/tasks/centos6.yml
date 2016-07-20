@@ -12,63 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: SVSDE workaround, "/etc/init.d/sde" sudo reset_permissions requirement
-  lineinfile: dest=/etc/sudoers
-              insertafter='^Defaults.*requiretty'
-              line='Defaults:root !requiretty'
-              validate='visudo -cf %s'
-
-
-# New style URLs - upgradeable
-- name: Creating Sandvine SVSDE Repository - Production
-  template: src=common/Sandvine-SVSDE.repo
-            dest=/etc/yum.repos.d/Sandvine-SVSDE.repo
-            owner=root
-            group=root
-            mode=0644
-  when: release == 'prod'
-
-
-- name: Creating Sandvine SVSDE Repository - Development
-  template: src=common/Sandvine-SVSDE_dev.repo
-            dest=/etc/yum.repos.d/Sandvine-SVSDE.repo
-            owner=root
-            group=root
-            mode=0644
-  when: release == 'dev' and static_repo != 'true'
-
-
-- name: Creating Sandvine SVSDE Repository - Development - Versioned
-  template: src=common/Sandvine-SVSDE_versioned.repo
-            dest=/etc/yum.repos.d/Sandvine-SVSDE.repo
-            owner=root
-            group=root
-            mode=0644
-  when: versioned_repo == 'true' and release == 'dev' and static_repo != 'true'
-
-
-# Old style URLs - non-upgradeable
-- name: Creating Sandvine SVSDE Repository - Static - Versioned
-  template: src=centos6/Sandvine-SVSDE_static_versioned_dev.repo
-            dest=/etc/yum.repos.d/Sandvine-SVSDE.repo
-            owner=root
-            group=root
-            mode=0644
-  when: static_repo == 'true' and versioned_repo == 'true' and release == 'dev'
-
-
-# Old style URLs - non-upgradeable 
-- name: Installing required packages and the SVSDE
-  yum: pkg={{item}} state=latest
-  with_items:
-    - sde
-    - perl-libs
-    - perl-XML-Parser
-    - perl-XML-Simple
-    - perl-libwww-perl
-
-
-- name: Managing Local Firewall Rules
+- name: centos6 - firewall rules
   command: "{{item}}"
   with_items:
   - lokkit --port=22:tcp --update

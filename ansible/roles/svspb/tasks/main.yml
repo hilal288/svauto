@@ -12,50 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Creating Sandvine SVSPB Repository - Production
-  template: src=Sandvine-SVSPB.repo
+- name: centos6 - copy Sandvine SVSPB repository
+  template: src=Sandvine-SVSPB.repo.j2
             dest=/etc/yum.repos.d/Sandvine-SVSPB.repo
             owner=root
             group=root
             mode=0644
-  when: release == 'prod'
 
 
-- name: Creating Sandvine SVSPB Repository - Development
-  template: src=Sandvine-SVSPB_dev.repo
-            dest=/etc/yum.repos.d/Sandvine-SVSPB.repo
-            owner=root
-            group=root
-            mode=0644
-  when: release == 'dev' and static_repo != 'true'
+# PostgreSQL 9.3 for:
 
-
-- name: Creating Sandvine SVSPB Repository - Development - Versioned
-  template: src=Sandvine-SVSPB_versioned.repo
-            dest=/etc/yum.repos.d/Sandvine-SVSPB.repo
-            owner=root
-            group=root
-            mode=0644
-  when: versioned_repo == 'true' and release == 'dev' and static_repo != 'true'
-
-
-- name: Creating Sandvine SVSPB Repository - Static - Versioned
-  template: src=Sandvine-SVSPB_static_versioned_dev.repo
-            dest=/etc/yum.repos.d/Sandvine-SVSPB.repo
-            owner=root
-            group=root
-            mode=0644
-  when: static_repo == 'true' and versioned_repo == 'true' and release == 'dev'
-
-
-# PostgreSQL 9.3
-#
-# For CentOS 7:
+# CentOS 7:
 - name: Installing PostgreSQL 9.3 RPM Repository package for CentOS 7
   yum: pkg=http://yum.postgresql.org/9.3/redhat/rhel-7-x86_64/pgdg-centos93-9.3-1.noarch.rpm state=present
   when: base_os == 'centos7'
 
-# For CentOS 6:
+# CentOS 6:
 - name: Installing PostgreSQL 9.3 RPM Repository package for CentOS 6
   yum: pkg=http://yum.postgresql.org/9.3/redhat/rhel-6-x86_64/pgdg-redhat93-9.3-1.noarch.rpm state=present
   when: base_os == 'centos6'
@@ -69,7 +41,7 @@
 
 
 - name: Installing required packages and the SVSPB
-  yum: pkg={{item}} state=latest
+  yum: pkg={{item}} state=latest update_cache=yes
   with_items:
     - svspb
 
@@ -91,12 +63,12 @@
   command: yum clean all
 
 
-- name: Copying Sandvine SVSPB login logo generator
+- name: centos - copy Sandvine SVSDE login logo generator
   copy: src=sandvine-motd-issue-banner.sh
         dest=/tmp/sandvine-motd-issue-banner.sh
         owner=root
         group=root
         mode=0755
 
-- name: Creating Sandvine SVSPB banner logo
+- name: centos - creating Sandvine SVSDE banner logo
   command: /tmp/sandvine-motd-issue-banner.sh
