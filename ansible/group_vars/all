@@ -156,7 +156,7 @@ setup_sub_option: "null"
 license_server: "licenser-server.placeholder.com"
 
 #
-# Cloud Services Mobile Device Management options
+# Cloud Services Mobile Data Management options
 #
 
 default_group: "Basic"
