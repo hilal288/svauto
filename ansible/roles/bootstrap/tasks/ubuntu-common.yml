@@ -156,3 +156,7 @@
 - name: ubuntu - vim as default for editor
   alternatives: name=editor path=/usr/bin/vim
   when: ubuntu_install == 'desktop'
+
+
+- name: ubuntu - group add regular system user to know groups
+  user: name={{ regular_system_user }} groups=adm,cdrom,sudo,dip,plugdev,lpadmin,sambashare,libvirtd,lxd,kvm append=yes
