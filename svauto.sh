@@ -189,6 +189,12 @@ case $i in
 		shift
         	;;
 
+        --download-iso-images)
+
+	        DOWNLOAD_ISO_IMAGES="yes"
+		shift
+		;;
+
 	--clean-all)
 
 		CLEAN_ALL="yes"
@@ -216,6 +222,26 @@ then
 	rm -rf build-date.txt packer/build* tmp/cs-rel/* tmp/cs/* tmp/sv/* ansible/tmp/*
 
 	echo
+
+	exit 0
+
+fi
+
+
+if [ "$DOWNLOAD_ISO_IMAGES" == "yes" ]
+then
+
+	echo
+	echo "Download ISO images into Libvirt subdir:"
+
+	sudo mkdir /var/lib/libvirt/ISO -p
+
+	cd /var/lib/libvirt/ISO
+
+	sudo wget -c $ubuntu16_iso_image
+	sudo wget -c $ubuntu14_iso_image
+	sudo wget -c $centos7_iso_image
+	sudo wget -c $centos6_iso_image
 
 	exit 0
 
