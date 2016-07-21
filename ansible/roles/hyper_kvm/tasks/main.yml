@@ -35,6 +35,10 @@
      - virtlogd
 
 
+- name: ubuntu - group add regular system user to Libvirt/KVM groups
+  user: name={{ regular_system_user }} groups=libvirtd,kvm append=yes
+
+
 # Review:
 #- name: "Reconfiguring Libvirt and enabling VHOST_NET + KSM at the Compute Node (QEmu-KVM)"
 #  command: "{{item}}"

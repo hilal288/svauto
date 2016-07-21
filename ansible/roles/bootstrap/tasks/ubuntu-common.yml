@@ -159,4 +159,4 @@
 
 
 - name: ubuntu - group add regular system user to know groups
-  user: name={{ regular_system_user }} groups=adm,cdrom,sudo,dip,plugdev,lpadmin,sambashare,libvirtd,lxd,kvm append=yes
+  user: name={{ regular_system_user }} groups=adm,cdrom,sudo,dip,plugdev,lpadmin,sambashare append=yes
