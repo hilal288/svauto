@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 - name: centos - copy Sandvine SVSDE repository
   template: src=centos-common/Sandvine-SVSDE.repo.j2
             dest=/etc/yum.repos.d/Sandvine-SVSDE.repo
