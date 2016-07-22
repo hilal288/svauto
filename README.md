@@ -12,8 +12,8 @@ Looking forward to add support for Linux Containers (LXD and Docker).
 It uses the following Open Source projects:
 
 * Ubuntu Xenial 16.04
-* Ansible 2.0
-* Packer 0.10.0
+* Ansible 2.1
+* Packer 0.10.1
 * QEmu 2.5
 * VirtualBox 5.0
 * Vagrant 1.8
