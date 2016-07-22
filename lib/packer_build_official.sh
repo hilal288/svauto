@@ -68,7 +68,7 @@ packer_build_official()
 
 	# PTS 7.40 on CentOS 6 - Linux 3.18 from Xen 4.6 Repo + DPDK 16.04 with Xen Support, no igb_uio needed
 	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svpts --version=7.40 --product-variant=xen-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--roles=centos-xen,cloud-init,bootstrap,grub-conf,svpts,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --versioned-repo --experimental-repo --operation=sandvine \
+		--roles=centos-xen,cloud-init,bootstrap,grub-conf,svpts,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --versioned-repo --operation=sandvine \
 		--packer-max-tries=3
 
 	# PTS 7.40 on CentOS 7 - Linux 3.18 from Xen 4.6 Repo + DPDK 16.04 with Xen Support, no igb_uio needed
