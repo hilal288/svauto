@@ -16,8 +16,8 @@
   when: base_os == 'centos6'
 
 
-- include: centos7.yml
-  when: base_os == 'centos7'
+#- include: centos7.yml
+#  when: base_os == 'centos7'
 
 
 - include: centos-common.yml
