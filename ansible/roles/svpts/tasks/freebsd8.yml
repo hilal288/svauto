@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: freebsd8 | copy FreeBSD rc.conf.local file
+- name: freebsd8 - copy FreeBSD rc.conf.local file
   copy: src=rc.conf.local
         dest=/etc/rc.conf.local
         owner=root
@@ -21,7 +21,7 @@
         backup=yes
 
 
-- name: freebsd8 | copy "fetchlabify" file
+- name: freebsd8 - copy "fetchlabify" file
   copy: src=fetchlabify
         dest=/etc/rc.d/fetchlabify
         owner=root
@@ -29,7 +29,7 @@
         mode=0755
 
 
-- name: freebsd8 | copy root's Bash RC
+- name: freebsd8 - copy root's Bash RC
   copy: src=_bashrc-root
         dest=/root/.bashrc
         owner=root
