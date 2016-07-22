@@ -29,7 +29,7 @@
   when: disable_autoconf != 'yes'
 
 
-- name: centos7 | copy igb_uio rc.modules file to boot sequence
+- name: centos7 - copy igb_uio rc.modules file to boot sequence
   copy: src=centos7/rc.modules
         dest=/etc/rc.modules
         owner=root
@@ -38,5 +38,5 @@
 
 
 # Adding support for running Linux PTS on CentOS 7 without systemd:
-#- name: centos7 | including hack to remove systemd
+#- name: centos7 - including hack to remove systemd
 #  include: c6_7-no-systemd.yml
