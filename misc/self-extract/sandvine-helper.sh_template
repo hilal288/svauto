@@ -151,6 +151,7 @@ fi
 
 if [ "$LIBVIRT_UNDEFINE" == "YES" ]
 then
+
 	clear
 
 	echo
@@ -186,6 +187,7 @@ then
 	virsh undefine $SVSPB
 
 	exit 0
+
 fi
 
 
@@ -208,6 +210,7 @@ then
 	wget -c --user=$FTP_USER --password=$FTP_PASS ftp://ftp.support.sandvine.com/release/CloudServices/$RELEASE/$SVSDE-disk1.qcow2c
 
 	exit 0
+
 fi
 
 
@@ -239,6 +242,7 @@ then
 	echo "Done."
 
 	exit 0
+
 fi
 
 
@@ -301,11 +305,13 @@ then
 	fi
 
 	exit 0
+
 fi
 
 
 if [ "$SUDO_SETUP" == "yes" ]
 then
+
 	echo
 	echo "Configuring sudores, so, members of group \"sudo\" will not require to type passwords."
 	echo "You'll need to type your password now (you need to be member of group sudo already):"
@@ -313,44 +319,37 @@ then
 	sudo sed -i -e 's/%sudo.*/%sudo ALL=NOPASSWD:ALL/g' /etc/sudoers
 
 	exit 0
+
 fi
 
 
 if [ "$OS_INSTALL" == "yes" ]
 then
-	sudo apt update
-	sudo apt -y install linux-generic-lts-wily software-properties-common ssh vim curl
-	sudo update-alternatives --set editor /usr/bin/vim.basic
-	sudo apt -y full-upgrade
-	sudo update-grub
 
 	echo
-        echo "Installing OpenStack Liberty (all-in-one) on Ubuntu Trusty with Ansible:"
+        echo "Installing OpenStack Mitaka (all-in-one) on Ubuntu Xenial with SVAuto:"
 
-	bash <(curl -s https://raw.githubusercontent.com/sandvine/os-ansible-deployment-lite/liberty/misc/os-install-lbr.sh)
+	bash <(curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/os-install-lbr.sh)
 
 	exit 0
+
 fi
 
 
 if [ "$KVM_INSTALL_SERVER" == "yes" ]
 then
-	sudo apt update
-	sudo apt -y install linux-generic-lts-wily software-properties-common ssh vim curl
-	sudo update-alternatives --set editor /usr/bin/vim.basic
-	sudo add-apt-repository -y cloud-archive:liberty
-	sudo apt update
-	sudo apt -y full-upgrade
-	sudo update-grub
 
-	# Instaling KVM Hypervisor and required tools to work with it
+	echo
+        echo "Installing KVM Hypervisor (single-host) on Ubuntu Xenial with SVAuto:"
+
 	if [ "$KVM_INSTALL_DESKTOP" == "yes" ]; then
-		sudo apt -y install ubuntu-virt
+		bash <(curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/install-xenial-kvm-server.sh)
 	else
-		sudo apt -y install ubuntu-virt-server
+		bash <(curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/install-xenial-kvm-desktop.sh)
 	fi
 
 	exit 0
+
 fi
 
 
@@ -469,5 +468,6 @@ then
 	virsh net-start internet
 
 	exit 0
+
 fi
 
