@@ -11,7 +11,7 @@ baseurl=ftp://{{ftp_username}}:{{ftp_password}}@ftp.support.sandvine.com/release
 baseurl=ftp://{{ packages_server }}/centos/{{ release_code_name }}/$releasever/svrepos/$basearch/svspb
 {% endif %}
 {% if (static_repo == 'true' and versioned_repo == 'true' and release == 'dev') %}
-baseurl=ftp://{{ static_packages_server }}/images/Linux/CENTOS6-x64/SPB/svspb-{{ spb_version }}
+baseurl=ftp://{{ static_packages_server }}/images/Linux/CENTOS6-x64/SPB/svspb-LNX-{{ spb_version }}
 {% endif %}
 {% if (base_os == 'centos6' and static_repo == 'true' and versioned_repo == 'true' and release == 'prod') %}
 baseurl=ftp://{{ftp_username}}:{{ftp_password}}@ftp.support.sandvine.com/release/SRP-SPB/SPB/{{ spb_version }}/software/linux-rpm/repo/$releasever/$basearch
