@@ -45,14 +45,13 @@ case $i in
 
 	--kvm-install-server)
 
-		KVM_INSTALL_SERVER="yes"
+		KVM_INSTALL="server"
 		shift
 		;;
 
 	--kvm-install-desktop)
 
-		KVM_INSTALL_SERVER="yes"
-		KVM_INSTALL_DESKTOP="yes"
+		KVM_INSTALL="desktop"
 		shift
 		;;
 
@@ -336,21 +335,31 @@ then
 fi
 
 
-if [ "$KVM_INSTALL_SERVER" == "yes" ]
-then
+case $KVM_INSTALL in
 
-	echo
-        echo "Installing KVM Hypervisor (single-host) on Ubuntu Xenial with SVAuto:"
+	server)
 
-	if [ "$KVM_INSTALL_DESKTOP" == "yes" ]; then
+		echo
+		echo "Installing KVM Hypervisor Server (single-host) on Ubuntu Xenial with SVAuto:"
+
 		bash <(curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/install-xenial-kvm-server.sh)
-	else
+
+		exit 0
+
+		;;
+
+	desktop)
+
+		echo
+		echo "Installing KVM Hypervisor Desktop (single-host) on Ubuntu Xenial with SVAuto:"
+
 		bash <(curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/install-xenial-kvm-desktop.sh)
-	fi
 
-	exit 0
+		exit 0
 
-fi
+		;;
+
+esac
 
 
 if [ "$LIBVIRT_DEFINE" == "yes" ]
