@@ -349,6 +349,11 @@ resources:
         system_info:
           default_user:
             name: "sandvine"
+        chpasswd:
+          list: |
+            root:sandvine
+            sandvine:sandvine
+          expire: False
 
   database:
     type: OS::Nova::Server
@@ -366,6 +371,11 @@ resources:
         system_info:
           default_user:
             name: "sandvine"
+        chpasswd:
+          list: |
+            root:sandvine
+            sandvine:sandvine
+          expire: False
 
   engine:
     type: OS::Nova::Server
@@ -383,6 +393,11 @@ resources:
         system_info:
           default_user:
             name: "sandvine"
+        chpasswd:
+          list: |
+            root:sandvine
+            sandvine:sandvine
+          expire: False
 
 outputs:
   nfv_floating_ip:

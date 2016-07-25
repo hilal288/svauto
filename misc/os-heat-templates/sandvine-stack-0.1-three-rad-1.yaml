@@ -406,6 +406,11 @@ resources:
         system_info:
           default_user:
             name: "sandvine"
+        chpasswd:
+          list: |
+            root:sandvine
+            sandvine:sandvine
+          expire: False
         runcmd:
         - 'su -c "\curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/install-svauto.sh | bash -s" sandvine'
 
@@ -456,7 +461,12 @@ resources:
         system_info:
           default_user:
             name: "sandvine"
-            
+        chpasswd:
+          list: |
+            root:sandvine
+            sandvine:sandvine
+          expire: False
+
   sde:
     type: OS::Nova::Server
     properties:
@@ -506,6 +516,11 @@ resources:
         system_info:
           default_user:
             name: "sandvine"
+        chpasswd:
+          list: |
+            root:sandvine
+            sandvine:sandvine
+          expire: False
         runcmd:
         - 'su -c "\curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/install-svauto.sh | bash -s" sandvine'
 

@@ -127,6 +127,11 @@ resources:
         system_info:
           default_user:
             name: "sandvine"
+        chpasswd:
+          list: |
+            root:sandvine
+            sandvine:sandvine
+          expire: False
 
 outputs:
   demosrv_floating_ip:
