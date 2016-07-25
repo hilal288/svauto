@@ -472,6 +472,8 @@ then
 
 	sed -i -e 's/packages_server:.*/packages_server: \"'$SVAUTO_MAIN_HOST'\"/g' ansible/group_vars/all
 
+	sed -i -e 's/license_server:.*/license_server: \"'$LICENSE_SERVER'\"/g' ansible/group_vars/all
+
 fi
 
 
