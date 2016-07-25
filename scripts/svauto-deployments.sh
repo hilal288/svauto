@@ -51,10 +51,6 @@ BUILD_RAND=$(openssl rand -hex 4)
 PLAYBOOK_FILE="playbook-"$BUILD_RAND".yml"
 
 
-# O.S. Detector
-OS=`python -c 'import platform ; print platform.dist()[0]'`
-
-
 echo
 echo "Welcome to SVAuto, the Sandvine Automation!"
 
@@ -62,11 +58,10 @@ echo "Welcome to SVAuto, the Sandvine Automation!"
 echo
 echo "Installing SVAuto basic dependencies (Git & Ansible):"
 
-shopt -s nocasematch
 
-case $OS in
+case $BASE_OS in
 
-	Ubuntu|Debian)
+	ubuntu*)
 
 		echo
 
@@ -80,7 +75,7 @@ case $OS in
 
 		;;
 
-	RedHat|CentOS)
+	centos*)
 
 		echo
 
