@@ -27,4 +27,4 @@
 
 
 - name: ubuntu16 - apt removing ubuntu-fan (it is broken)
-  apt: name=ubuntu-fan state=absent
+  apt: name=ubuntu-fan state=absent purge=yes
