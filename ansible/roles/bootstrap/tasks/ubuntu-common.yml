@@ -84,6 +84,7 @@
     - sysfsutils
     - nbd-client
     - btrfs-tools
+    - python-minimal
     - python-mysqldb
     - python-httplib2
     - silversearcher-ag
