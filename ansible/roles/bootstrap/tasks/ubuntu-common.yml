@@ -159,5 +159,11 @@
   when: ubuntu_install == 'desktop'
 
 
-- name: ubuntu - group add regular system user to know groups
+- name: ubuntu - group add regular system user to know Server groups
+  user: name={{ regular_system_user }} groups=adm,dialout,cdrom,floppy,sudo,dip,plugdev,netdev append=yes
+  when: ubuntu_install == 'server'
+
+
+- name: ubuntu - group add regular system user to know Desktop groups
   user: name={{ regular_system_user }} groups=adm,cdrom,sudo,dip,plugdev,lpadmin,sambashare append=yes
+  when: ubuntu_install == 'desktop'
