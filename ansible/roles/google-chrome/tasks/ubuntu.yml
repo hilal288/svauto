@@ -20,7 +20,5 @@
         mode=0755
 
 
-- name: ubuntu - apt installing Google Chrome
-  apt: pkg={{item}} state=latest
-  with_items:
-    - google-chrome-stable
+- name: ubuntu - apt installing Google Chrome Stable
+  apt: pkg=google-chrome-stable state=latest allow_unauthenticated=yes

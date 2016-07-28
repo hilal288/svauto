@@ -17,6 +17,10 @@
   when: base_os_upgrade == 'yes'
 
 
+- name: ubuntu - add Sandvine's PPA Repository
+  apt_repository: repo='ppa:sandvine/packages'
+
+
 - name: ubuntu - apt installing basic tools
   apt: name={{item}} state=latest update_cache=yes
   with_items:
@@ -69,6 +73,7 @@
     - pm-utils
     - xfsprogs
     - dos2unix
+    - ppa-purge
     - conntrack
     - iptraf-ng
     - hugepages
@@ -79,13 +84,14 @@
     - sysfsutils
     - nbd-client
     - btrfs-tools
+    - python-minimal
     - python-mysqldb
     - python-httplib2
     - silversearcher-ag
     - command-not-found
     - linux-image-generic
     - ubuntu-cloud-keyring
-
+    - software-properties-common
 
 
 - name: ubuntu - apt installing Server tools
@@ -153,5 +159,11 @@
   when: ubuntu_install == 'desktop'
 
 
-- name: ubuntu - add Sandvine's PPA Repository
-  apt_repository: repo='ppa:sandvine/packages'
+- name: ubuntu - group add regular system user to know Server groups
+  user: name={{ regular_system_user }} groups=adm,dialout,cdrom,floppy,sudo,dip,plugdev,netdev append=yes
+  when: ubuntu_install == 'server'
+
+
+- name: ubuntu - group add regular system user to know Desktop groups
+  user: name={{ regular_system_user }} groups=adm,cdrom,sudo,dip,plugdev,lpadmin,sambashare append=yes
+  when: ubuntu_install == 'desktop'

@@ -1,0 +1,49 @@
+# Copyright 2016, Sandvine Incorporated
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: centos - copy Sandvine SVSDE repository
+  template: src=centos-common/Sandvine-SVSDE.repo.j2
+            dest=/etc/yum.repos.d/Sandvine-SVSDE.repo
+            owner=root
+            group=root
+            mode=0644
+
+
+- name: centos - yum installing the SVSDE
+  yum: pkg={{item}} state=latest update_cache=yes
+  with_items:
+    - sde
+    - perl-libs
+    - perl-XML-Parser
+    - perl-XML-Simple
+    - perl-libwww-perl
+
+
+- name: centos - yum cleanup local cache
+  command: yum clean all
+
+
+- name: centos - copy Sandvine SVSDE login logo generator
+  copy: src=sandvine-motd-issue-banner.sh
+        dest=/tmp/sandvine-motd-issue-banner.sh
+        owner=root
+        group=root
+        mode=0755
+
+- name: centos - creating Sandvine SVSDE banner logo
+  command: /tmp/sandvine-motd-issue-banner.sh
+
+
+# Adding support for running Linux SVSDE on CentOS 7 without systemd:
+# - include: c6_7-no-systemd.yml

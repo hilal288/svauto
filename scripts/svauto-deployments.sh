@@ -48,11 +48,7 @@ done
 
 BUILD_RAND=$(openssl rand -hex 4)
 
-PLAYBOOK_FILE="playbook-"$BUILD_RAND"-"$ALL_ROLES".yml"
-
-
-# O.S. Detector
-OS=`python -c 'import platform ; print platform.dist()[0]'`
+PLAYBOOK_FILE="playbook-"$BUILD_RAND".yml"
 
 
 echo
@@ -62,27 +58,38 @@ echo "Welcome to SVAuto, the Sandvine Automation!"
 echo
 echo "Installing SVAuto basic dependencies (Git & Ansible):"
 
-shopt -s nocasematch
 
-case $OS in
+case $BASE_OS in
 
-	Ubuntu|Debian)
+	ubuntu*)
 
 		echo
+
+		sudo apt -y install software-properties-common
+
+		sudo add-apt-repository -y ppa:sandvine/packages
+
+		sudo apt update
+
 		sudo apt -y install git ansible
+
 		;;
 
-	RedHat|CentOS)
+	centos*)
 
 		echo
+
 		sudo yum --enablerepo=epel-testing -y install git ansible libselinux-python
+
 		;;
 
 	*)
 
                 echo
                 echo "Operation System not detected, aborting!"
+
                 exit 1
+
                 ;;
 
 esac
@@ -132,7 +139,7 @@ echo
 echo "Building Ansible top-level Playbook..."
 
 echo
-ansible_playbook_builder --base-os="$BASE_OS" --ansible-hosts="localhost" --roles="$ALL_ROLES" > ansible/tmp/$PLAYBOOK_FILE
+ansible_playbook_builder --ansible-remote-user=\"root\" --ansible-hosts="localhost" --roles="$ALL_ROLES" > ansible/tmp/$PLAYBOOK_FILE
 
 
 echo

@@ -24,3 +24,7 @@
   apt: name={{item}} state=latest update_cache=yes
   with_items:
     - nftables
+
+
+- name: ubuntu16 - apt removing ubuntu-fan (it is broken)
+  apt: name=ubuntu-fan state=absent purge=yes

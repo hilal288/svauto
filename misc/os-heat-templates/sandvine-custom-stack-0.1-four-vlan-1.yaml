@@ -474,6 +474,11 @@ resources:
         system_info:
           default_user:
             name: "sandvine"
+        chpasswd:
+          list: |
+            root:sandvine
+            sandvine:sandvine
+          expire: False
 
   # PTS 2
   pts2:
@@ -494,6 +499,11 @@ resources:
         system_info:
           default_user:
             name: "sandvine"
+        chpasswd:
+          list: |
+            root:sandvine
+            sandvine:sandvine
+          expire: False
 
   # SPB 1
   spb:
@@ -512,6 +522,11 @@ resources:
         system_info:
           default_user:
             name: "sandvine"
+        chpasswd:
+          list: |
+            root:sandvine
+            sandvine:sandvine
+          expire: False
 
   # SDE 1
   sde:
@@ -530,6 +545,11 @@ resources:
         system_info:
           default_user:
             name: "sandvine"
+        chpasswd:
+          list: |
+            root:sandvine
+            sandvine:sandvine
+          expire: False
 
 # Stack output
 outputs:

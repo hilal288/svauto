@@ -48,7 +48,7 @@
             mode=0640
             backup=yes
   when: item.os_project == "neutron"
-  with_items: mysql_databases
+  with_items: '{{mysql_databases}}'
   notify: restart-neutron
 
 
@@ -129,12 +129,12 @@
   when: br_mode == 'OVS'
 
 - name: Configuring Open vSwitch Bridge Port
-  openvswitch_port: bridge=br-ex port="{{neutron_external_interface}}" state=present
+  openvswitch_port: bridge=br-ex port="{{os_external}}" state=present
   when: br_mode == 'OVS'
 
 - name: Enabling br-ex Interface
-  command: 'ifup br-ex'
-  when: br_mode == 'OVS'
+  shell: 'ifup br-ex'
+  when: br_mode == 'OVS' and ubuntu_network_setup == 'yes'
 
 
 - name: Write custom sysctl.conf

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: ubuntu - yum cleaning up cache
+- name: ubuntu - apt cleaning up cache
   shell: apt-get clean
 
 
@@ -20,5 +20,5 @@
   shell: apt-get -y autoremove
 
 
-- name: ubuntu - dpkg autoremoving remainings of uninstalled packages
+- name: ubuntu - dpkg removing remainings of uninstalled packages
   shell: purge_uninstalled_packages=$(dpkg -l | grep ^rc | awk $'{print $2}' | xargs) ; if [ ! -z "$purge_uninstalled_packages" ] ; then dpkg -P $purge_uninstalled_packages ; fi

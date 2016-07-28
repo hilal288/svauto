@@ -12,30 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: centos - copy Sandvine Main Repository - Production
-  template: src=centos-common/Sandvine-Main.repo
-            dest=/etc/yum.repos.d/Sandvine-Main.repo
-            owner=root
-            group=root
-            mode=0644
-  when: release == 'prod'
-
-- name: centos - copy Sandvine Main Repository - Development
-  template: src=centos-common/Sandvine-Main_dev.repo
-            dest=/etc/yum.repos.d/Sandvine-Main.repo
-            owner=root
-            group=root
-            mode=0644
-  when: release == 'dev'
-
-- name: centos - copy Sandvine Main Repository - Experimental
-  template: src=centos-common/Sandvine-Main_dev_experimental.repo
-            dest=/etc/yum.repos.d/Sandvine-Main.repo
-            owner=root
-            group=root
-            mode=0644
-  when: release == 'dev' and is_experimental == 'yes'
-
+- name: centos - yum installing libselinux-python
+  yum: pkg=libselinux-python state=latest update_cache=yes
 
 - name: centos - selinux to permissive state
   selinux: policy=targeted state=permissive
@@ -44,6 +22,15 @@
 - name: centos - selinux disabled
   selinux: state=disabled
   when: is_container != 'yes'
+
+
+- name: centos - copy Sandvine Main Repository
+  template: src=centos-common/Sandvine-Main.repo.j2
+            dest=/etc/yum.repos.d/Sandvine-Main.repo
+            owner=root
+            group=root
+            mode=0644
+  when: disable_autoconf != 'yes'
 
 
 - name: centos - sudo members of wheel group without password

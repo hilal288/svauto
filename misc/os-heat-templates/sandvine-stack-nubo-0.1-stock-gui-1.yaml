@@ -250,6 +250,11 @@ resources:
         system_info:
           default_user:
             name: "sandvine"
+        chpasswd:
+          list: |
+            root:sandvine
+            sandvine:sandvine
+          expire: False
 
   spb:
     type: OS::Nova::Server
@@ -298,6 +303,11 @@ resources:
         system_info:
           default_user:
             name: "sandvine"
+        chpasswd:
+          list: |
+            root:sandvine
+            sandvine:sandvine
+          expire: False
 
   sde:
     type: OS::Nova::Server
@@ -346,6 +356,11 @@ resources:
         system_info:
           default_user:
             name: "sandvine"
+        chpasswd:
+          list: |
+            root:sandvine
+            sandvine:sandvine
+          expire: False
 
   gui:
     type: OS::Nova::Server

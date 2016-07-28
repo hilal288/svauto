@@ -1,0 +1,16 @@
+#
+# Sandvine-SVMCDTEXT.repo
+#
+
+[sandvine-svmcdtext]
+name=Sandvine - SVMCDTEXT
+{% if release == 'prod' %}
+baseurl=ftp://{{ftp_username}}:{{ftp_password}}@ftp.support.sandvine.com/release/CloudServices/{{ release_code_number }}/$releasever/svrepos/$basearch/svmcdtext
+{% endif %}
+{% if release == 'dev' %}
+baseurl=ftp://{{ packages_server }}/centos/{{ release_code_name }}/$releasever/svrepos/$basearch/svmcdtext
+{% endif %}
+enabled=1
+protect=0
+gpgcheck=0
+sslverify=0

@@ -26,6 +26,12 @@ echo
 echo
 echo "Installing Git and Ansible..."
 echo
+sudo apt -y install software-properties-common
+
+sudo add-apt-repository -y ppa:sandvine/packages
+
+sudo apt update
+
 sudo apt -y install git ansible
 
 
@@ -40,4 +46,4 @@ echo
 echo "Deploying Sandvine Platform from RPM packages:"
 echo
 cd ~/svauto
-./svauto.sh --freebsd-pts=yes --stack=demo
+./svauto.sh --freebsd-pts --os-project=demo --os-stack=demo --operation=cloud-services --cloud-services-mode=default

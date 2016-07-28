@@ -31,8 +31,8 @@ packer_build_cs()
 		--roles=cloud-init,bootstrap,grub-conf,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3
 
-	# SPB 6.60 on CentOS 6 + Cloud Services
-	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svspb --version=6.60 --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+	# SPB 6.65 on CentOS 6 + Cloud Services
+	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svspb --version=6.65 --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
 		--roles=cloud-init,bootstrap,grub-conf,svspb,svmcdtext,svreports,svcs-svspb,sandvine-auto-config,vmware-tools,post-cleanup-image,power-cycle $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3
 
@@ -243,6 +243,17 @@ packer_build_cs()
 				cat extract.sh sandvine-files.tar > sandvine-helper.sh_tail
 
 				sed -i -e 's/{{sandvine_release}}/'$SANDVINE_RELEASE'/g' sandvine-helper.sh_template
+
+				sed -i -e 's/read\ FTP_USER//g' sandvine-helper.sh_template
+				sed -i -e 's/read\ \-s\ FTP_PASS//g' sandvine-helper.sh_template
+				sed -i -e 's/\-c\ \-\-user=\$FTP_USER\ \-\-password=\$FTP_PASS\ //g' sandvine-helper.sh_template
+
+				sed -i -e 's/{{svpts_image_name}}/'svpts-7.30-cs-1-centos7-amd64'/g' sandvine-helper.sh_template
+				sed -i -e 's/{{svsde_image_name}}/'svsde-7.45-cs-1-centos6-amd64'/g' sandvine-helper.sh_template
+				sed -i -e 's/{{svspb_image_name}}/'svspb-6.60-cs-1-centos6-amd64'/g' sandvine-helper.sh_template
+
+				sed -i -e 's/{{packages_server}}/'$SVAUTO_MAIN_HOST'/g' sandvine-helper.sh_template
+				sed -i -e 's/{{packages_path}}/images\/platform\/cloud-services\/'$RELEASE_CODE_NAME'\/current/g' sandvine-helper.sh_template
 
 				cat sandvine-helper.sh_template sandvine-helper.sh_tail > sandvine-cs-helper.sh
 

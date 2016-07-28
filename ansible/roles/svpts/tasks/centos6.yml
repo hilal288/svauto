@@ -27,7 +27,7 @@
         mode=0644
 
 
-- name: centos6 | copy depmod "init script"
+- name: centos6 - copy depmod "init script"
   copy: src=centos6/depmod.init
         dest=/etc/init.d/depmod
         owner=root
@@ -35,17 +35,17 @@
         mode=0755
 
 
-- name: centos6 | enable depmod "init service"
+- name: centos6 - enable depmod "init service"
   file: src=/etc/init.d/depmod
         dest=/etc/rc3.d/S01depmod
         state=link
         force=yes
 
 
-- name: centos6 | firewall
+- name: centos6 - firewall
   command: "{{item}}"
   with_items:
-  - lokkit --port=22:tcp --update
-  - lokkit -t eth1
-  - service iptables save
+    - lokkit --port=22:tcp --update
+    - lokkit -t eth1
+    - service iptables save
   when: is_container != 'yes'

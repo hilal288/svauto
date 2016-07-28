@@ -356,7 +356,7 @@ fi
 EXTRA_VARS="base_os="$BASE_OS" release="$RELEASE" activate_eth1="no" deployment_mode="yes""
 
 if [ "$DISABLE_AUTOCONF" == "yes" ] ; then
-	EXTRA_VARS="$EXTRA_VARS disable_autoconf="yes" sv_auto_config="no" cs_auto_config="no""
+	EXTRA_VARS="$EXTRA_VARS disable_autoconf="yes""
 fi
 
 if [ "$STATIC_REPO" == "yes" ] ; then
@@ -391,7 +391,7 @@ case "$OPERATION" in
 		;;
 
 	cloud-services)
-		EXTRA_VARS="$EXTRA_VARS setup_mode="cloud-services""
+		EXTRA_VARS="$EXTRA_VARS setup_mode="cloud-services" setup_sub_option="default""
 		;;
 
         *)

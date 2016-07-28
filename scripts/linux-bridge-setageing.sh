@@ -21,13 +21,13 @@ for i in "$@"
 do
 case $i in
 
-	--project=*)
+	--os-project=*)
 
 		PROJECT="${i#*=}"
 		shift
 		;;
 
-	--stack=*)
+	--os-stack=*)
 
 		STACK="${i#*=}"
 		shift

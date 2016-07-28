@@ -189,6 +189,12 @@ case $i in
 		shift
         	;;
 
+        --download-iso-images)
+
+	        DOWNLOAD_ISO_IMAGES="yes"
+		shift
+		;;
+
 	--clean-all)
 
 		CLEAN_ALL="yes"
@@ -222,6 +228,26 @@ then
 fi
 
 
+if [ "$DOWNLOAD_ISO_IMAGES" == "yes" ]
+then
+
+	echo
+	echo "Download ISO images into Libvirt subdir:"
+
+	sudo mkdir /var/lib/libvirt/ISO -p
+
+	cd /var/lib/libvirt/ISO
+
+	sudo wget -c $ubuntu16_iso_image
+	sudo wget -c $ubuntu14_iso_image
+	sudo wget -c $centos7_iso_image
+	sudo wget -c $centos6_iso_image
+
+	exit 0
+
+fi
+
+
 if [ "$BOOTSTRAP_SVAUTO" == "yes" ]
 then
 
@@ -229,7 +255,7 @@ then
 	echo "Installing SVAuto dependencies via APT:"
 	echo
 
-	sudo ~/svauto/scripts/bootstrap-svauto.sh
+	sudo ~/svauto/scripts/bootstrap-svauto-server.sh
 
 	exit 0
 
@@ -318,6 +344,7 @@ fi
 if [ "$PACKER_BUILD_SANDVINE" == "yes" ]
 then
 
+	packer_build_sandvine_lab
 	packer_build_sandvine
 
 	exit 0
@@ -445,6 +472,8 @@ then
 #	sed -i -e 's/^#CSD_IP/'$CSD_FLOAT'/g' ansible/hosts
 
 	sed -i -e 's/packages_server:.*/packages_server: \"'$SVAUTO_MAIN_HOST'\"/g' ansible/group_vars/all
+
+	sed -i -e 's/license_server:.*/license_server: \"'$LICENSE_SERVER'\"/g' ansible/group_vars/all
 
 fi
 

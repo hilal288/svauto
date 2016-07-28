@@ -1,0 +1,28 @@
+#
+# Sandvine-SVSDE.repo
+#
+
+[sandvine-svsde]
+name=Sandvine - SVSDE (Sandvine Service Delivery Engine)
+{% if release == 'prod' %}
+baseurl=ftp://{{ftp_username}}:{{ftp_password}}@ftp.support.sandvine.com/release/CloudServices/{{ release_code_number }}/$releasever/svrepos/$basearch/svsde
+{% endif %}
+{% if (release == 'dev' and static_repo != 'true') %}
+baseurl=ftp://{{ packages_server }}/centos/{{ release_code_name }}/$releasever/svrepos/$basearch/svsde
+{% endif %}
+{% if (versioned_repo == 'true' and release == 'dev' and static_repo != 'true') %}
+baseurl=ftp://{{ packages_server }}/centos/{{ release_code_name }}/$releasever/svrepos/$basearch/svsde-{{ sde_version }}
+{% endif %}
+{% if (versioned_repo == 'true' and release == 'prod' and static_repo == 'true') %}
+baseurl=ftp://{{ftp_username}}:{{ftp_password}}@ftp.support.sandvine.com/SDE/$releasever/SDE-{{ sde_version }}/sde-{{ sde_version }}
+{% endif %}
+{% if (base_os == 'centos6' and static_repo == 'true' and versioned_repo == 'true' and release == 'dev') %}
+baseurl=ftp://{{ static_packages_server }}/images/Linux/CENTOS6-x64/SDE/svsde-LNX-{{ sde_version }}
+{% endif %}
+{% if (base_os == 'centos7' and static_repo == 'true' and versioned_repo == 'true' and release == 'dev') %}
+baseurl=ftp://{{ static_packages_server }}/images/Linux/RHEL7-x64/SDE/svsde-LNX-{{ sde_version }}
+{% endif %}
+enabled=1
+protect=0
+gpgcheck=0
+sslverify=0

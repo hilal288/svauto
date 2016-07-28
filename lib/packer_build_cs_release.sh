@@ -49,7 +49,7 @@ packer_build_cs_release()
 		--roles=cloud-init,bootstrap,grub-conf,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,sandvine-auto-config,vmware-tools,cleanrepo,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=6
 
-	# SPB 6.60 on CentOS 6 + Cloud Services customizations
+	# SPB 6.65 on CentOS 6 + Cloud Services customizations
 	./image-factory.sh --release=prod --base-os=centos6 --base-os-upgrade --product=cs-svspb --version=$SANDVINE_RELEASE --qcow2 --ova --vm-xml --sha256sum \
 		--roles=cloud-init,bootstrap,grub-conf,svspb,svmcdtext,svreports,svcs-svspb,sandvine-auto-config,vmware-tools,cleanrepo,post-cleanup-image,power-cycle $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=6
@@ -188,6 +188,13 @@ packer_build_cs_release()
 				cat extract.sh sandvine-files.tar > sandvine-helper.sh_tail
 
 				sed -i -e 's/{{sandvine_release}}/'$SANDVINE_RELEASE'/g' sandvine-helper.sh_template
+
+				sed -i -e 's/{{svpts_image_name}}/'cs-svpts-\\$RELEASE-centos7-amd64'/g' sandvine-helper.sh_template
+				sed -i -e 's/{{svsde_image_name}}/'cs-svsde-\\$RELEASE-centos7-amd64'/g' sandvine-helper.sh_template
+				sed -i -e 's/{{svspb_image_name}}/'cs-svspb-\\$RELEASE-centos7-amd64'/g' sandvine-helper.sh_template
+
+				sed -i -e 's/{{packages_server}}/'$PUBLIC_PACKAGES_SERVER'/g' sandvine-helper.sh_template
+				sed -i -e 's/{{packages_path}}/release\/CloudServices\/\$RELEASE/g' sandvine-helper.sh_template
 
 				cat sandvine-helper.sh_template sandvine-helper.sh_tail > cloudservices-helper.sh
 

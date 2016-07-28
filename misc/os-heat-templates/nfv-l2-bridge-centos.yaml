@@ -63,13 +63,13 @@ parameters:
     type: string
     label: "Engine Image (default 'engine')"
     description: "Engine Image"
-    default: "CentOS 6.6 - 64-bit - Cloud Based Image"
+    default: "CentOS 6 - 64-bit - Cloud Based Image"
 
   database_image:
     type: string
     label: "Database Image (default 'database')"
     description: "Database Image"
-    default: "CentOS 6.6 - 64-bit - Cloud Based Image"
+    default: "CentOS 6 - 64-bit - Cloud Based Image"
 
 resources:
   rtr:
@@ -366,6 +366,11 @@ resources:
         system_info:
           default_user:
             name: "cloud"
+        chpasswd:
+          list: |
+            root:sandvine
+            sandvine:sandvine
+          expire: False
 
   engine:
     type: OS::Nova::Server
@@ -383,6 +388,11 @@ resources:
         system_info:
           default_user:
             name: "cloud"
+        chpasswd:
+          list: |
+            root:sandvine
+            sandvine:sandvine
+          expire: False
 
 outputs:
   nfv_floating_ip:

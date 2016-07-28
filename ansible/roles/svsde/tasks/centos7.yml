@@ -12,36 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-# New style URLs - upgradeable 
-- name: Creating Sandvine SVSDE Repository - Development
-  template: src=common/Sandvine-SVSDE_dev.repo
-            dest=/etc/yum.repos.d/Sandvine-SVSDE.repo
-            owner=root
-            group=root
-            mode=0644
-  when: release == 'dev'
-
-
-# Old style URLs - non-upgradeable
-- name: Creating Sandvine SVSDE Repository - Static - Versioned
-  template: src=centos7/Sandvine-SVSDE_static_versioned_dev.repo
-            dest=/etc/yum.repos.d/Sandvine-SVSDE.repo
-            owner=root
-            group=root
-            mode=0644
-  when: static_repo == 'true' and versioned_repo == 'true' and release == 'dev'
-
-
-# Deployment
-- name: Installing required packages and the SVSDE
-  yum: pkg={{item}} state=latest
+- name: centos7 - firewall rules
+  firewalld: port={{item}} permanent=true state=enabled
   with_items:
-    - sde
-    - perl-libs
-    - perl-XML-Parser
-    - perl-XML-Simple
-    - perl-libwww-perl
+    - 22/tcp
+    - 80/tcp
+    - 443/tcp
+  when: is_container != 'yes' and disable_autoconf != 'yes'
+
+- firewalld: zone=trusted interface=eth1 permanent=true state=enabled
+  when: is_container != 'yes' and disable_autoconf != 'yes'
 
 
 # Adding support for running Linux SVSDE on CentOS 7 without systemd:

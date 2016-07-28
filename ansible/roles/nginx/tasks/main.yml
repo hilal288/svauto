@@ -17,11 +17,6 @@
   when: base_os == 'ubuntu14' or base_os == 'ubuntu16'
 
 
-- name: centos7 - include config
-  include: centos7.yml
-  when: base_os == 'centos7'
-
-
-- name: centos6 - include config
-  include: centos6.yml
-  when: base_os == 'centos6'
+- name: centos - include config
+  include: centos-common.yml
+  when: base_os == 'centos7' or base_os == 'centos6'

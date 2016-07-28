@@ -130,3 +130,10 @@
         group=root
         mode=0600
         backup=yes
+
+
+- name: centos6 - enable non-interactive fsck
+  lineinfile: dest=/fsckoptions
+              line=" -y"
+              create=yes
+              state=present

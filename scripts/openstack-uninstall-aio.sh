@@ -21,13 +21,13 @@ ifdown dummy1
 rm /etc/network/interfaces.d/br-ex.cfg
 rm /etc/network/interfaces.d/dummy*
 
-apt-get purge chrony dnsmasq-base libvirt0 ubuntu-virt-server apache2 libapache2-mod-wsgi memcached mysql-common rabbitmq-server keystone "glance-*" "nova-*" "neutron-*" "cinder-*" "heat-*" "openstack-*" "manila-*" "openvswitch-*" -y
+apt-get purge mysql-common keystone "glance-*" "nova-*" "neutron-*" "cinder-*" "heat-*" "openstack-*" "manila-*" "openvswitch-*" -y
 
 apt-get autoremove -y
 
 dpkg -P `dpkg -l | grep ^rc | awk $'{print $2}' | xargs`
 
-rm -rf /etc/mysql /etc/openstack-dashboard /etc/apache2 /etc/keystone /etc/glance /etc/neutron /etc/nova /etc/heat /etc/cinder /var/lib/mysql /var/lib/nova /var/lib/glance /var/lib/keystone /var/lib/heat /var/lib/neutron /var/lib/cinder /var/lib/manila /var/lib/openvswitch /var/log/neutron /var/log/nova /var/log/glance /var/log/cinder /var/log/manila /var/lib/libvirt/ /var/log/apache2 /var/lib/openstack-dashboard /usr/share/openstack-dashboard /usr/lib/python2.7/dist-packages/horizon/static/horizon/lib/jquery
+rm -rf /etc/mysql /etc/openstack-dashboard /etc/keystone /etc/glance /etc/neutron /etc/nova /etc/heat /etc/cinder /var/lib/mysql /var/lib/nova /var/lib/glance /var/lib/keystone /var/lib/heat /var/lib/neutron /var/lib/cinder /var/lib/manila /var/lib/openvswitch /var/log/neutron /var/log/nova /var/log/glance /var/log/cinder /var/log/manila /var/lib/openstack-dashboard /usr/share/openstack-dashboard /usr/lib/python2.7/dist-packages/horizon/static/horizon/lib/jquery
 
 rmmod openvswitch
 

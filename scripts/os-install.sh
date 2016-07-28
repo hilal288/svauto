@@ -29,7 +29,13 @@ echo
 echo
 echo "Installing Git and Ansible..."
 echo
-sudo apt -y install git ansible python-pycurl
+sudo apt -y install software-properties-common
+
+sudo add-apt-repository -y ppa:sandvine/packages
+
+sudo apt update
+
+sudo apt -y install git ansible
 
 
 echo
@@ -59,13 +65,11 @@ echo
 echo "You can now launch your Stacks! Be it a NFV L2 Bridge or just a Wordpress."
 echo "There are a few examples here at your home, for example, you can try:"
 echo
+echo " * Launch a very simple Ubuntu stack:"
+echo
 echo "source ~/demo-openrc.sh"
 echo
-echo "If you have 8~16G of RAM:"
-echo "heat stack-create demo -f ~/svauto/misc/os-heat-templates/sandvine-stack-0.1-centos.yaml"
-echo
-echo "If you have 2~4G of RAM:"
-echo "heat stack-create demo -f ~/svauto/misc/os-heat-templates/nfv-l2-bridge-basic-stack-ubuntu.yaml"
+echo "heat stack-create demo -f ~/svauto/misc/os-heat-templates/demo-stack.yaml"
 echo
 echo "Enjoy it!"
 echo
