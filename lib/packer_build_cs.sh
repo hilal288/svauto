@@ -244,6 +244,17 @@ packer_build_cs()
 
 				sed -i -e 's/{{sandvine_release}}/'$SANDVINE_RELEASE'/g' sandvine-helper.sh_template
 
+				sed -i -e 's/read\ FTP_USER//g' sandvine-helper.sh_template
+				sed -i -e 's/read\ \-s\ FTP_PASS//g' sandvine-helper.sh_template
+				sed -i -e 's/\-c\ \-\-user=\$FTP_USER\ \-\-password=\$FTP_PASS\ //g' sandvine-helper.sh_template
+
+				sed -i -e 's/{{svpts_image_name}}/'svpts-7.30-cs-1-centos7-amd64'/g' sandvine-helper.sh_template
+				sed -i -e 's/{{svsde_image_name}}/'svsde-7.45-cs-1-centos6-amd64'/g' sandvine-helper.sh_template
+				sed -i -e 's/{{svspb_image_name}}/'svspb-6.60-cs-1-centos6-amd64'/g' sandvine-helper.sh_template
+
+				sed -i -e 's/{{packages_server}}/'$SVAUTO_MAIN_HOST'/g' sandvine-helper.sh_template
+				sed -i -e 's/{{packages_path}}/images\/platform\/cloud-services\/'$RELEASE_CODE_NAME'\/current/g' sandvine-helper.sh_template
+
 				cat sandvine-helper.sh_template sandvine-helper.sh_tail > sandvine-cs-helper.sh
 
 				chmod +x sandvine-cs-helper.sh

@@ -21,9 +21,9 @@ export LC_ALL=C
 RELEASE="{{sandvine_release}}"
 
 
-SVPTS=cs-svpts-$RELEASE-centos7-amd64
-SVSDE=cs-svsde-$RELEASE-centos6-amd64
-SVSPB=cs-svspb-$RELEASE-centos6-amd64
+SVPTS="{{svpts_image_name}}"
+SVSDE="{{svsde_image_name}}"
+SVSPB="{{svspb_image_name}}"
 
 
 BOXES="$SVPTS $SVSDE $SVSPB"
@@ -204,9 +204,9 @@ then
         read -s FTP_PASS
 
 	echo
-	wget -c --user=$FTP_USER --password=$FTP_PASS ftp://ftp.support.sandvine.com/release/CloudServices/$RELEASE/$SVPTS-disk1.qcow2c
-	wget -c --user=$FTP_USER --password=$FTP_PASS ftp://ftp.support.sandvine.com/release/CloudServices/$RELEASE/$SVSPB-disk1.qcow2c
-	wget -c --user=$FTP_USER --password=$FTP_PASS ftp://ftp.support.sandvine.com/release/CloudServices/$RELEASE/$SVSDE-disk1.qcow2c
+	wget -c --user=$FTP_USER --password=$FTP_PASS ftp://{{packages_server}}/{{packages_path}}/$SVPTS-disk1.qcow2c
+	wget -c --user=$FTP_USER --password=$FTP_PASS ftp://{{packages_server}}/{{packages_path}}/$SVSPB-disk1.qcow2c
+	wget -c --user=$FTP_USER --password=$FTP_PASS ftp://{{packages_server}}/{{packages_path}}/$SVSDE-disk1.qcow2c
 
 	exit 0
 

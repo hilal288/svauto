@@ -3,6 +3,7 @@
 *.qcow2c
 *.vmdk
 *.retry
+*.log
 build-date.txt
 packer/build*
 packer/ubuntu*-tmpl

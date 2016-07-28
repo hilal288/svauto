@@ -344,6 +344,7 @@ fi
 if [ "$PACKER_BUILD_SANDVINE" == "yes" ]
 then
 
+	packer_build_sandvine_lab
 	packer_build_sandvine
 
 	exit 0

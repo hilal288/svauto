@@ -35,5 +35,5 @@ time ./svauto.sh --packer-build-cs --heat-templates-cs --libvirt-files --install
 
 
 # Sandvine Stock Images
-time ./svauto.sh --packer-build-official --heat-templates --libvirt-files --installation-helper --move2webroot --operation=sandvine
+time ./svauto.sh --packer-build-sandvine --heat-templates --libvirt-files --installation-helper --move2webroot --operation=sandvine
 #exit

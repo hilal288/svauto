@@ -189,6 +189,13 @@ packer_build_cs_release()
 
 				sed -i -e 's/{{sandvine_release}}/'$SANDVINE_RELEASE'/g' sandvine-helper.sh_template
 
+				sed -i -e 's/{{svpts_image_name}}/'cs-svpts-\\$RELEASE-centos7-amd64'/g' sandvine-helper.sh_template
+				sed -i -e 's/{{svsde_image_name}}/'cs-svsde-\\$RELEASE-centos7-amd64'/g' sandvine-helper.sh_template
+				sed -i -e 's/{{svspb_image_name}}/'cs-svspb-\\$RELEASE-centos7-amd64'/g' sandvine-helper.sh_template
+
+				sed -i -e 's/{{packages_server}}/'$PUBLIC_PACKAGES_SERVER'/g' sandvine-helper.sh_template
+				sed -i -e 's/{{packages_path}}/release\/CloudServices\/\$RELEASE/g' sandvine-helper.sh_template
+
 				cat sandvine-helper.sh_template sandvine-helper.sh_tail > cloudservices-helper.sh
 
 				chmod +x cloudservices-helper.sh
