@@ -20,7 +20,7 @@
     - mysql-server
     - MySQL-python
     - influxdb
-    - cloud-services-daemon
+    - svcloud-services-daemon
     - global-attributes-broker
 
 

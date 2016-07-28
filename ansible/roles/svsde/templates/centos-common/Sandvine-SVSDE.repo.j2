@@ -5,7 +5,7 @@
 [sandvine-svsde]
 name=Sandvine - SVSDE (Sandvine Service Delivery Engine)
 {% if release == 'prod' %}
-baseurl=ftp://{{ftp_username}}:{{ftp_password}}@ftp.support.sandvine.com/release/centos/{{ release_code_number }}/$releasever/os/$basearch/svsde
+baseurl=ftp://{{ftp_username}}:{{ftp_password}}@ftp.support.sandvine.com/release/CloudServices/{{ release_code_number }}/$releasever/svrepos/$basearch/svsde
 {% endif %}
 {% if (release == 'dev' and static_repo != 'true') %}
 baseurl=ftp://{{ packages_server }}/centos/{{ release_code_name }}/$releasever/svrepos/$basearch/svsde
