@@ -27,31 +27,31 @@ packer_build_sandvine_lab()
 	#
 
 	# Linux SVPTS 7.30 on CentOS 7
-	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svpts --version=7.30.0431 --product-variant=vpl-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
+	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svpts --version=7.30.0431 --product-variant=vpl-1 --operation=sandvine --qcow2 --vmdk --vhd --vm-xml --sha256sum \
 		--roles=cloud-init,bootstrap,grub-conf,svpts,vmware-tools,post-cleanup-image --disable-autoconf --static-repo --versioned-repo \
 		--packer-max-tries=3 --setup-default-interface-script $DRY_RUN_OPT
 
 
 	# Linux SVPTS 7.30 on CentOS 6 with Linux 3.18 from Xen 4.6 official repo
-	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svpts --version=7.30.0431 --product-variant=vpl-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
+	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svpts --version=7.30.0431 --product-variant=vpl-1 --operation=sandvine --qcow2 --vmdk --vhd --vm-xml --sha256sum \
 		--roles=centos-xen,cloud-init,bootstrap,grub-conf,svpts,vmware-tools,post-cleanup-image --disable-autoconf --static-repo --versioned-repo \
 		--packer-max-tries=3 $DRY_RUN_OPT
 
 
 	# Linux SVSDE 7.45 on CentOS 6
-	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svsde --version=7.45.0305 --product-variant=vpl-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
+	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svsde --version=7.45.0305 --product-variant=vpl-1 --operation=sandvine --qcow2 --vmdk --vhd --vm-xml --sha256sum \
 		--roles=cloud-init,bootstrap,grub-conf,svsde,vmware-tools,post-cleanup-image --disable-autoconf --static-repo --versioned-repo \
 		--packer-max-tries=3 $DRY_RUN_OPT
 
 
 	# Linux SVSDE 7.45 on CentOS 7
-	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svsde --version=7.45.0305 --product-variant=vpl-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
+	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svsde --version=7.45.0305 --product-variant=vpl-1 --operation=sandvine --qcow2 --vmd --vhd --vm-xml --sha256sum \
 		--roles=cloud-init,bootstrap,grub-conf,svsde,vmware-tools,post-cleanup-image --disable-autoconf --static-repo --versioned-repo \
 		--packer-max-tries=3 --setup-default-interface-script $DRY_RUN_OPT
 
 
 	# Linux SVSPB 6.65 on CentOS 6
-	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svspb --version=6.65.0019 --product-variant=vpl-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
+	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svspb --version=6.65.0019 --product-variant=vpl-1 --operation=sandvine --qcow2 --vmd --vhd --vm-xml --sha256sum \
 		--roles=cloud-init,bootstrap,grub-conf,svspb,vmware-tools,post-cleanup-image,power-cycle --disable-autoconf --static-repo --versioned-repo \
 		--packer-max-tries=3 $DRY_RUN_OPT
 
