@@ -95,8 +95,9 @@
 		<!-- Provide a list of home mobile country code -->
 		<HomeMCC>001</HomeMCC>
 		<!-- Provide a list of default group -->
-		<DefaultPlan group="Basic" default="Basic1"/>
-		<DefaultPlan group="NoQuota" default="NoQuota1"/>
+{% for group in mdmQMGroup %}
+                <DefaultPlan group="{{group.name}}" default="{{group.default}}"/>
+{% endfor %}
 	</MobileDataManagement>
 {% endif %}
 

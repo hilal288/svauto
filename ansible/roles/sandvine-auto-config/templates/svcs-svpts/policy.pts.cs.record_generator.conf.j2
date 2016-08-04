@@ -18,6 +18,13 @@ package record_generator \
     subscriber_tx_count_mode "pts_received" \
     max_event_attributes "14" \
     event_bulk_size "5" \
+{% if mdmQM is defined %}
+{% for mywheel in mdmQM %}
+    service "{{loop.index}}" \
+    name "{{mywheel.name}}" \
+    time_interval "{{ rec_gen_time_interval }}" \
+{% endfor %}
+{% else %}
     service "1" \
     name "Internet" \
     time_interval "{{ rec_gen_time_interval }}" \
@@ -27,6 +34,7 @@ package record_generator \
     service "3" \
     name "Roaming" \
     time_interval "{{ rec_gen_time_interval }}"
+{% endif %}
 
 ## Store HTTP Host and RTTs
 table "Flow_Info" \
