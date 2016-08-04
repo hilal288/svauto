@@ -250,10 +250,10 @@ os_cinder: "dummy2"
 
 br_mode: "LBR"
 
-linuxnet_interface_driver: "nova.network.linux_net.NeutronLinuxBridgeInterfaceDriver"
+linuxnet_interface_driver: "nova.network.linux_net.LinuxBridgeInterfaceDriver"
 neutron_interface_driver: "neutron.agent.linux.interface.BridgeInterfaceDriver"
 mechanism_drivers: "linuxbridge"
-firewall_driver: "neutron.agent.linux.iptables_firewall.IptablesFirewallDriver"
+firewall_driver: "iptables"
 
 public_addr: "controller-1.yourdomain.com"
 controller_addr: "controller-1.yourdomain.com"
