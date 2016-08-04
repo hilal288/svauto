@@ -532,7 +532,6 @@ then
 #	echo -n "Type the Subscriber IPv4 Subnet/Mask (for subnets.txt on the PTS): "
 #	read INT_SUBNET
 
-
 	echo
 	echo -n "Type the username with password-less SSH access to the lab's Instances: "
 	read REGULAR_SYSTEM_USER
@@ -582,6 +581,43 @@ then
 	sed -i -e 's/packages_server:.*/packages_server: \"'$SVAUTO_MAIN_HOST'\"/g' ansible/group_vars/all
 
 	sed -i -e 's/license_server:.*/license_server: \"'$LICENSE_SERVER'\"/g' ansible/group_vars/all
+
+	echo "### Adding MDM information ###" >> ansible/group_vars/all
+        echo "mdmQMGroup:" >> ansible/group_vars/all
+	echo "    - { name: \"NoQuota\", default: \"NoQuota1\" }" >> ansible/group_vars/all
+	echo "    - { name: \"Basic\", default: \"Basic1\" }" >> ansible/group_vars/all
+        echo "mdmQM:" >> ansible/group_vars/all
+        echo "  - wheel:" >> ansible/group_vars/all
+        echo "    name: \"Internet\"" >> ansible/group_vars/all
+        echo "    sharedQuota: \"100GB\"" >> ansible/group_vars/all
+        echo "    reportThreshold: \"25%,50%,75%,100%\"" >> ansible/group_vars/all
+        echo "    rollover: \"1\"" >> ansible/group_vars/all
+        echo "    plan: " >> ansible/group_vars/all
+        echo "    - { name: \"NoQuota1\", limit: \"1B\", event_thresholds: [\"100\"]} " >> ansible/group_vars/all
+        echo "    - { name: \"Basic1\", limit: \"1GB\", event_thresholds: [\"25\", \"50\", \"75\", \"100\"]} " >> ansible/group_vars/all
+        echo "    - { name: \"Basic2\", limit: \"2GB\", event_thresholds: [\"25\", \"50\", \"75\", \"100\"]} " >> ansible/group_vars/all
+        echo "    - { name: \"Basic3\", limit: \"3GB\", event_thresholds: [\"25\", \"50\", \"75\", \"100\"]} " >> ansible/group_vars/all
+        echo "  - wheel:" >> ansible/group_vars/all
+        echo "    name: \"Intranet\"" >> ansible/group_vars/all
+        echo "    sharedQuota: \"1000GB\"" >> ansible/group_vars/all
+        echo "    reportThreshold: \"25%,50%,75%,100%\"" >> ansible/group_vars/all
+        echo "    rollover: \"1\"" >> ansible/group_vars/all
+        echo "    plan: " >> ansible/group_vars/all
+        echo "    - { name: \"NoQuota1\", limit: \"1B\", event_thresholds: [\"100\"]} " >> ansible/group_vars/all
+        echo "    - { name: \"Basic1\", limit: \"10GB\", event_thresholds: [\"25\", \"50\", \"75\", \"100\"]} " >> ansible/group_vars/all
+        echo "    - { name: \"Basic2\", limit: \"20GB\", event_thresholds: [\"25\", \"50\", \"75\", \"100\"]} " >> ansible/group_vars/all
+        echo "    - { name: \"Basic3\", limit: \"30GB\", event_thresholds: [\"25\", \"50\", \"75\", \"100\"]} " >> ansible/group_vars/all
+        echo "  - wheel:" >> ansible/group_vars/all
+        echo "    name: \"Roaming\"" >> ansible/group_vars/all
+        echo "    sharedQuota: \"10GB\"" >> ansible/group_vars/all
+        echo "    reportThreshold: \"25%,50%,75%,100%\"" >> ansible/group_vars/all
+        echo "    rollover: \"1\"" >> ansible/group_vars/all
+        echo "    plan: " >> ansible/group_vars/all
+        echo "    - { name: \"NoQuota1\", limit: \"1B\", event_thresholds: [\"100\"]} " >> ansible/group_vars/all
+        echo "    - { name: \"Basic1\", limit: \"100MB\", event_thresholds: [\"25\", \"50\", \"75\", \"100\"]} " >> ansible/group_vars/all
+        echo "    - { name: \"Basic2\", limit: \"200MB\", event_thresholds: [\"25\", \"50\", \"75\", \"100\"]} " >> ansible/group_vars/all
+	echo "    - { name: \"Basic3\", limit: \"300MB\", event_thresholds: [\"25\", \"50\", \"75\", \"100\"]} " >> ansible/group_vars/all
+        echo "" >> ansible/group_vars/all
 
 
 	git checkout ansible/hosts
