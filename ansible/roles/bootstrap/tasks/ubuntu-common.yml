@@ -38,6 +38,7 @@
     - nmap
     - flip
     - lshw
+    - vlan
     - gdisk
     - unzip
     - ngrep
