@@ -39,11 +39,10 @@
   when: item.os_project == "keystone"
   with_items: '{{mysql_databases}}'
   notify: reload-apache2
-
+  tags: keystone_conf
 
 - name: Populating Keystone Database
   shell: su -s /bin/sh -c "keystone-manage db_sync" keystone
-
 
 - name: Initialize Fernet keys
   shell: keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone
@@ -96,6 +95,11 @@
         backup=yes
   notify: reload-apache2
 
+
+- name: Checking whether to configure ldap
+  include: keystone-ldap.yml
+  when: ldap_enabled is defined and ldap_enabled == 'yes'
+  tags: keystone_conf
 
 - meta: flush_handlers
 

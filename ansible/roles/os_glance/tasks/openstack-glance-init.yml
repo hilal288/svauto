@@ -36,4 +36,4 @@
   command: "{{item}}"
   with_items:
   - openstack user create --domain default --password "{{service_password}}" --email glance@{{your_domain}} glance
-  - openstack role add --project service --user glance admin
+  - openstack role add --project service --user glance --user-domain default admin

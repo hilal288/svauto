@@ -36,4 +36,4 @@
   command: "{{item}}"
   with_items:
   - openstack user create --domain default --password "{{service_password}}" --email neutron@{{your_domain}} neutron
-  - openstack role add --project service --user neutron admin
+  - openstack role add --project service --user neutron --user-domain default admin

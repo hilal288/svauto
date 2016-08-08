@@ -40,4 +40,4 @@
   command: "{{item}}"
   with_items:
   - openstack user create --domain default --password "{{service_password}}" --email cinder@{{your_domain}} cinder
-  - openstack role add --project service --user cinder admin
+  - openstack role add --project service --user cinder --user-domain default admin
