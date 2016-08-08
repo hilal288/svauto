@@ -334,7 +334,7 @@ nova_api_db_pass: "novaAPIPass"
 #           openstack project create -domain company.com jdoe
 #           openstack role add --project jdoe --user jdoe --user-domain company.com user
 
-ldap_enabled: "yes"
+ldap_enabled: "no"
 ldap_url: "ldap://<ldap ip 1>,ldap://<ldap ip 2>"
 ldap_user: ""
 ldap_password: ""
