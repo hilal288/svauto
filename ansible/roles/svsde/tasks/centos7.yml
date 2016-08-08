@@ -16,8 +16,6 @@
   firewalld: port={{item}} permanent=true state=enabled
   with_items:
     - 22/tcp
-    - 80/tcp
-    - 443/tcp
   when: is_container != 'yes' and disable_autoconf != 'yes'
 
 - firewalld: zone=trusted interface=eth1 permanent=true state=enabled
