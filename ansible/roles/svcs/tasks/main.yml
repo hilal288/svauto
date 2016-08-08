@@ -12,65 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: centos6 - yum installing Cloud Services
-  yum: pkg={{item}} state=latest
-  with_items:
-    - redis
-    - mysql
-    - mysql-server
-    - MySQL-python
-    - influxdb
-    - svcloud-services-daemon
-    - global-attributes-broker
+- include: centos6.yml
+  when: base_os == 'centos6'
 
 
-- name: centos6 - managing Firewall Rules
-  command: "{{item}}"
-  with_items:
-  - lokkit --port=22:tcp --update
-  - lokkit --port=80:tcp --update
-  - lokkit --port=443:tcp --update
-  - lokkit -t eth1
-  - service iptables save
-  when: is_container != 'yes'
+- include: centos7.yml
+  when: base_os == 'centos7'
 
 
-- name: centos6 - service enabling Cloud Services daemons
-  service: name={{item}} state=started enabled=yes
-  with_items:
-    - csd
-    - influxdb
-    - redis
-    - mysqld
-
-
-- name: centos6 - mysql creating Cloud Services database
-  mysql_db: name=cs state=present
-  register: cs_db_created
-
-- name: centos6 - mysql creating Cloud Services users and permissions
-  mysql_user:
-    host="{{cs_db_host}}"
-    name="{{cs_db_user}}"
-    password="{{cs_db_pass}}"
-    priv="cs.*:ALL,GRANT"
-    state=present
-  when: cs_db_created|changed
-
-- name: centos6 - copy Cloud Services database structure dump file
-  copy: src=mysql-schema.sql dest=/tmp
-  when: cs_db_created|changed
-
-- name: centos6 - mysql creating Cloud Services database structure
-  mysql_db: name=cs state=import target=/tmp/mysql-schema.sql
-  when: cs_db_created|changed
-
-
-- name: centos6 - workaround for InfluxDB Issue 3944
-  file: src=/lib64/libbz2.so.1.0.4
-        dest=/lib64/libbz2.so.1.0
-        state=link
-
-
-- name: centos6 - cleanup YUM local cache
-  command: yum clean all
+- include: centos-common.yml
+  when: base_os == 'centos7' or base_os == 'centos6'
