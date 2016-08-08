@@ -345,5 +345,5 @@ ldap_user_objectclass: ""
 ldap_user_name_attribute: ""
 # Note this is just a name and does not HAVE to match any ldap domain
 ldap_keystone_domain: "company.com"
-ldap_horizon_default_domain: "yes"
+ldap_horizon_default_domain: "no"
 ldap_keystone_domain_description: "Company Domain"
