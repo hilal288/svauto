@@ -73,7 +73,7 @@ packer_build_sandvine()
 			cp misc/os-heat-templates/sandvine-stack-nubo-0.1* tmp/sv
 
 			sed -i -e 's/{{pts_image}}/svpts-7.30.0431-vpl-1-centos7-amd64/g' tmp/sv/*.yaml
-			sed -i -e 's/{{sde_image}}/svsde-7.45.0305-vpl-1-centos6-amd64/g' tmp/sv/*.yaml
+			sed -i -e 's/{{sde_image}}/svsde-7.45.0305-vpl-1-centos7-amd64/g' tmp/sv/*.yaml
 			sed -i -e 's/{{spb_image}}/svspb-6.65.0019-vpl-1-centos6-amd64/g' tmp/sv/*.yaml
 			#sed -i -e 's/{{csd_image}}/svcsd-16.06.0013-csd-1-centos6-amd64/g' tmp/sv/*.yaml
 
@@ -100,7 +100,7 @@ packer_build_sandvine()
 
 			find packer/build* -name "*.xml" -exec cp {} tmp/sv/ \;
 
-			sed -i -e 's/{{sde_image}}/svsde-7.45-vpl-1-centos6-amd64/g' tmp/sv/libvirt-qemu.hook
+			sed -i -e 's/{{sde_image}}/svsde-7.45-vpl-1-centos7-amd64/g' tmp/sv/libvirt-qemu.hook
 
 		fi
 
@@ -189,8 +189,8 @@ packer_build_sandvine()
 				sed -i -e 's/read\ \-s\ FTP_PASS//g' sandvine-helper.sh_template
 				sed -i -e 's/\-c\ \-\-user=\$FTP_USER\ \-\-password=\$FTP_PASS\ //g' sandvine-helper.sh_template
 
-                                sed -i -e 's/{{svpts_image_name}}/'svpts-7.30.0431-vpl-1-centos6-amd64'/g' sandvine-helper.sh_template
-                                sed -i -e 's/{{svsde_image_name}}/'svsde-7.45.0305-vpl-1-centos6-amd64'/g' sandvine-helper.sh_template
+                                sed -i -e 's/{{svpts_image_name}}/'svpts-7.30.0431-vpl-1-centos7-amd64'/g' sandvine-helper.sh_template
+                                sed -i -e 's/{{svsde_image_name}}/'svsde-7.45.0305-vpl-1-centos7-amd64'/g' sandvine-helper.sh_template
                                 sed -i -e 's/{{svspb_image_name}}/'svspb-6.65.0019-vpl-1-centos6-amd64'/g' sandvine-helper.sh_template
 
                                 sed -i -e 's/{{packages_server}}/'$SVAUTO_MAIN_HOST'/g' sandvine-helper.sh_template

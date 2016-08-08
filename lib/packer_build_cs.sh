@@ -132,7 +132,7 @@ packer_build_cs()
 			cp misc/os-heat-templates/sandvine-stack-nubo-0.1* tmp/cs
 
 			sed -i -e 's/{{pts_image}}/svpts-7.30-cs-1-centos7-amd64/g' tmp/cs/*.yaml
-			sed -i -e 's/{{sde_image}}/svsde-7.45-cs-1-centos6-amd64/g' tmp/cs/*.yaml
+			sed -i -e 's/{{sde_image}}/svsde-7.45-cs-1-centos7-amd64/g' tmp/cs/*.yaml
 			sed -i -e 's/{{spb_image}}/svspb-6.60-cs-1-centos6-amd64/g' tmp/cs/*.yaml
 			#sed -i -e 's/{{csd_image}}/svcsd-7.40-csd-cs-1-centos6-amd64/g' tmp/cs/*.yaml
 
@@ -159,7 +159,7 @@ packer_build_cs()
 
 			find packer/build* -name "*.xml" -exec cp {} tmp/cs/ \;
 
-			sed -i -e 's/{{sde_image}}/svsde-7.45-cs-1-centos6-amd64/g' tmp/cs/libvirt-qemu.hook
+			sed -i -e 's/{{sde_image}}/svsde-7.45-cs-1-centos7-amd64/g' tmp/cs/libvirt-qemu.hook
 
 		fi
 
@@ -249,7 +249,7 @@ packer_build_cs()
 				sed -i -e 's/\-c\ \-\-user=\$FTP_USER\ \-\-password=\$FTP_PASS\ //g' sandvine-helper.sh_template
 
 				sed -i -e 's/{{svpts_image_name}}/'svpts-7.30-cs-1-centos7-amd64'/g' sandvine-helper.sh_template
-				sed -i -e 's/{{svsde_image_name}}/'svsde-7.45-cs-1-centos6-amd64'/g' sandvine-helper.sh_template
+				sed -i -e 's/{{svsde_image_name}}/'svsde-7.45-cs-1-centos7-amd64'/g' sandvine-helper.sh_template
 				sed -i -e 's/{{svspb_image_name}}/'svspb-6.60-cs-1-centos6-amd64'/g' sandvine-helper.sh_template
 
 				sed -i -e 's/{{packages_server}}/'$SVAUTO_MAIN_HOST'/g' sandvine-helper.sh_template

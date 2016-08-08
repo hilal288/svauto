@@ -74,7 +74,7 @@ packer_build_sandvine_lab()
 
 			find packer/build* -name "*.xml" -exec cp {} tmp/sv/ \;
 
-			sed -i -e 's/{{sde_image}}/svsde-7.45-vpl-1-centos6-amd64/g' tmp/sv/libvirt-qemu.hook
+			sed -i -e 's/{{sde_image}}/svsde-7.45-vpl-1-centos7-amd64/g' tmp/sv/libvirt-qemu.hook
 
 		fi
 
