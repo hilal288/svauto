@@ -42,12 +42,12 @@ packer_build_cs()
 		--packer-max-tries=3
 
 	# SDE 7.45 on CentOS 7 + Cloud Services SDE only - No Cloud Services daemon here
-	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svsde --version=7.45 --product-variant=sde-cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svsde --version=7.45 --product-variant=isolated-svsde-cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
 		--roles=cloud-init,bootstrap,grub-conf,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3
 
 	# Cloud Services Daemon 16.11 (back / front) on CentOS 7 - No SDE here
-	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svcsd --version=16.11 --product-variant=svcs-csd-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svcsd --version=16.11 --product-variant=isolated-svcsd-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
 		--roles=centos-xen,cloud-init,bootstrap,grub-conf,svcs,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3
 
