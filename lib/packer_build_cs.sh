@@ -135,7 +135,7 @@ packer_build_cs()
 			sed -i -e 's/{{pts_image}}/svpts-7.30-cs-1-centos7-amd64/g' tmp/cs/*.yaml
 			sed -i -e 's/{{sde_image}}/svsde-7.45-cs-1-centos7-amd64/g' tmp/cs/*.yaml
 			sed -i -e 's/{{spb_image}}/svspb-6.65-cs-1-centos6-amd64/g' tmp/cs/*.yaml
-			#sed -i -e 's/{{csd_image}}/svcsd-7.40-csd-cs-1-centos6-amd64/g' tmp/cs/*.yaml
+			sed -i -e 's/{{csd_image}}/svcsd-16.11-isolated-svcsd-1-centos7-amd64/g' tmp/cs/*.yaml
 
 		fi
 
@@ -224,7 +224,7 @@ packer_build_cs()
 				cp tmp/cs/sandvine-stack-0.1-three-vlan-1.yaml $WEB_ROOT_CS/cloudservices-stack-0.1-vlan-1.yaml
 				cp tmp/cs/sandvine-stack-0.1-three-rad-1.yaml $WEB_ROOT_CS/cloudservices-stack-0.1-rad-1.yaml
 				cp tmp/cs/sandvine-stack-nubo-0.1-stock-gui-1.yaml $WEB_ROOT_CS/cloudservices-stack-nubo-0.1-stock-gui-1.yaml
-				#cp tmp/cs/sandvine-stack-0.1-four-1.yaml $WEB_ROOT_CS/cloudservices-stack-0.1-four-1.yaml
+				cp tmp/cs/sandvine-stack-0.1-four-1.yaml $WEB_ROOT_CS/cloudservices-stack-0.1-four-1.yaml
 
 			fi
 
