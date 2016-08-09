@@ -40,10 +40,10 @@
   command: "{{item}}"
   with_items:
   - openstack user create --domain default --password "{{service_password}}" --email heat@{{your_domain}} heat
-  - openstack role add --project service --user heat admin
+  - openstack role add --project service --user heat --user-domain default admin
   - openstack domain create --description "Stack projects and users" heat
   - openstack user create --domain heat --password "{{service_password}}" heat_domain_admin
-  - openstack role add --domain heat --user heat_domain_admin admin
+  - openstack role add --domain heat --user heat_domain_admin --user-domain heat admin
   - openstack role create heat_stack_owner
-  - openstack role add --project demo --user demo heat_stack_owner
+  - openstack role add --project demo --user demo --user-domain default heat_stack_owner
   - openstack role create heat_stack_user

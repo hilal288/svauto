@@ -18,6 +18,7 @@
 - name: Installing Horizon Dashboard
   apt: name=openstack-dashboard state=latest
   notify: reload-apache2
+  tags: horizon
 
 
 - name: Updating local_settings.py
@@ -28,6 +29,7 @@
             mode=0644
             backup=yes
   notify: reload-apache2
+  tags: horizon
 
 
 - name: Updating openstack-dashboard.conf
@@ -38,11 +40,13 @@
             mode=0644
             backup=yes
   notify: reload-apache2
+  tags: horizon
 
 
 - name: Running manage.py collectstatic and compress
   shell: cd /usr/share/openstack-dashboard ; python manage.py collectstatic --noinput ; python manage.py compress
   notify: reload-apache2
+  tags: horizon
 
 
 - meta: flush_handlers
