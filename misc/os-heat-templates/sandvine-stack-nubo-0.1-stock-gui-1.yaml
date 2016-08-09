@@ -7,7 +7,7 @@ description: >
   We have 4 Instances:
 
   * PTS - CentOS 7
-  * SDE - CentOS 6
+  * SDE - CentOS 7
   * SPB - CentOS 6
   * GUI - Windows or Android
 
@@ -50,17 +50,17 @@ parameters:
     description: Public Network with Floating IP addresses
     default: "ext-net"
 
+  pts_image:
+    type: string
+    label: "PTS Image (default '{{pts_image}}')"
+    description: "PTS Image"
+    default: "{{pts_image}}"
+
   sde_image:
     type: string
     label: "SDE Image (default '{{sde_image}}')"
     description: "SDE Image"
     default: "{{sde_image}}"
-
-  pts_image:
-    type: string
-    label: "PTS L2 Bridge Image (default '{{pts_image}}')"
-    description: "PTS Image"
-    default: "{{pts_image}}"
 
   spb_image:
     type: string

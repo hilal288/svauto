@@ -46,7 +46,7 @@ parameters:
     type: string
     label: "Ubuntu Server - 64-bit"
     description: "Ubuntu - Xenial Xerus - LTS"
-    default: "Ubuntu 16.04 LTS - Xenial Xerus - 64-bit - Cloud Based Image"
+    default: "Ubuntu 16.04.1 LTS - Xenial Xerus - 64-bit - Cloud Based Image"
 
 resources:
   rtr:

@@ -7,9 +7,9 @@ description: >
   We have 4 Instances:
 
   * PTS - CentOS 7
-  * SDE - CentOS 6
+  * SDE - CentOS 7
   * SPB - CentOS 6
-  * CSD - CentOS 6
+  * CSD - CentOS 7
 
 
   We want to wire them as:
@@ -53,7 +53,7 @@ parameters:
 
   pts_image:
     type: string
-    label: "PTS L2 Bridge Image (default '{{pts_image}}')"
+    label: "PTS Image (default '{{pts_image}}')"
     description: "PTS Image"
     default: "{{pts_image}}"
 
