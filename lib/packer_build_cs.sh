@@ -41,15 +41,15 @@ packer_build_cs()
 		--roles=cloud-init,bootstrap,grub-conf,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3
 
-	# SDE 7.30 on CentOS 6 + Cloud Services SDE only - No Cloud Services daemon here!
-#	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svsde --version=7.30 --product-variant=sde-cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-#		--roles=cloud-init,bootstrap,grub-conf,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
-#		--packer-max-tries=3
+	# SDE 7.45 on CentOS 7 + Cloud Services SDE only - No Cloud Services daemon here
+	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svsde --version=7.45 --product-variant=sde-cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+		--roles=cloud-init,bootstrap,grub-conf,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
+		--packer-max-tries=3
 
-	# Cloud Services Daemon 7.40 (back / front) on CentOS 6 - No SDE here!
-#	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svcsd --version=7.40 --product-variant=csd-cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-#		--roles=centos-xen,cloud-init,bootstrap,grub-conf,svcs,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
-#		--packer-max-tries=3
+	# Cloud Services Daemon 16.11 (back / front) on CentOS 7 - No SDE here
+	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svcsd --version=16.11 --product-variant=svcs-csd-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+		--roles=centos-xen,cloud-init,bootstrap,grub-conf,svcs,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
+		--packer-max-tries=3
 
 
 	#
@@ -81,22 +81,23 @@ packer_build_cs()
 #	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svspb --version=7.00 --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
 #		--roles=cloud-init,bootstrap,grub-conf,svspb,vmware-tools,post-cleanup-image --versioned-repo $DRY_RUN_OPT --operation=cloud-services
 
+
 	#
 	# BUILD ENVIRONMENT
 	#
 
-	# Cloud Services Build Server (back / front) on CentOS 6 (new Golang 1.5)
+	# Cloud Services Build Server (back / front) on CentOS 6 (old Golang 1.5)
 	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=centos --version=6 --product-variant=build-srv-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
 	        --roles=centos-xen,cloud-init,bootstrap,grub-conf,golang-env,nodejs-env,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3
 
-	# Cloud Services Build Server (back / front) on CentOS 7 (old Golang 1.4)
+	# Cloud Services Build Server (back / front) on CentOS 7 (new Golang 1.6)
 	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=centos --version=7 --product-variant=build-srv-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
 	        --roles=centos-xen,cloud-init,bootstrap,grub-conf,golang-env,nodejs-env,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3
 
 
-	# Cloud Services Build Server (back) on CentOS 6 (new Golang 1.5)
+	# Cloud Services Build Server (back) on CentOS 6 (old Golang 1.5)
 #	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=centos --version=6 --product-variant=go-build-srv-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
 #	        --roles=centos-xen,cloud-init,bootstrap,grub-conf,golang-env,vmware-tools,post-cleanup-image $DRY_RUN_OPT
 
@@ -105,7 +106,7 @@ packer_build_cs()
 #	        --roles=centos-xen,cloud-init,bootstrap,grub-conf,nodejs-env,vmware-tools,post-cleanup-image $DRY_RUN_OPT
 
 
-	# Cloud Services Build Server (back) on CentOS 7 (old Golang 1.4)
+	# Cloud Services Build Server (back) on CentOS 7 (new Golang 1.6)
 #	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=centos --version=7 --product-variant=go-build-srv-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
 #	        --roles=centos-xen,cloud-init,bootstrap,grub-conf,golang-env,vmware-tools,post-cleanup-image $DRY_RUN_OPT
 
@@ -133,7 +134,7 @@ packer_build_cs()
 
 			sed -i -e 's/{{pts_image}}/svpts-7.30-cs-1-centos7-amd64/g' tmp/cs/*.yaml
 			sed -i -e 's/{{sde_image}}/svsde-7.45-cs-1-centos7-amd64/g' tmp/cs/*.yaml
-			sed -i -e 's/{{spb_image}}/svspb-6.60-cs-1-centos6-amd64/g' tmp/cs/*.yaml
+			sed -i -e 's/{{spb_image}}/svspb-6.65-cs-1-centos6-amd64/g' tmp/cs/*.yaml
 			#sed -i -e 's/{{csd_image}}/svcsd-7.40-csd-cs-1-centos6-amd64/g' tmp/cs/*.yaml
 
 		fi
@@ -250,7 +251,7 @@ packer_build_cs()
 
 				sed -i -e 's/{{svpts_image_name}}/'svpts-7.30-cs-1-centos7-amd64'/g' sandvine-helper.sh_template
 				sed -i -e 's/{{svsde_image_name}}/'svsde-7.45-cs-1-centos7-amd64'/g' sandvine-helper.sh_template
-				sed -i -e 's/{{svspb_image_name}}/'svspb-6.60-cs-1-centos6-amd64'/g' sandvine-helper.sh_template
+				sed -i -e 's/{{svspb_image_name}}/'svspb-6.65-cs-1-centos6-amd64'/g' sandvine-helper.sh_template
 
 				sed -i -e 's/{{packages_server}}/'$SVAUTO_MAIN_HOST'/g' sandvine-helper.sh_template
 				sed -i -e 's/{{packages_path}}/images\/platform\/cloud-services\/'$RELEASE_CODE_NAME'\/current/g' sandvine-helper.sh_template
