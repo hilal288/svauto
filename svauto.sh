@@ -265,8 +265,9 @@ fi
 if [ "$BUILD_YUM_REPO" == "yes" ]
 then
 
-	build_yum_repo_agawa
-	build_yum_repo_niagara
+#       build_yum_repo_agawa
+#       build_yum_repo_niagara
+	build_yum_repo_yukon
 
 	exit 0
 

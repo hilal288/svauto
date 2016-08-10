@@ -22,6 +22,7 @@ source lib/move2webroot.sh
 
 source lib/build-yum-repo-agawa.sh
 source lib/build-yum-repo-niagara.sh
+source lib/build-yum-repo-yukon.sh
 
 source lib/packer_build_cs_release.sh
 source lib/packer_build_cs.sh
