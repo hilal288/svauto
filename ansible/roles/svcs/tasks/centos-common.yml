@@ -24,9 +24,10 @@
 - name: centos - service enabling Cloud Services daemons
   service: name={{item}} state=started enabled=yes
   with_items:
-    - csd
-    - influxdb
     - redis
+    - influxdb
+    - csd
+    - global-attributes-broker
 
 
 - name: centos - sql creating Cloud Services database
