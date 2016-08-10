@@ -26,8 +26,8 @@ packer_build_cs()
 	# STABLE
 	#
 
-	# SDE 7.45 on CentOS 7 + Cloud Services SDE + Cloud Services Daemon (back / front)
-	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svsde --version=7.45 --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+	# SDE 7.50 on CentOS 7 + Cloud Services SDE + Cloud Services Daemon (back / front)
+	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svsde --version=7.50 --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
 		--roles=cloud-init,bootstrap,grub-conf,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3
 
@@ -41,8 +41,8 @@ packer_build_cs()
 		--roles=cloud-init,bootstrap,grub-conf,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3
 
-	# SDE 7.45 on CentOS 7 + Cloud Services SDE only - No Cloud Services daemon here
-	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svsde --version=7.45 --product-variant=isolated-svsde-cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+	# SDE 7.50 on CentOS 7 + Cloud Services SDE only - No Cloud Services daemon here
+	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svsde --version=7.50 --product-variant=isolated-svsde-cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
 		--roles=cloud-init,bootstrap,grub-conf,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3
 
@@ -60,26 +60,6 @@ packer_build_cs()
 	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svpts --version=7.30 --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
 		--roles=centos-xen,cloud-init,bootstrap,grub-conf,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3
-
-	# SDE 7.50 on CentOS 7
-#	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svsde --version=7.50 --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-#		--roles=centos-xen,cloud-init,bootstrap,grub-conf,svsde,svusagemanagement,svsubscribermapping,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services
-
-	# SDE 7.50 on CentOS 7
-#	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svsde --version=7.50 --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-#		--roles=centos-xen,cloud-init,bootstrap,grub-conf,svsde,svusagemanagement,svsubscribermapping,vmware-tools,post-cleanup-image --versioned-repo $DRY_RUN_OPT --operation=cloud-services
-
-       	# SDE 7.45 on CentOS 6
-#	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svsde --version=7.45 --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-#		--roles=cloud-init,bootstrap,grub-conf,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,vmware-tools,post-cleanup-image --versioned-repo $DRY_RUN_OPT --operation=cloud-services
-
-       	# SDE 7.40 on CentOS 6
-#	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svsde --version=7.40 --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-#		--roles=cloud-init,bootstrap,grub-conf,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,vmware-tools,post-cleanup-image --versioned-repo $DRY_RUN_OPT --operation=cloud-services
-
-	# SPB 7.00 on CentOS 6
-#	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svspb --version=7.00 --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-#		--roles=cloud-init,bootstrap,grub-conf,svspb,vmware-tools,post-cleanup-image --versioned-repo $DRY_RUN_OPT --operation=cloud-services
 
 
 	#

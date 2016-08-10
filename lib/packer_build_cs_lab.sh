@@ -26,8 +26,8 @@ packer_build_cs_lab()
 	# STABLE
 	#
 
-	# SDE 7.45 on CentOS 7 + Cloud Services SDE + Cloud Services Daemon (back / front) - Labified
-	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svsde --version=7.45 --product-variant=cs-1 --operation=cloud-services --qcow2 --vmdk --vhd --vm-xml --sha256sum \
+	# SDE 7.50 on CentOS 7 + Cloud Services SDE + Cloud Services Daemon (back / front) - Labified
+	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svsde --version=7.50 --product-variant=cs-1 --operation=cloud-services --qcow2 --vmdk --vhd --vm-xml --sha256sum \
 		--roles=cloud-init,bootstrap,grub-conf,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,sandvine-auto-config,vmware-tools,labify,post-cleanup-image $DRY_RUN_OPT \
 		--setup-default-interface-script --packer-max-tries=3
 
@@ -60,7 +60,7 @@ packer_build_cs_lab()
 
 			find packer/build* -name "*.xml" -exec cp {} tmp/cs/ \;
 
-			sed -i -e 's/{{sde_image}}/svsde-7.45-cs-1-centos6-amd64/g' tmp/cs/libvirt-qemu.hook
+			sed -i -e 's/{{sde_image}}/svsde-7.50-cs-1-centos6-amd64/g' tmp/cs/libvirt-qemu.hook
 
 		fi
 

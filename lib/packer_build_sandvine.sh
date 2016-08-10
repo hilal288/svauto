@@ -17,6 +17,11 @@
 packer_build_sandvine()
 {
 
+	PTS_VERSION="7.30.0464"
+	SDE_VERSION="7.50.0085"
+	SPB_VERSION="6.65.0053"
+
+
 	if [ "$DRY_RUN" == "yes" ]; then
 		export DRY_RUN_OPT="--dry-run"
 	fi
@@ -26,31 +31,31 @@ packer_build_sandvine()
 	#
 
 	# Linux SVPTS 7.30 on CentOS 7
-	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svpts --version=7.30.0431 --product-variant=vpl-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
+	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svpts --version=$PTS_VERSION --product-variant=vpl-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
 		--roles=cloud-init,bootstrap,grub-conf,svpts,vmware-tools,post-cleanup-image --disable-autoconf --static-repo --versioned-repo \
 		--packer-max-tries=3 $DRY_RUN_OPT
 
 
 	# Linux SVPTS 7.30 on CentOS 6 with Linux 3.18 from Xen 4.6 official repo
-	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svpts --version=7.30.0431 --product-variant=vpl-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
+	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svpts --version=$PTS_VERSION --product-variant=vpl-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
 		--roles=centos-xen,cloud-init,bootstrap,grub-conf,svpts,vmware-tools,post-cleanup-image --disable-autoconf --static-repo --versioned-repo \
 		--packer-max-tries=3 $DRY_RUN_OPT
 
 
 	# Linux SVSDE 7.45 on CentOS 6
-	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svsde --version=7.45.0305 --product-variant=vpl-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
+	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svsde --version=$SDE_VERSION --product-variant=vpl-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
 		--roles=cloud-init,bootstrap,grub-conf,svsde,vmware-tools,post-cleanup-image --disable-autoconf --static-repo --versioned-repo \
 		--packer-max-tries=3 $DRY_RUN_OPT
 
 
 	# Linux SVSDE 7.45 on CentOS 7
-	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svsde --version=7.45.0305 --product-variant=vpl-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
+	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svsde --version=$SDE_VERSION --product-variant=vpl-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
 		--roles=cloud-init,bootstrap,grub-conf,svsde,vmware-tools,post-cleanup-image --disable-autoconf --static-repo --versioned-repo \
 		--packer-max-tries=3 $DRY_RUN_OPT
 
 
 	# Linux SVSPB 6.65 on CentOS 6
-	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svspb --version=6.65.0019 --product-variant=vpl-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
+	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svspb --version=$SPB_VERSION --product-variant=vpl-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
 		--roles=cloud-init,bootstrap,grub-conf,svspb,vmware-tools,post-cleanup-image,power-cycle --disable-autoconf --static-repo --versioned-repo \
 		--packer-max-tries=3 $DRY_RUN_OPT
 
@@ -72,9 +77,9 @@ packer_build_sandvine()
 			cp misc/os-heat-templates/sandvine-stack-0.1* tmp/sv
 			cp misc/os-heat-templates/sandvine-stack-nubo-0.1* tmp/sv
 
-			sed -i -e 's/{{pts_image}}/svpts-7.30.0431-vpl-1-centos7-amd64/g' tmp/sv/*.yaml
-			sed -i -e 's/{{sde_image}}/svsde-7.45.0305-vpl-1-centos7-amd64/g' tmp/sv/*.yaml
-			sed -i -e 's/{{spb_image}}/svspb-6.65.0019-vpl-1-centos6-amd64/g' tmp/sv/*.yaml
+			sed -i -e 's/{{pts_image}}/svpts-'$PTS_VERSION'-vpl-1-centos7-amd64/g' tmp/sv/*.yaml
+			sed -i -e 's/{{sde_image}}/svsde-'$SDE_VERSION'-vpl-1-centos7-amd64/g' tmp/sv/*.yaml
+			sed -i -e 's/{{spb_image}}/svspb-'$SPB_VERSION'-vpl-1-centos6-amd64/g' tmp/sv/*.yaml
 			#sed -i -e 's/{{csd_image}}/svcsd-16.06.0013-csd-1-centos6-amd64/g' tmp/sv/*.yaml
 
 		fi
@@ -100,7 +105,7 @@ packer_build_sandvine()
 
 			find packer/build* -name "*.xml" -exec cp {} tmp/sv/ \;
 
-			sed -i -e 's/{{sde_image}}/svsde-7.45-vpl-1-centos7-amd64/g' tmp/sv/libvirt-qemu.hook
+			sed -i -e 's/{{sde_image}}/svsde-'$SDE_VERSION'-vpl-1-centos7-amd64/g' tmp/sv/libvirt-qemu.hook
 
 		fi
 
@@ -189,9 +194,9 @@ packer_build_sandvine()
 				sed -i -e 's/read\ \-s\ FTP_PASS//g' sandvine-helper.sh_template
 				sed -i -e 's/\-c\ \-\-user=\$FTP_USER\ \-\-password=\$FTP_PASS\ //g' sandvine-helper.sh_template
 
-                                sed -i -e 's/{{svpts_image_name}}/'svpts-7.30.0431-vpl-1-centos7-amd64'/g' sandvine-helper.sh_template
-                                sed -i -e 's/{{svsde_image_name}}/'svsde-7.45.0305-vpl-1-centos7-amd64'/g' sandvine-helper.sh_template
-                                sed -i -e 's/{{svspb_image_name}}/'svspb-6.65.0019-vpl-1-centos6-amd64'/g' sandvine-helper.sh_template
+                                sed -i -e 's/{{svpts_image_name}}/'svpts-'$PTS_VERSION'-vpl-1-centos7-amd64'/g' sandvine-helper.sh_template
+                                sed -i -e 's/{{svsde_image_name}}/'svsde-'$SDE_VERSION'-vpl-1-centos7-amd64'/g' sandvine-helper.sh_template
+                                sed -i -e 's/{{svspb_image_name}}/'svspb-'$SPB_VERSION'-vpl-1-centos6-amd64'/g' sandvine-helper.sh_template
 
                                 sed -i -e 's/{{packages_server}}/'$SVAUTO_MAIN_HOST'/g' sandvine-helper.sh_template
 				sed -i -e 's/{{packages_path}}/images\/platform\/stock\/'$RELEASE_CODE_NAME'\/current/g' sandvine-helper.sh_template
