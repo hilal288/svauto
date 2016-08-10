@@ -19,40 +19,103 @@
 ansible_playbook_builder()
 {
 
-	for i in "$@"
-	do
-	case $i in
+	for i in "$@"; do
 
-	        --ansible-remote-user=*)
+		case $i in
 
-	                ANSIBLE_REMOTE_USER="${i#*=}"
-	                shift
-	                ;;
+		        --ansible-remote-user=*)
 
-	        --ansible-hosts=*)
+		                ANSIBLE_REMOTE_USER="${i#*=}"
+		                shift
+		                ;;
 
-	                ANSIBLE_HOSTS="${i#*=}"
-	                shift
-	                ;;
+		        --ansible-hosts=*)
 
-	        --roles=*)
+		                ANSIBLE_HOSTS="${i#*=}"
+		                shift
+		                ;;
 
-	                ALL_ROLES="${i#*=}"
-	                ROLES="$( echo $ALL_ROLES | sed s/,/\ /g )"
-	                shift
-	                ;;
+		        --roles=*)
 
-	esac
+		                ALL_ROLES="${i#*=}"
+		                ROLES="$( echo $ALL_ROLES | sed s/,/\ /g )"
+		                shift
+		                ;;
+
+		esac
+
 	done
 
 
 	echo "- hosts: $ANSIBLE_HOSTS"
-	echo "  user: "$ANSIBLE_REMOTE_USER""
+	echo "  user: $ANSIBLE_REMOTE_USER"
 	echo "  become: yes"
 	echo "  roles:"
 
+
+	for Y in $ROLES; do
+
+		if [ "$Y" == "sandvine-auto-config" ];
+		then
+
+			SANDVINE_AUTO_CONFIG="yes"
+
+		fi
+
+	done
+
+
 	for X in $ROLES; do
-	        echo "  - role: "$X""
+
+		case $X in
+
+			svpts)
+
+				echo "  - role: $X"
+
+				if [ "$SANDVINE_AUTO_CONFIG" == "yes" ];
+				then
+					echo "  - { role: sandvine-auto-config, setup_server: 'svpts' }"
+				fi
+				;;
+
+			svsde)
+
+				echo "  - role: $X"
+
+				if [ "$SANDVINE_AUTO_CONFIG" == "yes" ];
+				then
+					echo "  - { role: sandvine-auto-config, setup_server: 'svsde' }"
+				fi
+				;;
+
+			svspb)
+
+				echo "  - role: $X"
+
+				if [ "$SANDVINE_AUTO_CONFIG" == "yes" ];
+				then
+					echo "  - { role: sandvine-auto-config, setup_server: 'svspb' }"
+				fi
+				;;
+
+			svcs)
+
+				echo "  - role: $X"
+
+				if [ "$SANDVINE_AUTO_CONFIG" == "yes" ];
+				then
+					echo "  - { role: sandvine-auto-config, setup_server: 'svcs' }"
+				fi
+				;;
+
+			*)
+
+				echo "  - role: $X"
+				;;
+
+		esac
+
 	done
 
 	echo ""

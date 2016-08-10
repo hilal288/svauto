@@ -406,20 +406,19 @@ esac
 case "$PRODUCT" in
 
         *svsde)
-		EXTRA_VARS=""$EXTRA_VARS" sde_version="$VERSION" setup_server="svsde""
+		EXTRA_VARS=""$EXTRA_VARS" sde_version="$VERSION""
 		;;
 
         *svpts)
-		EXTRA_VARS=""$EXTRA_VARS" pts_version="$VERSION" setup_server="svpts""
+		EXTRA_VARS=""$EXTRA_VARS" pts_version="$VERSION""
 		;;
 
         *svspb)
-		EXTRA_VARS=""$EXTRA_VARS" spb_version="$VERSION" setup_server="svspb""
+		EXTRA_VARS=""$EXTRA_VARS" spb_version="$VERSION""
 		sed -i -e 's/"shutdown_command":.*/"shutdown_command": "",/g' $PACKER_FILE
 		;;
 
-	svcs)
-		EXTRA_VARS=""$EXTRA_VARS" setup_server="svsde""
+	svcsd)
 		;;
 
 	centos)
