@@ -111,7 +111,9 @@ ansible_playbook_builder()
 
 			*)
 
-				echo "  - role: $X"
+				if [ "$X" != "sandvine-auto-config" ]; then
+					echo "  - role: $X"
+				fi
 				;;
 
 		esac
