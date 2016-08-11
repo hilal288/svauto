@@ -109,6 +109,18 @@ case $i in
                 shift
                 ;;
 
+        --packer-to-openstack)
+
+                PACKER_TO_OS="yes"
+                shift
+                ;;
+
+        --os-project=*)
+
+                OS_PROJECT="${i#*=}"
+                shift
+                ;;
+
         --cloud-services-mode=*)
 
                 CLOUD_SERVICES_MODE="${i#*=}"
@@ -637,7 +649,7 @@ then
 	if [ "$PACKER_TO_OS" == "yes" ]
 	then
 
-		if [ ! -f ~/admin-openrc.sh ]
+		if [ ! -f ~/$OS_PROJECT-openrc.sh ]
 		then
 			echo
 			echo "OpenStack Credentials for "admin" account not found, aborting!"
@@ -645,7 +657,7 @@ then
 		else
 			echo
 			echo "Loading OpenStack credentials for "admin" account..."
-			source ~/admin-openrc.sh
+			source ~/$OS_PROJECT-openrc.sh
 
 			echo
 			echo "Importing PTS on CentOS 6 into Glance..."
