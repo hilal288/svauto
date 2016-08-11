@@ -661,7 +661,7 @@ then
 
 			echo
 			echo "Importing PTS on CentOS 6 into Glance..."
-			glance image-create --file packer/$OUTPUT_DIR/"$PACKER_VM_NAME".qcow2c --name "$PACKER_VM_NAME-$TODAY" --is-public true --container-format bare --disk-format qcow2
+			glance image-create --file packer/$OUTPUT_DIR/"$PACKER_VM_NAME"-disk1.qcow2c --name "$PACKER_VM_NAME-$TODAY" --is-public true --container-format bare --disk-format qcow2
 			#glance image-update --property hw_scsi_model=virtio-scsi --property hw_disk_bus=scsi "$PACKER_VM_NAME-$TODAY"
 		fi
 
