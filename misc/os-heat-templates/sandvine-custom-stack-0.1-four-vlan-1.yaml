@@ -256,7 +256,7 @@ resources:
     properties:
       name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-subscribers-1-vlan-{{vlan_sub_id}}' } }
       network_type: vlan
-      physical_network: physvlanp3p3
+      physical_network: {{physical_network1_label}}
       segmentation_id: {{vlan_sub_id}}
       shared: false
 
@@ -280,7 +280,7 @@ resources:
     properties:
       name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-subscribers-2-vlan-{{vlan_sub2_id}}' } }
       network_type: vlan
-      physical_network: physvlanp3p4
+      physical_network: {{physical_network2_label}}
       segmentation_id: {{vlan_sub2_id}}
       shared: false
 
@@ -302,7 +302,7 @@ resources:
     properties:
       name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-data-internet-middle-1-vlan-{{vlan_middle_id}}' } }
       network_type: vlan
-      physical_network: physvlanfake
+      physical_network: {{physical_network3_label}}
       segmentation_id: {{vlan_middle_id}}
       shared: false
 
