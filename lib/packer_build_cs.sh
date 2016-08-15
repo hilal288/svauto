@@ -17,6 +17,12 @@
 packer_build_cs()
 {
 
+        PTS_VERSION="7.30"
+        SDE_VERSION="7.50"
+        SPB_VERSION="6.65"
+        CSD_VERSION="16.11"
+
+
 	if [ "$DRY_RUN" == "yes" ]; then
 		export DRY_RUN_OPT="--dry-run"
 	fi
@@ -27,27 +33,27 @@ packer_build_cs()
 	#
 
 	# SDE 7.50 on CentOS 7 + Cloud Services SDE + Cloud Services Daemon (back / front)
-	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svsde --version=7.50 --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svsde --version=$SDE_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
 		--roles=cloud-init,bootstrap,grub-conf,nginx,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3
 
 	# SPB 6.65 on CentOS 6 + Cloud Services
-	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svspb --version=6.65 --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svspb --version=$SPB_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
 		--roles=cloud-init,bootstrap,grub-conf,svspb,svmcdtext,svreports,svcs-svspb,sandvine-auto-config,vmware-tools,post-cleanup-image,power-cycle $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3
 
 	# PTS 7.30 on CentOS 7 + Cloud Services - Linux 3.10, DPDK 16.07, requires igb_uio
-	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svpts --version=7.30 --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svpts --version=$PTS_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
 		--roles=cloud-init,bootstrap,grub-conf,nginx,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3
 
 	# SDE 7.50 on CentOS 7 + Cloud Services SDE only - No Cloud Services daemon here
-	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svsde --version=7.50 --product-variant=isolated-svsde-cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svsde --version=$SDE_VERSION --product-variant=isolated-svsde-cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
 		--roles=cloud-init,bootstrap,grub-conf,nginx,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3
 
 	# Cloud Services Daemon 16.11 (back / front) on CentOS 7 - No SDE here
-	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svcsd --version=16.11 --product-variant=isolated-svcsd-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svcsd --version=$CSD_VERSION --product-variant=isolated-svcsd-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
 		--roles=centos-xen,cloud-init,bootstrap,grub-conf,nginx,svcs,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3
 
@@ -57,7 +63,7 @@ packer_build_cs()
 	#
 
 	# PTS 7.30 on CentOS 6 + Cloud Services - Linux 3.18 from Xen 4.6 official repo, DPDK 16.04, don't requires igb_uio
-	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svpts --version=7.30 --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svpts --version=$PTS_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
 		--roles=centos-xen,cloud-init,bootstrap,grub-conf,nginx,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3
 
@@ -112,10 +118,10 @@ packer_build_cs()
 			cp misc/os-heat-templates/sandvine-stack-0.1* tmp/cs
 			cp misc/os-heat-templates/sandvine-stack-nubo-0.1* tmp/cs
 
-			sed -i -e 's/{{pts_image}}/svpts-7.30-cs-1-centos7-amd64/g' tmp/cs/*.yaml
-			sed -i -e 's/{{sde_image}}/svsde-7.45-cs-1-centos7-amd64/g' tmp/cs/*.yaml
-			sed -i -e 's/{{spb_image}}/svspb-6.65-cs-1-centos6-amd64/g' tmp/cs/*.yaml
-			sed -i -e 's/{{csd_image}}/svcsd-16.11-isolated-svcsd-1-centos7-amd64/g' tmp/cs/*.yaml
+			sed -i -e 's/{{pts_image}}/svpts-'$PTS_VERSION'-cs-1-centos7-amd64/g' tmp/cs/*.yaml
+			sed -i -e 's/{{sde_image}}/svsde-'$SDE_VERSION'-cs-1-centos7-amd64/g' tmp/cs/*.yaml
+			sed -i -e 's/{{spb_image}}/svspb-'$SPB_VERSION'-cs-1-centos6-amd64/g' tmp/cs/*.yaml
+			sed -i -e 's/{{csd_image}}/svcsd-'$CSD_VERSION'-isolated-svcsd-1-centos7-amd64/g' tmp/cs/*.yaml
 
 		fi
 
@@ -140,7 +146,7 @@ packer_build_cs()
 
 			find packer/build* -name "*.xml" -exec cp {} tmp/cs/ \;
 
-			sed -i -e 's/{{sde_image}}/svsde-7.45-cs-1-centos7-amd64/g' tmp/cs/libvirt-qemu.hook
+			sed -i -e 's/{{sde_image}}/svsde-'$SDE_VERSION'-cs-1-centos7-amd64/g' tmp/cs/libvirt-qemu.hook
 
 		fi
 
@@ -227,11 +233,11 @@ packer_build_cs()
 
 				sed -i -e 's/read\ FTP_USER//g' sandvine-helper.sh_template
 				sed -i -e 's/read\ \-s\ FTP_PASS//g' sandvine-helper.sh_template
-				sed -i -e 's/\-c\ \-\-user=\$FTP_USER\ \-\-password=\$FTP_PASS\ //g' sandvine-helper.sh_template
+				sed -i -e 's/\-\-user=\$FTP_USER\ \-\-password=\$FTP_PASS\ //g' sandvine-helper.sh_template
 
-				sed -i -e 's/{{svpts_image_name}}/'svpts-7.30-cs-1-centos7-amd64'/g' sandvine-helper.sh_template
-				sed -i -e 's/{{svsde_image_name}}/'svsde-7.45-cs-1-centos7-amd64'/g' sandvine-helper.sh_template
-				sed -i -e 's/{{svspb_image_name}}/'svspb-6.65-cs-1-centos6-amd64'/g' sandvine-helper.sh_template
+				sed -i -e 's/{{svpts_image_name}}/'svpts-'$PTS_VERSION'-cs-1-centos7-amd64'/g' sandvine-helper.sh_template
+				sed -i -e 's/{{svsde_image_name}}/'svsde-'$SDE_VERSION'-cs-1-centos7-amd64'/g' sandvine-helper.sh_template
+				sed -i -e 's/{{svspb_image_name}}/'svspb-'$SPB_VERSION'-cs-1-centos6-amd64'/g' sandvine-helper.sh_template
 
 				sed -i -e 's/{{packages_server}}/'$SVAUTO_MAIN_HOST'/g' sandvine-helper.sh_template
 				sed -i -e 's/{{packages_path}}/images\/platform\/cloud-services\/'$RELEASE_CODE_NAME'\/current/g' sandvine-helper.sh_template
