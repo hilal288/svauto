@@ -29,6 +29,17 @@ build_yum_repo_yukon()
 	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos7 --product=svusagemanagementpts --version=5.20.0306 --latest
 
 
+	# Experimental
+
+	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos6 --product=svpts --version=7.30.0464 --latest
+	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos6 --product=svprotocols --version=16.07.2132 --latest
+
+	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos6 --product=svusagemanagementpts --version=5.20.0306 --latest
+
+	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos7 --product=svpts --version=7.40.0052 --latest-of-serie
+	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos6 --product=svpts --version=7.40.0052 --latest-of-serie
+
+
 	#
 	# SDE stuff
 	#
