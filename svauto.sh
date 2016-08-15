@@ -15,9 +15,6 @@
 # limitations under the License.
 
 
-TODAY=$(date +"%Y%m%d")
-
-
 source lib/include-tools.inc
 
 
@@ -70,12 +67,6 @@ case $i in
 	--packer-build-cs)
 
 		PACKER_BUILD_CS="yes"
-		shift
-		;;
-
-	--packer-to-openstack)
-
-		PACKER_TO_OS="yes"
 		shift
 		;;
 
@@ -420,6 +411,7 @@ then
 	fi
 
 
+#	TODO: Auto detected all instances automatically:
 	PTS_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-pts | awk $'{print $2}'` | awk $'{print $4}')
 	SDE_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-sde | awk $'{print $2}'` | awk $'{print $4}')
 	SPB_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-spb | awk $'{print $2}'` | awk $'{print $4}')
