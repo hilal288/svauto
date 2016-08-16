@@ -41,8 +41,3 @@ mkdir -p $GOPATH/src/git.svc.rocks/octo
 cd $GOPATH/src/git.svc.rocks/octo
 
 echo
-echo "You're currently inside of the following directory: "
-
-pwd
-
-echo
