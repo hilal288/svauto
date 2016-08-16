@@ -23,6 +23,10 @@
 # Build SDE + Cloud Services box:
 # ./vagrant-builder.sh --base-os=centos6 --product=svsde
 
+
+source lib/include-tools.inc
+
+
 #VAGRANT_DEFAULT_PROVIDER=libvirt
 
 RAND_PORT=`awk -v min=1025 -v max=9999 'BEGIN{srand(); print int(min+rand()*(max-min+1))}'`
@@ -122,6 +126,9 @@ cp vagrant/Vagrantfile_template vagrant/$VM_NAME/Vagrantfile
 
 
 sed -i -e 's/vagrant_run:.*/vagrant_run: "yes"/' ansible/group_vars/all
+
+sed -i -e 's/packages_server:.*/packages_server: \"'$SVAUTO_MAIN_HOST'\"/' ansible/group_vars/all
+sed -i -e 's/static_packages_server:.*/static_packages_server: \"'$STATIC_PACKAGES_SERVER'\"/' ansible/group_vars/all
 
 
 VBOX_SANITIZED=$(echo $VBOX | sed -e 's/\//\\\//g')
