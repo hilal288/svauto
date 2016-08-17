@@ -660,7 +660,7 @@ then
 			source ~/$OS_PROJECT-openrc.sh
 
 			echo
-			echo "Importing PTS on CentOS 6 into Glance..."
+			echo "Importing QCoW2 Image into Glance (only works if the QCoW2 is being created)..."
 			glance image-create --file packer/$OUTPUT_DIR/"$PACKER_VM_NAME"-disk1.qcow2c --name "$PACKER_VM_NAME-$BUILD_DATE" --is-public true --container-format bare --disk-format qcow2
 			#glance image-update --property hw_scsi_model=virtio-scsi --property hw_disk_bus=scsi "$PACKER_VM_NAME-$BUILD_DATE"
 		fi
