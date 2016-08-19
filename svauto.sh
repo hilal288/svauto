@@ -22,12 +22,31 @@ for i in "$@"
 do
 case $i in
 
+        --base-os=*)
+
+                BASE_OS="${i#*=}"
+                shift
+                ;;
+
+	--base-os-upgrade)
+
+		BASE_OS_UPGRADE="yes"
+		shift
+		;;
+
+	--operation=*)
+
+		OPERATION="${i#*=}"
+		shift
+		;;
+
 	--bootstrap-svauto)
 
 		BOOTSTRAP_SVAUTO="yes"
 		shift
 		;;
 
+	# Options starting with --os-* are OpenStack related
 	--os-project=*)
 
 		OS_PROJECT="${i#*=}"
@@ -37,6 +56,30 @@ case $i in
 	--os-stack=*)
 
 		OS_STACK="${i#*=}"
+		shift
+		;;
+
+        --os-release=*)
+
+	        OS_RELEASE="${i#*=}"
+		shift
+		;;
+
+        --os-bridge-mode=*)
+
+	        OS_BRIDGE_MODE="${i#*=}"
+		shift
+		;;
+
+        --os-hybrid-firewall)
+
+		OS_HYBRID_FW="yes"
+		shift
+		;;
+
+        --os-no-security-groups)
+
+		OS_NO_SEC="yes"
 		shift
 		;;
 
@@ -100,12 +143,6 @@ case $i in
 		shift
 		;;
 
-	--operation=*)
-
-		OPERATION="${i#*=}"
-		shift
-		;;
-
 	--cloud-services-mode=*)
 
 		CLOUD_SERVICES_MODE="${i#*=}"
@@ -138,47 +175,60 @@ case $i in
 		shift
 		;;
 
-        --base-os=*)
+	# Options starting with --ubuntu-* are Ubuntu related
+        --ubuntu-network-setup)
 
-                BASE_OS="${i#*=}"
-                shift
-                ;;
-
-	--base-os-upgrade)
-
-		BASE_OS_UPGRADE="yes"
+	        UBUNTU_NETWORK_SETUP="yes"
 		shift
 		;;
 
-        --use-dummies)
+        --ubuntu-network-detect-default-nic)
 
-	        USE_DUMMIES="yes"
-		shift
-        	;;
-
-        --br-mode=*)
-
-	        BR_MODE="${i#*=}"
-        	shift
-		;;
-
-        --ovs-hybrid-firewall)
-
-	        OVS_HYBRID_FW="yes"
+	        UBUNTU_NETWORK_DETECT_DEFAULT_NIC="yes"
 		shift
 		;;
 
-        --no-security-groups)
+	--ubuntu-network-mode=*)
 
-	        NO_SEC="yes"
+		UBUNTU_NETWORK_MODE="${i#*=}"
 		shift
-        	;;
+		;;
 
-        --openstack-release=*)
+	--ubuntu-network-ip=*)
 
-	        OPENSTACK_RELEASE="${i#*=}"
+		# Syntax: "ip/mask,gateway"
+		UBUNTU_NETWORK_IP_RAW_DATA="${i#*=}"
+
+		UBUNTU_STATIC_IP_MASK=`echo $UBUNTU_NETWORK_IP_RAW_DATA | cut -d , -f 1`
+		UBUNTU_STATIC_IP_GATEWAY=`echo $UBUNTU_NETWORK_IP_RAW_DATA | cut -d , -f 2`
+
 		shift
-        	;;
+		;;
+
+	--ubuntu-name-servers=*)
+
+		UBUNTU_NS_SETUP="yes"
+
+		# Syntax: "dns1,dns2"
+		UBUNTU_NAME_SERVERS_RAW="${i#*=}"
+
+		UBUNTU_NAME_SERVER_1=`echo $UBUNTU_NAME_SERVERS_RAW | cut -d , -f 1`
+		UBUNTU_NAME_SERVER_2=`echo $UBUNTU_NAME_SERVERS_RAW | cut -d , -f 2`
+
+		shift
+		;;
+
+	--ubuntu-dummies)
+
+		UBUNTU_DUMMIES="yes"
+		shift
+		;;
+
+	--ubuntu-iptables-rc-local)
+
+		UBUNTU_IPTABLES_RC_LOCAL="yes"
+		shift
+		;;
 
         --download-iso-images)
 
@@ -201,6 +251,117 @@ case $i in
 esac
 done
 
+
+#
+# Operation System setup on playbook vars
+#
+
+if [ ! -z "$BASE_OS" ];
+then
+	sed -i -e 's/base_os:.*/base_os: "'$BASE_OS'"/' ansible/group_vars/all
+fi
+
+if [ "$BASE_OS_UPGRADE" == "yes" ]
+then
+	sed -i -e 's/base_os_upgrade:.*/base_os_upgrade: "yes"/' ansible/group_vars/all
+fi
+
+
+#
+# Ubuntu Settings
+#
+
+# Network setup?
+if [ "$UBUNTU_NETWORK_SETUP" == "yes" ]
+then
+
+	echo
+	echo "Ubuntu Network Setup requested:"
+
+	sed -i -e 's/ubuntu_network_setup:.*/ubuntu_network_setup: "yes"/' ansible/group_vars/all
+
+fi
+
+if [ "$UBUNTU_NETWORK_DETECT_DEFAULT_NIC" == "yes" ]
+then
+
+	# Configuring the default interface
+	unset UBUNTU_PRIMARY_INTERFACE
+	UBUNTU_PRIMARY_INTERFACE=$(ip r | grep default | awk '{print $5}')
+
+
+	if [ -z "$UBUNTU_PRIMARY_INTERFACE" ]
+	then
+		echo
+		echo "ABORTING! Ubuntu's primary network interface not detected!"
+		echo "Are you sure that your Ubuntu have a default gateway configured?"
+
+		exit 1
+	fi
+
+
+	echo
+	echo "Your primary network interface is:"
+	echo "dafault route via:" $UBUNTU_PRIMARY_INTERFACE
+
+	echo
+	echo "* Enabling Network Setup, preparing Ansible variables based on detected default interface..."
+
+	sed -i -e 's/ubuntu_primary_interface:.*/ubuntu_primary_interface: "'$UBUNTU_PRIMARY_INTERFACE'"/g' ansible/group_vars/all
+
+
+	if [ "$OPERATION" == "openstack" ]
+	then
+
+		echo
+		echo "* Configuring OpenStack's Management Interface based on: '$UBUNTU_PRIMARY_INTERFACE'..."
+
+		sed -i -e 's/{{OS_MGMT_NIC}}/'$UBUNTU_PRIMARY_INTERFACE'/' ansible/hosts
+
+	fi
+
+fi
+
+# Network mode:
+case "$UBUNTU_NETWORK_MODE" in
+
+	dhcp)
+
+		sed -i -e 's/ubuntu_network_mode:.*/ubuntu_network_mode: "dhcp"/' ansible/group_vars/all
+		;;
+
+	static)
+
+		sed -i -e 's/ubuntu_network_mode:.*/ubuntu_network_mode: "static"/' ansible/group_vars/all
+		sed -i -e 's/ubuntu_static_ip_mask:.*/ubuntu_static_ip_mask: "'$UBUNTU_STATIC_IP_MASK'"/' ansible/group_vars/all
+		sed -i -e 's/ubuntu_static_ip_gateway:.*/ubuntu_static_ip_gateway: "'$UBUNTU_STATIC_IP_GATEWAY'"/' ansible/group_vars/all
+		;;
+
+esac
+
+# Name Server setup?
+if [ "$UBUNTU_NS_SETUP" == "yes" ]
+then
+	sed -i -e 's/ubuntu_name_server_1:.*/ubuntu_name_server_1: "'$UBUNTU_NAME_SERVER_1'"/' ansible/group_vars/all
+	sed -i -e 's/ubuntu_name_server_2:.*/ubuntu_name_server_2: "'$UBUNTU_NAME_SERVER_2'"/' ansible/group_vars/all
+fi
+
+# Enable dummies?
+if [ "$UBUNTU_DUMMIES" == "yes" ]
+then
+	sed -i -e 's/ubuntu_setup_dummy_nics:.*/ubuntu_setup_dummy_nics: "yes"/' ansible/group_vars/all
+fi
+
+# Enable iptalbes via /etc/rc.local?
+if [ "$UBUNTU_IPTABLES_RC_LOCAL" == "yes" ]
+then
+	sed -i -e 's/ubuntu_setup_iptables_rc_local:.*/ubuntu_setup_iptables_rc_local: "yes"/' ansible/group_vars/all
+fi
+
+
+#
+# SVAuto Functions
+#
 
 if [ "$CLEAN_ALL" == "yes" ]
 then
@@ -285,8 +446,8 @@ then
 
 	echo
 	echo "Installing OpenStack with SVAuto:"
-	echo
 
+	# NOTE: all the OS_* variables are being used by "os_deploy" below:
 	os_deploy
 
 	exit 0

@@ -51,7 +51,7 @@ echo
 echo "Bridge Mode: Open vSwitch"
 echo
 cd ~/svauto
-./svauto.sh --operation=openstack --br-mode=OVS --use-dummies --base-os=ubuntu16 --base-os-upgrade=yes --openstack-release=mitaka --deployment-mode --ovs-hybrid-firewall
+./svauto.sh --operation=openstack --base-os=ubuntu16 --base-os-upgrade --ubuntu-network-setup --ubuntu-network-detect-default-nic --ubuntu-network-mode=dhcp --ubuntu-dummies --ubuntu-iptables-rc-local --os-release=mitaka --os-bridge-mode=OVS --deployment-mode --os-hybrid-firewall
 
 
 echo

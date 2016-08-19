@@ -1,2 +1,0 @@
-auto {{os_mgmt}}
-iface {{os_mgmt}} inet dhcp

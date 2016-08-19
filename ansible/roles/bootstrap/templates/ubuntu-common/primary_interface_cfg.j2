@@ -1,0 +1,9 @@
+auto {{ ubuntu_primary_interface }}
+{% if ubuntu_network_mode == 'dhcp' %}
+iface {{ ubuntu_primary_interface }} inet dhcp
+{% endif %}
+{% if ubuntu_network_mode == 'static' %}
+iface {{ ubuntu_primary_interface }} inet static
+	address {{ ubuntu_static_ip_mask }}
+	gateway {{ ubuntu_static_ip_gateway }}
+{% endif %}
