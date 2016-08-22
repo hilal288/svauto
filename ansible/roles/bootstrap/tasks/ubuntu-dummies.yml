@@ -14,7 +14,7 @@
 
 - name: ubuntu - config dummy module options
   lineinfile: dest=/etc/modprobe.d/dummy.conf
-              line="options dummy numdummies=6"
+              line="options dummy numdummies=10"
               create=yes
 
 - name: ubuntu - config dummy module
@@ -41,9 +41,47 @@
         mode=0644
   when: br_mode == 'OVS'
 
+- name: ubuntu - copy dummybr0 config file for OVS
+  copy: src=ubuntu-common/interface_dummybr0
+        dest=/etc/network/interfaces.d/dummybr0.cfg
+        owner=root
+        group=root
+        mode=0644
+  when: br_mode == 'OVS'
+
+- name: ubuntu - copy dummybr1 config file for OVS
+  copy: src=ubuntu-common/interface_dummybr1
+        dest=/etc/network/interfaces.d/dummybr1.cfg
+        owner=root
+        group=root
+        mode=0644
+  when: br_mode == 'OVS'
+
+
 - name: ubuntu - copy dummy1 config file for LBR
   copy: src=ubuntu-common/interface_dummy1
         dest=/etc/network/interfaces.d/dummy1.cfg
+        owner=root
+        group=root
+        mode=0644
+
+- name: ubuntu - copy dummy2 config file
+  copy: src=ubuntu-common/interface_dummy2
+        dest=/etc/network/interfaces.d/dummy2.cfg
+        owner=root
+        group=root
+        mode=0644
+
+- name: ubuntu - copy dummy4 config file
+  copy: src=ubuntu-common/interface_dummy4
+        dest=/etc/network/interfaces.d/dummy4.cfg
+        owner=root
+        group=root
+        mode=0644
+
+- name: ubuntu - copy dummy5 config file
+  copy: src=ubuntu-common/interface_dummy5
+        dest=/etc/network/interfaces.d/dummy5.cfg
         owner=root
         group=root
         mode=0644
@@ -55,6 +93,15 @@
 
 - name: ubuntu - starting up dummy1
   shell: 'ifup dummy1'
+
+- name: ubuntu - starting up dummy2
+  shell: 'ifup dummy1'
+
+- name: ubuntu - starting up dummy4
+  shell: 'ifup dummy4'
+
+- name: ubuntu - starting up dummy5
+  shell: 'ifup dummy5'
 
 
 - name: ubuntu - re-read facts after configuring network interfaces

@@ -59,6 +59,12 @@ case $i in
 		shift
 		;;
 
+	--os-aio)
+
+		OS_AIO="yes"
+		shift
+		;;
+
         --os-release=*)
 
 	        OS_RELEASE="${i#*=}"
@@ -80,6 +86,12 @@ case $i in
         --os-no-security-groups)
 
 		OS_NO_SEC="yes"
+		shift
+		;;
+
+	--os-open-provider-nets-to-regular-users)
+
+		OS_OPEN_PROVIDER_NETS_TO_REGULAR_USERS="yes"
 		shift
 		;;
 

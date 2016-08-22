@@ -253,6 +253,8 @@ dpdk_driver_4: "vfio-pci"
 # OpenStack Definitions
 #
 
+os_aio: "no"
+
 openstack_release: "mitaka"
 
 your_domain: "yourdomain.com"
@@ -276,6 +278,20 @@ os_data: "dummy1"
 os_cinder: "dummy2"
 
 br_mode: "LBR"
+
+os_neutron_external_bridge: "br-ex"
+
+os_provider_net_1_label: "provider-net-1"
+os_provider_net_1_lbr_interface: "dummy6"
+os_provider_net_1_ovs_interface: "dummy4"
+os_provider_net_1_ovs_bridge_interface: "dummybr0"
+
+os_provider_net_2_label: "provider-net-2"
+os_provider_net_2_lbr_interface: "dummy7"
+os_provider_net_2_ovs_interface: "dummy5"
+os_provider_net_2_ovs_bridge_interface: "dummybr1"
+
+os_open_provider_nets_to_regular_users: "no"
 
 linuxnet_interface_driver: "nova.network.linux_net.LinuxBridgeInterfaceDriver"
 neutron_interface_driver: "neutron.agent.linux.interface.BridgeInterfaceDriver"

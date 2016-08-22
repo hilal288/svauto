@@ -37,7 +37,7 @@
             group=neutron
             mode=0640
             backup=yes
-  when: item.os_project == "neutron"
+  when: item.os_project == 'neutron'
   with_items: '{{mysql_databases}}'
   notify: restart-neutron
 
@@ -49,6 +49,23 @@
             group=neutron
             mode=0640
             backup=yes
+  notify: restart-neutron
+
+
+- name: Updating Neutron's Policy
+  copy: src=open-provider-nets-to-regular-users.json
+        dest=/etc/neutron/policy.d/open-provider-nets-to-regular-users.json
+        owner=root
+        group=neutron
+        mode=0644
+        backup=yes
+  when: os_open_provider_nets_to_regular_users == 'yes'
+  notify: restart-neutron
+
+- name: Removing custom Neutron's Policy if condition is "no"
+  file: path=/etc/neutron/policy.d/open-provider-nets-to-regular-users.json
+        state=absent
+  when: os_open_provider_nets_to_regular_users == 'no'
   notify: restart-neutron
 
 

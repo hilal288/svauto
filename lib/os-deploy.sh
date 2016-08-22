@@ -191,6 +191,23 @@ os_deploy()
 	sed -i -e 's/^#localhost/localhost/' ansible/hosts
 
 
+	if [ "$OS_AIO" == "yes" ]
+	then
+		echo
+		echo "* OpenStack AIO activated..."
+
+		sed -i -e 's/os_aio:.*/os_aio: "yes"/' ansible/group_vars/all
+	fi
+
+
+	if [ "$OS_OPEN_PROVIDER_NETS_TO_REGULAR_USERS" == "yes" ]
+	then
+		echo
+		echo "* Opening Provider Networks to all regular users! Security risk!"
+
+		sed -i -e 's/os_open_provider_nets_to_regular_users:.*/os_open_provider_nets_to_regular_users: "yes"/' ansible/group_vars/all
+	fi
+
 
 	if [ "$DRY_RUN" == "yes" ]
 	then

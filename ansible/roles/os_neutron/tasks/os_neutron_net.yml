@@ -124,16 +124,43 @@
   notify: restart-neutron
 
 
-- name: Creating Open vSwitch Bridge
-  openvswitch_bridge: bridge=br-ex state=present
+- name: Creating Open vSwitch Bridge - External Bridge
+  openvswitch_bridge: bridge="{{os_neutron_external_bridge}}" state=present
   when: br_mode == 'OVS'
 
-- name: Configuring Open vSwitch Bridge Port
-  openvswitch_port: bridge=br-ex port="{{os_external}}" state=present
+- name: Configuring Open vSwitch Bridge Port - External Bridge
+  openvswitch_port: bridge="{{os_neutron_external_bridge}}" port="{{os_external}}" state=present
   when: br_mode == 'OVS'
+
+
+- name: Creating Open vSwitch Bridge - Provider Network 1
+  openvswitch_bridge: bridge="{{os_provider_net_1_ovs_bridge_interface}}" state=present
+  when: br_mode == 'OVS'
+
+- name: Configuring Open vSwitch Bridge Port - Provider Network 1
+  openvswitch_port: bridge="{{os_provider_net_1_ovs_bridge_interface}}" port="{{os_provider_net_1_ovs_interface}}" state=present
+  when: br_mode == 'OVS'
+
+
+- name: Creating Open vSwitch Bridge - Provider Network 2
+  openvswitch_bridge: bridge="{{os_provider_net_2_ovs_bridge_interface}}" state=present
+  when: br_mode == 'OVS'
+
+- name: Configuring Open vSwitch Bridge Port - Provider Network 2
+  openvswitch_port: bridge="{{os_provider_net_2_ovs_bridge_interface}}" port="{{os_provider_net_2_ovs_interface}}" state=present
+  when: br_mode == 'OVS'
+
 
 - name: Enabling br-ex Interface
   shell: 'ifup br-ex'
+  when: br_mode == 'OVS' and ubuntu_network_setup == 'yes'
+
+- name: Enabling dummybr0 Interface
+  shell: 'ifup dummybr0'
+  when: br_mode == 'OVS' and ubuntu_network_setup == 'yes'
+
+- name: Enabling dummybr1 Interface
+  shell: 'ifup dummybr1'
   when: br_mode == 'OVS' and ubuntu_network_setup == 'yes'
 
 
