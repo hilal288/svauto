@@ -116,4 +116,4 @@ fi
 
 
 cd ~/svauto
-echo ./svauto.sh --svauto-deployments --base-os=$BASE_OS --ansible-roles=$ANSIBLE_ROLES --ansible-extra-vars=$ANSIBLE_EXTRA_VARS
+./svauto.sh --svauto-deployments --base-os=$BASE_OS --ansible-roles=$ANSIBLE_ROLES --ansible-extra-vars=$ANSIBLE_EXTRA_VARS
