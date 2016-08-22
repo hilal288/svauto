@@ -46,6 +46,28 @@ case $i in
 		shift
 		;;
 
+	--svauto-deployments)
+
+		SVAUTO_DEPLOYMENTS="yes"
+		shift
+		;;
+
+	# Options starting with --ansible-* are passed to Ansible itself,
+	# or being used by dynamic stuff.
+	--ansible-roles=*)
+
+		ALL_ANSIBLE_ROLES="${i#*=}"
+		ANSIBLE_ROLES="$( echo $ALL_ANSIBLE_ROLES | sed s/,/\ /g )"
+		shift
+		;;
+
+	--ansible-extra-vars=*)
+
+		ALL_ANSIBLE_EXTRA_VARS="${i#*=}"
+		ANSIBLE_EXTRA_VARS="$( echo $ALL_ANSIBLE_EXTRA_VARS | sed s/,/\ /g )"
+		shift
+		;;
+
 	# Options starting with --os-* are OpenStack related
 	--os-project=*)
 
@@ -393,6 +415,20 @@ fi
 if [ "$UBUNTU_IPTABLES_RC_LOCAL" == "yes" ]
 then
 	sed -i -e 's/ubuntu_setup_iptables_rc_local:.*/ubuntu_setup_iptables_rc_local: "yes"/' ansible/group_vars/all
+fi
+
+
+#
+# SVAuto Deployments - "Curl | Bash" lovers
+#
+
+if [ "$SVAUTO_DEPLOYMENTS" == "yes" ]
+then
+
+	svauto_deployments
+
+	exit 0
+
 fi
 
 
