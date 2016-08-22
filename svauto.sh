@@ -323,21 +323,46 @@ then
 fi
 
 # Network mode:
-case "$UBUNTU_NETWORK_MODE" in
+if [ ! -z "$UBUNTU_NETWORK_MODE" ];
+then
 
-	dhcp)
+	echo
+	echo "* Configuring Ubuntu's network mode to: \"$UBUNTU_NETWORK_MODE\"."
 
-		sed -i -e 's/ubuntu_network_mode:.*/ubuntu_network_mode: "dhcp"/' ansible/group_vars/all
-		;;
+	case "$UBUNTU_NETWORK_MODE" in
 
-	static)
+		dhcp)
 
-		sed -i -e 's/ubuntu_network_mode:.*/ubuntu_network_mode: "static"/' ansible/group_vars/all
-		sed -i -e 's/ubuntu_static_ip_mask:.*/ubuntu_static_ip_mask: "'$UBUNTU_STATIC_IP_MASK'"/' ansible/group_vars/all
-		sed -i -e 's/ubuntu_static_ip_gateway:.*/ubuntu_static_ip_gateway: "'$UBUNTU_STATIC_IP_GATEWAY'"/' ansible/group_vars/all
-		;;
+			sed -i -e 's/ubuntu_network_mode:.*/ubuntu_network_mode: "dhcp"/' ansible/group_vars/all
+			;;
 
-esac
+		static)
+
+			if [ -z $UBUNTU_STATIC_IP_MASK ]
+			then
+				echo
+				echo "Error! Static network mode requires IP address, mask and gateway. ABORTING!"
+				echo
+
+				exit 1
+			else
+
+				echo
+				echo " - Static IP/MASK: \"$UBUNTU_STATIC_IP_MASK\"."
+				echo " - Static gateway: \"$UBUNTU_STATIC_IP_GATEWAY\"."
+
+				UBUNTU_IP_MASK_SANITIZED=$(echo $UBUNTU_STATIC_IP_MASK | sed -e 's/\//\\\//g')
+
+				sed -i -e 's/ubuntu_network_mode:.*/ubuntu_network_mode: "static"/' ansible/group_vars/all
+				sed -i -e 's/ubuntu_static_ip_mask:.*/ubuntu_static_ip_mask: "'$UBUNTU_IP_MASK_SANITIZED'"/' ansible/group_vars/all
+				sed -i -e 's/ubuntu_static_ip_gateway:.*/ubuntu_static_ip_gateway: "'$UBUNTU_STATIC_IP_GATEWAY'"/' ansible/group_vars/all
+
+			fi
+			;;
+
+	esac
+
+fi
 
 # Name Server setup?
 if [ "$UBUNTU_NS_SETUP" == "yes" ]
