@@ -85,6 +85,7 @@
     - sysfsutils
     - nbd-client
     - btrfs-tools
+    - ssh-askpass
     - python-minimal
     - python-mysqldb
     - python-httplib2
