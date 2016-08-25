@@ -37,10 +37,10 @@ svauto_deployments()
 
 
 	echo
-	echo "Running Ansible with Playbook: \"$PLAYBOOK_FILE\"."
+	echo "Running Ansible with Playbook: \"tmp/$PLAYBOOK_FILE\"."
 
 	echo
 	cd ~/svauto/ansible
-	ansible-playbook -c local "tmp/$PLAYBOOK_FILE" --extra-vars "base_os=$BASE_OS $ANSIBLE_EXTRA_VARS"
+	ansible-playbook -c local tmp/$PLAYBOOK_FILE -e "base_os=$BASE_OS $ANSIBLE_EXTRA_VARS"
 
 }
