@@ -63,7 +63,7 @@ build_yum_repo_yukon()
 	#
 
 	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos7 --product=svsde --version=$YUKON_SVSDE --latest
-	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos6 --product=svsde --version=YUKON_SVSDE --latest
+	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos6 --product=svsde --version=$YUKON_SVSDE --latest
 
 	# Usage Management
 
