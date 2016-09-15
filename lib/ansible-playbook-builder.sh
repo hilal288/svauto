@@ -65,60 +65,87 @@ ansible_playbook_builder()
 	done
 
 
-	for X in $ROLES; do
+	if [ "$SANDVINE_AUTO_CONFIG" == "yes" ] && [ "$CONFIG_ONLY_MODE" == "yes" ]
+	then
 
-		case $X in
+		for Y in $ANSIBLE_HOSTS; do
 
-			svpts)
+			case $Y in
 
-				echo "  - role: $X"
-
-				if [ "$SANDVINE_AUTO_CONFIG" == "yes" ];
-				then
+				svpts-servers)
 					echo "  - { role: sandvine-auto-config, setup_server: 'svpts' }"
-				fi
-				;;
+					;;
 
-			svsde)
-
-				echo "  - role: $X"
-
-				if [ "$SANDVINE_AUTO_CONFIG" == "yes" ];
-				then
+				svsde-servers)
 					echo "  - { role: sandvine-auto-config, setup_server: 'svsde' }"
-				fi
-				;;
+					;;
 
-			svspb)
-
-				echo "  - role: $X"
-
-				if [ "$SANDVINE_AUTO_CONFIG" == "yes" ];
-				then
+				svspb-servers)
 					echo "  - { role: sandvine-auto-config, setup_server: 'svspb' }"
-				fi
-				;;
+					;;
 
-			svcs)
+			esac
 
-				echo "  - role: $X"
+		done
 
-				if [ "$SANDVINE_AUTO_CONFIG" == "yes" ];
-				then
-					echo "  - { role: sandvine-auto-config, setup_server: 'svcs' }"
-				fi
-				;;
+	else
 
-			*)
+		for X in $ROLES; do
 
-				if [ "$X" != "sandvine-auto-config" ]; then
+			case $X in
+
+				svpts)
+
 					echo "  - role: $X"
-				fi
-				;;
 
-		esac
+					if [ "$SANDVINE_AUTO_CONFIG" == "yes" ];
+					then
+						echo "  - { role: sandvine-auto-config, setup_server: 'svpts' }"
+					fi
+					;;
 
-	done
+				svsde)
+
+					echo "  - role: $X"
+
+					if [ "$SANDVINE_AUTO_CONFIG" == "yes" ];
+					then
+						echo "  - { role: sandvine-auto-config, setup_server: 'svsde' }"
+					fi
+					;;
+
+				svspb)
+
+					echo "  - role: $X"
+
+					if [ "$SANDVINE_AUTO_CONFIG" == "yes" ];
+					then
+						echo "  - { role: sandvine-auto-config, setup_server: 'svspb' }"
+					fi
+					;;
+
+				svcs)
+
+					echo "  - role: $X"
+
+					if [ "$SANDVINE_AUTO_CONFIG" == "yes" ];
+					then
+						echo "  - { role: sandvine-auto-config, setup_server: 'svcs' }"
+					fi
+					;;
+
+				*)
+
+					if [ "$X" != "sandvine-auto-config" ]; then
+						echo "  - role: $X"
+					fi
+					;;
+
+			esac
+
+		done
+
+	fi
 
 	echo ""
 
