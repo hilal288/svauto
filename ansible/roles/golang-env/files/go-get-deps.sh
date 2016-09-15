@@ -33,6 +33,7 @@ cd ipfix
 git checkout 6e3a744c25ea14b3ef5c74f9d5cb86e3ca90b658
 
 mkdir -p $GOPATH/src/github.com/dgrijalva
+cd $GOPATH/src/github.com/dgrijalva
 git clone https://github.com/dgrijalva/jwt-go.git
 cd jwt-go
 git checkout tags/v2.7.0
