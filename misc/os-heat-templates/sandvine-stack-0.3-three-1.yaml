@@ -71,9 +71,9 @@ parameters:
 
   tg_server_image:
     type: string
-    label: "Server Instance"
-    description: "Regular Server as a Subscriber"
-    default: "{{tg_server_image}}"
+    label: "Traffic Generator Instance"
+    description: "Regular Server as a Traffic Generator"
+    default: "{{tg_image}}"
 
 resources:
   rtr:
@@ -123,7 +123,7 @@ resources:
   tg_default_sec:
     type: OS::Neutron::SecurityGroup
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-subscriber-default-sec' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-tg-default-sec' } }
       rules:
         - protocol: icmp
         - protocol: tcp
@@ -374,7 +374,7 @@ resources:
       fixed_ips:
         - ip_address: 192.168.192.35
       security_groups:
-        - { get_resource: tg_ctrl_sec }
+        - { get_resource: tg_default_sec }
 
   tg_floating_ip_assoc:
     type: OS::Neutron::FloatingIPAssociation
@@ -465,7 +465,7 @@ resources:
   tg_server1:
     type: OS::Nova::Server
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-subscriber-server-1' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-tg-server-1' } }
       key_name: { get_param: 'ssh_key' }
       image: { get_param: 'tg_server_image' }
       admin_user: "cloud"
