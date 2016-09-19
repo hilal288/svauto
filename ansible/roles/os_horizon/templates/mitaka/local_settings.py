@@ -117,6 +117,10 @@ CONSOLE_TYPE = "SPICE"
 # including on the login form.
 #HORIZON_CONFIG["disable_password_reveal"] = False
 
+{% if horizon_help_url is defined %}
+HORIZON_CONFIG["help_url"] = "{{horizon_help_url}}"
+{% endif %}
+
 LOCAL_PATH = os.path.dirname(os.path.abspath(__file__))
 
 # Set custom secret key:
