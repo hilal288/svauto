@@ -16,17 +16,17 @@ description: >
   We want to wire them as:
 
   -------|ctrl_subnet|------------- Control Network (with Internet access via router_i0)
-      |        |        |                                |          |
-     ---      ---      ---                               |          |
-     | |      | |      | |                               |          |
-     | |      | |      | |                               |          |
-     | |      | |      | |    -------------------   -------------   |
-     | |      | |      | |----|data_real_subnet1|---|TG Client 1|   |
-     |S|      |S|      |P|    -------------------   -------------   |
-     |B|      |D|      |T|                                          |
-     |P|      |E|      |S|                                   -------------
-     | |      | |      | |            -----------------------|TG Server 2|
-     | |      | |      | |            |                      -------------
+      |        |        |                                       |          |
+     ---      ---      ---                                      |          |
+     | |      | |      | |                                      |          |
+     | |      | |      | |                                      |          |
+     | |      | |      | |    --------------------------   -------------   |
+     | |      | |      | |----|data_real_subnet1 + dhcp|---|TG Client 1|   |
+     |S|      |S|      |P|    --------------------------   -------------   |
+     |B|      |D|      |T|                                                 |
+     |P|      |E|      |S|                                       -------------
+     | |      | |      | |            ---------------------------|TG Server 2|
+     | |      | |      | |            |                          -------------
      | |      | |      | |            |
      | |      | |      | |    ------------------
      | |      | |      | |----|data_int_subnet1|
@@ -258,7 +258,7 @@ resources:
       name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-subscribers-ss1' } }
       dns_nameservers: [8.8.4.4, 8.8.8.8]
       network: { get_resource: data_sub_net1 }
-      enable_dhcp: False
+      enable_dhcp: True
       cidr: 10.192.0.0/16
       gateway_ip: 10.192.0.1
       allocation_pools:
@@ -275,7 +275,7 @@ resources:
     properties:
       name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-subscribers-si1' } }
       network: { get_resource: data_int_net1 }
-      enable_dhcp: False
+      enable_dhcp: True
       cidr: 10.192.0.0/16
       allocation_pools:
         - start: 10.192.0.2
