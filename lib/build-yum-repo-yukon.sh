@@ -19,6 +19,8 @@ build_yum_repo_yukon()
 
 	YUKON_SVTSE="1.00.0038"
 
+	YUKON_SVTCPA="5.40.0052"
+
 	YUKON_SVPTS="7.30.0518"
 	YUKON_SVPTS_EXPERIMENTAL="7.40.0052"
 
@@ -42,6 +44,14 @@ build_yum_repo_yukon()
 	#
 
 	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos7 --product=svtse --version=$YUKON_SVTSE --latest
+
+
+	#
+	# TCP Accelerator stuff
+	#
+
+	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos7 --product=svtcpa --version=$YUKON_SVTCPA --latest
+
 
 	#
 	# PTS stuff

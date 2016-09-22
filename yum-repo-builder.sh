@@ -102,6 +102,11 @@ esac
 
 case "$PRODUCT" in
 
+	svtcpa)
+
+		PROD_DIR="TCPA"
+		;;
+
 	svtse)
 
 		PROD_DIR="SVTSE"
@@ -208,6 +213,12 @@ then
 	FULL_NAME="$PRODUCT-$PLATFORM-$VERSION.pts_tse_dev_integration"
 fi
 
+# TCP Accelerator repo have an different exension, dealing with it.
+if [ "$PRODUCT" == "svtcpa" ]
+then
+	FULL_NAME="tcp_accelerator-$PLATFORM-$VERSION.tcp_540_svcommon"
+fi
+
 
 SHORT_NAME="$PRODUCT-$VERSION"
 
@@ -244,7 +255,7 @@ then
 fi
 
 
-if [ "$PRODUCT" == "svtse" ]
+if [ "$PRODUCT" == "svtse" ] || [ "$PRODUCT" == "svtcpa" ]
 then
 
 	rm -f $FULL_PATH/Packages/nginx*
