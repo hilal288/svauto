@@ -1,0 +1,22 @@
+#
+# Sandvine-SVTSE.repo
+#
+
+[sandvine-svtse]
+name=Sandvine - SVTSE (Sandvine Traffic Steering Engine)
+{% if (release == 'dev' and static_repo != 'true') %}
+baseurl=ftp://{{ packages_server }}/centos/{{ release_code_name }}/$releasever/svrepos/$basearch/svtse
+{% endif %}
+{% if (versioned_repo == 'true' and release == 'dev' and static_repo != 'true') %}
+baseurl=ftp://{{ packages_server }}/centos/{{ release_code_name }}/$releasever/svrepos/$basearch/svtse-{{ svtse_version }}
+{% endif %}
+{% if (base_os == 'centos6' and static_repo == 'true' and versioned_repo == 'true' and release == 'dev') %}
+baseurl=ftp://{{ static_packages_server }}/images/Linux/CENTOS6-x64/TSE/svtse-LNX-{{ svtse_version }}
+{% endif %}
+{% if (base_os == 'centos7' and static_repo == 'true' and versioned_repo == 'true' and release == 'dev') %}
+baseurl=ftp://{{ static_packages_server }}/images/Linux/RHEL7-x64/TSE/svtse-LNX-{{ svtse_version }}
+{% endif %}
+enabled=1
+protect=0
+gpgcheck=0
+sslverify=0
