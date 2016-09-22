@@ -17,9 +17,9 @@
 packer_build_sandvine_lab()
 {
 
-	PTS_VERSION="7.30.0464"
-	SDE_VERSION="7.50.0085"
-	SPB_VERSION="6.65.0053"
+	PTS_VERSION="7.30.0518"
+	SDE_VERSION="7.50.0132"
+	SPB_VERSION="6.65.0078"
 
 
 	if [ "$DRY_RUN" == "yes" ]; then
