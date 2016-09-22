@@ -102,6 +102,11 @@ esac
 
 case "$PRODUCT" in
 
+	svtse)
+
+		PROD_DIR="SVTSE"
+		;;
+
 	svpts)
 
 		PROD_DIR="SVPTS"
@@ -197,6 +202,12 @@ else
 	FULL_NAME="$PRODUCT-$PLATFORM-$VERSION"
 fi
 
+# TSE repo have an different exension, dealing with it.
+if [ "$PRODUCT" == "svtse" ]
+then
+	FULL_NAME="$PRODUCT-$PLATFORM-$VERSION.pts_tse_dev_integration"
+fi
+
 
 SHORT_NAME="$PRODUCT-$VERSION"
 
@@ -230,6 +241,22 @@ then
 	mv $REPOS_PATH/$SHORT_NAME $REPOS_PATH/svsubscribermapping-$VER_DOT
 	PRODUCT="svsubscribermapping"
 	SHORT_NAME="$PRODUCT-$VER_DOT"
+fi
+
+
+if [ "$PRODUCT" == "svtse" ]
+then
+
+	rm -f $FULL_PATH/Packages/nginx*
+
+fi
+
+
+if [ "$PRODUCT" == "svpts" ]
+then
+
+	rm -f $FULL_PATH/Packages/dpdk*
+
 fi
 
 

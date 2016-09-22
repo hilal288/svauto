@@ -17,6 +17,8 @@
 build_yum_repo_yukon()
 {
 
+	YUKON_SVTSE="1.00.0038"
+
 	YUKON_SVPTS="7.30.0518"
 	YUKON_SVPTS_EXPERIMENTAL="7.40.0052"
 
@@ -34,6 +36,12 @@ build_yum_repo_yukon()
 	YUKON_SVSM_C6="7.50.0006"
 	YUKON_SVSM_C7="7.50-0006"
 
+
+	#
+	# TSE stuff
+	#
+
+	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos7 --product=svtse --version=$YUKON_SVTSE --latest
 
 	#
 	# PTS stuff
