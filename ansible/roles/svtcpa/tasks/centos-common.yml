@@ -1,0 +1,42 @@
+# Copyright 2016, Sandvine Incorporated
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: centos - copy Sandvine SVTCPA repository
+  template: src=centos-common/Sandvine-SVTCPA.repo.j2
+            dest=/etc/yum.repos.d/Sandvine-SVTCPA.repo
+            owner=root
+            group=root
+            mode=0644
+
+
+- name: centos - yum installing the SVTCPA
+  yum: pkg={{item}} state=latest update_cache=yes
+  with_items:
+    - dpdk
+    - sv-tcp-accelerator
+
+
+- name: centos - yum cleanup local cache
+  command: yum clean all
+
+
+- name: centos - copy Sandvine SVTCPA login logo generator
+  copy: src=sandvine-motd-issue-banner.sh
+        dest=/tmp/sandvine-motd-issue-banner.sh
+        owner=root
+        group=root
+        mode=0755
+
+- name: centos - creating Sandvine SVTCPA banner logo
+  command: /tmp/sandvine-motd-issue-banner.sh
