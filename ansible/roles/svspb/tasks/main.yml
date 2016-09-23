@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: centos6 - copy Sandvine SVSPB repository
+- name: centos - copy Sandvine SVSPB repository
   template: src=Sandvine-SVSPB.repo.j2
             dest=/etc/yum.repos.d/Sandvine-SVSPB.repo
             owner=root
@@ -20,33 +20,20 @@
             mode=0644
 
 
-# PostgreSQL 9.3 for:
-
-# CentOS 7:
-- name: Installing PostgreSQL 9.3 RPM Repository package for CentOS 7
-  yum: pkg=http://yum.postgresql.org/9.3/redhat/rhel-7-x86_64/pgdg-centos93-9.3-1.noarch.rpm state=present
-  when: base_os == 'centos7'
-
-# CentOS 6:
-- name: Installing PostgreSQL 9.3 RPM Repository package for CentOS 6
-  yum: pkg=http://yum.postgresql.org/9.3/redhat/rhel-6-x86_64/pgdg-redhat93-9.3-1.noarch.rpm state=present
-  when: base_os == 'centos6'
-
-
-- name: Creating the serviceChannel subdir
+- name: centos - creating the serviceChannel subdir
   file: path=/usr/local/sandvine/run/serviceChannel
         state=directory
         mode=0755
         recurse=yes
 
 
-- name: Installing required packages and the SVSPB
+- name: centos - yum installing SVSPB
   yum: pkg={{item}} state=latest update_cache=yes
   with_items:
     - svspb
 
 
-- name: Managing Local Firewall Rules
+- name: centos6 - lokkit managing Local Firewall Rules
   command: "{{item}}"
   with_items:
   - lokkit --port=22:tcp --update
@@ -55,11 +42,7 @@
   when: is_container != 'yes' and disable_autoconf != 'yes'
 
 
-- name: Enabling PostgreSQL on system boot
-  service: name=postgresql-9.3 state=started enabled=yes
-
-
-- name: Cleanup YUM local cache
+- name: centos - Cleanup YUM local cache
   command: yum clean all
 
 

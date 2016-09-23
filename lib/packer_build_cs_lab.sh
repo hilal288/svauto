@@ -38,7 +38,7 @@ packer_build_cs_lab()
 
 	# SPB 6.65 on CentOS 6 + Cloud Services - Labified
 	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svspb --version=$SPB_VERSION --product-variant=cs-1 --operation=cloud-services --qcow2 --vmdk --vhd --vm-xml --sha256sum \
-		--roles=cloud-init,bootstrap,grub-conf,svspb,svmcdtext,svreports,svcs-svspb,sandvine-auto-config,vmware-tools,labify,post-cleanup-image,power-cycle $DRY_RUN_OPT \
+		--roles=cloud-init,bootstrap,grub-conf,postgresql,svspb,svmcdtext,svreports,svcs-svspb,sandvine-auto-config,vmware-tools,labify,post-cleanup-image,power-cycle $DRY_RUN_OPT \
 		--packer-max-tries=3
 
 	# PTS 7.30 on CentOS 7 + Cloud Services - Linux 3.10, DPDK 16.07, requires igb_uio - Labified

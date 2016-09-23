@@ -51,7 +51,7 @@ packer_build_cs_release()
 
 	# SPB 6.65 on CentOS 6 + Cloud Services customizations
 	./image-factory.sh --release=prod --base-os=centos6 --base-os-upgrade --product=cs-svspb --version=$SANDVINE_RELEASE --qcow2 --ova --vm-xml --sha256sum \
-		--roles=cloud-init,bootstrap,grub-conf,svspb,svmcdtext,svreports,svcs-svspb,sandvine-auto-config,vmware-tools,cleanrepo,post-cleanup-image,power-cycle $DRY_RUN_OPT --operation=cloud-services \
+		--roles=cloud-init,bootstrap,grub-conf,postgresql,svspb,svmcdtext,svreports,svcs-svspb,sandvine-auto-config,vmware-tools,cleanrepo,post-cleanup-image,power-cycle $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=6
 
 	# PTS 7.30 on CentOS 7 + Cloud Services customizations

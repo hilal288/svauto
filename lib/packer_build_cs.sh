@@ -44,7 +44,7 @@ packer_build_cs()
 
 	# SVSPB 6.65 on CentOS 6 + Cloud Services
 	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svspb --version=$SPB_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--roles=cloud-init,bootstrap,grub-conf,svspb,svmcdtext,svreports,svcs-svspb,sandvine-auto-config,vmware-tools,post-cleanup-image,power-cycle $DRY_RUN_OPT --operation=cloud-services \
+		--roles=cloud-init,bootstrap,grub-conf,postgresql,svspb,svmcdtext,svreports,svcs-svspb,sandvine-auto-config,vmware-tools,post-cleanup-image,power-cycle $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto
 
 	# SVPTS 7.30 on CentOS 7 + Cloud Services - Linux 3.10, DPDK 16.07

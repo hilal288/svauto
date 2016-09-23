@@ -57,7 +57,7 @@ packer_build_sandvine_lab()
 
 	# Linux SVSPB 6.65 on CentOS 6
 	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svspb --version=$SPB_VERSION --product-variant=vpl-1 --operation=sandvine --qcow2 --vmd --vhd --vm-xml --sha256sum \
-		--roles=cloud-init,bootstrap,grub-conf,svspb,vmware-tools,post-cleanup-image,power-cycle --disable-autoconf --static-repo --versioned-repo \
+		--roles=cloud-init,bootstrap,grub-conf,postgresql,svspb,vmware-tools,post-cleanup-image,power-cycle --disable-autoconf --static-repo --versioned-repo \
 		--packer-max-tries=3 $DRY_RUN_OPT
 
 

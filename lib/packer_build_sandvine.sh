@@ -21,6 +21,8 @@ packer_build_sandvine()
 	SDE_VERSION="7.50.0132"
 	SPB_VERSION="6.65.0078"
 
+	SVTSE_VERSION_EXPERIMENTAL="1.00.0041.pts_tse_dev_integration"
+
 
 	if [ "$DRY_RUN" == "yes" ]; then
 		export DRY_RUN_OPT="--dry-run"
@@ -57,8 +59,19 @@ packer_build_sandvine()
 
 	# Linux SVSPB 6.65 on CentOS 6
 	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svspb --version=$SPB_VERSION --product-variant=vpl-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--roles=cloud-init,bootstrap,grub-conf,nginx,svspb,vmware-tools,post-cleanup-image,power-cycle --disable-autoconf --static-repo --versioned-repo \
+		--roles=cloud-init,bootstrap,grub-conf,nginx,postgresql,svspb,vmware-tools,post-cleanup-image,power-cycle --disable-autoconf --static-repo --versioned-repo \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
+
+
+	#
+	# EXPERIMENTAL
+	#
+
+	# SVTSE 1.00 on CentOS 7
+#	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svtse --version=$SVTSE_VERSION_EXPERIMENTAL --product-variant=vpl-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
+#		--roles=cloud-init,bootstrap,grub-conf,nginx,svtse,vmware-tools,post-cleanup-image --disable-autoconf --static-repo --versioned-repo \
+#		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
+
 
 
 	if [ "$HEAT_TEMPLATES" == "yes" ]
