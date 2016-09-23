@@ -31,6 +31,15 @@
   command: yum clean all
 
 
+# The following task belongs to centos7.yml:
+- name: centos7 - copy igb_uio rc.modules file to boot sequence
+  copy: src=centos7/rc.modules
+        dest=/etc/rc.modules
+        owner=root
+        group=root
+        mode=0755
+
+
 - name: centos - copy Sandvine SVTCPA login logo generator
   copy: src=sandvine-motd-issue-banner.sh
         dest=/tmp/sandvine-motd-issue-banner.sh
