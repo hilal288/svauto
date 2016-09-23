@@ -17,6 +17,8 @@
 build_yum_repo_yukon()
 {
 
+	YUKON_SVNDA="5.20.0018"
+
 	YUKON_SVTSE="1.00.0041"
 
 	YUKON_SVTCPA="5.40.0052"
@@ -37,6 +39,14 @@ build_yum_repo_yukon()
 
 	YUKON_SVSM_C6="7.50.0006"
 	YUKON_SVSM_C7="7.50-0006"
+
+
+	#
+	# NA stuff
+	#
+
+	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos7 --product=svnda --version=$YUKON_SVNDA --latest
+
 
 
 	#

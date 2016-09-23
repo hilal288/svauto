@@ -102,6 +102,11 @@ esac
 
 case "$PRODUCT" in
 
+	svnda)
+
+		PROD_DIR="NA"
+		;;
+
 	svtcpa)
 
 		PROD_DIR="TCPA"
@@ -255,7 +260,7 @@ then
 fi
 
 
-if [ "$PRODUCT" == "svtse" ] || [ "$PRODUCT" == "svtcpa" ]
+if [ "$PRODUCT" == "svtse" ] || [ "$PRODUCT" == "svtcpa" ] || [ "$PRODUCT" == "svnda" ]
 then
 
 	rm -f $FULL_PATH/Packages/nginx*
@@ -267,6 +272,14 @@ if [ "$PRODUCT" == "svpts" ]
 then
 
 	rm -f $FULL_PATH/Packages/dpdk*
+
+fi
+
+
+if [ "$PRODUCT" == "svnda" ]
+then
+
+	rm -f $FULL_PATH/Packages/postgresql93*
 
 fi
 
