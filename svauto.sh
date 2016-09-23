@@ -135,12 +135,6 @@ case $i in
 		shift
 		;;
 
-	--packer-build-official)
-
-		PACKER_BUILD_OFFICIAL="yes"
-		shift
-		;;
-
 	--packer-build-cs)
 
 		PACKER_BUILD_CS="yes"
@@ -549,18 +543,8 @@ fi
 if [ "$PACKER_BUILD_CS" == "yes" ]
 then
 
-	packer_build_cs_lab
+#	packer_build_cs_lab
 	packer_build_cs
-
-	exit 0
-
-fi
-
-
-if [ "$PACKER_BUILD_OFFICIAL" == "yes" ]
-then
-
-	packer_build_official
 
 	exit 0
 
@@ -570,7 +554,7 @@ fi
 if [ "$PACKER_BUILD_SANDVINE" == "yes" ]
 then
 
-	packer_build_sandvine_lab
+#	packer_build_sandvine_lab
 	packer_build_sandvine
 	packer_build_sandvine_experimental
 
