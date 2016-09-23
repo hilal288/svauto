@@ -488,7 +488,7 @@ else
 		do
 
 			echo
-			echo "Packer is now building: "$PACKER_VM_NAME" with Ansible (try: $TRIES)..."
+			echo "Packer is now building: "$PACKER_VM_NAME" with Ansible (try: $TRIES of $MAX_TRIES)..."
 			echo
 
 			if packer build packer/$PACKER_FILES/$PACKER_VM_NAME-packer.yaml
