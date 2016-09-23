@@ -54,7 +54,6 @@
     - ifstat
     - strace
     - ltrace
-    - chrony
     - man-db
     - netcat
     - telnet
@@ -98,6 +97,7 @@
 - name: ubuntu - apt installing Server tools
   apt: name={{item}} state=latest update_cache=yes
   with_items:
+    - chrony
     - vim-nox
     - mtr-tiny
   when: ubuntu_install == 'server'
