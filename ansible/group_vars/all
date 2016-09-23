@@ -131,12 +131,11 @@ deploy_pts_freebsd_pkgs: "no"
 
 # Products and versions
 pts_version: "7.20"
-
 sde_version: "7.30"
-
 spb_version: "6.60"
-
 csd_version: "7.50"
+svtse_version: "1.00"
+svtcpa_version: "5.40"
 
 
 #

@@ -6,6 +6,6 @@ setMotdIssue() {
 	figlet -f slant $1 | sed -e 's/\\/\\\\/g' > /etc/issue
 }
 
-if [ -s "/usr/local/sandvine/etc/versions/TSE" ]; then
-	setMotdIssue "Sandvine - TSE"
+if [ -s "/usr/local/sandvine/etc/versions/TCPAccelerator" ]; then
+	setMotdIssue "Sandvine - TCPA"
 fi

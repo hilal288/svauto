@@ -572,6 +572,7 @@ then
 
 	packer_build_sandvine_lab
 	packer_build_sandvine
+	packer_build_sandvine_experimental
 
 	exit 0
 

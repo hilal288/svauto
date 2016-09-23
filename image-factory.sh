@@ -417,6 +417,14 @@ esac
 
 case "$PRODUCT" in
 
+        *svtse)
+		EXTRA_VARS=""$EXTRA_VARS" svtse_version="$VERSION""
+		;;
+
+        *svtcpa)
+		EXTRA_VARS=""$EXTRA_VARS" svtcpa_version="$VERSION""
+		;;
+
         *svsde)
 		EXTRA_VARS=""$EXTRA_VARS" sde_version="$VERSION""
 		;;
@@ -441,7 +449,7 @@ case "$PRODUCT" in
 
         *)
 		echo
-		echo "Usage: $0 --product={svpts|svsde|svspb|svcsd|centos|ubuntu}"
+		echo "Usage: $0 --product={svtse|svpts|svsde|svspb|svcsd|centos|ubuntu}"
 		exit 1
 		;;
 
@@ -652,11 +660,11 @@ then
 		if [ ! -f ~/$OS_PROJECT-openrc.sh ]
 		then
 			echo
-			echo "OpenStack Credentials for "admin" account not found, aborting!"
+			echo "OpenStack Credentials for "$OS_PROJECT" account not found, aborting!"
 			exit 1
 		else
 			echo
-			echo "Loading OpenStack credentials for "admin" account..."
+			echo "Loading OpenStack credentials for "$OS_PROJECT" account..."
 			source ~/$OS_PROJECT-openrc.sh
 
 			GLANCE_NAME=`echo $PACKER_VM_NAME | sed 's/\-amd64//g'`
