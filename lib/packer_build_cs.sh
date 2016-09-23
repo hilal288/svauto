@@ -78,31 +78,31 @@ packer_build_cs()
 	#
 
 	# Cloud Services Build Server (back / front) on CentOS 6 (old Golang 1.5)
-	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=centos --version=6 --product-variant=build-srv-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=centos --version=6 --product-variant=cs-devops-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
 	        --roles=centos-xen,cloud-init,bootstrap,grub-conf,golang-env,nodejs-env,ccollab-client,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto
 
 	# Cloud Services Build Server (back / front) on CentOS 7 (new Golang 1.6)
-	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=centos --version=7 --product-variant=build-srv-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=centos --version=7 --product-variant=cs-devops-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
 	        --roles=centos-xen,cloud-init,bootstrap,grub-conf,golang-env,nodejs-env,ccollab-client,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto
 
 
 	# Cloud Services Build Server (back) on CentOS 6 (old Golang 1.5)
-#	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=centos --version=6 --product-variant=go-build-srv-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+#	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=centos --version=6 --product-variant=go-devops-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
 #	        --roles=centos-xen,cloud-init,bootstrap,grub-conf,golang-env,vmware-tools,post-cleanup-image $DRY_RUN_OPT
 
 	# Cloud Services Build Server (front) on CentOS 6 (NodeJS)
-#	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=centos --version=6 --product-variant=nodejs-build-srv-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+#	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=centos --version=6 --product-variant=nodejs-devops-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
 #	        --roles=centos-xen,cloud-init,bootstrap,grub-conf,nodejs-env,vmware-tools,post-cleanup-image $DRY_RUN_OPT
 
 
 	# Cloud Services Build Server (back) on CentOS 7 (new Golang 1.6)
-#	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=centos --version=7 --product-variant=go-build-srv-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+#	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=centos --version=7 --product-variant=go-devops-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
 #	        --roles=centos-xen,cloud-init,bootstrap,grub-conf,golang-env,vmware-tools,post-cleanup-image $DRY_RUN_OPT
 
 	# Cloud Services Build Server (front) on CentOS 7 (NodeJS)
-#	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=centos --version=7 --product-variant=nodejs-build-srv-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+#	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=centos --version=7 --product-variant=nodejs-devops-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
 #	        --roles=centos-xen,cloud-init,bootstrap,grub-conf,nodejs-env,vmware-tools,post-cleanup-image $DRY_RUN_OPT
 
 
