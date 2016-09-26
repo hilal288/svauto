@@ -417,6 +417,11 @@ esac
 
 case "$PRODUCT" in
 
+        *svnda)
+		EXTRA_VARS=""$EXTRA_VARS" svnda_version="$VERSION""
+		sed -i -e 's/"disk_size":.*/"disk_size": "13312",/g' $PACKER_FILE
+		;;
+
         *svtse)
 		EXTRA_VARS=""$EXTRA_VARS" svtse_version="$VERSION""
 		;;
@@ -441,6 +446,9 @@ case "$PRODUCT" in
 	svcsd)
 		;;
 
+	devops)
+		;;
+
 	centos)
 		;;
 
@@ -449,7 +457,7 @@ case "$PRODUCT" in
 
         *)
 		echo
-		echo "Usage: $0 --product={svtse|svpts|svsde|svspb|svcsd|centos|ubuntu}"
+		echo "Usage: $0 --product={svtse|svpts|svsde|svspb|svcsd|devops|centos|ubuntu}"
 		exit 1
 		;;
 

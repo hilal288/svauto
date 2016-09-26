@@ -20,6 +20,7 @@ packer_build_sandvine()
 	PTS_VERSION="7.30.0518"
 	SDE_VERSION="7.50.0132"
 	SPB_VERSION="6.65.0078"
+	SVNDA_VERSION="5.20.0018"
 
 	SVTSE_VERSION_EXPERIMENTAL="1.00.0041.pts_tse_dev_integration"
 
@@ -71,6 +72,11 @@ packer_build_sandvine()
 #	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svtse --version=$SVTSE_VERSION_EXPERIMENTAL --product-variant=vpl-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
 #		--roles=cloud-init,bootstrap,grub-conf,nginx,svtse,vmware-tools,post-cleanup-image --disable-autoconf --static-repo --versioned-repo \
 #		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
+
+	# SVNDA 5.20 on CentOS 7
+	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svnda --version=$SVNDA_VERSION --product-variant=vpl-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
+		--roles=cloud-init,bootstrap,grub-conf,nginx,postgresql,svnda,vmware-tools,post-cleanup-image --disable-autoconf --static-repo --versioned-repo \
+		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 
 

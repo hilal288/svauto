@@ -136,6 +136,7 @@ spb_version: "6.60"
 csd_version: "7.50"
 svtse_version: "1.00"
 svtcpa_version: "5.40"
+svnda_version: "5.20"
 
 
 #
