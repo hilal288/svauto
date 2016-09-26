@@ -33,6 +33,8 @@ build_yum_repo_yukon()
 	YUKON_SVSPB="6.65.0078"
 	YUKON_SVSPB_EXPERIMENTAL="7.00.0044"
 
+	YUKON_SVCC="7.20.0004"
+
 	YUKON_SVNDS="6.65.0005"
 
 	YUKON_SVUM="5.20.0306"
@@ -118,5 +120,12 @@ build_yum_repo_yukon()
 	# Experimental
 
 	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos6 --product=svspb --version=$YUKON_SVSPB_EXPERIMENTAL --latest-of-serie
+
+
+	#
+	# Control Center
+	#
+
+	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos6 --product=svcontrol-center --version=$YUKON_SVCC --latest
 
 }

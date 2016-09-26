@@ -102,6 +102,11 @@ esac
 
 case "$PRODUCT" in
 
+	svcontrol-center)
+
+		PROD_DIR="CONTROL_CENTER"
+		;;
+
 	svnda)
 
 		PROD_DIR="NA"
@@ -210,6 +215,11 @@ then
 	FULL_NAME="$PRODUCT-$VERSION"
 else
 	FULL_NAME="$PRODUCT-$PLATFORM-$VERSION"
+fi
+
+if [ "$PRODUCT" == "svcontrol-center" ]
+then
+	FULL_NAME="$PRODUCT-$VERSION"
 fi
 
 # TSE repo have an different exension, dealing with it.
