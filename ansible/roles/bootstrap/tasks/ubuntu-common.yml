@@ -71,7 +71,6 @@
     - psmisc
     - tzdata
     - tshark
-    - ostinato
     - pm-utils
     - xfsprogs
     - dos2unix
@@ -118,6 +117,7 @@
     - kdiff3
     - xine-ui
     - gparted
+    - ostinato
     - rdesktop
     - filezilla
     - terminator
