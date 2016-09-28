@@ -24,7 +24,7 @@
 # ./vagrant-builder.sh --base-os=centos6 --product=svsde
 
 
-source lib/include-tools.inc
+source lib/include_tools.inc
 
 
 #VAGRANT_DEFAULT_PROVIDER=libvirt

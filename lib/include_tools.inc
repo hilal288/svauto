@@ -16,13 +16,13 @@
 
 source svauto.conf
 
-source lib/os-deploy.sh
+source lib/os_deploy.sh
 
 source lib/move2webroot.sh
 
-source lib/build-yum-repo-agawa.sh
-source lib/build-yum-repo-niagara.sh
-source lib/build-yum-repo-yukon.sh
+source lib/build_yum_repo_agawa.sh
+source lib/build_yum_repo_niagara.sh
+source lib/build_yum_repo_yukon.sh
 
 source lib/packer_build_cs_release.sh
 source lib/packer_build_cs.sh
@@ -32,6 +32,6 @@ source lib/packer_build_sandvine.sh
 source lib/packer_build_sandvine_lab.sh
 source lib/packer_build_sandvine_experimental.sh
 
-source lib/ansible-playbook-builder.sh
+source lib/ansible_playbook_builder.sh
 
 source lib/svauto_deployments.sh
