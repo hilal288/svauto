@@ -631,10 +631,10 @@ then
 
 
 #	TODO: Auto detected all instances automatically:
-	PTS_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-pts-1 | awk $'{print $2}'` | awk $'{print $4}')
-	SDE_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-sde-1 | awk $'{print $2}'` | awk $'{print $4}')
-	SPB_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-spb-1 | awk $'{print $2}'` | awk $'{print $4}')
-#	CSD_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-csd-1 | awk $'{print $2}'` | awk $'{print $4}')
+	PTS_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svpts-1 | awk $'{print $2}'` | awk $'{print $4}')
+	SDE_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svsde-1 | awk $'{print $2}'` | awk $'{print $4}')
+	SPB_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svspb-1 | awk $'{print $2}'` | awk $'{print $4}')
+#	CSD_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svcsd-1 | awk $'{print $2}'` | awk $'{print $4}')
 
 
 	if [ -z $PTS_FLOAT ] || [ -z $SDE_FLOAT ] || [ -z $SPB_FLOAT ] #|| [ -z $CSD_FLOAT ]

@@ -2,15 +2,15 @@ heat_template_version: 2013-05-23
 
 description: >
 
-  HOT template to create Sandvine Stack, it have an Instance acting as a L2 Load Balancer, the TSE.
+  HOT template to create Sandvine Stack, it have an Instance acting as a L2 Load Balancer, the SVTSE.
 
   We have 6 Instances:
 
-  * PTS - CentOS 7
-  * TSE - CentOS 7
-  * SDE - CentOS 7
-  * SPB - CentOS 6
-  * TCPA - CentOS 7
+  * SVPTS - CentOS 7
+  * SVTSE - CentOS 7
+  * SVSDE - CentOS 7
+  * SVSPB - CentOS 6
+  * SVTCPA - CentOS 7
   * Subscriber - Ubuntu 16.04
 
 
@@ -19,13 +19,14 @@ description: >
       ---|ctrl_subnet|------------------- Control Network (with Internet access via router_i0)
       |     |         |    |    |           |
      ---   ---       ---  ---  ---         ---
-     | |   | |       | |  | |  | |         | |      --|Ubuntu as a Subscriber|
+     | |   | |       |S|  |S|  |S|         | |
+     | |   | |       |V|  |V|  |V|         | |      --|Ubuntu as a Subscriber|
      | |   | |       |P|  |P|  |T|         | |      |
-     | |   | |       |T|  |T|  |C|         | |    --------------------------
-     | |   | |       |S|  |S|  |P|         | |----|data_real_subnet1 + dhcp|
+     |S|   |S|       |T|  |T|  |C|         |S|    --------------------------
+     |V|   |V|       |S|  |S|  |P|         |V|----|data_real_subnet1 + dhcp|
      |S|   |S|  -----| |--| |--| |         |T|    --------------------------
-     |B|   |D|  |    |1|  |2|  |A|         |S|
-     |P|   |E|  |    ---  ---  ---         |E|
+     |P|   |D|  |    |1|  |2|  |A|         |S|
+     |B|   |E|  |    ---  ---  ---         |E|
      | |   | |  |     |    |    |          | |
      | |   | |  |     |    |    |          | |
      | |   | |  |    |data_chain_subnet1|--| |
@@ -55,35 +56,35 @@ parameters:
     default: "ext-net"
 
   # Image definitions
-  pts_image:
+  svpts_image:
     type: string
-    label: "PTS Image (default '{{pts_image}}')"
-    description: "PTS Image"
-    default: "{{pts_image}}"
+    label: "SVPTS Image (default '{{svpts_image}}')"
+    description: "SVPTS Image"
+    default: "{{svpts_image}}"
 
-  sde_image:
+  svsde_image:
     type: string
-    label: "SDE Image (default '{{sde_image}}')"
-    description: "SDE Image"
-    default: "{{sde_image}}"
+    label: "SVSDE Image (default '{{svsde_image}}')"
+    description: "SVSDE Image"
+    default: "{{svsde_image}}"
 
-  spb_image:
+  svspb_image:
     type: string
-    label: "SPB Image (default '{{spb_image}}')"
-    description: "SPB Image"
-    default: "{{spb_image}}"
+    label: "SVSPB Image (default '{{svspb_image}}')"
+    description: "SVSPB Image"
+    default: "{{svspb_image}}"
 
-  tse_image:
+  svtse_image:
     type: string
-    label: "TSE Image (default '{{tse_image}}')"
-    description: "TSE Image"
-    default: "{{tse_image}}"
+    label: "SVTSE Image (default '{{svtse_image}}')"
+    description: "SVTSE Image"
+    default: "{{svtse_image}}"
 
-  tcpa_image:
+  svtcpa_image:
     type: string
-    label: "TCP Accelerator Image (default '{{tcpa_image}}')"
+    label: "TCP Accelerator Image (default '{{svtcpa_image}}')"
     description: "TCP Accelerator Image"
-    default: "{{tcpa_image}}"
+    default: "{{svtcpa_image}}"
 
   subscriber_image:
     type: string
@@ -165,10 +166,10 @@ resources:
           port_range_min: 3389
           port_range_max: 3389
 
-  sde_ctrl_sec:
+  svsde_ctrl_sec:
     type: OS::Neutron::SecurityGroup
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-sde-ctrl-rules' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-svsde-ctrl-rules' } }
       rules:
         - protocol: icmp
         - protocol: tcp
@@ -181,10 +182,10 @@ resources:
           port_range_min: 443
           port_range_max: 443
 
-  sde_srvc_sec:
+  svsde_srvc_sec:
     type: OS::Neutron::SecurityGroup
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-sde-srvc-rules' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-svsde-srvc-rules' } }
       rules:
         - protocol: icmp
         - protocol: tcp
@@ -194,10 +195,10 @@ resources:
           port_range_min: 1
           port_range_max: 65535
 
-  spb_ctrl_sec:
+  svspb_ctrl_sec:
     type: OS::Neutron::SecurityGroup
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-spb-ctrl-rules' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-svspb-ctrl-rules' } }
       rules:
         - protocol: icmp
         - protocol: tcp
@@ -207,10 +208,10 @@ resources:
           port_range_min: 8443
           port_range_max: 8443
 
-  spb_srvc_sec:
+  svspb_srvc_sec:
     type: OS::Neutron::SecurityGroup
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-spb-srvc-rules' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-svspb-srvc-rules' } }
       rules:
         - protocol: icmp
         - protocol: tcp
@@ -220,20 +221,20 @@ resources:
           port_range_min: 1
           port_range_max: 65535
 
-  pts_ctrl_sec:
+  svpts_ctrl_sec:
     type: OS::Neutron::SecurityGroup
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-pts-ctrl-rules' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-svpts-ctrl-rules' } }
       rules:
         - protocol: icmp
         - protocol: tcp
           port_range_min: 22
           port_range_max: 22
 
-  pts_srvc_sec:
+  svpts_srvc_sec:
     type: OS::Neutron::SecurityGroup
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-pts-srvc-rules' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-svpts-srvc-rules' } }
       rules:
         - protocol: icmp
         - protocol: tcp
@@ -243,20 +244,20 @@ resources:
           port_range_min: 1
           port_range_max: 65535
 
-  tse_ctrl_sec:
+  svtse_ctrl_sec:
     type: OS::Neutron::SecurityGroup
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-pts-ctrl-rules' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-svpts-ctrl-rules' } }
       rules:
         - protocol: icmp
         - protocol: tcp
           port_range_min: 22
           port_range_max: 22
 
-  tse_srvc_sec:
+  svtse_srvc_sec:
     type: OS::Neutron::SecurityGroup
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-pts-srvc-rules' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-svpts-srvc-rules' } }
       rules:
         - protocol: icmp
         - protocol: tcp
@@ -266,20 +267,20 @@ resources:
           port_range_min: 1
           port_range_max: 65535
 
-  tcpa_ctrl_sec:
+  svtcpa_ctrl_sec:
     type: OS::Neutron::SecurityGroup
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-pts-ctrl-rules' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-svpts-ctrl-rules' } }
       rules:
         - protocol: icmp
         - protocol: tcp
           port_range_min: 22
           port_range_max: 22
 
-  tcpa_srvc_sec:
+  svtcpa_srvc_sec:
     type: OS::Neutron::SecurityGroup
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-pts-srvc-rules' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-svpts-srvc-rules' } }
       rules:
         - protocol: icmp
         - protocol: tcp
@@ -375,123 +376,123 @@ resources:
   # Control Ports (with each Floating IP)
   #
 
-  pts_ctrl_port:
+  svpts_ctrl_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "pts-ctrl-port"]]}
+      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "svpts-ctrl-port"]]}
       network: { get_resource: ctrl_net }
       fixed_ips:
         - ip_address: 192.168.192.30
       security_groups:
-        - { get_resource: pts_ctrl_sec }
+        - { get_resource: svpts_ctrl_sec }
 
-  pts_floating_ip_assoc:
+  svpts_floating_ip_assoc:
     type: OS::Neutron::FloatingIPAssociation
     properties:
       floatingip_id: { get_resource: floating_ip_1 }
-      port_id: { get_resource: pts_ctrl_port }
+      port_id: { get_resource: svpts_ctrl_port }
 
-  sde_ctrl_port:
+  svsde_ctrl_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "sde-ctrl-port"]]}
+      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "svsde-ctrl-port"]]}
       network: { get_resource: ctrl_net }
       fixed_ips:
         - ip_address: 192.168.192.20
       security_groups:
-        - { get_resource: sde_ctrl_sec }
+        - { get_resource: svsde_ctrl_sec }
 
-  sde_floating_ip_assoc:
+  svsde_floating_ip_assoc:
     type: OS::Neutron::FloatingIPAssociation
     properties:
       floatingip_id: { get_resource: floating_ip_2 }
-      port_id: { get_resource: sde_ctrl_port }
+      port_id: { get_resource: svsde_ctrl_port }
 
-  spb_ctrl_port:
+  svspb_ctrl_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "spb-ctrl-port"]]}
+      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "svspb-ctrl-port"]]}
       network: { get_resource: ctrl_net }
       fixed_ips:
         - ip_address: 192.168.192.10
       security_groups:
-        - { get_resource: spb_ctrl_sec }
+        - { get_resource: svspb_ctrl_sec }
 
-  spb_floating_ip_assoc:
+  svspb_floating_ip_assoc:
     type: OS::Neutron::FloatingIPAssociation
     properties:
       floatingip_id: { get_resource: floating_ip_3 }
-      port_id: { get_resource: spb_ctrl_port }
+      port_id: { get_resource: svspb_ctrl_port }
 
-  tse_ctrl_port:
+  svtse_ctrl_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "tse-ctrl-port"]]}
+      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "svtse-ctrl-port"]]}
       network: { get_resource: ctrl_net }
       fixed_ips:
         - ip_address: 192.168.192.31
       security_groups:
-        - { get_resource: tse_ctrl_sec }
+        - { get_resource: svtse_ctrl_sec }
 
-  tse_floating_ip_assoc:
+  svtse_floating_ip_assoc:
     type: OS::Neutron::FloatingIPAssociation
     properties:
       floatingip_id: { get_resource: floating_ip_4 }
-      port_id: { get_resource: tse_ctrl_port }
+      port_id: { get_resource: svtse_ctrl_port }
 
-  tcpa_ctrl_port:
+  svtcpa_ctrl_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "tcpa-ctrl-port"]]}
+      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "svtcpa-ctrl-port"]]}
       network: { get_resource: ctrl_net }
       fixed_ips:
         - ip_address: 192.168.192.32
       security_groups:
-        - { get_resource: tcpa_ctrl_sec }
+        - { get_resource: svtcpa_ctrl_sec }
 
-  tcpa_floating_ip_assoc:
+  svtcpa_floating_ip_assoc:
     type: OS::Neutron::FloatingIPAssociation
     properties:
       floatingip_id: { get_resource: floating_ip_5 }
-      port_id: { get_resource: tcpa_ctrl_port }
+      port_id: { get_resource: svtcpa_ctrl_port }
 
   # Services Ports
-  spb_srvc_port:
+  svspb_srvc_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "spb-srvc-port"]]}
+      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "svspb-srvc-port"]]}
       network: { get_resource: service_net }
       fixed_ips:
         - ip_address: 192.168.192.130
 
-  sde_srvc_port:
+  svsde_srvc_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "sde-srvc-port"]]}
+      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "svsde-srvc-port"]]}
       network: { get_resource: service_net }
       fixed_ips:
        - ip_address: 192.168.192.140
  
-  pts_srvc_port:
+  svpts_srvc_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "pts-srvc-port"]]}
+      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "svpts-srvc-port"]]}
       network: { get_resource: service_net }
       fixed_ips:
         - ip_address: 192.168.192.150
 
-  tse_srvc_port:
+  svtse_srvc_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "tse-srvc-port"]]}
+      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "svtse-srvc-port"]]}
       network: { get_resource: service_net }
       fixed_ips:
         - ip_address: 192.168.192.151
 
-  tcpa_srvc_port:
+  svtcpa_srvc_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "tcpa-srvc-port"]]}
+      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "svtcpa-srvc-port"]]}
       network: { get_resource: service_net }
       fixed_ips:
         - ip_address: 192.168.192.152
@@ -499,43 +500,43 @@ resources:
   sub_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "spb-srvc-port"]]}
+      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "svspb-srvc-port"]]}
       network: { get_resource: data_sub_net1 }
 
   # Chain Network Data Ports
-  pts_chain_port:
+  svpts_chain_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "pts-chain-port"]]}
+      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "svpts-chain-port"]]}
       network: { get_resource: data_chain_net1 }
       port_security_enabled: False
 
-  tse_chain_port:
+  svtse_chain_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "tse-chain-port"]]}
+      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "svtse-chain-port"]]}
       network: { get_resource: data_chain_net1 }
       port_security_enabled: False
 
-  tcpa_chain_port:
+  svtcpa_chain_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "tcpa-chain-port"]]}
+      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "svtcpa-chain-port"]]}
       network: { get_resource: data_chain_net1 }
       port_security_enabled: False
 
-  # TSE Data Ports (Subscriber and Internet
-  tse_sub_port:
+  # SVTSE Data Ports (Subscriber and Internet
+  svtse_sub_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "tse-s1-port"]]}
+      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "svtse-s1-port"]]}
       network: { get_resource: data_sub_net1 }
       port_security_enabled: False
 
-  tse_int_port:
+  svtse_int_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "tse-i1-port"]]}
+      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "svtse-i1-port"]]}
       network: { get_resource: data_int_net1 }
       port_security_enabled: False
 
@@ -544,19 +545,19 @@ resources:
   #
 
   # Traffic Steering Engine
-  tse_instance_1:
+  svtse_instance_1:
     type: OS::Nova::Server
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-tse-1' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-svtse-1' } }
       key_name: { get_param: 'ssh_key' }
-      image: { get_param: 'tse_image' }
+      image: { get_param: 'svtse_image' }
       flavor: "m1.medium"
       networks:
-        - port: { get_resource: tse_ctrl_port }
-        - port: { get_resource: tse_srvc_port }
-        - port: { get_resource: tse_chain_port }
-        - port: { get_resource: tse_sub_port }
-        - port: { get_resource: tse_int_port }
+        - port: { get_resource: svtse_ctrl_port }
+        - port: { get_resource: svtse_srvc_port }
+        - port: { get_resource: svtse_chain_port }
+        - port: { get_resource: svtse_sub_port }
+        - port: { get_resource: svtse_int_port }
       user_data_format: RAW
       user_data: |
         #cloud-config
@@ -569,18 +570,18 @@ resources:
             sandvine:sandvine
           expire: False
 
-  # PTS Instance
-  pts_instance_1:
+  # SVPTS Instance
+  svpts_instance_1:
     type: OS::Nova::Server
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-pts-1' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-svpts-1' } }
       key_name: { get_param: 'ssh_key' }
-      image: { get_param: 'pts_image' }
+      image: { get_param: 'svpts_image' }
       flavor: "m1.small"
       networks:
-        - port: { get_resource: pts_ctrl_port }
-        - port: { get_resource: pts_srvc_port }
-        - port: { get_resource: pts_chain_port }
+        - port: { get_resource: svpts_ctrl_port }
+        - port: { get_resource: svpts_srvc_port }
+        - port: { get_resource: svpts_chain_port }
       user_data_format: RAW
       user_data: |
         #cloud-config
@@ -594,17 +595,17 @@ resources:
           expire: False
 
   # TCP Accelerator
-  tcpa_instance_1:
+  svtcpa_instance_1:
     type: OS::Nova::Server
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-tcpa-1' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-svtcpa-1' } }
       key_name: { get_param: 'ssh_key' }
-      image: { get_param: 'tcpa_image' }
+      image: { get_param: 'svtcpa_image' }
       flavor: "m1.medium"
       networks:
-        - port: { get_resource: tcpa_ctrl_port }
-        - port: { get_resource: tcpa_srvc_port }
-        - port: { get_resource: tcpa_chain_port }
+        - port: { get_resource: svtcpa_ctrl_port }
+        - port: { get_resource: svtcpa_srvc_port }
+        - port: { get_resource: svtcpa_chain_port }
       user_data_format: RAW
       user_data: |
         #cloud-config
@@ -617,17 +618,17 @@ resources:
             sandvine:sandvine
           expire: False
 
-  # SPB Instance
-  spb_instance_1:
+  # SVSPB Instance
+  svspb_instance_1:
     type: OS::Nova::Server
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-spb-1' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-svspb-1' } }
       key_name: { get_param: 'ssh_key' }
-      image: { get_param: 'spb_image' }
+      image: { get_param: 'svspb_image' }
       flavor: "m1.medium"
       networks:
-        - port: { get_resource: spb_ctrl_port }
-        - port: { get_resource: spb_srvc_port }
+        - port: { get_resource: svspb_ctrl_port }
+        - port: { get_resource: svspb_srvc_port }
       user_data_format: RAW
       user_data: |
         #cloud-config
@@ -640,17 +641,17 @@ resources:
             sandvine:sandvine
           expire: False
 
-  # SDE Instance
-  sde_instance_1:
+  # SVSDE Instance
+  svsde_instance_1:
     type: OS::Nova::Server
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-sde-1' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-svsde-1' } }
       key_name: { get_param: 'ssh_key' }
-      image: { get_param: 'sde_image' }
+      image: { get_param: 'svsde_image' }
       flavor: "m1.medium"
       networks:
-        - port: { get_resource: sde_ctrl_port }
-        - port: { get_resource: sde_srvc_port }
+        - port: { get_resource: svsde_ctrl_port }
+        - port: { get_resource: svsde_srvc_port }
       user_data_format: RAW
       user_data: |
         #cloud-config
@@ -687,22 +688,22 @@ resources:
 
 outputs:
 
-  pts_floating_ip:
-    description: The IP address of the deployed PTS Instance
+  svpts_floating_ip:
+    description: The IP address of the deployed SVPTS Instance
     value: { get_attr: [floating_ip_1, floating_ip_address] }
 
-  sde_floating_ip:
-    description: The IP address of the deployed SDE Instance
+  svsde_floating_ip:
+    description: The IP address of the deployed SVSDE Instance
     value: { get_attr: [floating_ip_2, floating_ip_address] }
 
-  spb_floating_ip:
-    description: The IP address of the deployed SPB Instance
+  svspb_floating_ip:
+    description: The IP address of the deployed SVSPB Instance
     value: { get_attr: [floating_ip_3, floating_ip_address] }
 
-  tse_floating_ip:
-    description: The IP address of the deployed TSE Instance
+  svtse_floating_ip:
+    description: The IP address of the deployed SVTSE Instance
     value: { get_attr: [floating_ip_4, floating_ip_address] }
 
-  tcpa_floating_ip:
-    description: The IP address of the deployed TCP Accelerator Instance
+  svtcpa_floating_ip:
+    description: The IP address of the deployed Sandvine TCP Accelerator Instance
     value: { get_attr: [floating_ip_5, floating_ip_address] }
