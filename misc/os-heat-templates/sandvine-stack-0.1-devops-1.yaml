@@ -568,8 +568,6 @@ resources:
             root:sandvine
             sandvine:sandvine
           expire: False
-        runcmd:
-        - 'su -c "\curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/svauto-deployments.sh | bash -s -- --base-os=centos7 --ansible-roles=bootstrap,grub-conf,golang-env,nodejs-env,ccollab-client,post-cleanup" sandvine'
 
 outputs:
   pts_floating_ip:
