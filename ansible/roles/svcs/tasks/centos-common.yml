@@ -50,7 +50,3 @@
 - name: centos - sql creating Cloud Services database structure
   mysql_db: name=cs state=import target=/tmp/sql-schema.sql
   when: cs_db_created|changed
-
-
-- name: centos - cleanup YUM local cache
-  command: yum clean all

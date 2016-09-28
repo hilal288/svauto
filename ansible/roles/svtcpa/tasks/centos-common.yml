@@ -27,10 +27,6 @@
     - sv-tcp-accelerator
 
 
-- name: centos - yum cleanup local cache
-  command: yum clean all
-
-
 # The following task belongs to centos7.yml:
 - name: centos7 - copy igb_uio rc.modules file to boot sequence
   copy: src=centos7/rc.modules

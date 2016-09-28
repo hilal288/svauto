@@ -42,10 +42,6 @@
   when: is_container != 'yes' and disable_autoconf != 'yes'
 
 
-- name: centos - Cleanup YUM local cache
-  command: yum clean all
-
-
 - name: centos - copy Sandvine SVSPB login logo generator
   copy: src=sandvine-motd-issue-banner.sh
         dest=/tmp/sandvine-motd-issue-banner.sh
