@@ -544,10 +544,10 @@ resources:
   #
 
   # Traffic Steering Engine
-  tse_instance:
+  tse_instance_1:
     type: OS::Nova::Server
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-tse' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-tse-1' } }
       key_name: { get_param: 'ssh_key' }
       image: { get_param: 'tse_image' }
       flavor: "m1.medium"
@@ -570,10 +570,10 @@ resources:
           expire: False
 
   # PTS Instance
-  pts_instance:
+  pts_instance_1:
     type: OS::Nova::Server
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-pts' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-pts-1' } }
       key_name: { get_param: 'ssh_key' }
       image: { get_param: 'pts_image' }
       flavor: "m1.small"
@@ -594,10 +594,10 @@ resources:
           expire: False
 
   # TCP Accelerator
-  tcpa_instance:
+  tcpa_instance_1:
     type: OS::Nova::Server
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-tcpa' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-tcpa-1' } }
       key_name: { get_param: 'ssh_key' }
       image: { get_param: 'tcpa_image' }
       flavor: "m1.medium"
@@ -618,10 +618,10 @@ resources:
           expire: False
 
   # SPB Instance
-  spb_instance:
+  spb_instance_1:
     type: OS::Nova::Server
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-spb' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-spb-1' } }
       key_name: { get_param: 'ssh_key' }
       image: { get_param: 'spb_image' }
       flavor: "m1.medium"
@@ -641,10 +641,10 @@ resources:
           expire: False
 
   # SDE Instance
-  sde_instance:
+  sde_instance_1:
     type: OS::Nova::Server
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-sde' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-sde-1' } }
       key_name: { get_param: 'ssh_key' }
       image: { get_param: 'sde_image' }
       flavor: "m1.medium"
@@ -664,10 +664,10 @@ resources:
           expire: False
 
   # Subscriber Instance
-  subscriber_instance:
+  subscriber_instance_1:
     type: OS::Nova::Server
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-subscriber' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-subscriber-1' } }
       key_name: { get_param: 'ssh_key' }
       image: { get_param: 'subscriber_image' }
       flavor: "m1.medium"

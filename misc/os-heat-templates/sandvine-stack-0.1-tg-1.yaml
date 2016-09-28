@@ -68,7 +68,7 @@ parameters:
     description: "SPB Image"
     default: "{{spb_image}}"
 
-  tg_server_image:
+  tg_image:
     type: string
     label: "Traffic Generator Instance"
     description: "Regular Server as a Traffic Generator"
@@ -375,24 +375,24 @@ resources:
       floatingip_id: { get_resource: floating_ip_4 }
       port_id: { get_resource: tg_ctrl_port }
 
-  tg_server_sub_port1:
+  tg_sub_port:
     type: OS::Neutron::Port
     properties:
       name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "tg_server-s1-port"]]}
       network: { get_resource: data_sub_net1 }
       port_security_enabled: False
 
-  tg_server_int_port1:
+  tg_int_port:
     type: OS::Neutron::Port
     properties:
       name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "tg_server-i1-port"]]}
       network: { get_resource: data_int_net1 }
       port_security_enabled: False
 
-  pts:
+  pts_1:
     type: OS::Nova::Server
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-pts' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-pts-1' } }
       key_name: { get_param: 'ssh_key' }
       image: { get_param: 'pts_image' }
       flavor: "m1.small"
@@ -413,10 +413,10 @@ resources:
             sandvine:sandvine
           expire: False
 
-  spb:
+  spb_1:
     type: OS::Nova::Server
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-spb' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-spb-1' } }
       key_name: { get_param: 'ssh_key' }
       image: { get_param: 'spb_image' }
       flavor: "m1.medium"
@@ -435,10 +435,10 @@ resources:
             sandvine:sandvine
           expire: False
 
-  sde:
+  sde_1:
     type: OS::Nova::Server
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-sde' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-sde-1' } }
       key_name: { get_param: 'ssh_key' }
       image: { get_param: 'sde_image' }
       flavor: "m1.medium"
@@ -457,17 +457,17 @@ resources:
             sandvine:sandvine
           expire: False
 
-  tg_server1:
+  tg_1:
     type: OS::Nova::Server
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-tg-server-1' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-tg-1' } }
       key_name: { get_param: 'ssh_key' }
-      image: { get_param: 'tg_server_image' }
+      image: { get_param: 'tg_image' }
       flavor: "m1.little"
       networks:
         - port: { get_resource: tg_ctrl_port }
-        - port: { get_resource: tg_server_sub_port1 }
-        - port: { get_resource: tg_server_int_port1 }
+        - port: { get_resource: tg_sub_port }
+        - port: { get_resource: tg_int_port }
       user_data_format: RAW
       user_data: |
         #cloud-config

@@ -331,10 +331,10 @@ resources:
       network: { get_resource: data_sub_net1 }
       port_security_enabled: False
 
-  nfv:
+  nfv_1:
     type: OS::Nova::Server
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-nfv' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-nfv-1' } }
       key_name: { get_param: 'ssh_key' }
       image: { get_param: 'nfv_image' }
       flavor: "m1.small"
@@ -355,10 +355,10 @@ resources:
             sandvine:sandvine
           expire: False
 
-  database:
+  database_1:
     type: OS::Nova::Server
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-database' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-database-1' } }
       key_name: { get_param: 'ssh_key' }
       image: { get_param: 'database_image' }
       flavor: "m1.small"
@@ -377,10 +377,10 @@ resources:
             sandvine:sandvine
           expire: False
 
-  engine:
+  engine_1:
     type: OS::Nova::Server
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-engine' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-engine-1' } }
       key_name: { get_param: 'ssh_key' }
       image: { get_param: 'engine_image' }
       flavor: "m1.small"

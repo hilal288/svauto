@@ -69,11 +69,11 @@ parameters:
     description: "SPB Image"
     default: "{{spb_image}}"
 
-  subscriber_server_image:
+  subscriber_image:
     type: string
     label: "Server Instance"
     description: "Regular Server as a Subscriber"
-    default: "{{subscriber_server_image}}"
+    default: "{{subscriber_image}}"
 
 resources:
   rtr:
@@ -360,16 +360,16 @@ resources:
       network: { get_resource: data_sub_net1 }
       port_security_enabled: False
 
-  subscriber_server_sub_port1:
+  subscriber_sub_port1:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "subscriber_server-s1-port"]]}
+      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "subscriber-s1-port"]]}
       network: { get_resource: data_sub_net1 }
 
-  pts:
+  pts_1:
     type: OS::Nova::Server
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-pts' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-pts-1' } }
       key_name: { get_param: 'ssh_key' }
       image: { get_param: 'pts_image' }
       flavor: "m1.small"
@@ -390,10 +390,10 @@ resources:
             sandvine:sandvine
           expire: False
 
-  spb:
+  spb_1:
     type: OS::Nova::Server
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-spb' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-spb-1' } }
       key_name: { get_param: 'ssh_key' }
       image: { get_param: 'spb_image' }
       flavor: "m1.medium"
@@ -412,10 +412,10 @@ resources:
             sandvine:sandvine
           expire: False
 
-  sde:
+  sde_1:
     type: OS::Nova::Server
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-sde' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-sde-1' } }
       key_name: { get_param: 'ssh_key' }
       image: { get_param: 'sde_image' }
       flavor: "m1.medium"
@@ -434,15 +434,15 @@ resources:
             sandvine:sandvine
           expire: False
 
-  subscriber_server1:
+  subscriber_1:
     type: OS::Nova::Server
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-subscriber-server-1' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-subscriber-1' } }
       key_name: { get_param: 'ssh_key' }
-      image: { get_param: 'subscriber_server_image' }
+      image: { get_param: 'subscriber_image' }
       flavor: "m1.little"
       networks:
-        - port: { get_resource: subscriber_server_sub_port1 }
+        - port: { get_resource: subscriber_sub_port1 }
       user_data_format: RAW
       user_data: |
         #cloud-config
