@@ -40,4 +40,4 @@
   command: "{{item}}"
   with_items:
   - openstack user create --domain default --password "{{service_password}}" --email manila@{{your_domain}} manila
-  - openstack role add --project service --user manila admin
+  - openstack role add --project service --user manila --user-domain default admin

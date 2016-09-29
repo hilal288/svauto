@@ -25,10 +25,6 @@ spb_servers={{ spb_srvc_ip }}
 cluster_name="{{ cluster_name }}"
 cluster_stat_name="{{ cluster_name }}"
 
-# Lower RAM requirements
-hal_maxFlows=100000
-ptsm_numHugePages=256
-
 # License Server
 {% if release == 'prod' %}
 #license_server_primary="{{ license_server }}"

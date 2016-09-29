@@ -15,15 +15,30 @@
 # limitations under the License.
 
 
-TODAY=$(date +"%Y%m%d")
-
-
-source lib/include-tools.inc
+source lib/include_tools.inc
 
 
 for i in "$@"
 do
 case $i in
+
+        --base-os=*)
+
+                BASE_OS="${i#*=}"
+                shift
+                ;;
+
+	--base-os-upgrade)
+
+		BASE_OS_UPGRADE="yes"
+		shift
+		;;
+
+	--operation=*)
+
+		OPERATION="${i#*=}"
+		shift
+		;;
 
 	--bootstrap-svauto)
 
@@ -31,6 +46,29 @@ case $i in
 		shift
 		;;
 
+	--svauto-deployments)
+
+		SVAUTO_DEPLOYMENTS="yes"
+		shift
+		;;
+
+	# Options starting with --ansible-* are passed to Ansible itself,
+	# or being used by dynamic stuff.
+	--ansible-roles=*)
+
+		ALL_ANSIBLE_ROLES="${i#*=}"
+		ANSIBLE_ROLES="$( echo $ALL_ANSIBLE_ROLES | sed s/,/\ /g )"
+		shift
+		;;
+
+	--ansible-extra-vars=*)
+
+		ALL_ANSIBLE_EXTRA_VARS="${i#*=}"
+		ANSIBLE_EXTRA_VARS="$( echo $ALL_ANSIBLE_EXTRA_VARS | sed s/,/\ /g )"
+		shift
+		;;
+
+	# Options starting with --os-* are OpenStack related
 	--os-project=*)
 
 		OS_PROJECT="${i#*=}"
@@ -40,6 +78,42 @@ case $i in
 	--os-stack=*)
 
 		OS_STACK="${i#*=}"
+		shift
+		;;
+
+	--os-aio)
+
+		OS_AIO="yes"
+		shift
+		;;
+
+        --os-release=*)
+
+	        OS_RELEASE="${i#*=}"
+		shift
+		;;
+
+        --os-bridge-mode=*)
+
+	        OS_BRIDGE_MODE="${i#*=}"
+		shift
+		;;
+
+        --os-hybrid-firewall)
+
+		OS_HYBRID_FW="yes"
+		shift
+		;;
+
+        --os-no-security-groups)
+
+		OS_NO_SEC="yes"
+		shift
+		;;
+
+	--os-open-provider-nets-to-regular-users)
+
+		OS_OPEN_PROVIDER_NETS_TO_REGULAR_USERS="yes"
 		shift
 		;;
 
@@ -61,21 +135,9 @@ case $i in
 		shift
 		;;
 
-	--packer-build-official)
-
-		PACKER_BUILD_OFFICIAL="yes"
-		shift
-		;;
-
 	--packer-build-cs)
 
 		PACKER_BUILD_CS="yes"
-		shift
-		;;
-
-	--packer-to-openstack)
-
-		PACKER_TO_OS="yes"
 		shift
 		;;
 
@@ -106,12 +168,6 @@ case $i in
 	--config-only-mode)
 
 		CONFIG_ONLY_MODE="yes"
-		shift
-		;;
-
-	--operation=*)
-
-		OPERATION="${i#*=}"
 		shift
 		;;
 
@@ -147,47 +203,60 @@ case $i in
 		shift
 		;;
 
-        --base-os=*)
+	# Options starting with --ubuntu-* are Ubuntu related
+        --ubuntu-network-setup)
 
-                BASE_OS="${i#*=}"
-                shift
-                ;;
-
-	--base-os-upgrade)
-
-		BASE_OS_UPGRADE="yes"
+	        UBUNTU_NETWORK_SETUP="yes"
 		shift
 		;;
 
-        --use-dummies)
+        --ubuntu-network-detect-default-nic)
 
-	        USE_DUMMIES="yes"
-		shift
-        	;;
-
-        --br-mode=*)
-
-	        BR_MODE="${i#*=}"
-        	shift
-		;;
-
-        --ovs-hybrid-firewall)
-
-	        OVS_HYBRID_FW="yes"
+	        UBUNTU_NETWORK_DETECT_DEFAULT_NIC="yes"
 		shift
 		;;
 
-        --no-security-groups)
+	--ubuntu-network-mode=*)
 
-	        NO_SEC="yes"
+		UBUNTU_NETWORK_MODE="${i#*=}"
 		shift
-        	;;
+		;;
 
-        --openstack-release=*)
+	--ubuntu-network-ip=*)
 
-	        OPENSTACK_RELEASE="${i#*=}"
+		# Syntax: "ip/mask,gateway"
+		UBUNTU_NETWORK_IP_RAW_DATA="${i#*=}"
+
+		UBUNTU_STATIC_IP_MASK=`echo $UBUNTU_NETWORK_IP_RAW_DATA | cut -d , -f 1`
+		UBUNTU_STATIC_IP_GATEWAY=`echo $UBUNTU_NETWORK_IP_RAW_DATA | cut -d , -f 2`
+
 		shift
-        	;;
+		;;
+
+	--ubuntu-name-servers=*)
+
+		UBUNTU_NS_SETUP="yes"
+
+		# Syntax: "dns1,dns2"
+		UBUNTU_NAME_SERVERS_RAW="${i#*=}"
+
+		UBUNTU_NAME_SERVER_1=`echo $UBUNTU_NAME_SERVERS_RAW | cut -d , -f 1`
+		UBUNTU_NAME_SERVER_2=`echo $UBUNTU_NAME_SERVERS_RAW | cut -d , -f 2`
+
+		shift
+		;;
+
+	--ubuntu-dummies)
+
+		UBUNTU_DUMMIES="yes"
+		shift
+		;;
+
+	--ubuntu-iptables-rc-local)
+
+		UBUNTU_IPTABLES_RC_LOCAL="yes"
+		shift
+		;;
 
         --download-iso-images)
 
@@ -210,6 +279,156 @@ case $i in
 esac
 done
 
+
+#
+# Operation System setup on playbook vars
+#
+
+if [ ! -z "$BASE_OS" ];
+then
+	sed -i -e 's/base_os:.*/base_os: "'$BASE_OS'"/' ansible/group_vars/all
+fi
+
+if [ "$BASE_OS_UPGRADE" == "yes" ]
+then
+	sed -i -e 's/base_os_upgrade:.*/base_os_upgrade: "yes"/' ansible/group_vars/all
+fi
+
+
+#
+# Ubuntu Settings
+#
+
+# Network setup?
+if [ "$UBUNTU_NETWORK_SETUP" == "yes" ]
+then
+
+	echo
+	echo "Ubuntu Network Setup requested:"
+
+	sed -i -e 's/ubuntu_network_setup:.*/ubuntu_network_setup: "yes"/' ansible/group_vars/all
+
+fi
+
+if [ "$UBUNTU_NETWORK_DETECT_DEFAULT_NIC" == "yes" ]
+then
+
+	# Configuring the default interface
+	unset UBUNTU_PRIMARY_INTERFACE
+	UBUNTU_PRIMARY_INTERFACE=$(ip r | grep default | awk '{print $5}')
+
+
+	if [ -z "$UBUNTU_PRIMARY_INTERFACE" ]
+	then
+		echo
+		echo "ABORTING! Ubuntu's primary network interface not detected!"
+		echo "Are you sure that your Ubuntu have a default gateway configured?"
+
+		exit 1
+	fi
+
+
+	echo
+	echo "Your primary network interface is:"
+	echo "dafault route via:" $UBUNTU_PRIMARY_INTERFACE
+
+	echo
+	echo "* Enabling Network Setup, preparing Ansible variables based on detected default interface..."
+
+	sed -i -e 's/ubuntu_primary_interface:.*/ubuntu_primary_interface: "'$UBUNTU_PRIMARY_INTERFACE'"/g' ansible/group_vars/all
+
+
+	if [ "$OPERATION" == "openstack" ]
+	then
+
+		echo
+		echo "* Configuring OpenStack's Management Interface based on: '$UBUNTU_PRIMARY_INTERFACE'..."
+
+		sed -i -e 's/{{OS_MGMT_NIC}}/'$UBUNTU_PRIMARY_INTERFACE'/' ansible/hosts
+
+	fi
+
+fi
+
+# Network mode:
+if [ ! -z "$UBUNTU_NETWORK_MODE" ];
+then
+
+	echo
+	echo "* Configuring Ubuntu's network mode to: \"$UBUNTU_NETWORK_MODE\"."
+
+	case "$UBUNTU_NETWORK_MODE" in
+
+		dhcp)
+
+			sed -i -e 's/ubuntu_network_mode:.*/ubuntu_network_mode: "dhcp"/' ansible/group_vars/all
+			;;
+
+		static)
+
+			if [ -z $UBUNTU_STATIC_IP_MASK ]
+			then
+				echo
+				echo "Error! Static network mode requires IP address, mask and gateway. ABORTING!"
+				echo
+
+				exit 1
+			else
+
+				echo
+				echo " - Static IP/MASK: \"$UBUNTU_STATIC_IP_MASK\"."
+				echo " - Static gateway: \"$UBUNTU_STATIC_IP_GATEWAY\"."
+
+				UBUNTU_IP_MASK_SANITIZED=$(echo $UBUNTU_STATIC_IP_MASK | sed -e 's/\//\\\//g')
+
+				sed -i -e 's/ubuntu_network_mode:.*/ubuntu_network_mode: "static"/' ansible/group_vars/all
+				sed -i -e 's/ubuntu_static_ip_mask:.*/ubuntu_static_ip_mask: "'$UBUNTU_IP_MASK_SANITIZED'"/' ansible/group_vars/all
+				sed -i -e 's/ubuntu_static_ip_gateway:.*/ubuntu_static_ip_gateway: "'$UBUNTU_STATIC_IP_GATEWAY'"/' ansible/group_vars/all
+
+			fi
+			;;
+
+	esac
+
+fi
+
+# Name Server setup?
+if [ "$UBUNTU_NS_SETUP" == "yes" ]
+then
+	sed -i -e 's/ubuntu_name_server_1:.*/ubuntu_name_server_1: "'$UBUNTU_NAME_SERVER_1'"/' ansible/group_vars/all
+	sed -i -e 's/ubuntu_name_server_2:.*/ubuntu_name_server_2: "'$UBUNTU_NAME_SERVER_2'"/' ansible/group_vars/all
+fi
+
+# Enable dummies?
+if [ "$UBUNTU_DUMMIES" == "yes" ]
+then
+	sed -i -e 's/ubuntu_setup_dummy_nics:.*/ubuntu_setup_dummy_nics: "yes"/' ansible/group_vars/all
+fi
+
+# Enable iptalbes via /etc/rc.local?
+if [ "$UBUNTU_IPTABLES_RC_LOCAL" == "yes" ]
+then
+	sed -i -e 's/ubuntu_setup_iptables_rc_local:.*/ubuntu_setup_iptables_rc_local: "yes"/' ansible/group_vars/all
+fi
+
+
+#
+# SVAuto Deployments - "Curl | Bash" lovers
+#
+
+if [ "$SVAUTO_DEPLOYMENTS" == "yes" ]
+then
+
+	svauto_deployments
+
+	exit 0
+
+fi
+
+
+#
+# SVAuto Functions
+#
 
 if [ "$CLEAN_ALL" == "yes" ]
 then
@@ -265,8 +484,9 @@ fi
 if [ "$BUILD_YUM_REPO" == "yes" ]
 then
 
-	build_yum_repo_agawa
-	build_yum_repo_niagara
+#       build_yum_repo_agawa
+#       build_yum_repo_niagara
+	build_yum_repo_yukon
 
 	exit 0
 
@@ -293,8 +513,8 @@ then
 
 	echo
 	echo "Installing OpenStack with SVAuto:"
-	echo
 
+	# NOTE: all the OS_* variables are being used by "os_deploy" below:
 	os_deploy
 
 	exit 0
@@ -323,18 +543,8 @@ fi
 if [ "$PACKER_BUILD_CS" == "yes" ]
 then
 
-	packer_build_cs_lab
+#	packer_build_cs_lab
 	packer_build_cs
-
-	exit 0
-
-fi
-
-
-if [ "$PACKER_BUILD_OFFICIAL" == "yes" ]
-then
-
-	packer_build_official
 
 	exit 0
 
@@ -344,8 +554,9 @@ fi
 if [ "$PACKER_BUILD_SANDVINE" == "yes" ]
 then
 
-	packer_build_sandvine_lab
+#	packer_build_sandvine_lab
 	packer_build_sandvine
+	packer_build_sandvine_experimental
 
 	exit 0
 
@@ -419,10 +630,11 @@ then
 	fi
 
 
-	PTS_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-pts | awk $'{print $2}'` | awk $'{print $4}')
-	SDE_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-sde | awk $'{print $2}'` | awk $'{print $4}')
-	SPB_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-spb | awk $'{print $2}'` | awk $'{print $4}')
-#	CSD_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-csd | awk $'{print $2}'` | awk $'{print $4}')
+#	TODO: Auto detected all instances automatically:
+	PTS_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svpts-1 | awk $'{print $2}'` | awk $'{print $4}')
+	SDE_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svsde-1 | awk $'{print $2}'` | awk $'{print $4}')
+	SPB_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svspb-1 | awk $'{print $2}'` | awk $'{print $4}')
+#	CSD_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svcsd-1 | awk $'{print $2}'` | awk $'{print $4}')
 
 
 	if [ -z $PTS_FLOAT ] || [ -z $SDE_FLOAT ] || [ -z $SPB_FLOAT ] #|| [ -z $CSD_FLOAT ]
@@ -532,7 +744,6 @@ then
 #	echo -n "Type the Subscriber IPv4 Subnet/Mask (for subnets.txt on the PTS): "
 #	read INT_SUBNET
 
-
 	echo
 	echo -n "Type the username with password-less SSH access to the lab's Instances: "
 	read REGULAR_SYSTEM_USER
@@ -582,6 +793,43 @@ then
 	sed -i -e 's/packages_server:.*/packages_server: \"'$SVAUTO_MAIN_HOST'\"/g' ansible/group_vars/all
 
 	sed -i -e 's/license_server:.*/license_server: \"'$LICENSE_SERVER'\"/g' ansible/group_vars/all
+
+	echo "### Adding MDM information ###" >> ansible/group_vars/all
+        echo "mdmQMGroup:" >> ansible/group_vars/all
+	echo "    - { name: \"NoQuota\", default: \"NoQuota1\" }" >> ansible/group_vars/all
+	echo "    - { name: \"Basic\", default: \"Basic1\" }" >> ansible/group_vars/all
+        echo "mdmQM:" >> ansible/group_vars/all
+        echo "  - wheel:" >> ansible/group_vars/all
+        echo "    name: \"Internet\"" >> ansible/group_vars/all
+        echo "    sharedQuota: \"100GB\"" >> ansible/group_vars/all
+        echo "    reportThreshold: \"25%,50%,75%,100%\"" >> ansible/group_vars/all
+        echo "    rollover: \"1\"" >> ansible/group_vars/all
+        echo "    plan: " >> ansible/group_vars/all
+        echo "    - { name: \"NoQuota1\", limit: \"1B\", event_thresholds: [\"100\"]} " >> ansible/group_vars/all
+        echo "    - { name: \"Basic1\", limit: \"1GB\", event_thresholds: [\"25\", \"50\", \"75\", \"100\"]} " >> ansible/group_vars/all
+        echo "    - { name: \"Basic2\", limit: \"2GB\", event_thresholds: [\"25\", \"50\", \"75\", \"100\"]} " >> ansible/group_vars/all
+        echo "    - { name: \"Basic3\", limit: \"3GB\", event_thresholds: [\"25\", \"50\", \"75\", \"100\"]} " >> ansible/group_vars/all
+        echo "  - wheel:" >> ansible/group_vars/all
+        echo "    name: \"Intranet\"" >> ansible/group_vars/all
+        echo "    sharedQuota: \"1000GB\"" >> ansible/group_vars/all
+        echo "    reportThreshold: \"25%,50%,75%,100%\"" >> ansible/group_vars/all
+        echo "    rollover: \"1\"" >> ansible/group_vars/all
+        echo "    plan: " >> ansible/group_vars/all
+        echo "    - { name: \"NoQuota1\", limit: \"1B\", event_thresholds: [\"100\"]} " >> ansible/group_vars/all
+        echo "    - { name: \"Basic1\", limit: \"10GB\", event_thresholds: [\"25\", \"50\", \"75\", \"100\"]} " >> ansible/group_vars/all
+        echo "    - { name: \"Basic2\", limit: \"20GB\", event_thresholds: [\"25\", \"50\", \"75\", \"100\"]} " >> ansible/group_vars/all
+        echo "    - { name: \"Basic3\", limit: \"30GB\", event_thresholds: [\"25\", \"50\", \"75\", \"100\"]} " >> ansible/group_vars/all
+        echo "  - wheel:" >> ansible/group_vars/all
+        echo "    name: \"Roaming\"" >> ansible/group_vars/all
+        echo "    sharedQuota: \"10GB\"" >> ansible/group_vars/all
+        echo "    reportThreshold: \"25%,50%,75%,100%\"" >> ansible/group_vars/all
+        echo "    rollover: \"1\"" >> ansible/group_vars/all
+        echo "    plan: " >> ansible/group_vars/all
+        echo "    - { name: \"NoQuota1\", limit: \"1B\", event_thresholds: [\"100\"]} " >> ansible/group_vars/all
+        echo "    - { name: \"Basic1\", limit: \"100MB\", event_thresholds: [\"25\", \"50\", \"75\", \"100\"]} " >> ansible/group_vars/all
+        echo "    - { name: \"Basic2\", limit: \"200MB\", event_thresholds: [\"25\", \"50\", \"75\", \"100\"]} " >> ansible/group_vars/all
+	echo "    - { name: \"Basic3\", limit: \"300MB\", event_thresholds: [\"25\", \"50\", \"75\", \"100\"]} " >> ansible/group_vars/all
+        echo "" >> ansible/group_vars/all
 
 
 	git checkout ansible/hosts

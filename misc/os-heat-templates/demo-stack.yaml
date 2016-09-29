@@ -2,7 +2,6 @@ heat_template_version: 2013-05-23
 
 description: >
 
-
   HOT template to create standard setup.
 
   We have 1 Instance:
@@ -46,7 +45,7 @@ parameters:
     type: string
     label: "Ubuntu Server - 64-bit"
     description: "Ubuntu - Xenial Xerus - LTS"
-    default: "Ubuntu 16.04 LTS - Xenial Xerus - 64-bit - Cloud Based Image"
+    default: "Ubuntu 16.04.1 LTS - Xenial Xerus - 64-bit - Cloud Based Image"
 
 resources:
   rtr:
@@ -133,7 +132,7 @@ resources:
             sandvine:sandvine
           expire: False
         runcmd:
-        - 'su -c "\curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/svauto-deployments.sh | bash -s -- --base-os=ubuntu16 --roles=bootstrap,grub-conf,post-cleanup --extra-vars=\"base_os_upgrade=yes ubuntu_install=server\"" sandvine'
+        - 'su -c "\curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/svauto-deployments.sh | bash -s -- --base-os=ubuntu16 --ansible-roles=bootstrap,grub-conf,post-cleanup --ansible-extra-vars=base_os_upgrade=yes,ubuntu_install=server" sandvine'
 
 outputs:
   demosrv_floating_ip:

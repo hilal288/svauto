@@ -1,0 +1,52 @@
+# Copyright 2016, Sandvine Incorporated
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: centos - yum installing Cloud Services
+  yum: pkg={{item}} state=latest
+  with_items:
+    - redis
+    - influxdb
+    - svcloud-services-daemon
+    - global-attributes-broker
+
+
+- name: centos - service enabling Cloud Services daemons
+  service: name={{item}} state=started enabled=yes
+  with_items:
+    - redis
+    - influxdb
+    - csd
+    - global-attributes-broker
+
+
+- name: centos - sql creating Cloud Services database
+  mysql_db: name=cs state=present
+  register: cs_db_created
+
+- name: centos - sql creating Cloud Services users and permissions
+  mysql_user:
+    host="{{cs_db_host}}"
+    name="{{cs_db_user}}"
+    password="{{cs_db_pass}}"
+    priv="cs.*:ALL,GRANT"
+    state=present
+  when: cs_db_created|changed
+
+- name: centos - copy Cloud Services database structure dump file
+  copy: src=sql-schema.sql dest=/tmp
+  when: cs_db_created|changed
+
+- name: centos - sql creating Cloud Services database structure
+  mysql_db: name=cs state=import target=/tmp/sql-schema.sql
+  when: cs_db_created|changed

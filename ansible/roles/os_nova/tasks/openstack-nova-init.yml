@@ -37,4 +37,4 @@
   command: "{{item}}"
   with_items:
   - openstack user create --domain default --password "{{service_password}}" --email nova@{{your_domain}} nova
-  - openstack role add --project service --user nova admin
+  - openstack role add --project service --user nova --user-domain default admin

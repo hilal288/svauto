@@ -7,10 +7,10 @@ name=Sandvine - Subscriber Mapping - SM
 {% if release == 'prod' %}
 baseurl=ftp://{{ftp_username}}:{{ftp_password}}@ftp.support.sandvine.com/release/CloudServices/{{ release_code_number }}/$releasever/svrepos/$basearch/svsubscribermapping
 {% endif %}
-{% if release == 'dev' %}
+{% if (release == 'dev' and versioned_repo != 'true') %}
 baseurl=ftp://{{ packages_server }}/centos/{{ release_code_name }}/$releasever/svrepos/$basearch/svsubscribermapping
 {% endif %}
-{% if (versioned_repo == 'true' and release == 'dev') %}
+{% if (release == 'dev' and versioned_repo == 'true') %}
 baseurl=ftp://{{ packages_server }}/centos/{{ release_code_name }}/$releasever/svrepos/$basearch/svsubscribermapping-{{ sde_version }}
 {% endif %}
 enabled=1

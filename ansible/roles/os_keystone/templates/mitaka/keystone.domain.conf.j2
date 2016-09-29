@@ -1,0 +1,255 @@
+[identity]
+driver = ldap
+
+[ldap]
+
+#
+# From keystone
+#
+
+# URL(s) for connecting to the LDAP server. Multiple LDAP URLs may be specified
+# as a comma separated string. The first URL to successfully bind is used for
+# the connection. (string value)
+url = "{{ ldap_url }}"
+
+# User BindDN to query the LDAP server. (string value)
+user = {{ ldap_user }} 
+
+# Password for the BindDN to query the LDAP server. (string value)
+password = {{ ldap_password }}
+
+# LDAP server suffix (string value)
+suffix = {{ ldap_suffix }}
+
+# If true, will add a dummy member to groups. This is required if the
+# objectclass for groups requires the "member" attribute. (boolean value)
+#use_dumb_member = false
+
+# DN of the "dummy member" to use when "use_dumb_member" is enabled. (string
+# value)
+#dumb_member = cn=dumb,dc=nonexistent
+
+# Delete subtrees using the subtree delete control. Only enable this option if
+# your LDAP server supports subtree deletion. (boolean value)
+#allow_subtree_delete = false
+
+# The LDAP scope for queries, "one" represents oneLevel/singleLevel and "sub"
+# represents subtree/wholeSubtree options. (string value)
+# Allowed values: one, sub
+query_scope = {{ ldap_query_scope }}
+
+# Maximum results per page; a value of zero ("0") disables paging. (integer
+# value)
+#page_size = 0
+
+# The LDAP dereferencing option for queries. The "default" option falls back to
+# using default dereferencing configured by your ldap.conf. (string value)
+# Allowed values: never, searching, always, finding, default
+#alias_dereferencing = default
+
+# Sets the LDAP debugging level for LDAP calls. A value of 0 means that
+# debugging is not enabled. This value is a bitmask, consult your LDAP
+# documentation for possible values. (integer value)
+#debug_level = <None>
+
+# Override the system's default referral chasing behavior for queries. (boolean
+# value)
+#chase_referrals = <None>
+
+# Search base for users. Defaults to the suffix value. (string value)
+user_tree_dn = {{ ldap_user_tree_dn }} 
+
+# LDAP search filter for users. (string value)
+#user_filter = <None>
+
+# LDAP objectclass for users. (string value)
+user_objectclass = {{ ldap_user_objectclass }}
+
+# LDAP attribute mapped to user id. WARNING: must not be a multivalued
+# attribute. (string value)
+#user_id_attribute = uid
+
+# LDAP attribute mapped to user name. (string value)
+#user_name_attribute = sn
+user_name_attribute = {{ ldap_user_name_attribute }}
+
+# LDAP attribute mapped to user description. (string value)
+#user_description_attribute = description
+
+# LDAP attribute mapped to user email. (string value)
+#user_mail_attribute = mail
+
+# LDAP attribute mapped to password. (string value)
+#user_pass_attribute = userPassword
+
+# LDAP attribute mapped to user enabled flag. (string value)
+#user_enabled_attribute = enabled
+
+# Invert the meaning of the boolean enabled values. Some LDAP servers use a
+# boolean lock attribute where "true" means an account is disabled. Setting
+# "user_enabled_invert = true" will allow these lock attributes to be used.
+# This setting will have no effect if "user_enabled_mask" or
+# "user_enabled_emulation" settings are in use. (boolean value)
+#user_enabled_invert = false
+
+# Bitmask integer to indicate the bit that the enabled value is stored in if
+# the LDAP server represents "enabled" as a bit on an integer rather than a
+# boolean. A value of "0" indicates the mask is not used. If this is not set to
+# "0" the typical value is "2". This is typically used when
+# "user_enabled_attribute = userAccountControl". (integer value)
+#user_enabled_mask = 0
+
+# Default value to enable users. This should match an appropriate int value if
+# the LDAP server uses non-boolean (bitmask) values to indicate if a user is
+# enabled or disabled. If this is not set to "True" the typical value is "512".
+# This is typically used when "user_enabled_attribute = userAccountControl".
+# (string value)
+#user_enabled_default = True
+
+# List of attributes stripped off the user on update. (list value)
+#user_attribute_ignore = default_project_id
+
+# LDAP attribute mapped to default_project_id for users. (string value)
+#user_default_project_id_attribute = <None>
+user_default_project_id_attribute = {{ ldap_user_name_attribute }}
+
+# Allow user creation in LDAP backend. (boolean value)
+# This option is deprecated for removal.
+# Its value may be silently ignored in the future.
+# Reason: Write support for Identity LDAP backends has been deprecated in the M
+# release and will be removed in the O release.
+user_allow_create = false
+
+# Allow user updates in LDAP backend. (boolean value)
+# This option is deprecated for removal.
+# Its value may be silently ignored in the future.
+# Reason: Write support for Identity LDAP backends has been deprecated in the M
+# release and will be removed in the O release.
+user_allow_update = false
+
+# Allow user deletion in LDAP backend. (boolean value)
+# This option is deprecated for removal.
+# Its value may be silently ignored in the future.
+# Reason: Write support for Identity LDAP backends has been deprecated in the M
+# release and will be removed in the O release.
+user_allow_delete = false
+
+# If true, Keystone uses an alternative method to determine if a user is
+# enabled or not by checking if they are a member of the
+# "user_enabled_emulation_dn" group. (boolean value)
+#user_enabled_emulation = false
+
+# DN of the group entry to hold enabled users when using enabled emulation.
+# (string value)
+#user_enabled_emulation_dn = <None>
+
+# Use the "group_member_attribute" and "group_objectclass" settings to
+# determine membership in the emulated enabled group. (boolean value)
+#user_enabled_emulation_use_group_config = false
+
+# List of additional LDAP attributes used for mapping additional attribute
+# mappings for users. Attribute mapping format is <ldap_attr>:<user_attr>,
+# where ldap_attr is the attribute in the LDAP entry and user_attr is the
+# Identity API attribute. (list value)
+#user_additional_attribute_mapping =
+
+# Search base for groups. Defaults to the suffix value. (string value)
+#group_tree_dn = <None>
+
+# LDAP search filter for groups. (string value)
+#group_filter = <None>
+
+# LDAP objectclass for groups. (string value)
+#group_objectclass = groupOfNames
+
+# LDAP attribute mapped to group id. (string value)
+#group_id_attribute = cn
+
+# LDAP attribute mapped to group name. (string value)
+#group_name_attribute = ou
+
+# LDAP attribute mapped to show group membership. (string value)
+#group_member_attribute = member
+
+# LDAP attribute mapped to group description. (string value)
+#group_desc_attribute = description
+
+# List of attributes stripped off the group on update. (list value)
+#group_attribute_ignore =
+
+# Allow group creation in LDAP backend. (boolean value)
+# This option is deprecated for removal.
+# Its value may be silently ignored in the future.
+# Reason: Write support for Identity LDAP backends has been deprecated in the M
+# release and will be removed in the O release.
+group_allow_create = false
+
+# Allow group update in LDAP backend. (boolean value)
+# This option is deprecated for removal.
+# Its value may be silently ignored in the future.
+# Reason: Write support for Identity LDAP backends has been deprecated in the M
+# release and will be removed in the O release.
+group_allow_update = false
+
+# Allow group deletion in LDAP backend. (boolean value)
+# This option is deprecated for removal.
+# Its value may be silently ignored in the future.
+# Reason: Write support for Identity LDAP backends has been deprecated in the M
+# release and will be removed in the O release.
+group_allow_delete = false
+
+# Additional attribute mappings for groups. Attribute mapping format is
+# <ldap_attr>:<user_attr>, where ldap_attr is the attribute in the LDAP entry
+# and user_attr is the Identity API attribute. (list value)
+#group_additional_attribute_mapping =
+
+# CA certificate file path for communicating with LDAP servers. (string value)
+#tls_cacertfile = <None>
+
+# CA certificate directory path for communicating with LDAP servers. (string
+# value)
+#tls_cacertdir = /etc/keystone/ssl/certs/
+
+# Enable TLS for communicating with LDAP servers. (boolean value)
+#use_tls = true
+
+# Specifies what checks to perform on client certificates in an incoming TLS
+# session. (string value)
+# Allowed values: demand, never, allow
+#tls_req_cert = demand
+
+# Enable LDAP connection pooling. (boolean value)
+#use_pool = true
+
+# Connection pool size. (integer value)
+#pool_size = 10
+
+# Maximum count of reconnect trials. (integer value)
+#pool_retry_max = 3
+
+# Time span in seconds to wait between two reconnect trials. (floating point
+# value)
+#pool_retry_delay = 0.1
+
+# Connector timeout in seconds. Value -1 indicates indefinite wait for
+# response. (integer value)
+#pool_connection_timeout = -1
+
+# Connection lifetime in seconds. (integer value)
+#pool_connection_lifetime = 600
+
+# Enable LDAP connection pooling for end user authentication. If use_pool is
+# disabled, then this setting is meaningless and is not used at all. (boolean
+# value)
+#use_auth_pool = true
+
+# End user auth connection pool size. (integer value)
+#auth_pool_size = 100
+
+# End user auth connection lifetime in seconds. (integer value)
+#auth_pool_connection_lifetime = 60
+
+# If the members of the group objectclass are user IDs rather than DNs, set
+# this to true. This is the case when using posixGroup as the group objectclass
+# and OpenDirectory. (boolean value)
+#group_members_are_ids = false

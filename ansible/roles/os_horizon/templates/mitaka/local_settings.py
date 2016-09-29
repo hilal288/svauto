@@ -61,7 +61,11 @@ OPENSTACK_API_VERSIONS = {
 
 # Set this to True if running on multi-domain model. When this is enabled, it
 # will require user to enter the Domain name in addition to username for login.
+{% if ldap_horizon_default_domain is defined and ldap_horizon_default_domain == 'yes' %}
+OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = False
+{% else %}
 OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = True
+{% endif %}
 
 # Overrides the default domain used when running on single-domain model
 # with Keystone V3. All entities will be created in the default domain.
@@ -69,7 +73,11 @@ OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = True
 # Also, you will most likely have a value in the keystone policy file like this
 #    "cloud_admin": "rule:admin_required and domain_id:<your domain id>"
 # This value must match the domain id specified there.
+{% if ldap_horizon_default_domain is defined and ldap_horizon_default_domain == 'yes' and ldap_keystone_domain is defined %}
+OPENSTACK_KEYSTONE_DEFAULT_DOMAIN = '{{ ldap_keystone_domain }}'
+{% else %}
 OPENSTACK_KEYSTONE_DEFAULT_DOMAIN = 'default'
+{% endif %}
 
 # Set this to True to enable panels that provide the ability for users to
 # manage Identity Providers (IdPs) and establish a set of rules to map

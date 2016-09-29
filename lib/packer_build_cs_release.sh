@@ -51,10 +51,10 @@ packer_build_cs_release()
 
 	# SPB 6.65 on CentOS 6 + Cloud Services customizations
 	./image-factory.sh --release=prod --base-os=centos6 --base-os-upgrade --product=cs-svspb --version=$SANDVINE_RELEASE --qcow2 --ova --vm-xml --sha256sum \
-		--roles=cloud-init,bootstrap,grub-conf,svspb,svmcdtext,svreports,svcs-svspb,sandvine-auto-config,vmware-tools,cleanrepo,post-cleanup-image,power-cycle $DRY_RUN_OPT --operation=cloud-services \
+		--roles=cloud-init,bootstrap,grub-conf,postgresql,svspb,svmcdtext,svreports,svcs-svspb,sandvine-auto-config,vmware-tools,cleanrepo,post-cleanup-image,power-cycle $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=6
 
-	# PTS 7.30 on CentOS 7 + Cloud Services customizations
+	# PTS 7.35 on CentOS 7 + Cloud Services customizations
 	./image-factory.sh --release=prod --base-os=centos7 --base-os-upgrade --product=cs-svpts --version=$SANDVINE_RELEASE --qcow2 --ova --vm-xml --sha256sum \
 		--roles=cloud-init,bootstrap,grub-conf,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config,vmware-tools,cleanrepo,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--lock-el7-kernel-upgrade --packer-max-tries=6
@@ -78,7 +78,7 @@ packer_build_cs_release()
 			cp misc/os-heat-templates/sandvine-stack-nubo-0.1* tmp/cs-rel
 
 			sed -i -e 's/{{pts_image}}/cs-svpts-'$SANDVINE_RELEASE'-centos7-amd64/g' tmp/cs-rel/*.yaml
-			sed -i -e 's/{{sde_image}}/cs-svsde-'$SANDVINE_RELEASE'-centos6-amd64/g' tmp/cs-rel/*.yaml
+			sed -i -e 's/{{sde_image}}/cs-svsde-'$SANDVINE_RELEASE'-centos7-amd64/g' tmp/cs-rel/*.yaml
 			sed -i -e 's/{{spb_image}}/cs-svspb-'$SANDVINE_RELEASE'-centos6-amd64/g' tmp/cs-rel/*.yaml
 			#sed -i -e 's/{{csd_image}}/cs-svcsd-'$SANDVINE_RELEASE'-centos6-amd64/g' tmp/cs-rel/*.yaml
 
@@ -105,7 +105,7 @@ packer_build_cs_release()
 
 			find packer/build* -name "*.xml" -exec cp {} tmp/cs-rel/ \;
 
-			sed -i -e 's/{{sde_image}}/cs-svsde-'$SANDVINE_RELEASE'-centos6-amd64/g' tmp/cs-rel/libvirt-qemu.hook
+			sed -i -e 's/{{sde_image}}/cs-svsde-'$SANDVINE_RELEASE'-centos7-amd64/g' tmp/cs-rel/libvirt-qemu.hook
 
 		fi
 
@@ -181,7 +181,7 @@ packer_build_cs_release()
 
 				rm sandvine-stack-0.1-four-1.yaml
 
-				mv libvirt-qemu.hook cs-svsde-$SANDVINE_RELEASE-centos6-amd64.hook
+				mv libvirt-qemu.hook cs-svsde-$SANDVINE_RELEASE-centos7-amd64.hook
 
 				tar -cf sandvine-files.tar *.yaml *.hook *.xml
 
@@ -191,7 +191,7 @@ packer_build_cs_release()
 
 				sed -i -e 's/{{svpts_image_name}}/'cs-svpts-\\$RELEASE-centos7-amd64'/g' sandvine-helper.sh_template
 				sed -i -e 's/{{svsde_image_name}}/'cs-svsde-\\$RELEASE-centos7-amd64'/g' sandvine-helper.sh_template
-				sed -i -e 's/{{svspb_image_name}}/'cs-svspb-\\$RELEASE-centos7-amd64'/g' sandvine-helper.sh_template
+				sed -i -e 's/{{svspb_image_name}}/'cs-svspb-\\$RELEASE-centos6-amd64'/g' sandvine-helper.sh_template
 
 				sed -i -e 's/{{packages_server}}/'$PUBLIC_PACKAGES_SERVER'/g' sandvine-helper.sh_template
 				sed -i -e 's/{{packages_path}}/release\/CloudServices\/\$RELEASE/g' sandvine-helper.sh_template

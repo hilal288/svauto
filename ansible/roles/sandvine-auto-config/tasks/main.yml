@@ -29,7 +29,7 @@
 
 - name: Sandvine Auto Configuration book for CS
   include: svcs-auto-config.yml
-  when: (setup_server == 'svsde' or setup_server == 'svcs') and setup_mode == 'cloud-services'
+  when: setup_server == 'svcs'
 
 
 - name: reload-sandvine

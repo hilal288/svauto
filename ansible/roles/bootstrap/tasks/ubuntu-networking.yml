@@ -17,96 +17,48 @@
 #  lineinfile: dest=/etc/modprobe.d/blacklist.conf line="blacklist nf_conntrack"
 
 
+# Activating br_netfilter module for bringing /proc/sys/net/bridge back.
+# https://askubuntu.com/questions/645638/directory-proc-sys-net-bridge-missing
 - name: ubuntu - config br_netfilter module
-  lineinfile: dest=/etc/modules
-              line="br_netfilter"
+  lineinfile: dest=/etc/modules line="br_netfilter"
 
 - name: ubuntu - loading br_netfilter module
   command: 'modprobe br_netfilter'
 
 
+# Enabling /etc/network/interfaces.d subdirectory.
 - name: ubuntu - copy global network config file
   copy: src=ubuntu-common/etc_network_interfaces
         dest=/etc/network/interfaces
         owner=root
         group=root
         mode=0644
+        backup=yes
 
 - name: ubuntu - creating global network config directory
   file: path=/etc/network/interfaces.d
         state=directory
 
-- name: ubuntu - copy primary network interface config (DHCP)
-  template: src=ubuntu-common/primary_interface_dhcp_cfg
-            dest=/etc/network/interfaces.d/{{os_mgmt}}.cfg
+
+# Configuring Ubuntu's default NIC.
+- name: ubuntu - copy primary network interface config
+  template: src=ubuntu-common/primary_interface_cfg.j2
+            dest=/etc/network/interfaces.d/{{ ubuntu_primary_interface }}.cfg
             owner=root
             group=root
             mode=0644
+            backup=yes
   when: ubuntu_install == 'server'
 
 
-- name: ubuntu - config dummy module options
-  lineinfile: dest=/etc/modprobe.d/dummy.conf
-              line="options dummy numdummies=6"
-              create=yes
-
-- name: ubuntu - config dummy module
-  lineinfile: dest=/etc/modules
-              line="dummy"
-
-- name: ubuntu - loading dummy module
-  command: 'modprobe dummy'
+# Including Dummy NIC setup.
+- name: ubuntu - include dummy NICs setup
+  include: ubuntu-dummies.yml
+  when: ubuntu_setup_dummy_nics == 'yes'
 
 
-- name: ubuntu - copy dummy0 config file for LBR
-  copy: src=ubuntu-common/interface_dummy0_lbr
-        dest=/etc/network/interfaces.d/dummy0.cfg
-        owner=root
-        group=root
-        mode=0644
-  when: br_mode == 'LBR'
-
-- name: ubuntu - starting up dummy0
-  command: 'ifup dummy0'
-  when: br_mode == 'LBR'
-
-- name: ubuntu - copy dummy1 config file for LBR
-  copy: src=ubuntu-common/interface_dummy1_lbr
-        dest=/etc/network/interfaces.d/dummy1.cfg
-        owner=root
-        group=root
-        mode=0644
-  when: br_mode == 'LBR'
-
-- name: ubuntu - starting up dummy1
-  command: 'ifup dummy1'
-  when: br_mode == 'LBR'
-
-
-- name: ubuntu - copy br-ex config file for OVS
-  copy: src=ubuntu-common/interface_br-ex_ovs
-        dest=/etc/network/interfaces.d/br-ex.cfg
-        owner=root
-        group=root
-        mode=0644
-  when: br_mode == 'OVS'
-
-- name: ubuntu - copy dummy1 config file for OVS
-  copy: src=ubuntu-common/interface_dummy1_ovs
-        dest=/etc/network/interfaces.d/dummy1.cfg
-        owner=root
-        group=root
-        mode=0644
-  when: br_mode == 'OVS'
-
-- name: ubuntu - starting up dummy1
-  command: 'ifup dummy1'
-  when: br_mode == 'OVS'
-
-
-- name: ubuntu - iptables rule for OpenStack AIO demo box
-  iptables: table=nat chain=POSTROUTING out_interface="{{os_mgmt}}" jump=MASQUERADE comment="Masquerade rule for OpenStack demo box"
-
- 
-- name: ubuntu - re-read facts after configuring network interfaces
-  setup: filter=ansible_*
+# Because OpenStack's br-ex is by default, of top of dummy0, we need to activate
+# an iptables rule on each boot, after Nova.
+- name: ubuntu - include iptables setup via rc.local
+  include: ubuntu-iptables-via-rc-local.yml
+  when: ubuntu_setup_iptables_rc_local == 'yes'

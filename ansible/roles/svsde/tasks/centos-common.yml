@@ -30,10 +30,6 @@
     - perl-libwww-perl
 
 
-- name: centos - yum cleanup local cache
-  command: yum clean all
-
-
 - name: centos - copy Sandvine SVSDE login logo generator
   copy: src=sandvine-motd-issue-banner.sh
         dest=/tmp/sandvine-motd-issue-banner.sh

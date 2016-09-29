@@ -59,13 +59,13 @@ parameters:
     type: string
     label: "NFV L2 Bridge Image (default 'nfv')"
     description: "NFV Image"
-    default: "Ubuntu 16.04 LTS - Xenial Xerus - 64-bit - Cloud Based Image"
+    default: "Ubuntu 16.04.1 LTS - Xenial Xerus - 64-bit - Cloud Based Image"
 
-  ubuntusrv1_image:
+  ubuntu_image:
     type: string
     label: "Ubuntu Server - 64-bit"
     description: "Ubuntu - Xenial Xerus - LTS"
-    default: "Ubuntu 16.04 LTS - Xenial Xerus - 64-bit - Cloud Based Image"
+    default: "Ubuntu 16.04.1 LTS - Xenial Xerus - 64-bit - Cloud Based Image"
 
 resources:
   rtr:
@@ -185,10 +185,10 @@ resources:
       network: { get_resource: data_sub_net1 }
       port_security_enabled: False
 
-  nfv:
+  nfv_1:
     type: OS::Nova::Server
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-nfv' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-nfv-1' } }
       key_name: { get_param: 'ssh_key' }
       image: { get_param: 'nfv_image' }
       flavor: "m1.small"
@@ -208,12 +208,12 @@ resources:
             sandvine:sandvine
           expire: False
 
-  ubuntusrv1:
+  ubuntu_1:
     type: OS::Nova::Server
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-ubuntu-server' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-ubuntu-1' } }
       key_name: { get_param: 'ssh_key' }
-      image: { get_param: 'ubuntusrv1_image' }
+      image: { get_param: 'ubuntu_image' }
       flavor: "m1.small"
       networks:
         - network: { get_resource: data_sub_net1 }

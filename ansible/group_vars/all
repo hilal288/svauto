@@ -17,7 +17,7 @@
 #
 
 #
-# Global definitions
+# Global Definitions
 #
 
 regular_system_user: "sandvine"
@@ -29,7 +29,7 @@ disable_autoconf: "no"
 # Debian: jessie, stretch
 # CentOS: centos6, centos7
 # FreeBSD: freebsd8
-base_os: centos6
+base_os: "centos6"
 
 # Upgrade Base OS:
 base_os_upgrade: "no"
@@ -131,12 +131,13 @@ deploy_pts_freebsd_pkgs: "no"
 
 # Products and versions
 pts_version: "7.20"
-
 sde_version: "7.30"
-
 spb_version: "6.60"
-
 csd_version: "7.50"
+svtse_version: "1.00"
+svtcpa_version: "5.40"
+svnda_version: "5.20"
+svcontrol-center_version: "7.20"
 
 
 #
@@ -189,8 +190,9 @@ quota_shared_roaming: "1GB"
 
 google_api_key: "none"
 
+
 #
-# PTS PCI Setup (also DPDK)
+# PTS PCI Setup (also DPDK - fastpath)
 #
 
 pts_set_port_control_1_1: "0000:00:03.0"
@@ -199,6 +201,29 @@ pts_set_port_service_1_2: "0000:00:04.0"
 pts_set_port_fastpath_1_3: "0000:00:05.0"
 pts_set_port_fastpath_1_4: "0000:00:06.0"
 pts_set_port_fastpath_1_5: "0000:00:07.0"
+
+
+#
+# Ubuntu Definitions
+#
+
+ubuntu_install: "server"
+
+ubuntu_network_setup: "no"
+
+ubuntu_primary_interface: "eth0"
+
+ubuntu_network_mode: "dhcp"
+
+ubuntu_static_ip_mask: "192.168.1.2/24"
+ubuntu_static_ip_gateway: "192.168.1.1"
+
+ubuntu_name_server_1: "null"
+ubuntu_name_server_2: "null"
+
+ubuntu_setup_dummy_nics: "no"
+
+ubuntu_setup_iptables_rc_local: "no"
 
 
 #
@@ -229,11 +254,14 @@ dpdk_driver_4: "vfio-pci"
 # OpenStack Definitions
 #
 
-ubuntu_install: "server"
-
-ubuntu_network_setup: "no"
+os_aio: "no"
 
 openstack_release: "mitaka"
+
+your_domain: "yourdomain.com"
+
+public_addr: "controller-1.yourdomain.com"
+controller_addr: "controller-1.yourdomain.com"
 
 os_nova_ctrl: "no"
 os_nova_cmpt: "no"
@@ -244,21 +272,38 @@ os_neutron_cmpt: "no"
 
 os_mgmt: "eth0"
 os_srvc: "eth0"
+
 os_external: "dummy0"
 os_data: "dummy1"
+
 os_cinder: "dummy2"
 
 br_mode: "LBR"
 
-linuxnet_interface_driver: "nova.network.linux_net.NeutronLinuxBridgeInterfaceDriver"
+os_neutron_external_bridge: "br-ex"
+
+os_provider_net_1_label: "provider-net-1"
+os_provider_net_1_lbr_interface: "dummy6"
+os_provider_net_1_ovs_interface: "dummy4"
+os_provider_net_1_ovs_bridge_interface: "dummybr0"
+
+os_provider_net_2_label: "provider-net-2"
+os_provider_net_2_lbr_interface: "dummy7"
+os_provider_net_2_ovs_interface: "dummy5"
+os_provider_net_2_ovs_bridge_interface: "dummybr1"
+
+os_open_provider_nets_to_regular_users: "no"
+
+linuxnet_interface_driver: "nova.network.linux_net.LinuxBridgeInterfaceDriver"
 neutron_interface_driver: "neutron.agent.linux.interface.BridgeInterfaceDriver"
 mechanism_drivers: "linuxbridge"
-firewall_driver: "neutron.agent.linux.iptables_firewall.IptablesFirewallDriver"
+firewall_driver: "iptables"
 
-public_addr: "controller-1.yourdomain.com"
-controller_addr: "controller-1.yourdomain.com"
-
-your_domain: "yourdomain.com"
+# Neutron's External Network (Floating IPs comes from here):
+ext_net_subnet: "172.31.254.128/25"
+ext_net_gateway: "172.31.254.129"
+ext_net_start: "172.31.254.130"
+ext_net_end: "172.31.254.254"
 
 region: "ca-east-1"
 
@@ -298,11 +343,6 @@ admin_openrc_env:
   OS_IDENTITY_API_VERSION: "3"
   OS_IMAGE_API_VERSION: "1"
 
-ext_net_subnet: "172.31.254.128/25"
-ext_net_gateway: "172.31.254.129"
-ext_net_start: "172.31.254.130"
-ext_net_end: "172.31.254.254"
-
 mysql_databases:
   - { os_project: "keystone", db_name: "keystone", db_host: "%", db_user: "keystoneUser", db_pass: "keystonePass" }
   - { os_project: "glance", db_name: "glance", db_host: "%", db_user: "glanceUser", db_pass: "glancePass" }
@@ -318,3 +358,33 @@ mysql_databases:
 nova_api_db_name: "nova_api"
 nova_api_db_user: "novaAPIUser"
 nova_api_db_pass: "novaAPIPass"
+
+
+#
+# Optional OpenStack LDAP Definitions
+#
+
+# http://docs.openstack.org/admin-guide/keystone_integrate_identity_backend_ldap.html
+
+# Note: Assuming that every user should have their own project space you will
+#       need to create a project and user/project mappings for EVERY user.
+#       In the following example we have decided that every user will have
+#       a project with the same name as the user name mapped to them
+#      
+#       EG: User "jdoe".  
+#           openstack project create -domain company.com jdoe
+#           openstack role add --project jdoe --user jdoe --user-domain company.com user
+
+ldap_enabled: "no"
+ldap_url: "ldap://<ldap ip 1>,ldap://<ldap ip 2>"
+ldap_user: ""
+ldap_password: ""
+ldap_suffix: "dc=company,dc=com"
+ldap_query_scope: "sub"
+ldap_user_tree_dn: ""
+ldap_user_objectclass: ""
+ldap_user_name_attribute: ""
+# Note this is just a name and does not HAVE to match any ldap domain
+ldap_keystone_domain: "company.com"
+ldap_horizon_default_domain: "no"
+ldap_keystone_domain_description: "Company Domain"

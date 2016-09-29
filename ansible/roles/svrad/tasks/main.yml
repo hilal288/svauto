@@ -68,7 +68,3 @@
 
 - name: Ensure IPFixd is running (and enable it at boot)
   service: name=ipfixd state=started enabled=yes
-
-
-- name: Cleanup YUM local cache
-  command: yum clean all

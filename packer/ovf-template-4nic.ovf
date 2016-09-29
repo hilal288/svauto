@@ -6,7 +6,7 @@
   </References>
   <DiskSection>
     <Info>Virtual disk information</Info>
-    <Disk ovf:capacity="4" ovf:capacityAllocationUnits="byte * 2^30" ovf:diskId="vmdisk1" ovf:fileRef="file1" ovf:format="http://www.vmware.com/interfaces/specifications/vmdk.html#streamOptimized" ovf:populatedSize="{{ovf_populatedSize}}" />
+    <Disk ovf:capacity="8" ovf:capacityAllocationUnits="byte * 2^30" ovf:diskId="vmdisk1" ovf:fileRef="file1" ovf:format="http://www.vmware.com/interfaces/specifications/vmdk.html#streamOptimized" ovf:populatedSize="{{ovf_populatedSize}}" />
   </DiskSection>
   <NetworkSection>
     <Info>The list of logical networks</Info>

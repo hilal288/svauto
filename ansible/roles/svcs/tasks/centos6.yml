@@ -1,0 +1,42 @@
+# Copyright 2016, Sandvine Incorporated
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: centos6 - yum installing Cloud Services dependencies
+  yum: pkg={{item}} state=latest
+  with_items:
+    - mysql
+    - mysql-server
+    - MySQL-python
+
+
+- name: centos6 - managing Firewall Rules
+  command: "{{item}}"
+  with_items:
+  - lokkit --port=80:tcp --update
+  - lokkit --port=443:tcp --update
+  - lokkit -t eth1
+  - service iptables save
+  when: is_container != 'yes'
+
+
+- name: centos6 - service enabling MySQL
+  service: name={{item}} state=started enabled=yes
+  with_items:
+    - mysqld
+
+
+- name: centos6 - workaround for InfluxDB Issue 3944
+  file: src=/lib64/libbz2.so.1.0.4
+        dest=/lib64/libbz2.so.1.0
+        state=link

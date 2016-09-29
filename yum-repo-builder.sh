@@ -102,6 +102,26 @@ esac
 
 case "$PRODUCT" in
 
+	svcontrol-center)
+
+		PROD_DIR="CONTROL_CENTER"
+		;;
+
+	svnda)
+
+		PROD_DIR="NA"
+		;;
+
+	svtcpa)
+
+		PROD_DIR="TCPA"
+		;;
+
+	svtse)
+
+		PROD_DIR="SVTSE"
+		;;
+
 	svpts)
 
 		PROD_DIR="SVPTS"
@@ -197,6 +217,23 @@ else
 	FULL_NAME="$PRODUCT-$PLATFORM-$VERSION"
 fi
 
+if [ "$PRODUCT" == "svcontrol-center" ]
+then
+	FULL_NAME="$PRODUCT-$VERSION"
+fi
+
+# TSE repo have an different exension, dealing with it.
+if [ "$PRODUCT" == "svtse" ]
+then
+	FULL_NAME="$PRODUCT-$PLATFORM-$VERSION.pts_tse_dev_integration"
+fi
+
+# TCP Accelerator repo have an different exension, dealing with it.
+if [ "$PRODUCT" == "svtcpa" ]
+then
+	FULL_NAME="tcp_accelerator-$PLATFORM-$VERSION.tcp_540_svcommon"
+fi
+
 
 SHORT_NAME="$PRODUCT-$VERSION"
 
@@ -230,6 +267,30 @@ then
 	mv $REPOS_PATH/$SHORT_NAME $REPOS_PATH/svsubscribermapping-$VER_DOT
 	PRODUCT="svsubscribermapping"
 	SHORT_NAME="$PRODUCT-$VER_DOT"
+fi
+
+
+if [ "$PRODUCT" == "svtse" ] || [ "$PRODUCT" == "svtcpa" ] || [ "$PRODUCT" == "svnda" ]
+then
+
+	rm -f $FULL_PATH/Packages/nginx*
+
+fi
+
+
+if [ "$PRODUCT" == "svpts" ]
+then
+
+	rm -f $FULL_PATH/Packages/dpdk*
+
+fi
+
+
+if [ "$PRODUCT" == "svnda" ]
+then
+
+	rm -f $FULL_PATH/Packages/postgresql93*
+
 fi
 
 

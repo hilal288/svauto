@@ -38,6 +38,7 @@
     - nmap
     - flip
     - lshw
+    - vlan
     - gdisk
     - unzip
     - ngrep
@@ -53,7 +54,6 @@
     - ifstat
     - strace
     - ltrace
-    - chrony
     - man-db
     - netcat
     - telnet
@@ -70,6 +70,7 @@
     - tcpick
     - psmisc
     - tzdata
+    - tshark
     - pm-utils
     - xfsprogs
     - dos2unix
@@ -97,6 +98,7 @@
 - name: ubuntu - apt installing Server tools
   apt: name={{item}} state=latest update_cache=yes
   with_items:
+    - chrony
     - vim-nox
     - mtr-tiny
   when: ubuntu_install == 'server'
@@ -115,12 +117,14 @@
     - kdiff3
     - xine-ui
     - gparted
+    - ostinato
     - rdesktop
     - filezilla
     - terminator
     - evolution
     - evolution-ews
     - wireshark-qt
+    - ssh-askpass
     - default-jre
     - default-java-plugin
     - chromium-browser

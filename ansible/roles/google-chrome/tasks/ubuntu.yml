@@ -21,4 +21,4 @@
 
 
 - name: ubuntu - apt installing Google Chrome Stable
-  apt: pkg=google-chrome-stable state=latest allow_unauthenticated=yes
+  apt: pkg=google-chrome-stable state=latest allow_unauthenticated=yes update_cache=yes

@@ -17,200 +17,202 @@
 os_deploy()
 {
 
-	# Validade the BR_MODE variable.
-	if ! [[ "$BR_MODE" = "OVS" || "$BR_MODE" = "LBR" ]]
+	# Validade the OS_BRIDGE_MODE variable.
+	if ! [[ "$OS_BRIDGE_MODE" == "OVS" || "$OS_BRIDGE_MODE" == "LBR" ]]
 	then
 		echo
 		echo "Aborting!!!"
 		echo "You need to correctly specify the Bridge Mode for your OpenStack."
 		echo
 		echo "For Open vSwitch based deployments:"
-		echo "./svauto.sh --br-mode=OVS --base-os=ubuntu16 --base-os-upgrade=yes --openstack-release=mitaka --deployment-mode"
+		echo "./svauto.sh --br-mode=OVS --base-os=ubuntu16 --base-os-upgrade=yes --os-release=mitaka --deployment-mode"
 		echo
 		echo "For Linux Bridges based deployments:"
-		echo "./svauto.sh --br-mode=LBR --base-os=ubuntu16 --base-os-upgrade=yes --openstack-release=mitaka --deployment-mode"
-	
+		echo "./svauto.sh --br-mode=LBR --base-os=ubuntu16 --base-os-upgrade=yes --os-release=mitaka --deployment-mode"
+
 		exit 1
 	fi
-	
-	
+
+
 	# Doing CPU checks
 	if [ "$DRY_RUN" == "yes" ]
 	then
-	
+
 		echo
-	        echo "Not running CPU checks on --dry-run..."
-	
+		echo "Not running CPU checks on --dry-run..."
+
 	else
-	 
+
 		# Verifying if you have enough CPU Cores.
 		echo
 		echo "Verifying if you have enough CPU Cores..."
-		
+
 		CPU_CORES=$(grep -c ^processor /proc/cpuinfo)
-		
+
 		if [ $CPU_CORES -lt 4 ]
 		then
 			echo
-		        echo "WARNING!!!"
+			echo "WARNING!!!"
 			echo
 			echo "You do not have enough CPU Cores to run this system!"
-		
+
 			exit 1
 		else
-		        echo
+			echo
 			echo "Okay, good, you have enough CPU Cores, proceeding..."
 		fi
-	
-	
+
+
 		# Verifying if host have Virtualization enabled, abort it if doesn't have.
 		echo
 		echo "Verifying if your CPU supports Virtualization..."
-		
-		sudo apt -y install cpu-checker 2>&1 > /dev/null
-		
+
+		sudo apt-get -y install cpu-checker 2>&1 > /dev/null
+
 		if /usr/sbin/kvm-ok 2>&1 > /dev/null
 		then
 			echo
-		        echo "OK, Virtualization supported, proceeding..."
+			echo "OK, Virtualization supported, proceeding..."
 		else
-		        echo "WARNING!!!"
+			echo "WARNING!!!"
 			echo
 			echo "Virtualization NOT supported on this CPU or it is not enabled on your BIOS"
-		
+
 			exit 1
 		fi
-	
+
 	fi
-	
-	
+
+
 	# Detect some of the local settings:
 	WHOAMI=$(whoami)
-	HOSTNAME=$(hostname)
+	UBUNTU_HOSTNAME=$(hostname)
 	FQDN=$(hostname -f)
 	DOMAIN=$(hostname -d)
-	
-	
+
+
 	# If the hostname and hosts file aren't configured according, abort.
-	if [ -z $HOSTNAME ]; then
-	        echo "Hostname not found... Configure the file /etc/hostname with your hostname. ABORTING!"
-	
-	        exit 1
+	if [ -z $UBUNTU_HOSTNAME ]; then
+		echo "Hostname not found... Configure the file /etc/hostname with your hostname. ABORTING!"
+
+		exit 1
 	fi
-	
+
 	if [ -z $DOMAIN ]; then
-	        echo "Domain not found... Configure the file /etc/hosts with your \"IP + FQDN + HOSTNAME\". ABORTING!"
-	
-	        exit 1
+		echo "Domain not found... Configure the file /etc/hosts with your \"IP + FQDN + HOSTNAME\". ABORTING!"
+
+		exit 1
 	fi
-	
+
 	if [ -z $FQDN ]; then
-	        echo "FQDN not found... Configure your /etc/hosts according. ABORTING!"
-	
-	        exit 1
+		echo "FQDN not found... Configure your /etc/hosts according. ABORTING!"
+
+		exit 1
 	fi
-	
-	
+
+
 	# Display local configuration
 	echo
 	echo "The detected local configuration are:"
 	echo
 	echo -e "* Username:"'\t'$WHOAMI
-	echo -e "* Hostname:"'\t'$HOSTNAME
+	echo -e "* Hostname:"'\t'$UBUNTU_HOSTNAME
 	echo -e "* FQDN:"'\t''\t'$FQDN
 	echo -e "* Domain:"'\t'$DOMAIN
-	
-	
+
+
 	# Message about ansible/group_vars/all configuration
 	echo
 	echo "Configuring your ansible/group_vars/all file, as follows:"
-	
+
 	# Configuring Bridge Mode on group_vars/all
 	echo
-	echo "* The Bridge Mode is set to "$BR_MODE"..."
-	
+	echo "* The Bridge Mode is set to "$OS_BRIDGE_MODE"..."
+
 	# http://docs.openstack.org/networking-guide/scenario_legacy_lb.html
-	if [ "$BR_MODE" = "LBR" ]
+	if [ "$OS_BRIDGE_MODE" == "LBR" ]
 	then
 		sed -i -e 's/br_mode:.*/br_mode: "LBR"/' ansible/group_vars/all
 		sed -i -e 's/linuxnet_interface_driver:.*/linuxnet_interface_driver: "nova.network.linux_net.LinuxBridgeInterfaceDriver"/' ansible/group_vars/all
 		sed -i -e 's/neutron_interface_driver:.*/neutron_interface_driver: "neutron.agent.linux.interface.BridgeInterfaceDriver"/' ansible/group_vars/all
 		sed -i -e 's/mechanism_drivers:.*/mechanism_drivers: "linuxbridge"/' ansible/group_vars/all
-		sed -i -e 's/firewall_driver:.*/firewall_driver: "neutron.agent.linux.iptables_firewall.IptablesFirewallDriver"/' ansible/group_vars/all
+		sed -i -e 's/firewall_driver:.*/firewall_driver: "iptables"/' ansible/group_vars/all
 	fi
-	
+
 	# http://docs.openstack.org/networking-guide/scenario_legacy_ovs.html
-	if [ "$BR_MODE" = "OVS" ]
+	if [ "$OS_BRIDGE_MODE" == "OVS" ]
 	then 
 		sed -i -e 's/br_mode:.*/br_mode: "OVS"/' ansible/group_vars/all
 		sed -i -e 's/linuxnet_interface_driver:.*/linuxnet_interface_driver: "nova.network.linux_net.LinuxOVSInterfaceDriver"/' ansible/group_vars/all
 		sed -i -e 's/neutron_interface_driver:.*/neutron_interface_driver: "neutron.agent.linux.interface.OVSInterfaceDriver"/' ansible/group_vars/all
 		sed -i -e 's/mechanism_drivers:.*/mechanism_drivers: "openvswitch"/' ansible/group_vars/all
-	
-		if [ "$OVS_HYBRID_FW" = "yes" ]
+
+		if [ "$OS_HYBRID_FW" == "yes" ]
 		then
-			sed -i -e 's/firewall_driver:.*/firewall_driver: "neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver"/' ansible/group_vars/all
+			sed -i -e 's/firewall_driver:.*/firewall_driver: "iptables_hybrid"/' ansible/group_vars/all
 		else
 			sed -i -e 's/firewall_driver:.*/firewall_driver: "openvswitch"/' ansible/group_vars/all
 		fi
 	fi
-	
-	
+
+
 	# Disabling Security Groups entirely
-	if [ "$NO_SEC" = "yes" ]
+	if [ "$OS_NO_SEC" == "yes" ]
 	then
 		echo
 		echo "* WARNING! Disabling Security Groups (null firewall_driver) for your entire Cloud environment!"
-	
+
 		sed -i -e 's/firewall_driver:.*/firewall_driver: "neutron.agent.firewall.NoopFirewall"/' ansible/group_vars/all
 	fi
-	
-	
+
+
 	# Configuring FQDN and Domain on group_vars/all
 	echo
-	echo "* The detected settings like OpenStack release, Ubuntu, hostnames, etc..."
-	
-	sed -i -e 's/openstack_release:.*/openstack_release: "'$OPENSTACK_RELEASE'"/' ansible/group_vars/all
-	
-	sed -i -e 's/base_os:.*/base_os: "ubuntu16"/' ansible/group_vars/all
-	sed -i -e 's/base_os_upgrade:.*/base_os_upgrade: "yes"/' ansible/group_vars/all
-	
-	sed -i -e 's/ubuntu_network_setup:.*/ubuntu_network_setup: "yes"/' ansible/group_vars/all
-	
-	sed -i -e 's/controller-1.yourdomain.com/'$FQDN'/g' ansible/group_vars/all
-	sed -i -e 's/yourdomain.com/'$DOMAIN'/g' ansible/group_vars/all
-	
-	
+	echo "* The detected settings like OpenStack release, hostnames, etc..."
+
+	sed -i -e 's/openstack_release:.*/openstack_release: "'$OS_RELEASE'"/' ansible/group_vars/all
+
+	sed -i -e 's/your_domain:.*/your_domain: "'$DOMAIN'"/' ansible/group_vars/all
+
+	sed -i -e 's/public_addr:.*/public_addr: "'$FQDN'"/' ansible/group_vars/all
+	sed -i -e 's/controller_addr:.*/controller_addr: "'$FQDN'"/' ansible/group_vars/all
+
+
 	# Configuring ansible/group_vars/all and ansible/hosts
 	echo
 	echo "* Your current \"$WHOAMI\" user..."
-	
-	sed -i -e 's/regular_system_user:.*/regular_system_user: "'$WHOAMI'"/g' ansible/group_vars/all
-	
-	
+
+	sed -i -e 's/regular_system_user:.*/regular_system_user: "'$WHOAMI'"/' ansible/group_vars/all
+
+
 	echo
 	echo "* Enabling \"localhost\" host on ansible/hosts..."
-	
-	sed -i -e 's/^#localhost/localhost/g' ansible/hosts
-	
-	
-	# Configuring the default interface
-	OS_MGMT=$(ip r | grep default | awk '{print $5}')
-	
-	echo 
-	echo "Your primary network interface is:"
-	echo "dafault route via:" $OS_MGMT
-	
-	echo
-	echo "* Preparing Ansible variable based on current default primary interface..."
-	
-	sed -i -e 's/{{OS_MGMT_NIC}}/'$OS_MGMT'/' ansible/hosts
-	
-	
+
+	sed -i -e 's/^#localhost/localhost/' ansible/hosts
+
+
+	if [ "$OS_AIO" == "yes" ]
+	then
+		echo
+		echo "* OpenStack AIO activated..."
+
+		sed -i -e 's/os_aio:.*/os_aio: "yes"/' ansible/group_vars/all
+	fi
+
+
+	if [ "$OS_OPEN_PROVIDER_NETS_TO_REGULAR_USERS" == "yes" ]
+	then
+		echo
+		echo "* Opening Provider Networks to all regular users! Security risk!"
+
+		sed -i -e 's/os_open_provider_nets_to_regular_users:.*/os_open_provider_nets_to_regular_users: "yes"/' ansible/group_vars/all
+	fi
+
+
 	if [ "$DRY_RUN" == "yes" ]
 	then
-	        echo
-	        echo "Not running Ansible on --dry-run!"
+		echo
+		echo "Not running Ansible on --dry-run!"
 		echo "Just preparing the environment variables, so you can run Ansible manually, like:"
 		echo
 		echo "cd ~/svauto/ansible"
@@ -223,15 +225,15 @@ os_deploy()
 	else
 		echo
 		echo "Running Ansible, deploying OpenStack:"
-	
+
 		if [ "$DEPLOYMENT_MODE" == "yes" ];
 		then
 			cd ~/svauto/ansible
 			ansible-playbook site-openstack.yml --extra-vars "deployment_mode=yes"
 		else
-	
+
 			cd ~/svauto/ansible
-	        	ansible-playbook site-openstack.yml
+			ansible-playbook site-openstack.yml
 		fi
 	fi
 

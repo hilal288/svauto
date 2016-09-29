@@ -15,7 +15,7 @@
 # limitations under the License.
 
 
-source lib/include-tools.inc
+source lib/include_tools.inc
 
 
 for i in "$@"
@@ -106,6 +106,18 @@ case $i in
         --operation=*)
 
                 OPERATION="${i#*=}"
+                shift
+                ;;
+
+        --packer-to-openstack)
+
+                PACKER_TO_OS="yes"
+                shift
+                ;;
+
+        --os-project=*)
+
+                OS_PROJECT="${i#*=}"
                 shift
                 ;;
 
@@ -405,21 +417,36 @@ esac
 
 case "$PRODUCT" in
 
+        *svnda)
+		EXTRA_VARS=""$EXTRA_VARS" svnda_version="$VERSION""
+		sed -i -e 's/"disk_size":.*/"disk_size": "13312",/g' $PACKER_FILE
+		;;
+
+        *svtse)
+		EXTRA_VARS=""$EXTRA_VARS" svtse_version="$VERSION""
+		;;
+
+        *svtcpa)
+		EXTRA_VARS=""$EXTRA_VARS" svtcpa_version="$VERSION""
+		;;
+
         *svsde)
-		EXTRA_VARS=""$EXTRA_VARS" sde_version="$VERSION" setup_server="svsde""
+		EXTRA_VARS=""$EXTRA_VARS" sde_version="$VERSION""
 		;;
 
         *svpts)
-		EXTRA_VARS=""$EXTRA_VARS" pts_version="$VERSION" setup_server="svpts""
+		EXTRA_VARS=""$EXTRA_VARS" pts_version="$VERSION""
 		;;
 
         *svspb)
-		EXTRA_VARS=""$EXTRA_VARS" spb_version="$VERSION" setup_server="svspb""
+		EXTRA_VARS=""$EXTRA_VARS" spb_version="$VERSION""
 		sed -i -e 's/"shutdown_command":.*/"shutdown_command": "",/g' $PACKER_FILE
 		;;
 
-	svcs)
-		EXTRA_VARS=""$EXTRA_VARS" setup_server="svsde""
+	svcsd)
+		;;
+
+	devops)
 		;;
 
 	centos)
@@ -430,7 +457,7 @@ case "$PRODUCT" in
 
         *)
 		echo
-		echo "Usage: $0 --product={svpts|svsde|svspb|svcsd|centos|ubuntu}"
+		echo "Usage: $0 --product={svtse|svpts|svsde|svspb|svcsd|devops|centos|ubuntu}"
 		exit 1
 		;;
 
@@ -469,7 +496,7 @@ else
 		do
 
 			echo
-			echo "Packer is now building: "$PACKER_VM_NAME" with Ansible (try: $TRIES)..."
+			echo "Packer is now building: "$PACKER_VM_NAME" with Ansible (try: $TRIES of $MAX_TRIES)..."
 			echo
 
 			if packer build packer/$PACKER_FILES/$PACKER_VM_NAME-packer.yaml
@@ -638,20 +665,22 @@ then
 	if [ "$PACKER_TO_OS" == "yes" ]
 	then
 
-		if [ ! -f ~/admin-openrc.sh ]
+		if [ ! -f ~/$OS_PROJECT-openrc.sh ]
 		then
 			echo
-			echo "OpenStack Credentials for "admin" account not found, aborting!"
+			echo "OpenStack Credentials for "$OS_PROJECT" account not found, aborting!"
 			exit 1
 		else
 			echo
-			echo "Loading OpenStack credentials for "admin" account..."
-			source ~/admin-openrc.sh
+			echo "Loading OpenStack credentials for "$OS_PROJECT" account..."
+			source ~/$OS_PROJECT-openrc.sh
+
+			GLANCE_NAME=`echo $PACKER_VM_NAME | sed 's/\-amd64//g'`
 
 			echo
-			echo "Importing PTS on CentOS 6 into Glance..."
-			glance image-create --file packer/$OUTPUT_DIR/"$PACKER_VM_NAME".qcow2c --name "$PACKER_VM_NAME-$TODAY" --is-public true --container-format bare --disk-format qcow2
-			#glance image-update --property hw_scsi_model=virtio-scsi --property hw_disk_bus=scsi "$PACKER_VM_NAME-$TODAY"
+			echo "Importing QCoW2 Image into Glance (only works if the QCoW2 is being created)..."
+			glance image-create --file packer/$OUTPUT_DIR/"$PACKER_VM_NAME"-disk1.qcow2c --name "$GLANCE_NAME-$BUILD_DATE" --is-public true --container-format bare --disk-format qcow2
+			#glance image-update --property hw_scsi_model=virtio-scsi --property hw_disk_bus=scsi "$PACKER_VM_NAME-$BUILD_DATE"
 		fi
 
 	fi

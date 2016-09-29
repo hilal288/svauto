@@ -3,7 +3,7 @@
 #
 
 [svsde-servers]
-#SDE_IP setup_server=svsde setup_mode=sandvine
+#SDE_IP base_os=centos7 setup_server=svsde setup_mode=sandvine
 #ec2-54-16X-Y3-1Z1.compute-1.amazonaws.com
 
 [svpts-servers]

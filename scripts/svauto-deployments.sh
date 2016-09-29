@@ -28,27 +28,20 @@ case $i in
 	        shift
 	        ;;
 
-	--roles=*)
+	--ansible-roles=*)
 
-	        ALL_ROLES="${i#*=}"
-	        ROLES="$( echo $ALL_ROLES | sed s/,/\ /g )"
+	        ANSIBLE_ROLES="${i#*=}"
 	        shift
 	        ;;
 
-	--extra-vars=*)
+	--ansible-extra-vars=*)
 
-	        ALL_EXTRA_VARS="${i#*=}"
-	        EXTRA_VARS="$( echo $ALL_EXTRA_VARS | sed s/,/\ /g )"
+	        ANSIBLE_EXTRA_VARS="${i#*=}"
 	        shift
 	        ;;
 
 esac
 done
-
-
-BUILD_RAND=$(openssl rand -hex 4)
-
-PLAYBOOK_FILE="playbook-"$BUILD_RAND".yml"
 
 
 echo
@@ -122,29 +115,5 @@ if  [ ! -f ~/svauto/svauto.sh ]; then
 fi
 
 
-echo
-echo "Loading SVAuto includes..."
 cd ~/svauto
-source lib/include-tools.inc
-
-
-echo
-echo "Bootstrapping --base-os=\"$BASE_OS\" via Ansible with the folllwing roles and vars:"
-echo
-echo "Roles: "$ALL_ROLES"."
-echo "Extra Vars: "$ALL_EXTRA_VARS"."
-
-
-echo
-echo "Building Ansible top-level Playbook..."
-
-echo
-ansible_playbook_builder --ansible-remote-user=\"root\" --ansible-hosts="localhost" --roles="$ALL_ROLES" > ansible/tmp/$PLAYBOOK_FILE
-
-
-echo
-echo "Running Ansible with Playbook: \"$PLAYBOOK_FILE\"."
-
-echo
-cd ~/svauto/ansible
-ansible-playbook -c local "tmp/$PLAYBOOK_FILE" --extra-vars "base_os=$BASE_OS $EXTRA_VARS"
+./svauto.sh --svauto-deployments --base-os=$BASE_OS --ansible-roles=$ANSIBLE_ROLES --ansible-extra-vars=$ANSIBLE_EXTRA_VARS
