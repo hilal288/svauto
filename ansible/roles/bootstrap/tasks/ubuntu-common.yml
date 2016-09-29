@@ -104,6 +104,11 @@
   when: ubuntu_install == 'server'
 
 
+- name: ubuntu - dpkg enabling MultiArch on Desktops
+  shell: dpkg --add-architecture i386
+  when: ubuntu_install == 'desktop'
+
+
 - name: ubuntu - apt installing Desktop tools
   apt: name={{item}} state=latest update_cache=yes
   with_items:
