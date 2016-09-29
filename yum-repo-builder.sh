@@ -259,9 +259,6 @@ else
 fi
 
 
-createrepo $FULL_PATH
-
-
 if [ "$PRODUCT" == "subscriber_mapping" ]
 then
 	mv $REPOS_PATH/$SHORT_NAME $REPOS_PATH/svsubscribermapping-$VER_DOT
@@ -270,12 +267,7 @@ then
 fi
 
 
-if [ "$PRODUCT" == "svtse" ] || [ "$PRODUCT" == "svtcpa" ] || [ "$PRODUCT" == "svnda" ]
-then
-
-	rm -f $FULL_PATH/Packages/nginx*
-
-fi
+rm -f $FULL_PATH/Packages/nginx*
 
 
 if [ "$PRODUCT" == "svpts" ]
@@ -292,6 +284,9 @@ then
 	rm -f $FULL_PATH/Packages/postgresql93*
 
 fi
+
+
+createrepo $FULL_PATH
 
 
 if [ "$LATEST_OF_SERIE" == "yes" ]
