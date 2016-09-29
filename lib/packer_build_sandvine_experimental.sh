@@ -48,10 +48,10 @@ packer_build_sandvine_experimental()
 		--roles=cloud-init,bootstrap,grub-conf,nginx,svtcpa,vmware-tools,post-cleanup-image --versioned-repo \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
-	# Linux SVNDA 5.20 on Centos 7
-        ./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svnda --version=$SVNDA_VERSION --product-variant=vpl-test-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
-                --roles=cloud-init,bootstrap,grub-conf,nginx,postgresql,svnda,vmware-tools,post-cleanup-image --versioned-repo \
-                --packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
+#	# Linux SVNDA 5.20 on Centos 7
+#        ./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svnda --version=$SVNDA_VERSION --product-variant=vpl-test-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
+#                --roles=cloud-init,bootstrap,grub-conf,nginx,postgresql,svnda,vmware-tools,post-cleanup-image --versioned-repo \
+#                --packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 
 
