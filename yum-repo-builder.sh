@@ -19,7 +19,7 @@
 # the required values as arguments, for example:
 
 
-source lib/include-tools.inc
+source lib/include_tools.inc
 
 
 for i in "$@"
