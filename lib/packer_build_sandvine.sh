@@ -34,13 +34,13 @@ packer_build_sandvine()
 	# STABLE
 	#
 
-	# Linux SVPTS 7.30 on CentOS 7
+	# Linux SVPTS 7.35 on CentOS 7
 	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svpts --version=$PTS_VERSION --product-variant=vpl-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
 		--roles=cloud-init,bootstrap,grub-conf,nginx,svpts,vmware-tools,post-cleanup-image --disable-autoconf --static-repo --versioned-repo \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 
-	# Linux SVPTS 7.30 on CentOS 6 with Linux 3.18 from Xen 4.6 official repo
+	# Linux SVPTS 7.35 on CentOS 6 with Linux 3.18 from Xen 4.6 official repo
 	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svpts --version=$PTS_VERSION --product-variant=vpl-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
 		--roles=centos-xen,cloud-init,bootstrap,grub-conf,nginx,svpts,vmware-tools,post-cleanup-image --disable-autoconf --static-repo --versioned-repo \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT

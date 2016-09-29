@@ -17,7 +17,7 @@
 packer_build_cs_lab()
 {
 
-        PTS_VERSION="7.30"
+        PTS_VERSION="7.35"
         SDE_VERSION="7.50"
         SPB_VERSION="6.65"
 
@@ -41,7 +41,7 @@ packer_build_cs_lab()
 		--roles=cloud-init,bootstrap,grub-conf,postgresql,svspb,svmcdtext,svreports,svcs-svspb,sandvine-auto-config,vmware-tools,labify,post-cleanup-image,power-cycle $DRY_RUN_OPT \
 		--packer-max-tries=3
 
-	# PTS 7.30 on CentOS 7 + Cloud Services - Linux 3.10, DPDK 16.07, requires igb_uio - Labified
+	# PTS 7.35 on CentOS 7 + Cloud Services - Linux 3.10, DPDK 16.07, requires igb_uio - Labified
 	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svpts --version=$PTS_VERSION --product-variant=cs-1 --operation=cloud-services --qcow2 --vmdk --vhd --vm-xml --sha256sum \
 		--roles=cloud-init,bootstrap,grub-conf,nginx,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config,vmware-tools,labify,post-cleanup-image $DRY_RUN_OPT \
 		--setup-default-interface-script --packer-max-tries=3

@@ -17,7 +17,7 @@
 packer_build_cs()
 {
 
-        PTS_VERSION="7.30"
+        PTS_VERSION="7.35"
         SDE_VERSION="7.50"
         SPB_VERSION="6.65"
         CSD_VERSION="16.11"
@@ -47,7 +47,7 @@ packer_build_cs()
 		--roles=cloud-init,bootstrap,grub-conf,postgresql,svspb,svmcdtext,svreports,svcs-svspb,sandvine-auto-config,vmware-tools,post-cleanup-image,power-cycle $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto
 
-	# SVPTS 7.30 on CentOS 7 + Cloud Services - Linux 3.10, DPDK 16.07
+	# SVPTS 7.35 on CentOS 7 + Cloud Services - Linux 3.10, DPDK 16.07
 	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svpts --version=$PTS_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
 		--roles=cloud-init,bootstrap,grub-conf,nginx,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto
@@ -67,7 +67,7 @@ packer_build_cs()
 	# EXPERIMENTAL
 	#
 
-	# SVPTS 7.30 on CentOS 6 + Cloud Services - Linux 3.18 from Xen 4.6 official repo, DPDK 16.04, don't requires igb_uio
+	# SVPTS 7.35 on CentOS 6 + Cloud Services - Linux 3.18 from Xen 4.6 official repo, DPDK 16.04, don't requires igb_uio
 	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svpts --version=$PTS_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
 		--roles=centos-xen,cloud-init,bootstrap,grub-conf,nginx,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto
