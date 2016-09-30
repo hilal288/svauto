@@ -81,6 +81,12 @@ case $i in
 		shift
 		;;
 
+        --os-stack-type=*)
+
+                OS_STACK_TYPE="${i#*=}"
+                shift
+                ;;
+
 	--os-aio)
 
 		OS_AIO="yes"
@@ -619,11 +625,51 @@ then
 	fi
 
 
-	# TODO: Auto detected all instances automatically:
-	PTS_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svpts-1 | awk $'{print $2}'` | awk $'{print $4}')
-	SDE_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svsde-1 | awk $'{print $2}'` | awk $'{print $4}')
-	SPB_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svspb-1 | awk $'{print $2}'` | awk $'{print $4}')
-#	CSD_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svcsd-1 | awk $'{print $2}'` | awk $'{print $4}')
+	if [ -z $OS_STACK_TYPE ]
+	then
+		echo
+		echo "You did not specified the Stack type to deploy Sandvine's RPM Packages."
+
+		exit 1
+
+	fi
+
+
+        case "$OS_STACK_TYPE" in
+
+                # TODO: Auto detected all instances automatically:
+
+                stock)
+
+                        PTS_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svpts-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        SDE_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svsde-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        SPB_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svspb-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        ;;
+
+                svcsd-three)
+
+                        PTS_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svpts-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        SDE_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svsde-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        SPB_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svspb-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        ;;
+
+                svcsd-four)
+
+                        PTS_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svpts-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        SDE_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svsde-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        SPB_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svspb-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        CSD_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svcsd-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        ;;
+
+                svnda)
+
+                        PTS_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svpts-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        SDE_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svsde-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        SPB_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svspb-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        NDA_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svnda-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        ;;
+
+        esac
 
 
 	if [ -z $PTS_FLOAT ] || [ -z $SDE_FLOAT ] || [ -z $SPB_FLOAT ] #|| [ -z $CSD_FLOAT ]
@@ -652,7 +698,8 @@ then
 	echo SVPTS: $PTS_FLOAT
 	echo SVSDE: $SDE_FLOAT
 	echo SVSPB: $SPB_FLOAT
-#	echo SVCSD: $CSD_FLOAT
+	if [ "$OS_STACK_TYPE" == "svcsd*" ]; then echo SVCSD: $CSD_FLOAT; fi
+	if [ "$OS_STACK_TYPE" == "svnda" ]; then echo SVNDA: $NDA_FLOAT; fi
 
 
 	cd ansible/
@@ -677,7 +724,8 @@ then
 
 	sed -i -e 's/^#SDE_IP/'$SDE_FLOAT'/g' $ANSIBLE_INVENTORY_FILE
 	sed -i -e 's/^#SPB_IP/'$SPB_FLOAT'/g' $ANSIBLE_INVENTORY_FILE
-#	sed -i -e 's/^#CSD_IP/'$CSD_FLOAT'/g' $ANSIBLE_INVENTORY_FILE
+	if [ "$OS_STACK_TYPE" == "svcsd*" ]; then sed -i -e 's/^#CSD_IP/'$CSD_FLOAT'/g' $ANSIBLE_INVENTORY_FILE; fi
+	if [ "$OS_STACK_TYPE" == "svnda" ]; then sed -i -e 's/^#NDA_IP/'$NDA_FLOAT'/g' $ANSIBLE_INVENTORY_FILE; fi
 
 
 	# TODO: Avoid touch on ansible/group_vars/all file.
@@ -763,6 +811,13 @@ then
 
 			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svspb-servers \
 				--roles=sandvine-auto-config >> $ANSIBLE_PLAYBOOK_FILE
+
+			if [ "$OS_STACK_TYPE" == "svnda" ]
+			then
+				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svnda-servers \
+					--roles=sandvine-auto-config >> $ANSIBLE_PLAYBOOK_FILE
+
+			fi
 
 
 			if [ "$DRY_RUN" == "yes" ]
@@ -979,7 +1034,8 @@ then
 			echo "ssh sandvine@$PTS_FLOAT # PTS"
 			echo "ssh sandvine@$SDE_FLOAT # SDE"
 			echo "ssh sandvine@$SPB_FLOAT # SPB"
-#			echo "ssh sandvine@$CSD_FLOAT # CSD"
+			if [ "$OS_STACK_TYPE" == "svcsd*" ]; then echo "ssh sandvine@$CSD_FLOAT # CSD"; fi
+			if [ "$OS_STACK_TYPE" == "svnda*" ]; then echo "ssh sandvine@$NDA_FLOAT # NDA"; fi
 			echo
 
 		fi

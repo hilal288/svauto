@@ -84,6 +84,10 @@ ansible_playbook_builder()
 					echo "  - { role: sandvine-auto-config, setup_server: 'svspb' }"
 					;;
 
+				svnda-servers)
+					echo "  - { role: sandvine-auto-config, setup_server: 'svnda' }"
+					;;
+
 			esac
 
 		done
@@ -121,6 +125,16 @@ ansible_playbook_builder()
 					if [ "$SANDVINE_AUTO_CONFIG" == "yes" ];
 					then
 						echo "  - { role: sandvine-auto-config, setup_server: 'svspb' }"
+					fi
+					;;
+
+				svnda)
+
+					echo "  - role: $X"
+
+					if [ "$SANDVINE_AUTO_CONFIG" == "yes" ];
+					then
+						echo "  - { role: sandvine-auto-config, setup_server: 'svnda' }"
 					fi
 					;;
 
