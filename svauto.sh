@@ -563,20 +563,8 @@ then
 fi
 
 
-if [ ! "$LABIFY" == "yes" ]
+if [ -n "$OS_PROJECT" ]
 then
-
-
-	if [ -z $OS_PROJECT ]
-	then
-		echo
-		echo "You did not specified the OpenStack Project name, by passing:"
-		echo
-		echo "--os-project=\"demo\" to \"~/svauto.sh\""
-
-		exit 1
-	fi
-
 
 	if [ ! -f ~/$OS_PROJECT-openrc.sh ]
 	then
@@ -626,11 +614,12 @@ then
 	else
 		echo
 		echo "Stack not found! Aborting..."
+
 		exit 1
 	fi
 
 
-#	TODO: Auto detected all instances automatically:
+	# TODO: Auto detected all instances automatically:
 	PTS_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svpts-1 | awk $'{print $2}'` | awk $'{print $4}')
 	SDE_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svsde-1 | awk $'{print $2}'` | awk $'{print $4}')
 	SPB_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svspb-1 | awk $'{print $2}'` | awk $'{print $4}')
@@ -646,32 +635,30 @@ then
 		echo " * Missing Floating IP for one or more Sandvine's Instances."
 		echo " * You're running a Stack that is not compatbile with Sandvine's rquirements."
 		echo
+
 		exit 1
 	fi
 
 
+	BUILD_RAND=$(openssl rand -hex 4)
+
+
 	echo
-	echo "The following Sandvine-compatible Instances (their Floating IPs) was detected on"
-	echo "your \"$OS_STACK\" Stack:"
+	echo "The following Sandvine-compatible Instances was detected on your \"$OS_STACK\" Stack:"
 	echo
 	echo Floating IPs of:
 	echo
-	echo PTS: $PTS_FLOAT
-	echo SDE: $SDE_FLOAT
-	echo SPB: $SPB_FLOAT
-#	echo CSD: $CSD_FLOAT
+	echo SVPTS: $PTS_FLOAT
+	echo SVSDE: $SDE_FLOAT
+	echo SVSPB: $SPB_FLOAT
+#	echo SVCSD: $CSD_FLOAT
 
-fi
+	echo
+	echo "Preparing the Ansible Playbooks to deploy/configure Sandvine Platform..."
 
-
-echo
-echo "Preparing the Ansible Playbooks to deploy/configure Sandvine Platform..."
-
-
-if [ ! "$LABIFY" == "yes" ]
-then
 
 	git checkout ansible/hosts
+
 
 	if [ "$FREEBSD_PTS" == "yes" ]
 	then
@@ -687,11 +674,6 @@ then
 
 	sed -i -e 's/license_server:.*/license_server: \"'$LICENSE_SERVER'\"/g' ansible/group_vars/all
 
-fi
-
-
-if [ ! "$LABIFY" == "yes" ]
-then
 
 	if [ "$FREEBSD_PTS" == "yes" ]
 	then
@@ -711,7 +693,263 @@ then
 
 	fi
 
+
+	if [ "$DEPLOYMENT_MODE" == "yes" ]
+	then
+		EXTRA_VARS="deployment_mode=yes"
+	fi
+
+
+	case "$CLOUD_SERVICES_MODE" in
+
+		default)
+			echo
+			echo "Cloud Services mode set to: \"default\"."
+
+			EXTRA_VARS="$EXTRA_VARS setup_sub_option=default"
+			;;
+
+		mdm)
+			echo
+			echo "Cloud Services mode set to: \"mdm\"."
+
+			EXTRA_VARS="$EXTRA_VARS setup_sub_option=mdm"
+			;;
+
+	esac
+
+
+	if [ "$OPERATION" == "sandvine" ]
+	then
+
+		EXTRA_VARS="$EXTRA_VARS setup_mode=sandvine"
+
+
+		cd ansible/
+
+
+		if [ "$CONFIG_ONLY_MODE" == "yes" ]
+		then
+
+			echo
+			echo "Configuring Sandvine Platform with Ansible..."
+
+
+			PLAYBOOK_FILE="tmp/sandvine-auto-config-"$BUILD_RAND".yml"
+
+			echo
+			echo "Creating Ansible Playbook: \"$PLAYBOOK_FILE\"."
+
+			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts-servers \
+				--roles=sandvine-auto-config > $PLAYBOOK_FILE
+
+			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svsde-servers \
+				--roles=sandvine-auto-config >> $PLAYBOOK_FILE
+
+			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svspb-servers \
+				--roles=sandvine-auto-config >> $PLAYBOOK_FILE
+
+
+			if [ "$DRY_RUN" == "yes" ]
+			then
+
+				echo
+				echo "Not running Ansible on dry run..."
+
+			else
+
+	                        echo
+	                        echo "Running Ansible:"
+	                        echo
+	                        echo "ansible-playbook $PLAYBOOK_FILE --extra-vars \"$EXTRA_VARS\""
+	                        echo
+
+				ansible-playbook $PLAYBOOK_FILE --extra-vars "$EXTRA_VARS"
+
+			fi
+
+		else
+
+			echo
+			echo "Deploying Sandvine's RPM packages with Ansible..."
+
+
+			PLAYBOOK_FILE="tmp/site-sandvine-"$BUILD_RAND".yml"
+
+			echo
+			echo "Creating Ansible Playbook: \"$PLAYBOOK_FILE\"."
+
+			if [ "$DEPLOYMENT_MODE" == "yes" ]
+			then
+
+				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts-servers \
+					--roles=bootstrap,svpts,sandvine-auto-config,post-cleanup,power-cycle > $PLAYBOOK_FILE
+
+				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svsde-servers \
+					--roles=bootstrap,svsde,sandvine-auto-config,post-cleanup,power-cycle >> $PLAYBOOK_FILE
+
+				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svspb-servers \
+					--roles=bootstrap,svspb,sandvine-auto-config,post-cleanup,power-cycle >> $PLAYBOOK_FILE
+
+			else
+
+				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts-servers \
+					--roles=bootstrap,svpts,sandvine-auto-config,post-cleanup > $PLAYBOOK_FILE
+
+				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svsde-servers \
+					--roles=bootstrap,svsde,sandvine-auto-config,post-cleanup >> $PLAYBOOK_FILE
+
+				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svspb-servers \
+					--roles=bootstrap,svspb,sandvine-auto-config,post-cleanup >> $PLAYBOOK_FILE
+
+			fi
+
+			if [ "$DRY_RUN" == "yes" ]
+			then
+
+				echo
+				echo "Not running Ansible on dry run..."
+
+			else
+
+	                        echo
+        	                echo "Running Ansible:"
+                	        echo
+                        	echo "ansible-playbook $PLAYBOOK_FILE --extra-vars \"$EXTRA_VARS\""
+                       		echo
+
+				ansible-playbook $PLAYBOOK_FILE --extra-vars "$EXTRA_VARS"
+
+			fi
+
+		fi
+
+	fi
+
+
+	if [ "$OPERATION" == "cloud-services" ]
+	then
+
+		EXTRA_VARS="$EXTRA_VARS setup_mode=cloud-services"
+
+
+		cd ansible/
+
+
+		if [ "$CONFIG_ONLY_MODE" == "yes" ]
+		then
+
+			echo
+			echo "Configuring Sandvine Platform and Cloud Services with Ansible..."
+
+
+			PLAYBOOK_FILE="tmp/sandvine-auto-config-"$BUILD_RAND".yml"
+
+			echo
+			echo "Creating Ansible Playbook: \"$PLAYBOOK_FILE\"."
+
+			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts-servers \
+				--roles=sandvine-auto-config > $PLAYBOOK_FILE
+
+			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svsde-servers \
+				--roles=sandvine-auto-config >> $PLAYBOOK_FILE
+
+			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svspb-servers \
+				--roles=sandvine-auto-config >> $PLAYBOOK_FILE
+
+
+                        if [ "$DRY_RUN" == "yes" ]
+                        then
+
+                                echo
+                                echo "Not running Ansible on dry run..."
+
+                        else
+
+	                        echo
+	                        echo "Running Ansible:"
+	                        echo
+	                        echo "ansible-playbook $PLAYBOOK_FILE --extra-vars \"$EXTRA_VARS\""
+	                        echo
+	
+				ansible-playbook $PLAYBOOK_FILE --extra-vars "$EXTRA_VARS"
+
+			fi
+
+		else
+
+			echo
+			echo "Deploying Sandvine's RPM Packages plus Cloud Services with Ansible..."
+
+
+			PLAYBOOK_FILE="tmp/site-cloudservices-"$BUILD_RAND".yml"
+
+			echo
+			echo "Creating Ansible Playbook: \"$PLAYBOOK_FILE\"."
+
+			if [ "$DEPLOYMENT_MODE" == "yes" ]
+			then
+
+				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts-servers \
+					--roles=bootstrap,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config,post-cleanup,power-cycle > $PLAYBOOK_FILE
+
+				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svsde-servers \
+					--roles=bootstrap,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,sandvine-auto-config,post-cleanup,power-cycle >> $PLAYBOOK_FILE
+
+				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svspb-servers \
+					--roles=bootstrap,svspb,svreports,svcs-svspb,sandvine-auto-config,post-cleanup,power-cycle >> $PLAYBOOK_FILE
+
+			else
+
+				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts-servers \
+					--roles=bootstrap,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config,post-cleanup > $PLAYBOOK_FILE
+
+				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svsde-servers \
+					--roles=bootstrap,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,sandvine-auto-config,post-cleanup >> $PLAYBOOK_FILE
+
+				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svspb-servers \
+					--roles=bootstrap,svspb,svreports,svcs-svspb,sandvine-auto-config,post-cleanup >> $PLAYBOOK_FILE
+
+			fi
+
+
+                        if [ "$DRY_RUN" == "yes" ]
+                        then
+
+                                echo
+                                echo "Not running Ansible on dry run..."
+
+                        else
+
+				echo
+				echo "Running Ansible:"
+				echo
+				echo "ansible-playbook $PLAYBOOK_FILE --extra-vars \"$EXTRA_VARS\""
+				echo
+
+				ansible-playbook $PLAYBOOK_FILE --extra-vars "$EXTRA_VARS"
+
+			fi
+
+			echo
+			echo "If no errors reported by Ansible, then, well done!"
+			echo
+			echo "Your brand new Sandvine's Stack is reachable through SSH:"
+			echo
+			echo "ssh sandvine@$PTS_FLOAT # PTS"
+			echo "ssh sandvine@$SDE_FLOAT # SDE"
+			echo "ssh sandvine@$SPB_FLOAT # SPB"
+#			echo "ssh sandvine@$CSD_FLOAT # CSD"
+			echo
+
+		fi
+
+	fi
+
+	exit 0
+
 fi
+
 
 if [ "$LABIFY" == "yes" ]
 then
@@ -853,238 +1091,6 @@ then
 	sed -i -e 's/^#SPB_IP/'$SPB_FQDN'/g' ansible/hosts
 #	sed -i -e 's/^#CSD_IP/'$CSD_FQDN'/g' ansible/hosts
 
-
-fi
-
-
-if [ "$DRY_RUN" == "yes" ]
-then
-
-	echo
-	echo "Not running Ansible! Just preparing the environment variables..."
-
-else
-
-	BUILD_RAND=$(openssl rand -hex 4)
-
-
-	if [ "$DEPLOYMENT_MODE" == "yes" ]
-	then
-		EXTRA_VARS="deployment_mode=yes"
-	fi
-
-
-	case "$CLOUD_SERVICES_MODE" in
-
-		default)
-			echo
-			echo "Cloud Services mode set to: \"default\"."
-
-			EXTRA_VARS="$EXTRA_VARS setup_sub_option=default"
-			;;
-
-		mdm)
-			echo
-			echo "Cloud Services mode set to: \"mdm\"."
-
-			EXTRA_VARS="$EXTRA_VARS setup_sub_option=mdm"
-			;;
-
-	esac
-
-
-	if [ "$OPERATION" == "sandvine" ]
-	then
-
-		EXTRA_VARS="$EXTRA_VARS setup_mode=sandvine"
-
-
-		cd ansible/
-
-
-		if [ "$CONFIG_ONLY_MODE" == "yes" ]
-		then
-
-			echo
-			echo "Configuring Sandvine Platform with Ansible..."
-
-
-			PLAYBOOK_FILE="tmp/sandvine-auto-config-"$BUILD_RAND".yml"
-
-			echo
-			echo "Creating Ansible Playbook: \"$PLAYBOOK_FILE\"."
-
-			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts-servers \
-				--roles=sandvine-auto-config > $PLAYBOOK_FILE
-
-			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svsde-servers \
-				--roles=sandvine-auto-config >> $PLAYBOOK_FILE
-
-			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svspb-servers \
-				--roles=sandvine-auto-config >> $PLAYBOOK_FILE
-
-
-                        echo
-                        echo "Running Ansible:"
-                        echo
-                        echo "ansible-playbook $PLAYBOOK_FILE --extra-vars \"$EXTRA_VARS\""
-                        echo
-
-			ansible-playbook $PLAYBOOK_FILE --extra-vars "$EXTRA_VARS"
-
-		else
-
-			echo
-			echo "Deploying Sandvine's RPM packages with Ansible..."
-
-
-			PLAYBOOK_FILE="tmp/site-sandvine-"$BUILD_RAND".yml"
-
-			echo
-			echo "Creating Ansible Playbook: \"$PLAYBOOK_FILE\"."
-
-			if [ "$DEPLOYMENT_MODE" == "yes" ]
-			then
-
-				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts-servers \
-					--roles=bootstrap,svpts,sandvine-auto-config,post-cleanup,power-cycle > $PLAYBOOK_FILE
-
-				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svsde-servers \
-					--roles=bootstrap,svsde,sandvine-auto-config,post-cleanup,power-cycle >> $PLAYBOOK_FILE
-
-				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svspb-servers \
-					--roles=bootstrap,svspb,sandvine-auto-config,post-cleanup,power-cycle >> $PLAYBOOK_FILE
-
-			else
-
-				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts-servers \
-					--roles=bootstrap,svpts,sandvine-auto-config,post-cleanup > $PLAYBOOK_FILE
-
-				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svsde-servers \
-					--roles=bootstrap,svsde,sandvine-auto-config,post-cleanup >> $PLAYBOOK_FILE
-
-				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svspb-servers \
-					--roles=bootstrap,svspb,sandvine-auto-config,post-cleanup >> $PLAYBOOK_FILE
-
-			fi
-
-
-                        echo
-                        echo "Running Ansible:"
-                        echo
-                        echo "ansible-playbook $PLAYBOOK_FILE --extra-vars \"$EXTRA_VARS\""
-                        echo
-
-			ansible-playbook $PLAYBOOK_FILE --extra-vars "$EXTRA_VARS"
-
-		fi
-
-	fi
-
-
-	if [ "$OPERATION" == "cloud-services" ]
-	then
-
-		EXTRA_VARS="$EXTRA_VARS setup_mode=cloud-services"
-
-
-		cd ansible/
-
-
-		if [ "$CONFIG_ONLY_MODE" == "yes" ]
-		then
-
-			echo
-			echo "Configuring Sandvine Platform and Cloud Services with Ansible..."
-
-
-			PLAYBOOK_FILE="tmp/sandvine-auto-config-"$BUILD_RAND".yml"
-
-			echo
-			echo "Creating Ansible Playbook: \"$PLAYBOOK_FILE\"."
-
-			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts-servers \
-				--roles=sandvine-auto-config > $PLAYBOOK_FILE
-
-			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svsde-servers \
-				--roles=sandvine-auto-config >> $PLAYBOOK_FILE
-
-			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svspb-servers \
-				--roles=sandvine-auto-config >> $PLAYBOOK_FILE
-
-
-                        echo
-                        echo "Running Ansible:"
-                        echo
-                        echo "ansible-playbook $PLAYBOOK_FILE --extra-vars \"$EXTRA_VARS\""
-                        echo
-
-			ansible-playbook $PLAYBOOK_FILE --extra-vars "$EXTRA_VARS"
-
-		else
-
-			echo
-			echo "Deploying Sandvine's RPM Packages plus Cloud Services with Ansible..."
-
-
-			PLAYBOOK_FILE="tmp/site-cloudservices-"$BUILD_RAND".yml"
-
-			echo
-			echo "Creating Ansible Playbook: \"$PLAYBOOK_FILE\"."
-
-			if [ "$DEPLOYMENT_MODE" == "yes" ]
-			then
-
-				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts-servers \
-					--roles=bootstrap,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config,post-cleanup,power-cycle > $PLAYBOOK_FILE
-
-				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svsde-servers \
-					--roles=bootstrap,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,sandvine-auto-config,post-cleanup,power-cycle >> $PLAYBOOK_FILE
-
-				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svspb-servers \
-					--roles=bootstrap,svspb,svreports,svcs-svspb,sandvine-auto-config,post-cleanup,power-cycle >> $PLAYBOOK_FILE
-
-			else
-
-				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts-servers \
-					--roles=bootstrap,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config,post-cleanup > $PLAYBOOK_FILE
-
-				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svsde-servers \
-					--roles=bootstrap,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,sandvine-auto-config,post-cleanup >> $PLAYBOOK_FILE
-
-				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svspb-servers \
-					--roles=bootstrap,svspb,svreports,svcs-svspb,sandvine-auto-config,post-cleanup >> $PLAYBOOK_FILE
-
-			fi
-
-
-			echo
-			echo "Running Ansible:"
-			echo
-			echo "ansible-playbook $PLAYBOOK_FILE --extra-vars \"$EXTRA_VARS\""
-			echo
-
-			ansible-playbook $PLAYBOOK_FILE --extra-vars "$EXTRA_VARS"
-
-		fi
-
-	fi
-
-fi
-
-
-if [ ! "$LABIFY" == "yes" ]
-then
-
-	echo
-	echo "If no errors reported by Ansible, then, well done!"
-	echo
-	echo "Your brand new Sandvine's Stack is reachable through SSH:"
-	echo
-	echo "ssh sandvine@$PTS_FLOAT # PTS"
-	echo "ssh sandvine@$SDE_FLOAT # SDE"
-	echo "ssh sandvine@$SPB_FLOAT # SPB"
-#	echo "ssh sandvine@$CSD_FLOAT # CSD"
-	echo
+	exit 0
 
 fi
