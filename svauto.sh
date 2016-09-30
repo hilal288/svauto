@@ -642,6 +642,7 @@ then
 
 	BUILD_RAND=$(openssl rand -hex 4)
 
+	ANSIBLE_INVENTORY_FILE="tmp/hosts-$BUILD_RAND"
 
 	echo
 	echo "The following Sandvine-compatible Instances was detected on your \"$OS_STACK\" Stack:"
@@ -653,27 +654,39 @@ then
 	echo SVSPB: $SPB_FLOAT
 #	echo SVCSD: $CSD_FLOAT
 
+
+	cd ansible/
+
+
+	# TODO: create a directory for each stack with its hosts and playbook.
+
+
 	echo
-	echo "Preparing the Ansible Playbooks to deploy/configure Sandvine Platform..."
+	echo "Creating Ansible Inventory: \"ansible/tmp/hosts-$BUILD_RAND\"."
 
 
-	git checkout ansible/hosts
+	cp hosts $ANSIBLE_INVENTORY_FILE
 
 
 	if [ "$FREEBSD_PTS" == "yes" ]
 	then
-		sed -i -e 's/^#FREEBSD_PTS_IP/'$PTS_FLOAT'/g' ansible/hosts
+		sed -i -e 's/^#FREEBSD_PTS_IP/'$PTS_FLOAT'/g' $ANSIBLE_INVENTORY_FILE
 	else
-		sed -i -e 's/^#PTS_IP/'$PTS_FLOAT'/g' ansible/hosts
+		sed -i -e 's/^#PTS_IP/'$PTS_FLOAT'/g' $ANSIBLE_INVENTORY_FILE
 	fi
-	sed -i -e 's/^#SDE_IP/'$SDE_FLOAT'/g' ansible/hosts
-	sed -i -e 's/^#SPB_IP/'$SPB_FLOAT'/g' ansible/hosts
-#	sed -i -e 's/^#CSD_IP/'$CSD_FLOAT'/g' ansible/hosts
 
-	sed -i -e 's/packages_server:.*/packages_server: \"'$SVAUTO_MAIN_HOST'\"/g' ansible/group_vars/all
+	sed -i -e 's/^#SDE_IP/'$SDE_FLOAT'/g' $ANSIBLE_INVENTORY_FILE
+	sed -i -e 's/^#SPB_IP/'$SPB_FLOAT'/g' $ANSIBLE_INVENTORY_FILE
+#	sed -i -e 's/^#CSD_IP/'$CSD_FLOAT'/g' $ANSIBLE_INVENTORY_FILE
 
-	sed -i -e 's/license_server:.*/license_server: \"'$LICENSE_SERVER'\"/g' ansible/group_vars/all
 
+	# TODO: Avoid touch on ansible/group_vars/all file.
+
+	echo
+	echo "Changing \"ansible/group_vars/all\" file:"
+
+	sed -i -e 's/packages_server:.*/packages_server: \"'$SVAUTO_MAIN_HOST'\"/g' group_vars/all
+	sed -i -e 's/license_server:.*/license_server: \"'$LICENSE_SERVER'\"/g' group_vars/all
 
 	if [ "$FREEBSD_PTS" == "yes" ]
 	then
@@ -686,12 +699,16 @@ then
 			echo
 			echo "FreeBSD PTS detected, preparing it, by installing Python 2.7 sane version..."
 			ssh -oStrictHostKeyChecking=no cloud@$PTS_FLOAT 'sudo pkg_add http://ftp-archive.freebsd.org/pub/FreeBSD-Archive/old-releases/amd64/8.2-RELEASE/packages/python/python27-2.7.1_1.tbz'
-			sed -i -e 's/base_os:.*/base_os: freebsd8/g' ansible/group_vars/all
-			sed -i -e 's/deploy_pts_freebsd_pkgs:.*/deploy_pts_freebsd_pkgs: yes/g' ansible/group_vars/all
+			sed -i -e 's/base_os:.*/base_os: freebsd8/g' group_vars/all
+			sed -i -e 's/deploy_pts_freebsd_pkgs:.*/deploy_pts_freebsd_pkgs: yes/g' group_vars/all
 			echo "done."
 		fi
 
 	fi
+
+
+	echo
+	echo "Preparing the Ansible Playbooks to deploy/configure Sandvine Platform..."
 
 
 	if [ "$DEPLOYMENT_MODE" == "yes" ]
@@ -725,9 +742,6 @@ then
 		EXTRA_VARS="$EXTRA_VARS setup_mode=sandvine"
 
 
-		cd ansible/
-
-
 		if [ "$CONFIG_ONLY_MODE" == "yes" ]
 		then
 
@@ -735,19 +749,20 @@ then
 			echo "Configuring Sandvine Platform with Ansible..."
 
 
-			PLAYBOOK_FILE="tmp/sandvine-auto-config-"$BUILD_RAND".yml"
+			ANSIBLE_PLAYBOOK_FILE="tmp/sandvine-auto-config-$BUILD_RAND.yml"
+
 
 			echo
-			echo "Creating Ansible Playbook: \"$PLAYBOOK_FILE\"."
+			echo "Creating Ansible Playbook: \"ansible/$ANSIBLE_PLAYBOOK_FILE\"."
 
 			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts-servers \
-				--roles=sandvine-auto-config > $PLAYBOOK_FILE
+				--roles=sandvine-auto-config > $ANSIBLE_PLAYBOOK_FILE
 
 			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svsde-servers \
-				--roles=sandvine-auto-config >> $PLAYBOOK_FILE
+				--roles=sandvine-auto-config >> $ANSIBLE_PLAYBOOK_FILE
 
 			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svspb-servers \
-				--roles=sandvine-auto-config >> $PLAYBOOK_FILE
+				--roles=sandvine-auto-config >> $ANSIBLE_PLAYBOOK_FILE
 
 
 			if [ "$DRY_RUN" == "yes" ]
@@ -756,15 +771,22 @@ then
 				echo
 				echo "Not running Ansible on dry run..."
 
+				echo
+				echo "NOTE: You can manually run Ansible by typing:"
+				echo
+				echo "cd ansible"
+	                        echo "ansible-playbook -i $ANSIBLE_INVENTORY_FILE $ANSIBLE_PLAYBOOK_FILE --extra-vars \"$EXTRA_VARS\""
+				echo
+
 			else
 
 	                        echo
 	                        echo "Running Ansible:"
 	                        echo
-	                        echo "ansible-playbook $PLAYBOOK_FILE --extra-vars \"$EXTRA_VARS\""
+	                        echo "ansible-playbook -i $ANSIBLE_INVENTORY_FILE $ANSIBLE_PLAYBOOK_FILE --extra-vars \"$EXTRA_VARS\""
 	                        echo
 
-				ansible-playbook $PLAYBOOK_FILE --extra-vars "$EXTRA_VARS"
+				ansible-playbook -i $ANSIBLE_INVENTORY_FILE $ANSIBLE_PLAYBOOK_FILE --extra-vars "$EXTRA_VARS"
 
 			fi
 
@@ -774,33 +796,33 @@ then
 			echo "Deploying Sandvine's RPM packages with Ansible..."
 
 
-			PLAYBOOK_FILE="tmp/site-sandvine-"$BUILD_RAND".yml"
+			ANSIBLE_PLAYBOOK_FILE="tmp/site-sandvine-"$BUILD_RAND".yml"
 
 			echo
-			echo "Creating Ansible Playbook: \"$PLAYBOOK_FILE\"."
+			echo "Creating Ansible Playbook: \"ansible/$ANSIBLE_PLAYBOOK_FILE\"."
 
 			if [ "$DEPLOYMENT_MODE" == "yes" ]
 			then
 
 				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts-servers \
-					--roles=bootstrap,svpts,sandvine-auto-config,post-cleanup,power-cycle > $PLAYBOOK_FILE
+					--roles=bootstrap,svpts,sandvine-auto-config,post-cleanup,power-cycle > $ANSIBLE_PLAYBOOK_FILE
 
 				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svsde-servers \
-					--roles=bootstrap,svsde,sandvine-auto-config,post-cleanup,power-cycle >> $PLAYBOOK_FILE
+					--roles=bootstrap,svsde,sandvine-auto-config,post-cleanup,power-cycle >> $ANSIBLE_PLAYBOOK_FILE
 
 				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svspb-servers \
-					--roles=bootstrap,svspb,sandvine-auto-config,post-cleanup,power-cycle >> $PLAYBOOK_FILE
+					--roles=bootstrap,svspb,sandvine-auto-config,post-cleanup,power-cycle >> $ANSIBLE_PLAYBOOK_FILE
 
 			else
 
 				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts-servers \
-					--roles=bootstrap,svpts,sandvine-auto-config,post-cleanup > $PLAYBOOK_FILE
+					--roles=bootstrap,svpts,sandvine-auto-config,post-cleanup > $ANSIBLE_PLAYBOOK_FILE
 
 				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svsde-servers \
-					--roles=bootstrap,svsde,sandvine-auto-config,post-cleanup >> $PLAYBOOK_FILE
+					--roles=bootstrap,svsde,sandvine-auto-config,post-cleanup >> $ANSIBLE_PLAYBOOK_FILE
 
 				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svspb-servers \
-					--roles=bootstrap,svspb,sandvine-auto-config,post-cleanup >> $PLAYBOOK_FILE
+					--roles=bootstrap,svspb,sandvine-auto-config,post-cleanup >> $ANSIBLE_PLAYBOOK_FILE
 
 			fi
 
@@ -810,15 +832,22 @@ then
 				echo
 				echo "Not running Ansible on dry run..."
 
+                                echo
+                                echo "NOTE: You can manually run Ansible by typing:"
+                                echo
+                                echo "cd ansible"
+                                echo "ansible-playbook -i $ANSIBLE_INVENTORY_FILE $ANSIBLE_PLAYBOOK_FILE --extra-vars \"$EXTRA_VARS\""
+                                echo
+
 			else
 
 	                        echo
         	                echo "Running Ansible:"
                 	        echo
-                        	echo "ansible-playbook $PLAYBOOK_FILE --extra-vars \"$EXTRA_VARS\""
+                        	echo "ansible-playbook -i $ANSIBLE_INVENTORY_FILE $ANSIBLE_PLAYBOOK_FILE --extra-vars \"$EXTRA_VARS\""
                        		echo
 
-				ansible-playbook $PLAYBOOK_FILE --extra-vars "$EXTRA_VARS"
+				ansible-playbook -i $ANSIBLE_INVENTORY_FILE $ANSIBLE_PLAYBOOK_FILE --extra-vars "$EXTRA_VARS"
 
 			fi
 
@@ -833,9 +862,6 @@ then
 		EXTRA_VARS="$EXTRA_VARS setup_mode=cloud-services"
 
 
-		cd ansible/
-
-
 		if [ "$CONFIG_ONLY_MODE" == "yes" ]
 		then
 
@@ -843,19 +869,19 @@ then
 			echo "Configuring Sandvine Platform and Cloud Services with Ansible..."
 
 
-			PLAYBOOK_FILE="tmp/sandvine-auto-config-"$BUILD_RAND".yml"
+			ANSIBLE_PLAYBOOK_FILE="tmp/sandvine-auto-config-"$BUILD_RAND".yml"
 
 			echo
-			echo "Creating Ansible Playbook: \"$PLAYBOOK_FILE\"."
+			echo "Creating Ansible Playbook: \"ansible/$ANSIBLE_PLAYBOOK_FILE\"."
 
 			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts-servers \
-				--roles=sandvine-auto-config > $PLAYBOOK_FILE
+				--roles=sandvine-auto-config > $ANSIBLE_PLAYBOOK_FILE
 
 			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svsde-servers \
-				--roles=sandvine-auto-config >> $PLAYBOOK_FILE
+				--roles=sandvine-auto-config >> $ANSIBLE_PLAYBOOK_FILE
 
 			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svspb-servers \
-				--roles=sandvine-auto-config >> $PLAYBOOK_FILE
+				--roles=sandvine-auto-config >> $ANSIBLE_PLAYBOOK_FILE
 
 
                         if [ "$DRY_RUN" == "yes" ]
@@ -864,15 +890,22 @@ then
                                 echo
                                 echo "Not running Ansible on dry run..."
 
+                                echo
+                                echo "NOTE: You can manually run Ansible by typing:"
+                                echo
+                                echo "cd ansible"
+                                echo "ansible-playbook -i $ANSIBLE_INVENTORY_FILE $ANSIBLE_PLAYBOOK_FILE --extra-vars \"$EXTRA_VARS\""
+                                echo
+
                         else
 
 	                        echo
 	                        echo "Running Ansible:"
 	                        echo
-	                        echo "ansible-playbook $PLAYBOOK_FILE --extra-vars \"$EXTRA_VARS\""
+	                        echo "ansible-playbook -i $ANSIBLE_INVENTORY_FILE $ANSIBLE_PLAYBOOK_FILE --extra-vars \"$EXTRA_VARS\""
 	                        echo
 	
-				ansible-playbook $PLAYBOOK_FILE --extra-vars "$EXTRA_VARS"
+				ansible-playbook -i $ANSIBLE_INVENTORY_FILE $ANSIBLE_PLAYBOOK_FILE --extra-vars "$EXTRA_VARS"
 
 			fi
 
@@ -882,33 +915,33 @@ then
 			echo "Deploying Sandvine's RPM Packages plus Cloud Services with Ansible..."
 
 
-			PLAYBOOK_FILE="tmp/site-cloudservices-"$BUILD_RAND".yml"
+			ANSIBLE_PLAYBOOK_FILE="tmp/site-cloudservices-"$BUILD_RAND".yml"
 
 			echo
-			echo "Creating Ansible Playbook: \"$PLAYBOOK_FILE\"."
+			echo "Creating Ansible Playbook: \"ansible/$ANSIBLE_PLAYBOOK_FILE\"."
 
 			if [ "$DEPLOYMENT_MODE" == "yes" ]
 			then
 
 				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts-servers \
-					--roles=bootstrap,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config,post-cleanup,power-cycle > $PLAYBOOK_FILE
+					--roles=bootstrap,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config,post-cleanup,power-cycle > $ANSIBLE_PLAYBOOK_FILE
 
 				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svsde-servers \
-					--roles=bootstrap,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,sandvine-auto-config,post-cleanup,power-cycle >> $PLAYBOOK_FILE
+					--roles=bootstrap,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,sandvine-auto-config,post-cleanup,power-cycle >> $ANSIBLE_PLAYBOOK_FILE
 
 				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svspb-servers \
-					--roles=bootstrap,svspb,svreports,svcs-svspb,sandvine-auto-config,post-cleanup,power-cycle >> $PLAYBOOK_FILE
+					--roles=bootstrap,svspb,svreports,svcs-svspb,sandvine-auto-config,post-cleanup,power-cycle >> $ANSIBLE_PLAYBOOK_FILE
 
 			else
 
 				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts-servers \
-					--roles=bootstrap,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config,post-cleanup > $PLAYBOOK_FILE
+					--roles=bootstrap,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config,post-cleanup > $ANSIBLE_PLAYBOOK_FILE
 
 				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svsde-servers \
-					--roles=bootstrap,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,sandvine-auto-config,post-cleanup >> $PLAYBOOK_FILE
+					--roles=bootstrap,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,sandvine-auto-config,post-cleanup >> $ANSIBLE_PLAYBOOK_FILE
 
 				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svspb-servers \
-					--roles=bootstrap,svspb,svreports,svcs-svspb,sandvine-auto-config,post-cleanup >> $PLAYBOOK_FILE
+					--roles=bootstrap,svspb,svreports,svcs-svspb,sandvine-auto-config,post-cleanup >> $ANSIBLE_PLAYBOOK_FILE
 
 			fi
 
@@ -919,15 +952,22 @@ then
                                 echo
                                 echo "Not running Ansible on dry run..."
 
+                                echo
+                                echo "NOTE: You can manually run Ansible by typing:"
+                                echo
+                                echo "cd ansible"
+                                echo "ansible-playbook -i $ANSIBLE_INVENTORY_FILE $ANSIBLE_PLAYBOOK_FILE --extra-vars \"$EXTRA_VARS\""
+                                echo
+
                         else
 
 				echo
 				echo "Running Ansible:"
 				echo
-				echo "ansible-playbook $PLAYBOOK_FILE --extra-vars \"$EXTRA_VARS\""
+				echo "ansible-playbook -i $ANSIBLE_INVENTORY_FILE $ANSIBLE_PLAYBOOK_FILE --extra-vars \"$EXTRA_VARS\""
 				echo
 
-				ansible-playbook $PLAYBOOK_FILE --extra-vars "$EXTRA_VARS"
+				ansible-playbook -i $ANSIBLE_INVENTORY_FILE $ANSIBLE_PLAYBOOK_FILE --extra-vars "$EXTRA_VARS"
 
 			fi
 
