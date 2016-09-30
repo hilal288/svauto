@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: restart-cloudservices
-  service: name=csd state=started enabled=yes
-  when: deployment_mode != 'yes'
+- name: svnda - configuring "rc.conf" file
+  template: src=svnda/rc.conf.j2
+            dest=/usr/local/sandvine/etc/rc.conf
+            owner=sv_admin
+            group=sv_admin
+            mode=0644
+            backup=yes

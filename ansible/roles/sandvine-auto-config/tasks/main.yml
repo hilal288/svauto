@@ -27,9 +27,14 @@
   when: setup_server == 'svspb'
 
 
-- name: Sandvine Auto Configuration book for CS
+- name: Sandvine Auto Configuration book for SVCS
   include: svcs-auto-config.yml
   when: setup_server == 'svcs'
+
+
+- name: Sandvine Auto Configuration book for SVNDA
+  include: svnda-auto-config.yml
+  when: setup_server == 'svnda'
 
 
 - name: reload-sandvine
