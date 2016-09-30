@@ -129,6 +129,9 @@ versioned_repo: "false"
 # Deploy FreeBSD packages
 deploy_pts_freebsd_pkgs: "no"
 
+# Install SVNDA AddOns
+svnda_install_addons: 'no'
+
 # Products and versions
 pts_version: "7.20"
 sde_version: "7.30"

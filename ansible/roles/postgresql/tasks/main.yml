@@ -34,12 +34,18 @@
     - python-psycopg2
 
 
-#- name: centos - PostgreSQL initiating database
+# SPB install doesn't like this:
+#- name: centos6 - PostgreSQL initiating database
 #  shell: service postgresql-9.3 initdb
 #         creates=/var/lib/pgsql/data/postgresql.conf
 #  when: base_os == 'centos6'
 
 
+- name: centos7 - PostgreSQL initiating database
+  shell: /usr/pgsql-9.3/bin/postgresql93-setup initdb
+         creates=/var/lib/pgsql/data/postgresql.conf
+  when: base_os == 'centos7'
+
+
 - name: centos - service enabling PostgreSQL
   service: name=postgresql-9.3 enabled=yes
-  when: base_os == 'centos6'
