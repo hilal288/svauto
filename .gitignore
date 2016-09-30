@@ -11,6 +11,5 @@ packer/centos*-tmpl
 packer_cache
 public_dir
 yum_repos
-ansible/tmp/*.yml
-ansible/tmp/*.retry
+ansible/tmp/*
 ansible/facts_storage/*
