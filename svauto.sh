@@ -81,6 +81,12 @@ case $i in
 		shift
 		;;
 
+	--os-stack-user=*)
+
+		OS_STACK_USER="${i#*=}"
+		shift
+		;;
+
         --os-stack-type=*)
 
                 OS_STACK_TYPE="${i#*=}"
@@ -705,7 +711,7 @@ then
 	cd ansible/
 
 
-	# TODO: create a directory for each stack with its hosts and playbook.
+	# TODO: Create a directory for each stack with its hosts and playbook.
 
 
 	echo
@@ -713,6 +719,9 @@ then
 
 
 	cp hosts $ANSIBLE_INVENTORY_FILE
+
+
+	sed -i -e 's/{{OS_STACK_USER}}/'$OS_STACK_USER'/g' $ANSIBLE_INVENTORY_FILE
 
 
 	if [ "$FREEBSD_PTS" == "yes" ]
@@ -724,6 +733,7 @@ then
 
 	sed -i -e 's/^#SDE_IP/'$SDE_FLOAT'/g' $ANSIBLE_INVENTORY_FILE
 	sed -i -e 's/^#SPB_IP/'$SPB_FLOAT'/g' $ANSIBLE_INVENTORY_FILE
+
 	if [ "$OS_STACK_TYPE" == "svcsd*" ]; then sed -i -e 's/^#CSD_IP/'$CSD_FLOAT'/g' $ANSIBLE_INVENTORY_FILE; fi
 	if [ "$OS_STACK_TYPE" == "svnda" ]; then sed -i -e 's/^#NDA_IP/'$NDA_FLOAT'/g' $ANSIBLE_INVENTORY_FILE; fi
 
