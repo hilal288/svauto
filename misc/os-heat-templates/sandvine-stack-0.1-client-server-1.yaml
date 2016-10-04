@@ -388,6 +388,7 @@ resources:
     properties:
       name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "tg-client-port"]]}
       network: { get_resource: data_sub_net1 }
+      port_security_enabled: False
 
   tg_server_ctrl_port:
     type: OS::Neutron::Port
@@ -410,6 +411,7 @@ resources:
     properties:
       name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "tg-server-port"]]}
       network: { get_resource: data_int_net1 }
+      port_security_enabled: False
 
   svpts_1:
     type: OS::Nova::Server
