@@ -485,18 +485,3 @@ resources:
         - rm -f /etc/network/interfaces.d/50-cloud-init.cfg
 
 outputs:
-  svpts_floating_ip:
-    description: The IP address of the deployed SVPTS Instance
-    value: { get_attr: [floating_ip_1, floating_ip_address] }
-
-  svsde_floating_ip:
-    description: The IP address of the deployed SVSDE Instance
-    value: { get_attr: [floating_ip_2, floating_ip_address] }
-
-  svspb_floating_ip:
-    description: The IP address of the deployed SVSPB Instance
-    value: { get_attr: [floating_ip_3, floating_ip_address] }
-
-  tg_floating_ip:
-    description: The IP address of the deployed Traffic Generator Instance
-    value: { get_attr: [floating_ip_4, floating_ip_address] }

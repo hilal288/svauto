@@ -13,7 +13,7 @@ description: >
 
   We want to wire them as:
 
-  -------|ctrl_subnet|------------- Control Network (with Internet access via router_i0)
+      ---|ctrl_subnet|-------- Control Network (with Internet access via router_i0)
       |        |        |
      ---      ---      ---
      | |      | |      | |      --|Android|     --|Windows|
@@ -31,7 +31,7 @@ description: >
      | |      | |      | |
      ---      ---      - -
       |        |        |
-      --|service_subnet|------  <-- Service Network (not routed - no gateway)
+      --|service_subnet|------ Service Network (not routed - no gateway)
 
 parameters:
   ssh_key:
@@ -421,14 +421,3 @@ resources:
           expire: False
 
 outputs:
-  svpts_floating_ip:
-    description: The IP address of the deployed SVPTS instance
-    value: { get_attr: [floating_ip_1, floating_ip_address] }
-
-  svsde_floating_ip:
-    description: The IP address of the deployed SVSDE instance
-    value: { get_attr: [floating_ip_2, floating_ip_address] }
-
-  svspb_floating_ip:
-    description: The IP address of the deployed SVSPB instance
-    value: { get_attr: [floating_ip_3, floating_ip_address] }

@@ -230,6 +230,3 @@ resources:
           expire: False
 
 outputs:
-  nfv_floating_ip:
-    description: The IP address of the deployed NFV instance
-    value: { get_attr: [floating_ip_1, floating_ip_address] }

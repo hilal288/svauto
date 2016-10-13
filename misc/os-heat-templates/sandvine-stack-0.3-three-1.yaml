@@ -486,18 +486,3 @@ resources:
         - 'su -c "\curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/svauto-deployments.sh | bash -s -- --base-os=ubuntu16 --ansible-roles=bootstrap,grub-conf,post-cleanup --ansible-extra-vars=base_os_upgrade=yes,ubuntu_install=server" sandvine'
 
 outputs:
-  svpts_floating_ip:
-    description: The IP address of the deployed SVPTS instance
-    value: { get_attr: [floating_ip_1, floating_ip_address] }
-
-  svsde_floating_ip:
-    description: The IP address of the deployed SVSDE instance
-    value: { get_attr: [floating_ip_2, floating_ip_address] }
-
-  svspb_floating_ip:
-    description: The IP address of the deployed SVSPB instance
-    value: { get_attr: [floating_ip_3, floating_ip_address] }
-
-  tg_floating_ip:
-    description: The IP address of the deployed Traffic Generator instance
-    value: { get_attr: [floating_ip_4, floating_ip_address] }

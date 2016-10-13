@@ -428,14 +428,3 @@ resources:
         - 'su -c "\curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/install-svauto.sh | bash -s" sandvine'
 
 outputs:
-  svpts_floating_ip:
-    description: The IP address of the deployed SVPTS instance
-    value: { get_attr: [floating_ip_1, floating_ip_address] }
-
-  svsde_floating_ip:
-    description: The IP address of the deployed SVSDE instance
-    value: { get_attr: [floating_ip_2, floating_ip_address] }
-
-  svspb_floating_ip:
-    description: The IP address of the deployed SVSPB instance
-    value: { get_attr: [floating_ip_3, floating_ip_address] }
