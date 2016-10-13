@@ -20,8 +20,16 @@
 #10.128.243.249
 
 [svcs-servers]
-#CSD_IP ansible_user={{OS_STACK_USER}}
+#CSD_IP ansible_user={{OS_STACK_USER}} base_os=centos7 setup_server=svcs setup_mode=cloud-services
 #10.128.243.2
+
+[svtse-servers]
+#SVTSE_IP ansible_user={{OS_STACK_USER}} base_os=centos7 setup_server=svtse setup_mode=sandvine
+#10.128.243.249
+
+[svtcpa-servers]
+#SVTCPA_IP ansible_user={{OS_STACK_USER}} base_os=centos7 setup_server=svtcpa setup_mode=sandvine
+#10.128.243.249
 
 
 #

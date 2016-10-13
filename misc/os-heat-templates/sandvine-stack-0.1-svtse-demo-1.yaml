@@ -16,7 +16,7 @@ description: >
 
   We want to wire them as:
 
-      ---|ctrl_subnet|------------------- Control Network (with Internet access via router_i0)
+      -------|ctrl_subnet|------------------- Control Network (with Internet access via router_i0)
       |     |         |    |    |           |
      ---   ---       ---  ---  ---         ---
      | |   | |       |S|  |S|  |S|         | |
@@ -33,7 +33,7 @@ description: >
      | |   | |  |                          | |------------|data_int_subnet1|----|Internet via router_i1|
      ---   ---  |                          - -
       |     |   |                           |
-      --|service_subnet|-------  <-- Service Network (not routed - no gateway)
+      --------------|service_subnet|---------  <-- Service Network (not routed - no gateway)
 
 parameters:
 

@@ -215,6 +215,12 @@ case $i in
 		shift
 		;;
 
+        --centos-network-setup)
+
+	        CENTOS_NETWORK_SETUP="yes"
+		shift
+		;;
+
 	# Options starting with --ubuntu-* are Ubuntu related
         --ubuntu-network-setup)
 
@@ -675,6 +681,24 @@ then
                         NDA_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svnda-1 | awk $'{print $2}'` | awk $'{print $4}')
                         ;;
 
+                svtse-demo-mycloud)
+
+                        PTS_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svpts-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        SDE_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svsde-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        SPB_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svspb-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        SVTSE_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svtse-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        SVTCPA_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svtcpa-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        ;;
+
+
+		*)
+
+			echo
+			echo "Usage: $0 --os-stack-type={stock|svcsd-three|svcsd-four|svnda|svtse-demo-mycloud}"
+
+			exit 1
+			;;
+
         esac
 
 
@@ -704,19 +728,24 @@ then
 	echo SVPTS: $PTS_FLOAT
 	echo SVSDE: $SDE_FLOAT
 	echo SVSPB: $SPB_FLOAT
+
 	if [ "$OS_STACK_TYPE" == "svcsd*" ]; then echo SVCSD: $CSD_FLOAT; fi
 	if [ "$OS_STACK_TYPE" == "svnda" ]; then echo SVNDA: $NDA_FLOAT; fi
+
+	if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then echo SVTSE: $SVTSE_FLOAT; fi
+	if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then echo SVTCPA: $SVTCPA_FLOAT; fi
 
 
 	cd ansible/
 
 
-	# TODO: Create a directory for each stack with its hosts and playbook.
-
-
 	echo
 	echo "Creating Ansible Inventory: \"ansible/tmp/hosts-$BUILD_RAND\"."
 
+
+	# TODO:
+	# * Create a directory for each stack with its hosts and playbook.
+	# * Create an "ansible_inventory_builder" function, to autogenerate it, instead of just copying it.
 
 	cp hosts $ANSIBLE_INVENTORY_FILE
 
@@ -736,6 +765,9 @@ then
 
 	if [ "$OS_STACK_TYPE" == "svcsd*" ]; then sed -i -e 's/^#CSD_IP/'$CSD_FLOAT'/g' $ANSIBLE_INVENTORY_FILE; fi
 	if [ "$OS_STACK_TYPE" == "svnda" ]; then sed -i -e 's/^#NDA_IP/'$NDA_FLOAT'/g' $ANSIBLE_INVENTORY_FILE; fi
+
+	if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then sed -i -e 's/^#SVTSE_IP/'$SVTSE_FLOAT'/g' $ANSIBLE_INVENTORY_FILE; fi
+	if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then sed -i -e 's/^#SVTCPA_IP/'$SVTCPA_FLOAT'/g' $ANSIBLE_INVENTORY_FILE; fi
 
 
 	# TODO: Avoid touch on ansible/group_vars/all file.
@@ -778,6 +810,7 @@ then
 	case "$CLOUD_SERVICES_MODE" in
 
 		default)
+
 			echo
 			echo "Cloud Services mode set to: \"default\"."
 
@@ -785,6 +818,7 @@ then
 			;;
 
 		mdm)
+
 			echo
 			echo "Cloud Services mode set to: \"mdm\"."
 
@@ -797,7 +831,18 @@ then
 	if [ "$OPERATION" == "sandvine" ]
 	then
 
-		EXTRA_VARS="$EXTRA_VARS setup_mode=sandvine"
+		if [ "$OS_STACK_TYPE" == "stock" ] || [ "$OS_STACK_TYPE" == "svnda" ]
+		then
+			EXTRA_VARS="$EXTRA_VARS setup_mode=sandvine"
+		fi
+
+		if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then EXTRA_VARS="$EXTRA_VARS setup_mode=svtse-demo"; fi
+
+
+		if [ "$CENTOS_NETWORK_SETUP" == "yes" ]
+		then
+			EXTRA_ROLES="centos-network-setup,"
+		fi
 
 
 		if [ "$CONFIG_ONLY_MODE" == "yes" ]
@@ -814,19 +859,27 @@ then
 			echo "Creating Ansible Playbook: \"ansible/$ANSIBLE_PLAYBOOK_FILE\"."
 
 			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts-servers \
-				--roles=sandvine-auto-config > $ANSIBLE_PLAYBOOK_FILE
+				--roles="$EXTRA_ROLES"sandvine-auto-config > $ANSIBLE_PLAYBOOK_FILE
 
 			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svsde-servers \
-				--roles=sandvine-auto-config >> $ANSIBLE_PLAYBOOK_FILE
+				--roles="$EXTRA_ROLES"sandvine-auto-config >> $ANSIBLE_PLAYBOOK_FILE
 
 			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svspb-servers \
-				--roles=sandvine-auto-config >> $ANSIBLE_PLAYBOOK_FILE
+				--roles="$EXTRA_ROLES"sandvine-auto-config >> $ANSIBLE_PLAYBOOK_FILE
 
 			if [ "$OS_STACK_TYPE" == "svnda" ]
 			then
 				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svnda-servers \
-					--roles=sandvine-auto-config >> $ANSIBLE_PLAYBOOK_FILE
+					--roles="$EXTRA_ROLES"sandvine-auto-config >> $ANSIBLE_PLAYBOOK_FILE
+			fi
 
+			if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]
+			then
+				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svtcpa-servers \
+					--roles="$EXTRA_ROLES"sandvine-auto-config >> $ANSIBLE_PLAYBOOK_FILE
+
+				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svtse-servers \
+					--roles="$EXTRA_ROLES"sandvine-auto-config >> $ANSIBLE_PLAYBOOK_FILE
 			fi
 
 
@@ -1041,11 +1094,16 @@ then
 			echo
 			echo "Your brand new Sandvine's Stack is reachable through SSH:"
 			echo
-			echo "ssh sandvine@$PTS_FLOAT # PTS"
-			echo "ssh sandvine@$SDE_FLOAT # SDE"
-			echo "ssh sandvine@$SPB_FLOAT # SPB"
-			if [ "$OS_STACK_TYPE" == "svcsd*" ]; then echo "ssh sandvine@$CSD_FLOAT # CSD"; fi
-			if [ "$OS_STACK_TYPE" == "svnda*" ]; then echo "ssh sandvine@$NDA_FLOAT # NDA"; fi
+			echo "ssh sandvine@$PTS_FLOAT # SVPTS"
+			echo "ssh sandvine@$SDE_FLOAT # SVSDE"
+			echo "ssh sandvine@$SPB_FLOAT # SVSPB"
+
+			if [ "$OS_STACK_TYPE" == "svcsd*" ]; then echo "ssh sandvine@$CSD_FLOAT # SVCS"; fi
+			if [ "$OS_STACK_TYPE" == "svnda*" ]; then echo "ssh sandvine@$NDA_FLOAT # SVNDA"; fi
+
+			if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then echo "ssh sandvine@$SVTSE_FLOAT # SVTSE"; fi
+			if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then echo "ssh sandvine@$SVTCPA_FLOAT # TCP Accelerator"; fi
+
 			echo
 
 		fi
@@ -1193,6 +1251,7 @@ then
 	else
 		sed -i -e 's/^#PTS_IP/'$PTS_FQDN'/g' ansible/hosts
 	fi
+
 	sed -i -e 's/^#SDE_IP/'$SDE_FQDN'/g' ansible/hosts
 	sed -i -e 's/^#SPB_IP/'$SPB_FQDN'/g' ansible/hosts
 #	sed -i -e 's/^#CSD_IP/'$CSD_FQDN'/g' ansible/hosts

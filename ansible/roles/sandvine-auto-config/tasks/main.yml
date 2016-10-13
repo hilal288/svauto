@@ -37,6 +37,16 @@
   when: setup_server == 'svnda'
 
 
+- name: Sandvine Auto Configuration book for SVTSE
+  include: svtse-auto-config.yml
+  when: setup_server == 'svtse'
+
+
+- name: Sandvine Auto Configuration book for SVTCPA
+  include: svtcpa-auto-config.yml
+  when: setup_server == 'svtcpa'
+
+
 - name: reload-sandvine
   shell: cd /usr/local/sandvine/etc ; svreload
   when: deployment_mode != 'yes'

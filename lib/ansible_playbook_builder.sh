@@ -65,6 +65,15 @@ ansible_playbook_builder()
 	done
 
 
+	for Y in $ROLES; do
+
+		if [ "$Y" != "sandvine-auto-config" ]; then
+			echo "  - $Y"
+		fi
+
+	done
+
+
 	if [ "$SANDVINE_AUTO_CONFIG" == "yes" ] && [ "$CONFIG_ONLY_MODE" == "yes" ]
 	then
 
@@ -86,6 +95,14 @@ ansible_playbook_builder()
 
 				svnda-servers)
 					echo "  - { role: sandvine-auto-config, setup_server: 'svnda' }"
+					;;
+
+				svtse-servers)
+					echo "  - { role: sandvine-auto-config, setup_server: 'svtse' }"
+					;;
+
+				svtcpa-servers)
+					echo "  - { role: sandvine-auto-config, setup_server: 'svtcpa' }"
 					;;
 
 			esac
@@ -138,6 +155,26 @@ ansible_playbook_builder()
 					fi
 					;;
 
+				svtse)
+
+					echo "  - role: $X"
+
+					if [ "$SANDVINE_AUTO_CONFIG" == "yes" ];
+					then
+						echo "  - { role: sandvine-auto-config, setup_server: 'svtse' }"
+					fi
+					;;
+
+				svtcpa)
+
+					echo "  - role: $X"
+
+					if [ "$SANDVINE_AUTO_CONFIG" == "yes" ];
+					then
+						echo "  - { role: sandvine-auto-config, setup_server: 'svtcpa' }"
+					fi
+					;;
+
 				svcs)
 
 					echo "  - role: $X"
@@ -148,18 +185,12 @@ ansible_playbook_builder()
 					fi
 					;;
 
-				*)
-
-					if [ "$X" != "sandvine-auto-config" ]; then
-						echo "  - role: $X"
-					fi
-					;;
-
 			esac
 
 		done
 
 	fi
+
 
 	echo ""
 

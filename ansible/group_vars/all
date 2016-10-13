@@ -59,6 +59,9 @@ lab_stack: "no"
 eth0_pci_id: "0000:00:03.0"
 eth1_pci_id: "0000:00:04.0"
 
+# Enable Sandvine's Main Yum Repository:
+sandvine_main_yum_repo: "no"
+
 
 #
 # Sandvine Platform Definitions
