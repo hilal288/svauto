@@ -30,4 +30,10 @@
   ignore_errors: yes
 
 
+# For Ubuntu 16
+- name: ubuntu16 - rebooting in 1 minute...
+  shell: /sbin/shutdown -r 1 --no-wall
+  when: base_os == 'ubuntu16'
+
+
 - pause: seconds=15
