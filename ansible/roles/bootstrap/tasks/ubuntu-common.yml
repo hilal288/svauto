@@ -175,5 +175,5 @@
 
 
 - name: ubuntu - group add regular system user to know Desktop groups
-  user: name={{ regular_system_user }} groups=adm,cdrom,sudo,dip,plugdev,lpadmin,sambashare append=yes
+  user: name={{ regular_system_user }} groups=adm,cdrom,sudo,dip,plugdev,lpadmin append=yes
   when: ubuntu_install == 'desktop'
