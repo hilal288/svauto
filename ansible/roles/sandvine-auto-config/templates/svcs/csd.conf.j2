@@ -4,19 +4,19 @@
 
 	<Storage>
 		<!-- InfluxDB for storing real-time stats. -->
-                <InfluxDB log="false" verbose="false">root:root@udp({{ csd_srvc_ip }}:8086)/cs</InfluxDB>
+                <InfluxDB log="false" verbose="false">root:root@udp({{ hostvars[groups['svsde-servers'][0]]['ansible_eth1']['ipv4']['address'] }}:8086)/cs</InfluxDB>
 
 		<!-- Redis for web sessions and caching global attributes. -->
-		<Redis>{{ csd_srvc_ip }}:6379</Redis>
+		<Redis>{{ hostvars[groups['svsde-servers'][0]]['ansible_eth1']['ipv4']['address'] }}:6379</Redis>
 
 		<!-- SPB SOAP for querying historical data. -->
-		<SPB>spbadmin:sandvine@{{ spb_srvc_ip }}:8081</SPB>
+		<SPB>spbadmin:sandvine@{{ hostvars[groups['svspb-servers'][0]]['ansible_eth1']['ipv4']['address'] }}:8081</SPB>
 		<!-- SPB data publishing interval. This value is represented in seconds.
 		     If SPB published interval is 1 min then here it should be 60 -->
 		<SPBInterval>60</SPBInterval>
 
 		<!-- MySQL or PostgreSQL for persistence of global attributes. -->
-                <RDBM>mysql://svadmin:sandvine@{{ csd_srvc_ip }}:3306/cs</RDBM>
+                <RDBM>mysql://svadmin:sandvine@{{ hostvars[groups['svsde-servers'][0]]['ansible_eth1']['ipv4']['address'] }}:3306/cs</RDBM>
 
 		<!-- InfluxDB data cleanup time. Supported time suffix w = week, d = day, h = hour, m = minute and s = second -->
 		<DataCleanupTime>62m</DataCleanupTime>
@@ -27,7 +27,7 @@
                 <UdrActualLocation>/usr/local/sandvine/var/spool/logging/local/d2/logging/local</UdrActualLocation>
 
 		<!-- Connection configuration for global attributes -->
-                <GlobalAttr>http://{{ ga_srvc_ip }}:8091</GlobalAttr>
+                <GlobalAttr>http://{{ hostvars[groups['svsde-servers'][0]]['ansible_eth1']['ipv4']['address'] }}:8091</GlobalAttr>
                 <!-- Global attributes api version number -->
                 <GlobalAttrAPI>1</GlobalAttrAPI>
 
@@ -91,7 +91,7 @@
         <!-- Configuration for cloud service mobile data management -->
 	<MobileDataManagement>
 		<!-- Address to access SDE SOAP Server -->
-		<SDEAddr>http://{{ sde_srvc_ip }}:7504</SDEAddr>
+		<SDEAddr>http://{{ hostvars[groups['svsde-servers'][0]]['ansible_eth1']['ipv4']['address'] }}:7504</SDEAddr>
 		<!-- Provide a list of home mobile country code -->
 		<HomeMCC>001</HomeMCC>
 		<!-- Provide a list of default group -->

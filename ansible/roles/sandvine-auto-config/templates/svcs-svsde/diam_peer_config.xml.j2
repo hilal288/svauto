@@ -4,7 +4,7 @@
     <peers>
         <peer>
             <identity>pts</identity>
-            <hostname>{{ pts_srvc_ip }}</hostname>
+            <hostname>{{ hostvars[groups['svpts-servers'][0]]['ansible_eth1']['ipv4']['address'] }}</hostname>
             <realm>sandvine.com</realm>
             <dictionaries>
                 <dictionary>CS</dictionary>
@@ -21,7 +21,7 @@
         </peer>
          <peer>
             <identity>cs</identity>
-            <hostname>{{ csd_srvc_ip }}</hostname>
+            <hostname>{{ hostvars[groups['svsde-servers'][0]]['ansible_eth1']['ipv4']['address'] }}</hostname>
             <realm>sandvine.com</realm>
             <port>3869</port>
             <bias>2</bias>
@@ -53,7 +53,7 @@
                 <key-file>KEYpath</key-file>
             </security>
             <server-config>
-                <ip>{{ sde_srvc_ip }}</ip>
+                <ip>{{ hostvars[groups['svsde-servers'][0]]['ansible_eth1']['ipv4']['address'] }}</ip>
                 <port>3868</port>
                 <watchdog-timeout>20</watchdog-timeout>
                 <cer-timeout>10</cer-timeout>

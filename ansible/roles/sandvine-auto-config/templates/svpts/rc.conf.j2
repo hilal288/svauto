@@ -20,7 +20,7 @@ SVSUPPORT=none@localhost
 # - https://git.sandvine.rocks/sandvine/blank-config/src/master/pts/rc.conf
 powerview_enabled="true"
 
-spb_servers={{ spb_srvc_ip }}
+spb_servers={{ hostvars[groups['svspb-servers'][0]]['ansible_eth1']['ipv4']['address'] }}
 
 cluster_name="{{ cluster_name }}"
 cluster_stat_name="{{ cluster_name }}"

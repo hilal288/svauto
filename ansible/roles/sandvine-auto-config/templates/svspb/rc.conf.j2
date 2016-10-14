@@ -15,7 +15,7 @@ install_base=/usr/local/sandvine
 
 SVSUPPORT=none@localhost
 
-spb_servers={{ spb_srvc_ip }}
+spb_servers={{ hostvars[groups['svspb-servers'][0]]['ansible_eth1']['ipv4']['address'] }}
 
 cluster_name="{{ cluster_name }}"
 spb_cluster_name="{{ cluster_name }}"

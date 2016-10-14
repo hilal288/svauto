@@ -47,6 +47,9 @@ ansible_playbook_builder()
 	done
 
 
+	echo "- hosts: all"
+	echo "  tasks: [ ]"
+	echo ""
 	echo "- hosts: $ANSIBLE_HOSTS"
 	echo "  user: $ANSIBLE_REMOTE_USER"
 	echo "  become: yes"

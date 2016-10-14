@@ -86,21 +86,6 @@ cluster_name: "sandvine"
 int_subnet: "10.192.0.0/16"
 ext_subnet: "0.0.0.0/0"
 
-# IPs
-spb_ctrl_ip: "192.168.192.10"
-spb_srvc_ip: "192.168.192.130"
-
-sde_ctrl_ip: "192.168.192.20"
-sde_srvc_ip: "192.168.192.140"
-
-pts_ctrl_ip: "192.168.192.30"
-pts_srvc_ip: "192.168.192.150"
-
-csd_ctrl_ip: "192.168.192.20"
-csd_srvc_ip: "192.168.192.140"
-
-ga_srvc_ip: "192.168.192.140"
-
 # PTS LinkData
 classifier_linkdata: "DEFAULT"
 
