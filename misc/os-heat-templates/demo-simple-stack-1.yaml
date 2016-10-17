@@ -1,4 +1,4 @@
-heat_template_version: 2013-05-23
+heat_template_version: 2016-04-08
 
 description: >
 
@@ -44,21 +44,21 @@ parameters:
     type: string
     label: "Ubuntu Server - 64-bit"
     description: "Ubuntu - Xenial Xerus - LTS"
-    default: "Ubuntu 16.04.1 LTS - Xenial Xerus - 64-bit - Cloud Based Image"
+    default: "Ubuntu 16.04.1 64-bit"
 
 resources:
-  rtr:
+  router_0:
     type: OS::Neutron::Router
     properties:
       admin_state_up: True
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-rtr' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-router-0' } }
       external_gateway_info:
         network: { get_param: public_network }
 
-  router_i0:
+  router_0_i0:
     type: OS::Neutron::RouterInterface
     properties:
-      router: { get_resource: rtr }
+      router: { get_resource: router_0 }
       subnet: { get_resource: ctrl_subnet }
 
   ctrl_net:
@@ -77,7 +77,6 @@ resources:
 
   demosrv:
     type: OS::Nova::Server
-    depends_on: ctrl_subnet
     properties:
       name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-demosrv' } }
       key_name: { get_param: 'ssh_key' }
