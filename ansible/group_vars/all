@@ -221,10 +221,12 @@ ubuntu_setup_iptables_rc_local: "no"
 # Ubuntu's DPDK Setup
 #
 
-grub_nr_1g_pages: "64"
+grub_enable_hugepages: "no"
 
-dpdk_nr_1g_pages: "1"
-dpdk_nr_2m_pages: "32"
+grub_nr_1g_pages: "4"
+
+dpdk_nr_1g_pages: "{{grub_nr_1g_pages}}"
+dpdk_nr_2m_pages: "512"
 
 dpdk_bus: "pci"
 
