@@ -653,41 +653,41 @@ then
 
                 stock)
 
-                        PTS_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svpts-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        SDE_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svsde-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        SPB_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svspb-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        PTS_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-pts-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        SDE_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-sde-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        SPB_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-spb-1 | awk $'{print $2}'` | awk $'{print $4}')
                         ;;
 
                 svcsd-three)
 
-                        PTS_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svpts-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        SDE_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svsde-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        SPB_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svspb-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        PTS_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-pts-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        SDE_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-sde-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        SPB_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-spb-1 | awk $'{print $2}'` | awk $'{print $4}')
                         ;;
 
                 svcsd-four)
 
-                        PTS_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svpts-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        SDE_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svsde-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        SPB_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svspb-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        PTS_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-pts-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        SDE_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-sde-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        SPB_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-spb-1 | awk $'{print $2}'` | awk $'{print $4}')
                         CSD_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svcsd-1 | awk $'{print $2}'` | awk $'{print $4}')
                         ;;
 
                 svnda)
 
-                        PTS_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svpts-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        SDE_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svsde-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        SPB_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svspb-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        NDA_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svnda-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        PTS_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-pts-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        SDE_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-sde-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        SPB_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-spb-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        NDA_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-nda-1 | awk $'{print $2}'` | awk $'{print $4}')
                         ;;
 
                 svtse-demo-mycloud)
 
-                        PTS_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svpts-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        SDE_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svsde-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        SPB_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svspb-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        SVTSE_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svtse-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        SVTCPA_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-svtcpa-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        PTS_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-pts-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        SDE_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-sde-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        SPB_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-spb-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        TSE_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-tse-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        TCPA_FLOAT=$(nova floating-ip-list | grep `nova list | grep $OS_STACK-tcpa-1 | awk $'{print $2}'` | awk $'{print $4}')
                         ;;
 
 
@@ -725,15 +725,15 @@ then
 	echo
 	echo Floating IPs of:
 	echo
-	echo SVPTS: $PTS_FLOAT
-	echo SVSDE: $SDE_FLOAT
-	echo SVSPB: $SPB_FLOAT
+	echo PTS: $PTS_FLOAT
+	echo SDE: $SDE_FLOAT
+	echo SPB: $SPB_FLOAT
 
 	if [ "$OS_STACK_TYPE" == "svcsd*" ]; then echo SVCSD: $CSD_FLOAT; fi
-	if [ "$OS_STACK_TYPE" == "svnda" ]; then echo SVNDA: $NDA_FLOAT; fi
+	if [ "$OS_STACK_TYPE" == "svnda" ]; then echo NDA: $NDA_FLOAT; fi
 
-	if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then echo SVTSE: $SVTSE_FLOAT; fi
-	if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then echo SVTCPA: $SVTCPA_FLOAT; fi
+	if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then echo TSE: $TSE_FLOAT; fi
+	if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then echo TCPA: $TCPA_FLOAT; fi
 
 
 	cd ansible/
@@ -766,8 +766,8 @@ then
 	if [ "$OS_STACK_TYPE" == "svcsd*" ]; then sed -i -e 's/^#CSD_IP/'$CSD_FLOAT'/g' $ANSIBLE_INVENTORY_FILE; fi
 	if [ "$OS_STACK_TYPE" == "svnda" ]; then sed -i -e 's/^#NDA_IP/'$NDA_FLOAT'/g' $ANSIBLE_INVENTORY_FILE; fi
 
-	if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then sed -i -e 's/^#SVTSE_IP/'$SVTSE_FLOAT'/g' $ANSIBLE_INVENTORY_FILE; fi
-	if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then sed -i -e 's/^#SVTCPA_IP/'$SVTCPA_FLOAT'/g' $ANSIBLE_INVENTORY_FILE; fi
+	if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then sed -i -e 's/^#TSE_IP/'$TSE_FLOAT'/g' $ANSIBLE_INVENTORY_FILE; fi
+	if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then sed -i -e 's/^#TCPA_IP/'$TCPA_FLOAT'/g' $ANSIBLE_INVENTORY_FILE; fi
 
 
 	# TODO: Avoid touch on ansible/group_vars/all file.
@@ -1094,15 +1094,15 @@ then
 			echo
 			echo "Your brand new Sandvine's Stack is reachable through SSH:"
 			echo
-			echo "ssh sandvine@$PTS_FLOAT # SVPTS"
-			echo "ssh sandvine@$SDE_FLOAT # SVSDE"
-			echo "ssh sandvine@$SPB_FLOAT # SVSPB"
+			echo "ssh sandvine@$PTS_FLOAT # PTS"
+			echo "ssh sandvine@$SDE_FLOAT # SDE"
+			echo "ssh sandvine@$SPB_FLOAT # SPB"
 
 			if [ "$OS_STACK_TYPE" == "svcsd*" ]; then echo "ssh sandvine@$CSD_FLOAT # SVCS"; fi
-			if [ "$OS_STACK_TYPE" == "svnda*" ]; then echo "ssh sandvine@$NDA_FLOAT # SVNDA"; fi
+			if [ "$OS_STACK_TYPE" == "svnda*" ]; then echo "ssh sandvine@$NDA_FLOAT # NDA"; fi
 
-			if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then echo "ssh sandvine@$SVTSE_FLOAT # SVTSE"; fi
-			if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then echo "ssh sandvine@$SVTCPA_FLOAT # TCP Accelerator"; fi
+			if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then echo "ssh sandvine@$TSE_FLOAT # TSE"; fi
+			if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then echo "ssh sandvine@$TCPA_FLOAT # TCP Accelerator"; fi
 
 			echo
 

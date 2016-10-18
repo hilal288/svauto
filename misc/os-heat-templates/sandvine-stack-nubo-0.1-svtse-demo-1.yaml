@@ -6,10 +6,10 @@ description: >
 
   We have 6 Instances:
 
-  * SVPTS - CentOS 7
+  * PTS - CentOS 7
   * SVTSE - CentOS 7
-  * SVSDE - CentOS 7
-  * SVSPB - CentOS 6
+  * SDE - CentOS 7
+  * SPB - CentOS 6
   * SVTCPA - CentOS 7
   * Subscriber - Ubuntu 16.04
 
@@ -56,23 +56,23 @@ parameters:
     default: "ext-net"
 
   # Image definitions
-  svpts_image:
+  pts_image:
     type: string
-    label: "SVPTS Image (default '{{svpts_image}}')"
-    description: "SVPTS Image"
-    default: "{{svpts_image}}"
+    label: "PTS Image (default '{{pts_image}}')"
+    description: "PTS Image"
+    default: "{{pts_image}}"
 
-  svsde_image:
+  sde_image:
     type: string
-    label: "SVSDE Image (default '{{svsde_image}}')"
-    description: "SVSDE Image"
-    default: "{{svsde_image}}"
+    label: "SDE Image (default '{{sde_image}}')"
+    description: "SDE Image"
+    default: "{{sde_image}}"
 
-  svspb_image:
+  spb_image:
     type: string
-    label: "SVSPB Image (default '{{svspb_image}}')"
-    description: "SVSPB Image"
-    default: "{{svspb_image}}"
+    label: "SPB Image (default '{{spb_image}}')"
+    description: "SPB Image"
+    default: "{{spb_image}}"
 
   svtse_image:
     type: string
@@ -200,26 +200,26 @@ resources:
   # Control Ports (with each Floating IP)
   #
 
-  svpts_ctrl_port:
+  pts_ctrl_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "svpts-ctrl-port"]]}
+      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "pts-ctrl-port"]]}
       network: { get_resource: ctrl_net }
       fixed_ips:
         - ip_address: 192.168.192.30
 
-  svsde_ctrl_port:
+  sde_ctrl_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "svsde-ctrl-port"]]}
+      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "sde-ctrl-port"]]}
       network: { get_resource: ctrl_net }
       fixed_ips:
         - ip_address: 192.168.192.20
 
-  svspb_ctrl_port:
+  spb_ctrl_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "svspb-ctrl-port"]]}
+      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "spb-ctrl-port"]]}
       network: { get_resource: ctrl_net }
       fixed_ips:
         - ip_address: 192.168.192.10
@@ -241,26 +241,26 @@ resources:
         - ip_address: 192.168.192.32
 
   # Services Ports
-  svspb_srvc_port:
+  spb_srvc_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "svspb-srvc-port"]]}
+      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "spb-srvc-port"]]}
       network: { get_resource: service_net }
       fixed_ips:
         - ip_address: 192.168.192.130
 
-  svsde_srvc_port:
+  sde_srvc_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "svsde-srvc-port"]]}
+      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "sde-srvc-port"]]}
       network: { get_resource: service_net }
       fixed_ips:
        - ip_address: 192.168.192.140
  
-  svpts_srvc_port:
+  pts_srvc_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "svpts-srvc-port"]]}
+      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "pts-srvc-port"]]}
       network: { get_resource: service_net }
       fixed_ips:
         - ip_address: 192.168.192.150
@@ -284,14 +284,14 @@ resources:
   sub_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "svspb-srvc-port"]]}
+      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "spb-srvc-port"]]}
       network: { get_resource: data_sub_net1 }
 
   # Chain Network Data Ports
-  svpts_chain_port:
+  pts_chain_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "svpts-chain-port"]]}
+      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "pts-chain-port"]]}
       network: { get_resource: data_chain_net1 }
 
   svtse_chain_port:
@@ -349,18 +349,18 @@ resources:
             sandvine:sandvine
           expire: False
 
-  # SVPTS Instance
-  svpts_instance_1:
+  # PTS Instance
+  pts_instance_1:
     type: OS::Nova::Server
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-svpts-1' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-pts-1' } }
       key_name: { get_param: 'ssh_key' }
-      image: { get_param: 'svpts_image' }
+      image: { get_param: 'pts_image' }
       flavor: "m1.small"
       networks:
-        - port: { get_resource: svpts_ctrl_port }
-        - port: { get_resource: svpts_srvc_port }
-        - port: { get_resource: svpts_chain_port }
+        - port: { get_resource: pts_ctrl_port }
+        - port: { get_resource: pts_srvc_port }
+        - port: { get_resource: pts_chain_port }
       user_data_format: RAW
       user_data: |
         #cloud-config
@@ -397,17 +397,17 @@ resources:
             sandvine:sandvine
           expire: False
 
-  # SVSPB Instance
-  svspb_instance_1:
+  # SPB Instance
+  spb_instance_1:
     type: OS::Nova::Server
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-svspb-1' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-spb-1' } }
       key_name: { get_param: 'ssh_key' }
-      image: { get_param: 'svspb_image' }
+      image: { get_param: 'spb_image' }
       flavor: "m1.medium"
       networks:
-        - port: { get_resource: svspb_ctrl_port }
-        - port: { get_resource: svspb_srvc_port }
+        - port: { get_resource: spb_ctrl_port }
+        - port: { get_resource: spb_srvc_port }
       user_data_format: RAW
       user_data: |
         #cloud-config
@@ -420,17 +420,17 @@ resources:
             sandvine:sandvine
           expire: False
 
-  # SVSDE Instance
-  svsde_instance_1:
+  # SDE Instance
+  sde_instance_1:
     type: OS::Nova::Server
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-svsde-1' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-sde-1' } }
       key_name: { get_param: 'ssh_key' }
-      image: { get_param: 'svsde_image' }
+      image: { get_param: 'sde_image' }
       flavor: "m1.medium"
       networks:
-        - port: { get_resource: svsde_ctrl_port }
-        - port: { get_resource: svsde_srvc_port }
+        - port: { get_resource: sde_ctrl_port }
+        - port: { get_resource: sde_srvc_port }
       user_data_format: RAW
       user_data: |
         #cloud-config
