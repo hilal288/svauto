@@ -839,10 +839,10 @@ then
 		if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then EXTRA_VARS="$EXTRA_VARS setup_mode=svtse-demo"; fi
 
 
-		if [ "$CENTOS_NETWORK_SETUP" == "yes" ]
-		then
-			EXTRA_ROLES="centos-network-setup,"
-		fi
+#		if [ "$CENTOS_NETWORK_SETUP" == "yes" ]
+#		then
+#			EXTRA_ROLES="centos-network-setup,"
+#		fi
 
 
 		if [ "$CONFIG_ONLY_MODE" == "yes" ]
@@ -858,8 +858,22 @@ then
 			echo
 			echo "Creating Ansible Playbook: \"ansible/$ANSIBLE_PLAYBOOK_FILE\"."
 
-			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts-servers \
-				--roles="$EXTRA_ROLES"sandvine-auto-config > $ANSIBLE_PLAYBOOK_FILE
+			if [ "$CENTOS_NETWORK_SETUP" == "yes" ]
+			then
+
+				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svspb-servers \
+					--roles=centos-network-setup >> $ANSIBLE_PLAYBOOK_FILE
+
+				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svsde-servers \
+					--roles=centos-network-setup >> $ANSIBLE_PLAYBOOK_FILE
+
+				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts-servers \
+					--roles=centos-network-setup >> $ANSIBLE_PLAYBOOK_FILE
+
+			fi
+
+			ansible_playbook_builder --get-facts --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts-servers \
+				--roles="$EXTRA_ROLES"sandvine-auto-config >> $ANSIBLE_PLAYBOOK_FILE
 
 			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svsde-servers \
 				--roles="$EXTRA_ROLES"sandvine-auto-config >> $ANSIBLE_PLAYBOOK_FILE
@@ -922,7 +936,7 @@ then
 			if [ "$DEPLOYMENT_MODE" == "yes" ]
 			then
 
-				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts-servers \
+				ansible_playbook_builder --get-facts --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts-servers \
 					--roles=bootstrap,svpts,sandvine-auto-config,post-cleanup,power-cycle > $ANSIBLE_PLAYBOOK_FILE
 
 				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svsde-servers \
@@ -933,7 +947,7 @@ then
 
 			else
 
-				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts-servers \
+				ansible_playbook_builder --get-facts --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts-servers \
 					--roles=bootstrap,svpts,sandvine-auto-config,post-cleanup > $ANSIBLE_PLAYBOOK_FILE
 
 				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svsde-servers \
@@ -992,7 +1006,7 @@ then
 			echo
 			echo "Creating Ansible Playbook: \"ansible/$ANSIBLE_PLAYBOOK_FILE\"."
 
-			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts-servers \
+			ansible_playbook_builder --get-facts --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts-servers \
 				--roles=sandvine-auto-config > $ANSIBLE_PLAYBOOK_FILE
 
 			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svsde-servers \
@@ -1041,7 +1055,7 @@ then
 			if [ "$DEPLOYMENT_MODE" == "yes" ]
 			then
 
-				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts-servers \
+				ansible_playbook_builder --get-facts --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts-servers \
 					--roles=bootstrap,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config,post-cleanup,power-cycle > $ANSIBLE_PLAYBOOK_FILE
 
 				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svsde-servers \
@@ -1052,7 +1066,7 @@ then
 
 			else
 
-				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts-servers \
+				ansible_playbook_builder --get-facts --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts-servers \
 					--roles=bootstrap,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config,post-cleanup > $ANSIBLE_PLAYBOOK_FILE
 
 				ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svsde-servers \

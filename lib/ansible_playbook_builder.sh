@@ -42,13 +42,27 @@ ansible_playbook_builder()
 		                shift
 		                ;;
 
+		        --get-facts)
+
+		                GET_FACTS="yes"
+		                shift
+		                ;;
+
 		esac
 
 	done
 
 
-	echo "- hosts: all"
-	echo "  tasks: [ ]"
+	if [ "$GET_FACTS" == "yes" ]
+	then
+		echo ""
+		echo "- hosts: all"
+		echo "  tasks: [ ]"
+
+		unset GET_FACTS
+	fi
+
+
 	echo ""
 	echo "- hosts: $ANSIBLE_HOSTS"
 	echo "  user: $ANSIBLE_REMOTE_USER"
@@ -193,8 +207,5 @@ ansible_playbook_builder()
 		done
 
 	fi
-
-
-	echo ""
 
 }
