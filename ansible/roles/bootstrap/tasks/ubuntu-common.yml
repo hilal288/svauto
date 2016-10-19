@@ -71,6 +71,7 @@
     - psmisc
     - tzdata
     - tshark
+    - netperf
     - pm-utils
     - xfsprogs
     - dos2unix
