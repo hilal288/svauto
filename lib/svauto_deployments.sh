@@ -21,6 +21,43 @@ svauto_deployments()
 
 	PLAYBOOK_FILE="playbook-"$BUILD_RAND".yml"
 
+	echo
+	echo "Welcome to SVAuto, the Sandvine Automation!"
+
+
+	echo
+	echo "Installing SVAuto basic dependencies (Git & Ansible):"
+
+
+	case $BASE_OS in
+
+		ubuntu*)
+
+			echo
+			sudo apt -y install software-properties-common
+			sudo add-apt-repository -y ppa:sandvine/packages
+			sudo apt update
+			sudo apt -y install git ansible
+
+			;;
+
+		centos*)
+
+			echo
+			sudo yum --enablerepo=epel-testing -y install git ansible libselinux-python
+			;;
+
+		*)
+
+	                echo
+	                echo "Operation System not detected, aborting!"
+
+	                exit 1
+
+	                ;;
+
+	esac
+
 
 	echo
 	echo "Bootstrapping --base-os=\"$BASE_OS\" via Ansible with the folllwing roles and vars:"
@@ -41,6 +78,6 @@ svauto_deployments()
 
 	echo
 	cd ~/svauto/ansible
-	ansible-playbook -c local tmp/$PLAYBOOK_FILE -e "base_os=$BASE_OS $ANSIBLE_EXTRA_VARS"
+	sudo ansible-playbook -c local tmp/$PLAYBOOK_FILE -e "base_os=$BASE_OS $ANSIBLE_EXTRA_VARS"
 
 }

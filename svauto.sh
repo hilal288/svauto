@@ -437,6 +437,30 @@ fi
 if [ "$SVAUTO_DEPLOYMENTS" == "yes" ]
 then
 
+	if  [ ! -d ~/svauto ]; then
+	        echo
+	        echo "Downloading SVAuto into your home directory..."
+	        echo
+
+	        cd ~
+	        git clone -b dev https://github.com/sandvine-eng/svauto.git
+	else
+	        echo
+	        echo "Apparently, you already have SVAuto, enjoy it!"
+	        echo
+	fi
+
+
+	if  [ ! -f ~/svauto/svauto.sh ]; then
+		echo
+		echo "WARNING!"
+		echo "SVAuto main script not found, Git clone might have failed."
+
+		echo
+
+		exit 1
+	fi
+
 	svauto_deployments
 
 	exit 0
