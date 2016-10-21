@@ -5,4 +5,4 @@ angular.module('app.config', [])
 {% if setup_sub_option == 'mdm' %}
 .constant('ENV', {"api":"","GeolocationAPI":"https://www.googleapis.com/geolocation/v1/geolocate","GoogleAPIKey":"{{ google_api_key }}"})
 {% endif%}
-.constant('CONFIG', {"showApps":true,"enableCustomProtocols":true});
+.constant('CONFIG', {"showApps":true,"enableCustomProtocols":true,"enableUDR":true,"dataSampleInterval":5});
