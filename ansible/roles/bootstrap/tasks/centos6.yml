@@ -108,7 +108,6 @@
     - tcpdump  
     - numactl
     - mlocate
-    - ansible
     - python33
     - pciutils 
     - deltarpm
@@ -121,6 +120,13 @@
     - traceroute
     - conntrack-tools
     - libhugetlbfs-utils
+
+
+- name: centos6 - yum installing Ansible from EPEL Testing
+  yum: pkg={{item}} state=latest update_cache=yes enablerepo=epel-testing
+  with_items:
+    - ansible
+    - libselinux-python
 
 
 - name: centos6 - copy SSH Daemon config
