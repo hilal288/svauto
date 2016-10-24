@@ -134,8 +134,6 @@ ansible_playbook_builder()
 
 				svpts)
 
-					echo "  - role: $X"
-
 					if [ "$SANDVINE_AUTO_CONFIG" == "yes" ];
 					then
 						echo "  - { role: sandvine-auto-config, setup_server: 'svpts' }"
@@ -143,8 +141,6 @@ ansible_playbook_builder()
 					;;
 
 				svsde)
-
-					echo "  - role: $X"
 
 					if [ "$SANDVINE_AUTO_CONFIG" == "yes" ];
 					then
@@ -154,8 +150,6 @@ ansible_playbook_builder()
 
 				svspb)
 
-					echo "  - role: $X"
-
 					if [ "$SANDVINE_AUTO_CONFIG" == "yes" ];
 					then
 						echo "  - { role: sandvine-auto-config, setup_server: 'svspb' }"
@@ -163,8 +157,6 @@ ansible_playbook_builder()
 					;;
 
 				svnda)
-
-					echo "  - role: $X"
 
 					if [ "$SANDVINE_AUTO_CONFIG" == "yes" ];
 					then
@@ -174,8 +166,6 @@ ansible_playbook_builder()
 
 				svtse)
 
-					echo "  - role: $X"
-
 					if [ "$SANDVINE_AUTO_CONFIG" == "yes" ];
 					then
 						echo "  - { role: sandvine-auto-config, setup_server: 'svtse' }"
@@ -184,8 +174,6 @@ ansible_playbook_builder()
 
 				svtcpa)
 
-					echo "  - role: $X"
-
 					if [ "$SANDVINE_AUTO_CONFIG" == "yes" ];
 					then
 						echo "  - { role: sandvine-auto-config, setup_server: 'svtcpa' }"
@@ -193,8 +181,6 @@ ansible_playbook_builder()
 					;;
 
 				svcs)
-
-					echo "  - role: $X"
 
 					if [ "$SANDVINE_AUTO_CONFIG" == "yes" ];
 					then

@@ -33,33 +33,33 @@ packer_build_cs()
 	#
 
 	# SVSDE 7.50 on CentOS 7 + Cloud Services SDE + Cloud Services Daemon (back / front)
-	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svsde --version=$SDE_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--roles=cloud-init,bootstrap,grub-conf,nginx,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
+	./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=svsde --version=$SDE_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+		--ansible-roles=cloud-init,bootstrap,grub-conf,nginx,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto
 
 	# SVSDE 7.50 on CentOS 6 + Cloud Services SDE + Cloud Services Daemon (back / front)
-	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svsde --version=$SDE_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--roles=cloud-init,bootstrap,grub-conf,nginx,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
+	./svauto.sh --image-factory --release=dev --base-os=centos6 --base-os-upgrade --product=svsde --version=$SDE_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+		--ansible-roles=cloud-init,bootstrap,grub-conf,nginx,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto
 
 	# SVSPB 6.65 on CentOS 6 + Cloud Services
-	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svspb --version=$SPB_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--roles=cloud-init,bootstrap,grub-conf,postgresql,svspb,svmcdtext,svreports,svcs-svspb,sandvine-auto-config,vmware-tools,post-cleanup-image,power-cycle $DRY_RUN_OPT --operation=cloud-services \
+	./svauto.sh --image-factory --release=dev --base-os=centos6 --base-os-upgrade --product=svspb --version=$SPB_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+		--ansible-roles=cloud-init,bootstrap,grub-conf,postgresql,svspb,svmcdtext,svreports,svcs-svspb,sandvine-auto-config,vmware-tools,post-cleanup-image,power-cycle $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto
 
 	# SVPTS 7.35 on CentOS 7 + Cloud Services - Linux 3.10, DPDK 16.07
-	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svpts --version=$PTS_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--roles=cloud-init,bootstrap,grub-conf,nginx,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
+	./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=svpts --version=$PTS_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+		--ansible-roles=cloud-init,bootstrap,grub-conf,nginx,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto
 
 	# SVSDE 7.50 on CentOS 7 + Cloud Services SDE only - No Cloud Services daemon here
-	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svsde --version=$SDE_VERSION --product-variant=isolated-svsde-cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--roles=cloud-init,bootstrap,grub-conf,nginx,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
+	./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=svsde --version=$SDE_VERSION --product-variant=isolated-svsde-cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+		--ansible-roles=cloud-init,bootstrap,grub-conf,nginx,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto
 
 	# Cloud Services Daemon 16.11 (back / front) on CentOS 7 - No SDE here
-	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svcsd --version=$CSD_VERSION --product-variant=isolated-svcsd-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--roles=centos-xen,cloud-init,bootstrap,grub-conf,nginx,svcs,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
+	./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=svcsd --version=$CSD_VERSION --product-variant=isolated-svcsd-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+		--ansible-roles=centos-xen,cloud-init,bootstrap,grub-conf,nginx,svcs,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto
 
 
@@ -68,8 +68,8 @@ packer_build_cs()
 	#
 
 	# SVPTS 7.35 on CentOS 6 + Cloud Services - Linux 3.18 from Xen 4.6 official repo, DPDK 16.04, don't requires igb_uio
-	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svpts --version=$PTS_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--roles=centos-xen,cloud-init,bootstrap,grub-conf,nginx,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
+	./svauto.sh --image-factory --release=dev --base-os=centos6 --base-os-upgrade --product=svpts --version=$PTS_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+		--ansible-roles=centos-xen,cloud-init,bootstrap,grub-conf,nginx,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto
 
 
@@ -78,32 +78,32 @@ packer_build_cs()
 	#
 
 	# Cloud Services Build Server (back / front) on CentOS 6 (old Golang 1.5)
-	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=devops --version=6 --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-	        --roles=centos-xen,cloud-init,bootstrap,grub-conf,golang-env,nodejs-env,ccollab-client,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
+	./svauto.sh --image-factory --release=dev --base-os=centos6 --base-os-upgrade --product=devops --version=6 --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+	        --ansible-roles=centos-xen,cloud-init,bootstrap,grub-conf,golang-env,nodejs-env,ccollab-client,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto
 
 	# Cloud Services Build Server (back / front) on CentOS 7 (new Golang 1.6)
-	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=devops --version=7 --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-	        --roles=centos-xen,cloud-init,bootstrap,grub-conf,golang-env,nodejs-env,ccollab-client,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
+	./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=devops --version=7 --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+	        --ansible-roles=centos-xen,cloud-init,bootstrap,grub-conf,golang-env,nodejs-env,ccollab-client,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto
 
 
 	# Cloud Services Build Server (back) on CentOS 6 (old Golang 1.5)
-#	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=centos --version=6 --product-variant=go-devops-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-#	        --roles=centos-xen,cloud-init,bootstrap,grub-conf,golang-env,vmware-tools,post-cleanup-image $DRY_RUN_OPT
+#	./svauto.sh --image-factory --release=dev --base-os=centos6 --base-os-upgrade --product=centos --version=6 --product-variant=go-devops-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+#	        --ansible-roles=centos-xen,cloud-init,bootstrap,grub-conf,golang-env,vmware-tools,post-cleanup-image $DRY_RUN_OPT
 
 	# Cloud Services Build Server (front) on CentOS 6 (NodeJS)
-#	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=centos --version=6 --product-variant=nodejs-devops-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-#	        --roles=centos-xen,cloud-init,bootstrap,grub-conf,nodejs-env,vmware-tools,post-cleanup-image $DRY_RUN_OPT
+#	./svauto.sh --image-factory --release=dev --base-os=centos6 --base-os-upgrade --product=centos --version=6 --product-variant=nodejs-devops-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+#	        --ansible-roles=centos-xen,cloud-init,bootstrap,grub-conf,nodejs-env,vmware-tools,post-cleanup-image $DRY_RUN_OPT
 
 
 	# Cloud Services Build Server (back) on CentOS 7 (new Golang 1.6)
-#	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=centos --version=7 --product-variant=go-devops-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-#	        --roles=centos-xen,cloud-init,bootstrap,grub-conf,golang-env,vmware-tools,post-cleanup-image $DRY_RUN_OPT
+#	./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=centos --version=7 --product-variant=go-devops-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+#	        --ansible-roles=centos-xen,cloud-init,bootstrap,grub-conf,golang-env,vmware-tools,post-cleanup-image $DRY_RUN_OPT
 
 	# Cloud Services Build Server (front) on CentOS 7 (NodeJS)
-#	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=centos --version=7 --product-variant=nodejs-devops-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-#	        --roles=centos-xen,cloud-init,bootstrap,grub-conf,nodejs-env,vmware-tools,post-cleanup-image $DRY_RUN_OPT
+#	./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=centos --version=7 --product-variant=nodejs-devops-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+#	        --ansible-roles=centos-xen,cloud-init,bootstrap,grub-conf,nodejs-env,vmware-tools,post-cleanup-image $DRY_RUN_OPT
 
 
 	if [ "$HEAT_TEMPLATES_CS" == "yes" ]

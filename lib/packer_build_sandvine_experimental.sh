@@ -34,23 +34,23 @@ packer_build_sandvine_experimental()
 
 
         # Linux SVPTS 7.40 on CentOS 7
-        ./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svpts --version=$SVPTS_VERSION --product-variant=vpl-test-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
-                --roles=cloud-init,bootstrap,grub-conf,nginx,svpts,vmware-tools,post-cleanup-image --versioned-repo \
+        ./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=svpts --version=$SVPTS_VERSION --product-variant=vpl-test-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
+                --ansible-roles=cloud-init,bootstrap,grub-conf,nginx,svpts,vmware-tools,post-cleanup-image --versioned-repo \
                 --packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 	# Linux SVTSE 1.00 on CentOS 7
-	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svtse --version=$SVTSE_VERSION --product-variant=vpl-test-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--roles=cloud-init,bootstrap,grub-conf,nginx,svtse,vmware-tools,post-cleanup-image --versioned-repo \
+	./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=svtse --version=$SVTSE_VERSION --product-variant=vpl-test-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
+		--ansible-roles=cloud-init,bootstrap,grub-conf,nginx,svtse,vmware-tools,post-cleanup-image --versioned-repo \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 	# Linux SVTCP Accelerator 5.40 on CentOS 7
-	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svtcpa --version=$SVTCPA_VERSION --product-variant=vpl-test-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--roles=cloud-init,bootstrap,grub-conf,nginx,svtcpa,vmware-tools,post-cleanup-image --versioned-repo \
+	./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=svtcpa --version=$SVTCPA_VERSION --product-variant=vpl-test-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
+		--ansible-roles=cloud-init,bootstrap,grub-conf,nginx,svtcpa,vmware-tools,post-cleanup-image --versioned-repo \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 #	# Linux SVNDA 5.20 on Centos 7
-#        ./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svnda --version=$SVNDA_VERSION --product-variant=vpl-test-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
-#                --roles=cloud-init,bootstrap,grub-conf,nginx,postgresql,svnda,vmware-tools,post-cleanup-image --versioned-repo \
+#        ./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=svnda --version=$SVNDA_VERSION --product-variant=vpl-test-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
+#                --ansible-roles=cloud-init,bootstrap,grub-conf,nginx,postgresql,svnda,vmware-tools,post-cleanup-image --versioned-repo \
 #                --packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 

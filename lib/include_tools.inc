@@ -35,3 +35,5 @@ source lib/packer_build_sandvine_experimental.sh
 source lib/ansible_playbook_builder.sh
 
 source lib/svauto_deployments.sh
+
+source lib/image_factory.sh

@@ -52,6 +52,153 @@ case $i in
 		shift
 		;;
 
+	#
+	# Image Factory specific options - BEGIN
+	#
+
+	--image-factory)
+
+		IMAGE_FACTORY="yes"
+		shift
+		;;
+
+        --product=*)
+
+                PRODUCT="${i#*=}"
+                shift
+                ;;
+
+        --version=*)
+
+		VERSION="${i#*=}"
+		shift
+		;;
+
+        --product-variant=*)
+
+		PRODUCT_VARIANT="${i#*=}"
+		shift
+		;;
+
+	--lock-el7-kernel-upgrade)
+
+		LOCK_KERNEL="yes"
+		shift
+		;;
+
+	--disable-autoconf)
+
+		DISABLE_AUTOCONF="yes"
+		shift
+		;;
+
+	--static-repo)
+
+		STATIC_REPO="yes"
+		shift
+		;;
+
+	--versioned-repo)
+
+		VERSIONED_REPO="yes"
+		shift
+		;;
+
+	--experimental-repo)
+
+		EXPERIMENTAL_REPO="yes"
+		shift
+		;;
+
+	--setup-default-interface-script)
+
+		SETUP_DEFAULT_INT_SH="yes"
+		shift
+		;;
+
+        --packer-to-openstack)
+
+                PACKER_TO_OS="yes"
+                shift
+                ;;
+
+        --os-project=*)
+
+                OS_PROJECT="${i#*=}"
+                shift
+                ;;
+
+        --cloud-services-mode=*)
+
+                CLOUD_SERVICES_MODE="${i#*=}"
+                shift
+                ;;
+
+	--packer-max-tries=*)
+
+		MAX_TRIES="${i#*=}"
+		shift
+		;;
+
+	--vm-xml)
+
+		VM_XML="yes"
+		shift
+		;;
+
+	--qcow2)
+
+		QCOW2="yes"
+		shift
+		;;
+
+	--vmdk)
+
+		VMDK="yes"
+		shift
+		;;
+
+	--ovf)
+
+		OVF="yes"
+		shift
+		;;
+
+	--ova)
+
+		OVF="yes"
+		OVA="yes"
+		shift
+		;;
+
+	--vhd)
+
+		VHD="yes"
+		shift
+		;;
+
+	--vhdx)
+
+		VHDX="yes"
+		shift
+		;;
+
+	--vdi)
+
+		VDI="yes"
+		shift
+		;;
+
+	--sha256sum)
+
+		SHA256SUM="yes"
+		shift
+		;;
+
+	#
+	# Image Factory specific options - END
+	#
+
 	# Options starting with --ansible-* are passed to Ansible itself,
 	# or being used by dynamic stuff.
 	--ansible-roles=*)
@@ -203,11 +350,11 @@ case $i in
 		shift
 		;;
 
-	--release)
+        --release=*)
 
-		RELEASE="yes"
-		shift
-		;;
+                RELEASE="${i#*=}"
+                shift
+                ;;
 
 	--build-yum-repo)
 
@@ -296,6 +443,20 @@ case $i in
 
 esac
 done
+
+
+#
+# SVAuto Image Factory - To build images
+#
+
+if [ "$IMAGE_FACTORY" == "yes" ]
+then
+
+	image_factory
+
+	exit 0
+
+fi
 
 
 #
@@ -572,7 +733,7 @@ then
 fi
 
 
-if [ "$PACKER_BUILD_CS" == "yes" ] && [ "$RELEASE" == "yes" ]
+if [ "$PACKER_BUILD_CS" == "yes" ] && [ "$RELEASE" == "prod" ]
 then
 
 	packer_build_cs_release
