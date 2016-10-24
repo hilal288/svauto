@@ -52,6 +52,12 @@ case $i in
 		shift
 		;;
 
+	--vagrant)
+
+		VAGRANT="yes"
+		shift
+		;;
+
 	#
 	# Image Factory specific options - BEGIN
 	#
@@ -446,13 +452,27 @@ done
 
 
 #
-# SVAuto Image Factory - To build images
+# SVAuto Image Factory - To build images using Packer and Ansible
 #
 
 if [ "$IMAGE_FACTORY" == "yes" ]
 then
 
 	image_factory
+
+	exit 0
+
+fi
+
+
+#
+# SVAuto Vagrant - To bootstrap boxes using Vagrant and Ansible
+#
+
+if [ "$VAGRANT" == "yes" ]
+then
+
+	vagrant_builder
 
 	exit 0
 

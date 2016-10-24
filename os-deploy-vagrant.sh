@@ -14,6 +14,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+#
+# *** OBSOLETE SCRIPT ***
+#
+# Keeping it for reference only.
+#
+# With future versions of SVAuto, we'll be able to dynamically build OpenStack
+# on Vagrant, by just passing Ansible roles we want.
+#
+
 WHOAMI=vagrant
 
 HOSTNAME=controller-1
