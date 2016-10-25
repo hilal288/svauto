@@ -48,6 +48,8 @@ or:
 
     bash <(curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/bootstrap-xenial-server.sh) 
 
+    curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/bootstrap-xenial-server.sh | bash
+
 Bootstrap Ubuntu 16.04 Desktop, while upgrading and installing Google Chrome:
 
     curl -L https://raw.githubusercontent.com/sandvine-eng/svauto/dev/svauto.sh | bash -s -- --svauto-deployments --base-os=ubuntu16 --ansible-roles=bootstrap,grub-conf,hyper_kvm,google-chrome,scudcloud,sublime,ccollab-client --extra-vars="base_os_upgrade=yes"
@@ -86,9 +88,13 @@ Server:
 
     bash <(curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/bootstrap-svauto-server.sh)
 
+    curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/bootstrap-svauto-server.sh | bash
+
 Desktop:
 
     bash <(curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/bootstrap-svauto-desktop.sh)
+
+    curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/bootstrap-svauto-desktop.sh | bash
 
 ## SVAuto script usage example
 
