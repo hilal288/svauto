@@ -50,6 +50,55 @@
   when: base_os == 'centos6'
 
 
+- name: centos - yum installing basic common tools
+  yum: pkg={{item}} state=latest update_cache=yes
+  with_items:
+    - at
+    - git
+    - vim
+    - man
+    - zip
+    - ntp
+    - gpm
+    - htop
+    - lftp
+    - curl
+    - wget
+    - tmux
+    - lsof
+    - nmap
+    - lshw
+    - unzip
+    - iotop
+    - iftop
+    - acpid
+    - which
+    - bwm-ng
+    - figlet
+    - telnet
+    - psmisc
+    - iperf3
+    - parted
+    - tcpick
+    - cronie
+    - mlocate
+    - tcpdump
+    - sysstat
+    - rsyslog
+    - numactl
+    - dos2unix
+    - pciutils
+    - deltarpm
+    - tcpreplay
+    - dmidecode
+    - man-pages
+    - yum-utils
+    - bind-utils
+    - traceroute
+    - conntrack-tools
+    - libhugetlbfs-utils
+
+
 - name: centos - copy root's Bash RC 
   copy: src=centos-common/bashrc.j2
         dest=/root/.bashrc
