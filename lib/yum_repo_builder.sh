@@ -19,65 +19,8 @@
 # the required values as arguments, for example:
 
 
-source lib/include_tools.inc
-
-
-for i in "$@"
-do
-case $i in
-
-        --base-os=*)
-
-                BASE_OS="${i#*=}"
-                shift
-                ;;
-
-        --product=*)
-
-                PRODUCT="${i#*=}"
-		PLATFORM="LNX"
-                shift
-                ;;
-
-        --version=*)
-
-		VERSION="${i#*=}"
-		shift
-		;;
-
-	--release=*)
-
-		RELEASE="${i#*=}"
-		shift
-		;;
-
-	--release-code-name=*)
-
-		RELEASE_CODE_NAME="${i#*=}"
-		shift
-		;;
-
-	--latest)
-
-		LATEST="yes"
-		shift
-		;;
-
-	--latest-of-serie)
-
-		LATEST_OF_SERIE="yes"
-		shift
-		;;
-
-	--dry-run)
-
-		DRY_RUN="yes"
-		shift
-		;;
-
-esac
-done
-
+yum_repo_builder()
+{
 
 case "$BASE_OS" in
 
@@ -312,3 +255,5 @@ then
 
 	cd - &>/dev/null
 fi
+
+}

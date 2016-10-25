@@ -39,3 +39,5 @@ source lib/svauto_deployments.sh
 source lib/image_factory.sh
 
 source lib/vagrant_builder.sh
+
+source lib/yum_repo_builder.sh

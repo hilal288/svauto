@@ -47,7 +47,7 @@ build_yum_repo_yukon()
 	# NA stuff
 	#
 
-	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos7 --product=svnda --version=$YUKON_SVNDA --latest
+	./svauto.sh --yum-repo-builder --release-code-name=yukon --release=dev --base-os=centos7 --product=svnda --version=$YUKON_SVNDA --latest
 
 
 
@@ -55,77 +55,77 @@ build_yum_repo_yukon()
 	# TSE stuff
 	#
 
-	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos7 --product=svtse --version=$YUKON_SVTSE --latest
+	./svauto.sh --yum-repo-builder --release-code-name=yukon --release=dev --base-os=centos7 --product=svtse --version=$YUKON_SVTSE --latest
 
 
 	#
 	# TCP Accelerator stuff
 	#
 
-	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos7 --product=svtcpa --version=$YUKON_SVTCPA --latest
+	./svauto.sh --yum-repo-builder --release-code-name=yukon --release=dev --base-os=centos7 --product=svtcpa --version=$YUKON_SVTCPA --latest
 
 
 	#
 	# PTS stuff
 	#
 
-	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos7 --product=svpts --version=$YUKON_SVPTS --latest
-	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos7 --product=svprotocols --version=$YUKON_SVPROTOCOLS --latest
+	./svauto.sh --yum-repo-builder --release-code-name=yukon --release=dev --base-os=centos7 --product=svpts --version=$YUKON_SVPTS --latest
+	./svauto.sh --yum-repo-builder --release-code-name=yukon --release=dev --base-os=centos7 --product=svprotocols --version=$YUKON_SVPROTOCOLS --latest
 
 	# Usage Management PTS
 
-	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos7 --product=svusagemanagementpts --version=$YUKON_SVUM --latest
+	./svauto.sh --yum-repo-builder --release-code-name=yukon --release=dev --base-os=centos7 --product=svusagemanagementpts --version=$YUKON_SVUM --latest
 
 
 	# Experimental
 
-	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos6 --product=svpts --version=$YUKON_SVPTS --latest
-	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos6 --product=svprotocols --version=$YUKON_SVPROTOCOLS --latest
+	./svauto.sh --yum-repo-builder --release-code-name=yukon --release=dev --base-os=centos6 --product=svpts --version=$YUKON_SVPTS --latest
+	./svauto.sh --yum-repo-builder --release-code-name=yukon --release=dev --base-os=centos6 --product=svprotocols --version=$YUKON_SVPROTOCOLS --latest
 
-	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos6 --product=svusagemanagementpts --version=$YUKON_SVUM --latest
+	./svauto.sh --yum-repo-builder --release-code-name=yukon --release=dev --base-os=centos6 --product=svusagemanagementpts --version=$YUKON_SVUM --latest
 
-	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos7 --product=svpts --version=$YUKON_SVPTS_EXPERIMENTAL --latest-of-serie
-	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos6 --product=svpts --version=$YUKON_SVPTS_EXPERIMENTAL --latest-of-serie
+	./svauto.sh --yum-repo-builder --release-code-name=yukon --release=dev --base-os=centos7 --product=svpts --version=$YUKON_SVPTS_EXPERIMENTAL --latest-of-serie
+	./svauto.sh --yum-repo-builder --release-code-name=yukon --release=dev --base-os=centos6 --product=svpts --version=$YUKON_SVPTS_EXPERIMENTAL --latest-of-serie
 
 
 	#
 	# SDE stuff
 	#
 
-	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos7 --product=svsde --version=$YUKON_SVSDE --latest
-	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos6 --product=svsde --version=$YUKON_SVSDE --latest
+	./svauto.sh --yum-repo-builder --release-code-name=yukon --release=dev --base-os=centos7 --product=svsde --version=$YUKON_SVSDE --latest
+	./svauto.sh --yum-repo-builder --release-code-name=yukon --release=dev --base-os=centos6 --product=svsde --version=$YUKON_SVSDE --latest
 
 	# Usage Management
 
-	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos7 --product=svusagemanagement --version=$YUKON_SVUM --latest
-	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos6 --product=svusagemanagement --version=$YUKON_SVUM --latest
+	./svauto.sh --yum-repo-builder --release-code-name=yukon --release=dev --base-os=centos7 --product=svusagemanagement --version=$YUKON_SVUM --latest
+	./svauto.sh --yum-repo-builder --release-code-name=yukon --release=dev --base-os=centos6 --product=svusagemanagement --version=$YUKON_SVUM --latest
 
 	# Subscriber Mapping
 
-	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos6 --product=svsubscribermapping --version=$YUKON_SVSM_C6 --latest
-	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos7 --product=subscriber_mapping --version=$YUKON_SVSM_C7 --latest
+	./svauto.sh --yum-repo-builder --release-code-name=yukon --release=dev --base-os=centos6 --product=svsubscribermapping --version=$YUKON_SVSM_C6 --latest
+	./svauto.sh --yum-repo-builder --release-code-name=yukon --release=dev --base-os=centos7 --product=subscriber_mapping --version=$YUKON_SVSM_C7 --latest
 
 
 	#
 	# SPB stuff
 	#
 
-	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos6 --product=svspb --version=$YUKON_SVSPB --latest
+	./svauto.sh --yum-repo-builder --release-code-name=yukon --release=dev --base-os=centos6 --product=svspb --version=$YUKON_SVSPB --latest
 
 	# NDS
 
-	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos6 --product=svreports --version=$YUKON_SVNDS --latest
+	./svauto.sh --yum-repo-builder --release-code-name=yukon --release=dev --base-os=centos6 --product=svreports --version=$YUKON_SVNDS --latest
 
 
 	# Experimental
 
-	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos6 --product=svspb --version=$YUKON_SVSPB_EXPERIMENTAL --latest-of-serie
+	./svauto.sh --yum-repo-builder --release-code-name=yukon --release=dev --base-os=centos6 --product=svspb --version=$YUKON_SVSPB_EXPERIMENTAL --latest-of-serie
 
 
 	#
 	# Control Center
 	#
 
-	./yum-repo-builder.sh --release-code-name=yukon --release=dev --base-os=centos6 --product=svcontrol-center --version=$YUKON_SVCC --latest
+	./svauto.sh --yum-repo-builder --release-code-name=yukon --release=dev --base-os=centos6 --product=svcontrol-center --version=$YUKON_SVCC --latest
 
 }

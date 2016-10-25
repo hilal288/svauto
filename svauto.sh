@@ -59,6 +59,38 @@ case $i in
 		;;
 
 	#
+	# SVAuto Yum Repo Builder specific options - BEGIN
+	#
+
+	--yum-repo-builder)
+
+		YUM_REPO_BUILDER="yes"
+		shift
+		;;
+
+	--release-code-name=*)
+
+		RELEASE_CODE_NAME="${i#*=}"
+		shift
+		;;
+
+	--latest)
+
+		LATEST="yes"
+		shift
+		;;
+
+	--latest-of-serie)
+
+		LATEST_OF_SERIE="yes"
+		shift
+		;;
+
+	#
+	# SVAuto Yum Repo Builder specific options - END
+	#
+
+	#
 	# Image Factory specific options - BEGIN
 	#
 
@@ -71,6 +103,7 @@ case $i in
         --product=*)
 
                 PRODUCT="${i#*=}"
+		PLATFORM="LNX"
                 shift
                 ;;
 
@@ -473,6 +506,21 @@ if [ ! -z "$VAGRANT_MODE" ];
 then
 
 	vagrant_builder
+
+	exit 0
+
+fi
+
+
+#
+# SVAuto Local Yum Repo - To host Sandvine's RPM packages locally and install
+# from it.
+#
+
+if [ "$YUM_REPO_BUILDER" == "yes" ]
+then
+
+	yum_repo_builder
 
 	exit 0
 
