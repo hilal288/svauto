@@ -52,9 +52,9 @@ case $i in
 		shift
 		;;
 
-	--vagrant)
+	--vagrant=*)
 
-		VAGRANT="yes"
+		VAGRANT_MODE="${i#*=}"
 		shift
 		;;
 
@@ -469,7 +469,7 @@ fi
 # SVAuto Vagrant - To bootstrap boxes using Vagrant and Ansible
 #
 
-if [ "$VAGRANT" == "yes" ]
+if [ ! -z "$VAGRANT_MODE" ];
 then
 
 	vagrant_builder

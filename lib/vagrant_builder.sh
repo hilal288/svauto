@@ -14,14 +14,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# First version of vagrant-builder.sh, still very basic but, fully functional!
+# Second version of vagrant-builder.sh, still very basic but, supports dynamic
+# playbook.
 
 # Golang and NodeJS on CentOS 6 and 7:
-# ./svauto.sh --vagrant --base-os=centos6 --product=svcs-build
-# ./svauto.sh --vagrant --base-os=centos7 --product=svcs-build
+#
+# ./svauto.sh --vagrant=up --base-os=centos6 --product=svcs-build
+# ./svauto.sh --vagrant=up --base-os=centos7 --product=svcs-build
 
-# Build SDE + Cloud Services box:
-# ./svauto.sh --vagrant --base-os=centos7 --product=svsde
+# Build Sandvine Boxes
+#
+# ./svauto.sh --vagrant=up --base-os=centos7 --product=svsde
+# ./svauto.sh --vagrant=up --base-os=centos7 --product=svpts
+# ./svauto.sh --vagrant=up --base-os=centos6 --product=svspb
 
 
 vagrant_builder()
@@ -30,6 +35,10 @@ vagrant_builder()
 	#VAGRANT_DEFAULT_PROVIDER=libvirt
 
 	RAND_PORT=`awk -v min=1025 -v max=9999 'BEGIN{srand(); print int(min+rand()*(max-min+1))}'`
+
+	BUILD_RAND=$(openssl rand -hex 4)
+
+	ANSIBLE_PLAYBOOK_FILE="vagrant-run-$BUILD_RAND.yml"
 
 
 	case "$BASE_OS" in
@@ -66,25 +75,29 @@ vagrant_builder()
 		svpts)
 
 			VM_NAME="svpts_1"
-			PLAYBOOK_NAME="svpts-vagrant"
+
+			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts_1 --roles=bootstrap,svpts >> ansible/$ANSIBLE_PLAYBOOK_FILE
 			;;
 
 		svspb)
 
 			VM_NAME="svspb_1"
-			PLAYBOOK_NAME="svspb-vagrant"
+
+			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svspb_1 --roles=bootstrap,svspb >> ansible/$ANSIBLE_PLAYBOOK_FILE
 			;;
 
 		svsde)
 
 			VM_NAME="svsde_1"
-			PLAYBOOK_NAME="svsde-vagrant"
+
+			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svsde_1 --roles=bootstrap,svsde >> ansible/$ANSIBLE_PLAYBOOK_FILE
 			;;
 
 		svcs-build)
 
 			VM_NAME="svcs_build_1"
-			PLAYBOOK_NAME="svcs-build-vagrant"
+
+			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svcs_build_1 --roles=bootstrap,golang-env,nodejs-env,ccollab-client,vmware-tools,post-cleanup >> ansible/$ANSIBLE_PLAYBOOK_FILE
 			;;
 
 		*)
@@ -98,45 +111,76 @@ vagrant_builder()
 	esac
 
 
-	mkdir -p vagrant/$VM_NAME
+	echo
+	echo "Entering into: \"vagrant/$VM_NAME\" subdir and runnig \"vagrant $VAGRANT_MODE\" for you!"
 
-	cp vagrant/Vagrantfile_template vagrant/$VM_NAME/Vagrantfile
+	case "$VAGRANT_MODE" in
 
+		up)
 
-	sed -i -e 's/vagrant_run:.*/vagrant_run: "yes"/' ansible/group_vars/all
+			mkdir -p vagrant/$VM_NAME
 
-	sed -i -e 's/packages_server:.*/packages_server: \"'$SVAUTO_MAIN_HOST'\"/' ansible/group_vars/all
-	sed -i -e 's/static_packages_server:.*/static_packages_server: \"'$STATIC_PACKAGES_SERVER'\"/' ansible/group_vars/all
-
-
-	VBOX_SANITIZED=$(echo $VBOX | sed -e 's/\//\\\//g')
+			cp vagrant/Vagrantfile_template vagrant/$VM_NAME/Vagrantfile
 
 
-	sed -i -e 's/{{base_os}}/'$BASE_OS'/g' vagrant/$VM_NAME/Vagrantfile
-	sed -i -e 's/{{vm_box}}/'$VBOX_SANITIZED'/g' vagrant/$VM_NAME/Vagrantfile
-	sed -i -e 's/{{vm_name}}/'$VM_NAME'/g' vagrant/$VM_NAME/Vagrantfile
-	sed -i -e 's/{{ssh_local_port}}/'$RAND_PORT'/g' vagrant/$VM_NAME/Vagrantfile
-	sed -i -e 's/{{playbook_name}}/'$PLAYBOOK_NAME'/g' vagrant/$VM_NAME/Vagrantfile
+			sed -i -e 's/vagrant_run:.*/vagrant_run: "yes"/' ansible/group_vars/all
+
+			sed -i -e 's/packages_server:.*/packages_server: \"'$SVAUTO_MAIN_HOST'\"/' ansible/group_vars/all
+			sed -i -e 's/static_packages_server:.*/static_packages_server: \"'$STATIC_PACKAGES_SERVER'\"/' ansible/group_vars/all
 
 
-	if [ "$DRY_RUN" == "yes" ]
-	then
+			VBOX_SANITIZED=$(echo $VBOX | sed -e 's/\//\\\//g')
 
-		echo
-		echo "Not running \"vagrant up\"!"
-		echo "Just creating the Vagrantfile for you, under vagrant/\"vagrant/$VM_NAME\" subdir..."
-		echo
 
-	else
+			sed -i -e 's/{{base_os}}/'$BASE_OS'/g' vagrant/$VM_NAME/Vagrantfile
+			sed -i -e 's/{{vm_box}}/'$VBOX_SANITIZED'/g' vagrant/$VM_NAME/Vagrantfile
+			sed -i -e 's/{{vm_name}}/'$VM_NAME'/g' vagrant/$VM_NAME/Vagrantfile
+			sed -i -e 's/{{ssh_local_port}}/'$RAND_PORT'/g' vagrant/$VM_NAME/Vagrantfile
 
-		echo
-		echo "Entering into: vagrant/$VM_NAME subdir and runnig \"vagrant up\" for you!"
 
-		cd vagrant/$VM_NAME
+			sed -i -e 's/{{ansible_playbook_file}}/'$ANSIBLE_PLAYBOOK_FILE'/g' vagrant/$VM_NAME/Vagrantfile
 
-		echo
-		vagrant up --provider libvirt
 
-	fi
+			if [ "$DRY_RUN" == "yes" ]
+			then
+
+				echo
+				echo "Not running \"vagrant up\"!"
+				echo "Just creating the Vagrantfile for you, under vagrant/\"vagrant/$VM_NAME\" subdir..."
+				echo
+
+			else
+
+				cd vagrant/$VM_NAME
+
+				echo
+				vagrant up --provider=libvirt
+
+			fi
+
+			;;
+
+		ssh)
+
+			cd vagrant/$VM_NAME
+			vagrant ssh
+
+			;;
+
+		destroy)
+
+			cd vagrant/$VM_NAME
+			vagrant destroy
+
+			;;
+
+		provision)
+
+			cd vagrant/$VM_NAME
+			vagrant provision
+
+			;;
+
+	esac
 
 }

@@ -13,3 +13,4 @@ public_dir
 yum_repos
 ansible/tmp/*
 ansible/facts_storage/*
+ansible/vagrant-run-*

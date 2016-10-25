@@ -32,28 +32,12 @@ DOMAIN=yourdomain.com
 
 # Display local configuration
 echo
-echo "The detected local configuration are:"
+echo "The hardcoded local configuration is:"
 echo
 echo -e "* Username:"'\t'$WHOAMI
 echo -e "* Hostname:"'\t'$HOSTNAME
 echo -e "* FQDN:"'\t''\t'$FQDN
 echo -e "* Domain:"'\t'$DOMAIN
-
-
-if [ -z $HOSTNAME ]; then
-        echo "Hostname not found... Configure the file /etc/hostname with your hostname. ABORTING!"
-        exit 1
-fi
-
-if [ -z $DOMAIN ]; then
-        echo "Domain not found... Configure the file /etc/hosts with your \"IP + FQDN + HOSTNAME\". ABORTING!"
-        exit 2
-fi
-
-if [ -z $FQDN ]; then
-        echo "FQDN not found... Configure your /etc/hosts according. ABORTING!"
-        exit 3
-fi
 
 
 echo
@@ -85,4 +69,4 @@ echo
 echo "Running Ansible through Vagrant, deploying OpenStack:"
 echo
 
-vagrant up
+vagrant up --provider=libvirt
