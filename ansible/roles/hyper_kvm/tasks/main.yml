@@ -29,11 +29,11 @@
 
 
 - name: ubuntu - copy QEmu/KVM defaults
-  template: src=qemu-kvm
-            dest=/etc/default/qemu-kvm
-            owner=root
-            group=root
-            mode=0644
+  copy: src=qemu-kvm
+        dest=/etc/default/qemu-kvm
+        owner=root
+        group=root
+        mode=0644
 
 
 - name: ubuntu - service enabling Libvirt daemons
