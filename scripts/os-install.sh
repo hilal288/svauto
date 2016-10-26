@@ -69,7 +69,7 @@ echo " * Launch a very simple Ubuntu stack:"
 echo
 echo "source ~/demo-openrc.sh"
 echo
-echo "heat stack-create demo -f ~/svauto/misc/os-heat-templates/demo-stack.yaml"
+echo "openstack stack create -t ~/svauto/misc/os-heat-templates/demo-complex-stack-server-1.yaml demo-stack-1"
 echo
 echo "Enjoy it!"
 echo
