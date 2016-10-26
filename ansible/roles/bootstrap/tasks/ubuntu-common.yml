@@ -88,6 +88,7 @@
     - btrfs-tools
     - python-minimal
     - python-mysqldb
+    - ecryptfs-utils
     - python-httplib2
     - silversearcher-ag
     - command-not-found
