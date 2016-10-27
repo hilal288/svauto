@@ -26,7 +26,6 @@
             owner=root
             group=root
             mode=0644
-  when: disable_autoconf != 'yes'
 
 
 - name: centos - creating /d2 subdirectory
