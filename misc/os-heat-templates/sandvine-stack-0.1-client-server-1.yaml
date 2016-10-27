@@ -4,12 +4,18 @@ description: >
 
   HOT template to create Sandvine Stack, it have an Instance acting as a L2 Bridge between two VXLAN networks.
 
+
   We have 4 Instances:
 
+
   * PTS - CentOS 7
+
   * SDE - CentOS 7
+
   * SPB - CentOS 6
+
   * Traffic Generator 1 - Ubuntu (iperf3 / tcpreplay) or FreeBSD
+
   * Traffic Generator 2 - Ubuntu (iperf3 / tcpreplay) or FreeBSD
 
 

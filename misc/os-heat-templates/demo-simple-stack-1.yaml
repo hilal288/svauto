@@ -4,9 +4,12 @@ description: >
 
   HOT template to create standard setup, no Security Groups, no fixed or Floating IPs are assigned. Also, no Neutron ports are pre-defined, wiring the Instance directly to the Control Network.
 
+
   We have 1 Instance:
 
+
   * Ubuntu as a server
+
 
   We want to wire them as:
 

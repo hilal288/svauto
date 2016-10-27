@@ -4,13 +4,20 @@ description: >
 
   HOT template to create Sandvine Stack, it have an Instance acting as a L2 Load Balancer, the SVTSE.
 
+
   We have 6 Instances:
 
+
   * PTS - CentOS 7
+
   * SVTSE - CentOS 7
+
   * SDE - CentOS 7
+
   * SPB - CentOS 6
+
   * SVTCPA - CentOS 7
+
   * Subscriber - Ubuntu 16.04
 
 

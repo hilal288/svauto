@@ -2,15 +2,19 @@ heat_template_version: 2013-05-23
 
 description: >
 
-
   HOT template to create standard NFV setup, acting as a L2 Bridge between two VXLAN (or VLAN) networks.
+
 
   NOTE: The "NFV Image" is just a plain Linux (or FreeBSD) distribution without any kind of NFV configured. To make it work, you'll need to create a Linux L2 Bridge (or a DPDK App), using the Virtual NICs "eth2 + eth3".
 
+
   We have 3 Instances:
 
+
   * Linux acting as a L2 Bridge and Policy Control
+
   * Linux as Engine
+
   * Linux Database
 
 

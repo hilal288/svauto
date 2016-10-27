@@ -4,9 +4,12 @@ description: >
 
   HOT template to create standard setup, that contains Neutron Port definitions, Floating IP and Security Groups.
 
+
   We have 1 Instance:
 
+
   * Ubuntu as a server
+
 
   We want to wire them as:
 
