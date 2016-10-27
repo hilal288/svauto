@@ -22,8 +22,6 @@
 
 regular_system_user: "sandvine"
 
-disable_autoconf: "no"
-
 # Base O.S.:
 # Ubuntu: ubuntu14, ubuntu16
 # Debian: jessie, stretch
@@ -51,9 +49,6 @@ deployment_mode: "no"
 
 # Open vSwitch with DPDK?
 ovs_dpdk: "no"
-
-# Stack running at the lab?
-lab_stack: "no"
 
 # NIC Interface ordering via PCI ID
 eth0_pci_id: "0000:00:03.0"

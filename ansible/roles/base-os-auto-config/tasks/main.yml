@@ -12,15 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: centos7 - firewall rules
-  firewalld: port={{item}} permanent=true state=enabled
-  with_items:
-    - 22/tcp
-  when: is_container != 'yes' and disable_autoconf != 'yes'
-
-- firewalld: zone=trusted interface=eth1 permanent=true state=enabled
-  when: is_container != 'yes' and disable_autoconf != 'yes'
+- name: centos7 - include custom book
+  include: centos7.yml
+  when: base_os == 'centos7'
 
 
-# Adding support for running Linux SVSDE on CentOS 7 without systemd:
-# - include: c6_7-no-systemd.yml
+- name: centos6 - include custom book
+  include: centos6.yml
+  when: base_os == 'centos6'

@@ -12,19 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: centos7 - copy "etc-hosts-fix" init script
-  copy: src=centos7/etc-hosts-fix
-        dest=/etc/init.d/etc-hosts-fix
-        owner=root
-        group=root
-        mode=0755
-  when: disable_autoconf != 'yes'
-
-- name: centos7 - service "etc-hosts-fix" enabled
-  service: name=etc-hosts-fix state=restarted enabled=yes
-  when: disable_autoconf != 'yes'
-
-
 - name: centos7 - yum installing epel repository
   yum: pkg=epel-release state=installed
 
@@ -37,11 +24,6 @@
     - nmap-ncat
     - firewalld
     - dracut-config-generic
-
-
-- name: centos7 - service firewalld enabled
-  service: name=firewalld enabled=yes
-  when: disable_autoconf != 'yes' and lab_stack != 'yes'
 
 
 - name: centos7 - yum uninstalling Network Manager
@@ -108,6 +90,7 @@
 # Lock Kernel upgrade only when building Linux PTS on CentOS 7.
 # It is realy, really required, only if "release == 'prod'".
 # This is a DPDK RPM Package limitation, that we're work arouding it.
+
 - name: centos7 - yum installing Kernel, DPDK RPM workaround
   yum: pkg={{item}}
   with_items:

@@ -125,12 +125,6 @@ case $i in
 		shift
 		;;
 
-	--disable-autoconf)
-
-		DISABLE_AUTOCONF="yes"
-		shift
-		;;
-
 	--static-repo)
 
 		STATIC_REPO="yes"
@@ -1456,8 +1450,6 @@ then
 
 
 	sed -i -e 's/regular_system_user:.*/regular_system_user: '$REGULAR_SYSTEM_USER'/g' ansible/group_vars/all
-
-	sed -i -e 's/lab_stack:.*/lab_stack: "yes"/g' ansible/group_vars/all
 
 	sed -i -e 's/packages_server:.*/packages_server: \"'$SVAUTO_MAIN_HOST'\"/g' ansible/group_vars/all
 

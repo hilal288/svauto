@@ -33,15 +33,6 @@
     - svspb
 
 
-- name: centos6 - lokkit managing Local Firewall Rules
-  command: "{{item}}"
-  with_items:
-  - lokkit --port=22:tcp --update
-  - lokkit -t eth1
-  - service iptables save
-  when: is_container != 'yes' and disable_autoconf != 'yes'
-
-
 - name: centos - copy Sandvine SVSPB login logo generator
   copy: src=sandvine-motd-issue-banner.sh
         dest=/tmp/sandvine-motd-issue-banner.sh

@@ -36,31 +36,31 @@ packer_build_sandvine()
 
 	# Linux SVPTS 7.35 on CentOS 7
 	./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=svpts --version=$PTS_VERSION --product-variant=vpl-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--ansible-roles=cloud-init,bootstrap,grub-conf,nginx,svpts,vmware-tools,post-cleanup-image --disable-autoconf --static-repo --versioned-repo \
+		--ansible-roles=cloud-init,bootstrap,grub-conf,nginx,svpts,vmware-tools,post-cleanup-image --static-repo --versioned-repo \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 
 	# Linux SVPTS 7.35 on CentOS 6 with Linux 3.18 from Xen 4.6 official repo
 	./svauto.sh --image-factory --release=dev --base-os=centos6 --base-os-upgrade --product=svpts --version=$PTS_VERSION --product-variant=vpl-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--ansible-roles=centos-xen,cloud-init,bootstrap,grub-conf,nginx,svpts,vmware-tools,post-cleanup-image --disable-autoconf --static-repo --versioned-repo \
+		--ansible-roles=centos-xen,cloud-init,bootstrap,grub-conf,nginx,svpts,vmware-tools,post-cleanup-image --static-repo --versioned-repo \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 
 	# Linux SVSDE 7.45 on CentOS 6
 	./svauto.sh --image-factory --release=dev --base-os=centos6 --base-os-upgrade --product=svsde --version=$SDE_VERSION --product-variant=vpl-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--ansible-roles=cloud-init,bootstrap,grub-conf,nginx,svsde,vmware-tools,post-cleanup-image --disable-autoconf --static-repo --versioned-repo \
+		--ansible-roles=cloud-init,bootstrap,grub-conf,nginx,svsde,vmware-tools,post-cleanup-image --static-repo --versioned-repo \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 
 	# Linux SVSDE 7.45 on CentOS 7
 	./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=svsde --version=$SDE_VERSION --product-variant=vpl-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--ansible-roles=cloud-init,bootstrap,grub-conf,nginx,svsde,vmware-tools,post-cleanup-image --disable-autoconf --static-repo --versioned-repo \
+		--ansible-roles=cloud-init,bootstrap,grub-conf,nginx,svsde,vmware-tools,post-cleanup-image --static-repo --versioned-repo \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 
 	# Linux SVSPB 6.65 on CentOS 6
 	./svauto.sh --image-factory --release=dev --base-os=centos6 --base-os-upgrade --product=svspb --version=$SPB_VERSION --product-variant=vpl-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--ansible-roles=cloud-init,bootstrap,grub-conf,nginx,postgresql,svspb,vmware-tools,post-cleanup-image,power-cycle --disable-autoconf --static-repo --versioned-repo \
+		--ansible-roles=cloud-init,bootstrap,grub-conf,nginx,postgresql,svspb,vmware-tools,post-cleanup-image,power-cycle --static-repo --versioned-repo \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 
@@ -70,12 +70,12 @@ packer_build_sandvine()
 
 	# SVTSE 1.00 on CentOS 7
 #	./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=svtse --version=$SVTSE_VERSION_EXPERIMENTAL --product-variant=vpl-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
-#		--ansible-roles=cloud-init,bootstrap,grub-conf,nginx,svtse,vmware-tools,post-cleanup-image --disable-autoconf --static-repo --versioned-repo \
+#		--ansible-roles=cloud-init,bootstrap,grub-conf,nginx,svtse,vmware-tools,post-cleanup-image --static-repo --versioned-repo \
 #		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 	# SVNDA 5.20 on CentOS 7
 	./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=svnda --version=$SVNDA_VERSION --product-variant=vpl-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--ansible-roles=cloud-init,bootstrap,grub-conf,nginx,postgresql,svnda,vmware-tools,post-cleanup-image --disable-autoconf --static-repo --versioned-repo \
+		--ansible-roles=cloud-init,bootstrap,grub-conf,nginx,postgresql,svnda,vmware-tools,post-cleanup-image --static-repo --versioned-repo \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 

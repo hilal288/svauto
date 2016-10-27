@@ -190,10 +190,6 @@ image_factory()
 	# Build extra_vars "nicely"!
 	EXTRA_VARS="base_os="$BASE_OS" release="$RELEASE" activate_eth1="no" deployment_mode="yes""
 
-	if [ "$DISABLE_AUTOCONF" == "yes" ] ; then
-		EXTRA_VARS="$EXTRA_VARS disable_autoconf="yes""
-	fi
-
 	if [ "$STATIC_REPO" == "yes" ] ; then
 		EXTRA_VARS="$EXTRA_VARS static_repo="true" static_packages_server="$STATIC_PACKAGES_SERVER""
 	fi

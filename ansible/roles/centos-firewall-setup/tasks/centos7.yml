@@ -12,11 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+- name: centos7 - service firewalld enabled
+  service: name=firewalld enabled=yes
+
+
 - name: centos7 - firewall rules
   firewalld: port={{item}} permanent=true state=enabled
   with_items:
     - 22/tcp
-  when: is_container != 'yes' and disable_autoconf != 'yes'
 
 - firewalld: zone=trusted interface=eth1 permanent=true state=enabled
-  when: is_container != 'yes' and disable_autoconf != 'yes'
+
+
+- name: centos7 - firewall rules for "svcs"
+  firewalld: port={{item}} permanent=true state=enabled
+  with_items:
+    - 8080/tcp
+    - 443/tcp
+  when: setup_server == 'svcs'

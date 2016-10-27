@@ -12,11 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: centos7 - firewall rules
-  firewalld: port={{item}} permanent=true state=enabled
-  with_items:
-    - 22/tcp
-  when: is_container != 'yes' and disable_autoconf != 'yes'
+# TODO: See if cloud-init can solve those "CentOS problems"...
 
-- firewalld: zone=trusted interface=eth1 permanent=true state=enabled
-  when: is_container != 'yes' and disable_autoconf != 'yes'
+- name: centos7 - copy "etc-hosts-fix" init script
+  copy: src=centos7/etc-hosts-fix
+        dest=/etc/init.d/etc-hosts-fix
+        owner=root
+        group=root
+        mode=0755
+
+- name: centos7 - service "etc-hosts-fix" enabled
+  service: name=etc-hosts-fix state=restarted enabled=yes

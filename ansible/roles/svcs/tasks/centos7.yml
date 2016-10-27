@@ -19,18 +19,6 @@
     - mariadb-server
     - MySQL-python
 
-
-#- name: centos7 - firewall rules
-#  firewalld: port={{item}} permanent=true state=enabled
-#  with_items:
-#    - 80/tcp
-#    - 443/tcp
-#  when: is_container != 'yes' and disable_autoconf != 'yes'
-#
-#- firewalld: zone=trusted interface=eth1 permanent=true state=enabled
-#  when: is_container != 'yes' and disable_autoconf != 'yes'
-
-
 - name: centos7 - service enabling MariaDB
   service: name={{item}} state=started enabled=yes
   with_items:
