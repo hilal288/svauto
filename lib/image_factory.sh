@@ -14,11 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 image_factory()
 {
-
-	BUILD_RAND=$(openssl rand -hex 4)
 
 	PACKER_FILES=build-$PRODUCT-$BUILD_RAND-packer-files
 	OUTPUT_DIR=build-$PRODUCT-$BUILD_RAND-output-dir

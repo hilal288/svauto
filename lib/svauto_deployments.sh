@@ -17,8 +17,6 @@
 svauto_deployments()
 {
 
-	BUILD_RAND=$(openssl rand -hex 4)
-
 	PLAYBOOK_FILE="playbook-"$BUILD_RAND".yml"
 
 	echo

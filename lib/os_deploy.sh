@@ -17,6 +17,9 @@
 os_deploy()
 {
 
+	ANSIBLE_PLAYBOOK_FILE="tmp/openstack-aio-$BUILD_RAND.yml"
+
+
 	# Validade the OS_BRIDGE_MODE variable.
 	if ! [[ "$OS_BRIDGE_MODE" == "OVS" || "$OS_BRIDGE_MODE" == "LBR" ]]
 	then
@@ -209,6 +212,22 @@ os_deploy()
 	fi
 
 
+	echo
+	echo "* Building top-level Ansible's Playbook file."
+
+	ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=os_aio \
+		--roles=bootstrap,os_clients,ssh_keypair,os_mysql,os_mysql_db,os_rabbitmq,os_memcached,apache2,os_keystone,os_glance,os_glance_images,hyper_kvm,os_nova,os_keypair,os_nova_flavors,os_neutron,os_ext_net,os_horizon,os_heat,post-cleanup >> ansible/$ANSIBLE_PLAYBOOK_FILE
+
+#	ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=os_controller_nodes \
+#		--roles=bootstrap,grub-conf,os_clients,ssh_keypair,os_mysql,os_mysql_db,os_rabbitmq,os_memcached,apache2,os_keystone,os_glance,os_glance_images,os_nova,os_keypair,os_nova_flavors,os_neutron,os_ext_net,os_horizon,os_heat,post-cleanup >> $ANSIBLE_PLAYBOOK_FILE
+#
+#	ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=os_network_nodes \
+#		--roles=bootstrap,grub-conf,os_neutron,post-cleanup >> $ANSIBLE_PLAYBOOK_FILE
+#
+#	ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=os_compute_nodes \
+#		--roles=bootstrap,grub-conf,hyper_kvm,os_nova,os_neutron,post-cleanup >> $ANSIBLE_PLAYBOOK_FILE
+
+
 	if [ "$DRY_RUN" == "yes" ]
 	then
 		echo
@@ -216,24 +235,24 @@ os_deploy()
 		echo "Just preparing the environment variables, so you can run Ansible manually, like:"
 		echo
 		echo "cd ~/svauto/ansible"
-		echo "ansible-playbook site-openstack.yml --extra-vars \"deployment_mode=yes\""
+		echo "ansible-playbook $ANSIBLE_PLAYBOOK_FILE --extra-vars \"deployment_mode=yes\""
 		echo
 		echo "And a second run after a successful deployment:"
 		echo
-		echo "ansible-playbook site-openstack.yml"
+		echo "ansible-playbook $ANSIBLE_PLAYBOOK_FILE"
 		echo
 	else
 		echo
-		echo "Running Ansible, deploying OpenStack:"
+		echo "* Running Ansible, deploying OpenStack:"
 
 		if [ "$DEPLOYMENT_MODE" == "yes" ];
 		then
 			cd ~/svauto/ansible
-			ansible-playbook site-openstack.yml --extra-vars "deployment_mode=yes"
+			ansible-playbook $ANSIBLE_PLAYBOOK_FILE --extra-vars "deployment_mode=yes"
 		else
 
 			cd ~/svauto/ansible
-			ansible-playbook site-openstack.yml
+			ansible-playbook $ANSIBLE_PLAYBOOK_FILE
 		fi
 	fi
 

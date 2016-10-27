@@ -21,7 +21,6 @@
 #
 # With future versions of SVAuto, we'll be able to dynamically build OpenStack
 # on Vagrant, by just passing Ansible roles we want.
-#
 
 WHOAMI=vagrant
 
@@ -63,6 +62,17 @@ echo
 echo "Preparing Ansible variable based on current default gateway interface..."
 
 sed -i -e 's/os_mgmt:.*/os_mgmt: "'$PRIMARY_INTERFACE'"/' ansible/group_vars/all
+
+
+echo
+echo "Building top-level Ansible's Playbook file."
+
+ANSIBLE_PLAYBOOK_FILE="openstack-aio-$BUILD_RAND.yml"
+
+ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=os_vagrant_aio \
+	--roles=bootstrap,os_clients,ssh_keypair,os_mysql,os_mysql_db,os_rabbitmq,os_memcached,apache2,os_keystone,os_glance,os_glance_images,hyper_kvm,os_nova,os_keypair,os_nova_flavors,os_neutron,os_ext_net,os_horizon,os_heat,post-cleanup >> ansible/$ANSIBLE_PLAYBOOK_FILE
+
+sed -i -e 's/{{openstack-aio-top-book}}/"'$ANSIBLE_PLAYBOOK_FILE'"/' Vagrantfile
 
 
 echo

@@ -28,15 +28,12 @@
 # ./svauto.sh --vagrant=up --base-os=centos7 --product=svpts
 # ./svauto.sh --vagrant=up --base-os=centos6 --product=svspb
 
-
 vagrant_builder()
 {
 
 	#VAGRANT_DEFAULT_PROVIDER=libvirt
 
 	RAND_PORT=`awk -v min=1025 -v max=9999 'BEGIN{srand(); print int(min+rand()*(max-min+1))}'`
-
-	BUILD_RAND=$(openssl rand -hex 4)
 
 	ANSIBLE_PLAYBOOK_FILE="vagrant-run-$BUILD_RAND.yml"
 

@@ -15,6 +15,9 @@
 # limitations under the License.
 
 
+BUILD_RAND=$(openssl rand -hex 4)
+
+
 source lib/include_tools.inc
 
 
@@ -957,9 +960,8 @@ then
 	fi
 
 
-	BUILD_RAND=$(openssl rand -hex 4)
-
 	ANSIBLE_INVENTORY_FILE="tmp/hosts-$BUILD_RAND"
+
 
 	echo
 	echo "The following Sandvine-compatible Instances was detected on your \"$OS_STACK\" Stack:"
