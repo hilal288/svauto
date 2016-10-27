@@ -34,7 +34,7 @@ packer_build_cs()
 
 	# SVSDE 7.50 on CentOS 7 + Cloud Services SDE + Cloud Services Daemon (back / front)
 	./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=svsde --version=$SDE_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--ansible-roles=cloud-init,bootstrap,grub-conf,base-os-auto-config,centos-network-setup,centos-firewall-setup,nginx,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
+		--ansible-roles=cloud-init,bootstrap,grub-conf,udev-rules,base-os-auto-config,centos-network-setup,centos-firewall-setup,nginx,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto
 
 	# SVSDE 7.50 on CentOS 6 + Cloud Services SDE + Cloud Services Daemon (back / front)
@@ -49,17 +49,17 @@ packer_build_cs()
 
 	# SVPTS 7.35 on CentOS 7 + Cloud Services - Linux 3.10, DPDK 16.07
 	./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=svpts --version=$PTS_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--ansible-roles=cloud-init,bootstrap,grub-conf,base-os-auto-config,centos-network-setup,centos-firewall-setup,nginx,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
+		--ansible-roles=cloud-init,bootstrap,grub-conf,udev-rules,base-os-auto-config,centos-network-setup,centos-firewall-setup,nginx,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto
 
 	# SVSDE 7.50 on CentOS 7 + Cloud Services SDE only - No Cloud Services daemon here
 	./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=svsde --version=$SDE_VERSION --product-variant=isolated-svsde-cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--ansible-roles=cloud-init,bootstrap,grub-conf,base-os-auto-config,centos-network-setup,centos-firewall-setup,nginx,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
+		--ansible-roles=cloud-init,bootstrap,grub-conf,udev-rules,base-os-auto-config,centos-network-setup,centos-firewall-setup,nginx,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto
 
 	# Cloud Services Daemon 16.11 (back / front) on CentOS 7 - No SDE here
 	./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=svcsd --version=$CSD_VERSION --product-variant=isolated-svcsd-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--ansible-roles=centos-xen,cloud-init,bootstrap,grub-conf,base-os-auto-config,centos-network-setup,centos-firewall-setup,nginx,svcs,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
+		--ansible-roles=centos-xen,cloud-init,bootstrap,grub-conf,udev-rules,base-os-auto-config,centos-network-setup,centos-firewall-setup,nginx,svcs,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto
 
 
@@ -84,7 +84,7 @@ packer_build_cs()
 
 	# Cloud Services Build Server (back / front) on CentOS 7 (new Golang 1.6)
 	./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=devops --version=7 --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-	        --ansible-roles=centos-xen,cloud-init,bootstrap,grub-conf,base-os-auto-config,centos-network-setup,centos-firewall-setup,golang-env,nodejs-env,ccollab-client,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
+	        --ansible-roles=centos-xen,cloud-init,bootstrap,grub-conf,udev-rules,base-os-auto-config,centos-network-setup,centos-firewall-setup,golang-env,nodejs-env,ccollab-client,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto
 
 
@@ -99,11 +99,11 @@ packer_build_cs()
 
 	# Cloud Services Build Server (back) on CentOS 7 (new Golang 1.6)
 #	./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=centos --version=7 --product-variant=go-devops-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-#	        --ansible-roles=centos-xen,cloud-init,bootstrap,grub-conf,base-os-auto-config,centos-network-setup,centos-firewall-setup,golang-env,vmware-tools,post-cleanup-image $DRY_RUN_OPT
+#	        --ansible-roles=centos-xen,cloud-init,bootstrap,grub-conf,udev-rules,base-os-auto-config,centos-network-setup,centos-firewall-setup,golang-env,vmware-tools,post-cleanup-image $DRY_RUN_OPT
 
 	# Cloud Services Build Server (front) on CentOS 7 (NodeJS)
 #	./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=centos --version=7 --product-variant=nodejs-devops-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-#	        --ansible-roles=centos-xen,cloud-init,bootstrap,grub-conf,base-os-auto-config,centos-network-setup,centos-firewall-setup,nodejs-env,vmware-tools,post-cleanup-image $DRY_RUN_OPT
+#	        --ansible-roles=centos-xen,cloud-init,bootstrap,grub-conf,udev-rules,base-os-auto-config,centos-network-setup,centos-firewall-setup,nodejs-env,vmware-tools,post-cleanup-image $DRY_RUN_OPT
 
 
 	if [ "$HEAT_TEMPLATES_CS" == "yes" ]

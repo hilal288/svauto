@@ -33,8 +33,8 @@ packer_build_sandvine_lab()
 
 	# Linux SVPTS 7.35 on CentOS 7
 	./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=svpts --version=$PTS_VERSION --product-variant=vpl-1 --operation=sandvine --qcow2 --vmdk --vhd --vm-xml --sha256sum \
-		--ansible-roles=cloud-init,bootstrap,grub-conf,nginx,svpts,vmware-tools,post-cleanup-image --static-repo --versioned-repo \
-		--packer-max-tries=3 --setup-default-interface-script $DRY_RUN_OPT
+		--ansible-roles=cloud-init,bootstrap,grub-conf,setup-default-interface,nginx,svpts,vmware-tools,post-cleanup-image --static-repo --versioned-repo \
+		--packer-max-tries=3 $DRY_RUN_OPT
 
 
 	# Linux SVPTS 7.35 on CentOS 6 with Linux 3.18 from Xen 4.6 official repo
@@ -51,8 +51,8 @@ packer_build_sandvine_lab()
 
 	# Linux SVSDE 7.50 on CentOS 7
 	./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=svsde --version=$SDE_VERSION --product-variant=vpl-1 --operation=sandvine --qcow2 --vmd --vhd --vm-xml --sha256sum \
-		--ansible-roles=cloud-init,bootstrap,grub-conf,nginx,svsde,vmware-tools,post-cleanup-image --static-repo --versioned-repo \
-		--packer-max-tries=3 --setup-default-interface-script $DRY_RUN_OPT
+		--ansible-roles=cloud-init,bootstrap,grub-conf,setup-default-interface,nginx,svsde,vmware-tools,post-cleanup-image --static-repo --versioned-repo \
+		--packer-max-tries=3 $DRY_RUN_OPT
 
 
 	# Linux SVSPB 6.65 on CentOS 6

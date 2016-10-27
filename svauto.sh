@@ -143,12 +143,6 @@ case $i in
 		shift
 		;;
 
-	--setup-default-interface-script)
-
-		SETUP_DEFAULT_INT_SH="yes"
-		shift
-		;;
-
         --packer-to-openstack)
 
                 PACKER_TO_OS="yes"

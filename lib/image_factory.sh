@@ -210,10 +210,6 @@ image_factory()
 		EXTRA_VARS="$EXTRA_VARS base_os_upgrade="yes""
 	fi
 
-	if [ "$SETUP_DEFAULT_INT_SH" == "yes" ]; then
-		EXTRA_VARS="$EXTRA_VARS centos7_vmware_net_hack="yes""
-	fi
-
 
 	case "$OPERATION" in
 

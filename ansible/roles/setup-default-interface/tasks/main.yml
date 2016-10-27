@@ -12,27 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: centos7 - yum installing packages for "labify-linux.sh" script
-  yum: pkg={{item}} state=latest
-  with_items:
-    - nfs-utils 
-
-
-- name: centos7 - service rpcbind enabled
-  service: name=rpcbind state=started enabled=yes
-
-
-- name: centos7 - copy fetchlabify 2 script
-  copy: src=centos7/fetchlabify
-        dest=/etc/init.d/fetchlabify
+- name: centos7 - copy Setup Default Interface Script
+  copy: src=centos7/setupDefaultInterface
+        dest=/usr/local/sbin/setupDefaultInterface
         owner=root
         group=root
         mode=0755
+  when: centos7_vmware_net_hack == 'yes'
 
+- name: centos7 - copy Setup Default Interface systemd service
+  copy: src=centos7/setup-default-interface.service
+        dest=/lib/systemd/system/setup-default-interface.service
+        owner=root
+        group=root
+        mode=0755
+  when: centos7_vmware_net_hack == 'yes'
 
-- name: centos7 - enabling Labify on system boot
-  command: chkconfig fetchlabify on
-
-
-- name: centos7 - service firewalld disabled
-  service: name=firewalld state=stopped enabled=no
+- name: centos7 - service Setup Default Interface
+  service: name=setup-default-interface enabled=yes
+  when: centos7_vmware_net_hack == 'yes'

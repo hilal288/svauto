@@ -33,8 +33,8 @@ packer_build_cs_lab()
 
 	# SDE 7.50 on CentOS 7 + Cloud Services SDE + Cloud Services Daemon (back / front) - Labified
 	./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=svsde --version=$SDE_VERSION --product-variant=cs-1 --operation=cloud-services --qcow2 --vmdk --vhd --vm-xml --sha256sum \
-		--ansible-roles=cloud-init,bootstrap,grub-conf,nginx,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,sandvine-auto-config,vmware-tools,labify,post-cleanup-image $DRY_RUN_OPT \
-		--setup-default-interface-script --packer-max-tries=3
+		--ansible-roles=cloud-init,bootstrap,grub-conf,setup-default-interface,nginx,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,sandvine-auto-config,vmware-tools,labify,post-cleanup-image $DRY_RUN_OPT \
+		--packer-max-tries=3
 
 	# SPB 6.65 on CentOS 6 + Cloud Services - Labified
 	./svauto.sh --image-factory --release=dev --base-os=centos6 --base-os-upgrade --product=svspb --version=$SPB_VERSION --product-variant=cs-1 --operation=cloud-services --qcow2 --vmdk --vhd --vm-xml --sha256sum \
@@ -43,8 +43,8 @@ packer_build_cs_lab()
 
 	# PTS 7.35 on CentOS 7 + Cloud Services - Linux 3.10, DPDK 16.07, requires igb_uio - Labified
 	./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=svpts --version=$PTS_VERSION --product-variant=cs-1 --operation=cloud-services --qcow2 --vmdk --vhd --vm-xml --sha256sum \
-		--ansible-roles=cloud-init,bootstrap,grub-conf,nginx,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config,vmware-tools,labify,post-cleanup-image $DRY_RUN_OPT \
-		--setup-default-interface-script --packer-max-tries=3
+		--ansible-roles=cloud-init,bootstrap,grub-conf,setup-default-interface,nginx,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config,vmware-tools,labify,post-cleanup-image $DRY_RUN_OPT \
+		--packer-max-tries=3
 
 
 	if [ "$LIBVIRT_FILES" == "yes" ]

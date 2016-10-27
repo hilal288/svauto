@@ -41,11 +41,11 @@ enable_apache_vhost: "no"
 # Vagrant run?
 vagrant_run: "no"
 
-# Enable a CentOS 7 hack for VMWare
-centos7_vmware_net_hack: "no"
-
 # Deployment mode:
 deployment_mode: "no"
+
+# Use old Linux interface name "ethX" on CentOS:
+centos_old_ifnames: "yes"
 
 # Open vSwitch with DPDK?
 ovs_dpdk: "no"
