@@ -38,32 +38,6 @@
   when: disable_autoconf != 'yes'
 
 
-- name: centos6 - copy eth0 config file
-  copy: src=centos6/ifcfg-eth0
-        dest=/etc/sysconfig/network-scripts/ifcfg-eth0
-        owner=root
-        group=root
-        mode=0644
-
-- name: centos6 - starting up eth0
-  shell: ifup eth0
-  when: lab_stack == 'yes'
-  ignore_errors: yes
-
-- name: centos6 - copy eth1 config file
-  copy: src=centos6/ifcfg-eth1
-        dest=/etc/sysconfig/network-scripts/ifcfg-eth1
-        owner=root
-        group=root
-        mode=0644
-  when: disable_autoconf != 'yes'
-
-- name: centos6 - starting up eth1
-  shell: ifup eth1
-  when: activate_eth1 == "yes"
-  ignore_errors: yes
-
-
 - name: centos6 - yum EPEL repository
   yum: pkg=http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
 
