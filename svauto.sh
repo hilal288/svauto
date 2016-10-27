@@ -148,21 +148,21 @@ case $i in
 
         --packer-to-openstack)
 
-                PACKER_TO_OS="yes"
-                shift
-                ;;
+		PACKER_TO_OS="yes"
+		shift
+		;;
 
         --os-project=*)
 
-                OS_PROJECT="${i#*=}"
-                shift
-                ;;
+		OS_PROJECT="${i#*=}"
+		shift
+		;;
 
         --cloud-services-mode=*)
 
-                CLOUD_SERVICES_MODE="${i#*=}"
-                shift
-                ;;
+		CLOUD_SERVICES_MODE="${i#*=}"
+		shift
+		;;
 
 	--packer-max-tries=*)
 
@@ -849,19 +849,21 @@ then
 		echo "However, the following Stack(s) was detected under your account:"
 		echo
 
-		heat stack-list
+		openstack stack list
 
 		echo
 		echo "Run this script with the following arguments:"
 		echo
 		echo "cd ~/svauto"
-		echo "./svauto.sh --os-project=\"demo\" --stack=demo"
+		echo "./svauto.sh --os-project=\"demo\" --os-stack=sv-stack-1"
 		echo
 		echo
 		echo "If you don't have a Sandvine compatible Stack up and running."
 		echo "To launch one, run:"
 		echo
-		echo "heat stack-create demo -f ~/svauto/misc/os-heat-templates/sandvine-stack-0.1-centos.yaml"
+		echo "openstack stack create -t ~/svauto/misc/os-heat-templates/sandvine-stack-0.1-stock-three-1.yaml sv-stack-1"
+		echo
+		echo "NOTE: You'll need to configure the *_images inside of the above Heat template."
 		echo
 		echo "Aborting!"
 
