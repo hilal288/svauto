@@ -974,7 +974,7 @@ then
 	echo SDE: $SDE_FLOAT
 	echo SPB: $SPB_FLOAT
 
-	if [ "$OS_STACK_TYPE" == "svcsd*" ]; then echo SVCSD: $CSD_FLOAT; fi
+	if [ "$OS_STACK_TYPE" == "svcsd-three" ] || [ "$OS_STACK_TYPE" == "svcsd-four" ]; then echo SVCSD: $CSD_FLOAT; fi
 	if [ "$OS_STACK_TYPE" == "svnda" ]; then echo NDA: $NDA_FLOAT; fi
 
 	if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then echo TSE: $TSE_FLOAT; fi
@@ -1008,7 +1008,7 @@ then
 	sed -i -e 's/^#SDE_IP/'$SDE_FLOAT'/g' $ANSIBLE_INVENTORY_FILE
 	sed -i -e 's/^#SPB_IP/'$SPB_FLOAT'/g' $ANSIBLE_INVENTORY_FILE
 
-	if [ "$OS_STACK_TYPE" == "svcsd*" ]; then sed -i -e 's/^#CSD_IP/'$CSD_FLOAT'/g' $ANSIBLE_INVENTORY_FILE; fi
+	if [ "$OS_STACK_TYPE" == "svcsd-three" ] || [ "$OS_STACK_TYPE" == "svcsd-four" ]; then sed -i -e 's/^#CSD_IP/'$CSD_FLOAT'/g' $ANSIBLE_INVENTORY_FILE; fi
 	if [ "$OS_STACK_TYPE" == "svnda" ]; then sed -i -e 's/^#NDA_IP/'$NDA_FLOAT'/g' $ANSIBLE_INVENTORY_FILE; fi
 
 	if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then sed -i -e 's/^#TSE_IP/'$TSE_FLOAT'/g' $ANSIBLE_INVENTORY_FILE; fi
@@ -1357,8 +1357,8 @@ then
 			echo "ssh sandvine@$SDE_FLOAT # SDE"
 			echo "ssh sandvine@$SPB_FLOAT # SPB"
 
-			if [ "$OS_STACK_TYPE" == "svcsd*" ]; then echo "ssh sandvine@$CSD_FLOAT # SVCS"; fi
-			if [ "$OS_STACK_TYPE" == "svnda*" ]; then echo "ssh sandvine@$NDA_FLOAT # NDA"; fi
+			if [ "$OS_STACK_TYPE" == "svcsd-three" ] || [ "$OS_STACK_TYPE" == "svcsd-four" ]; then echo "ssh sandvine@$CSD_FLOAT # SVCS"; fi
+			if [ "$OS_STACK_TYPE" == "svnda" ]; then echo "ssh sandvine@$NDA_FLOAT # NDA"; fi
 
 			if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then echo "ssh sandvine@$TSE_FLOAT # TSE"; fi
 			if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then echo "ssh sandvine@$TCPA_FLOAT # TCP Accelerator"; fi
