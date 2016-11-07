@@ -130,6 +130,6 @@ resources:
             sandvine:sandvine
           expire: False
         runcmd:
-        - 'su -c "\curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/svauto-deployments.sh | bash -s -- --base-os=ubuntu16 --ansible-roles=bootstrap,grub-conf,ubuntu-mate,hyper_kvm,vagrant,os_clients,google-chrome,post-cleanup,power-cycle --ansible-extra-vars=base_os_upgrade=yes,ubuntu_install=desktop" sandvine'
+        - 'su -c "\curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/svauto-deployments.sh | bash -s -- --base-os=ubuntu16 --ansible-roles=bootstrap,grub-conf,ubuntu-mate-desktop,hyper_kvm,vagrant,os_clients,google-chrome,post-cleanup,power-cycle --ansible-extra-vars=base_os_upgrade=yes,ubuntu_install=desktop" sandvine'
 
 outputs:
