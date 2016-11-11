@@ -861,6 +861,8 @@ then
 		# Updating O.S. images properties (use with care), below syntax not ready yet for Glance v2:
 		# glance image-update --property hw_scsi_model=virtio-scsi --property hw_disk_bus=scsi "your-image-name-1.0"
 
+		popd
+
 		exit 0
 
 	fi
