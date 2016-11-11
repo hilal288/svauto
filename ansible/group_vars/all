@@ -48,7 +48,7 @@ deployment_mode: "no"
 centos_old_ifnames: "yes"
 
 # Open vSwitch with DPDK?
-ovs_dpdk: "no"
+openvswitch_mode: "null"
 
 # NIC Interface ordering via PCI ID
 eth0_pci_id: "0000:00:03.0"

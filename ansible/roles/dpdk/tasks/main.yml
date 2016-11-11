@@ -22,6 +22,8 @@
   apt: name={{item}} state=latest
   with_items:
     - dpdk
+    - dpdk-igb-uio-dkms
+    - dpdk-rte-kni-dkms
 
 
 - name: ubuntu - copy dpdk.conf
