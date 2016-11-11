@@ -33,8 +33,12 @@
   when: sandvine_main_yum_repo == 'yes'
 
 
-- name: centos - sudo members of wheel group without password
-  lineinfile: "validate='visudo -cf %s' dest=/etc/sudoers state=present regexp='^%wheel' line='%wheel ALL=(ALL) NOPASSWD: ALL'"
+- name: centos - copy sudoers config file for members of group "wheel"
+  copy: src=centos-common/wheel-group
+        dest=/etc/sudoers.d/wheel-group
+        owner=root
+        group=root
+        mode=0644
 
 
 - name: centos - ZeroConf disabled
