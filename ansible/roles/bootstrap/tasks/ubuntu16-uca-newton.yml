@@ -12,19 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Reference:
-# http://docs.openstack.org/mitaka/install-guide-ubuntu/keystone-openrc.html
+- name: ubuntu16 - apt enabling Newton Ubuntu Cloud Archive
+  apt_repository: repo='deb http://ubuntu-cloud.archive.canonical.com/ubuntu xenial-updates/newton main'
 
-- name: Creating admin-openrc.sh file
-  template: src=common/admin-openrc.sh
-            dest=/home/{{regular_system_user}}/admin-openrc.sh
-            owner={{regular_system_user}}
-            group={{regular_system_user}}
-            mode=0640
 
-- name: Creating demo-openrc.sh file
-  template: src=common/demo-openrc.sh
-            dest=/home/{{regular_system_user}}/demo-openrc.sh
-            owner={{regular_system_user}}
-            group={{regular_system_user}}
-            mode=0640
+- name: ubuntu16 - apt Installing Cloud Archive Keyring
+  apt: name=ubuntu-cloud-keyring state=latest update_cache=yes

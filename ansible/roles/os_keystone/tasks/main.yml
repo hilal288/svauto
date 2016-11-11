@@ -23,6 +23,7 @@
 
 - name: Stopping and disabling Keystone (it runs under Apache)
   service: name=keystone state=stopped enabled=no
+  when: openstack_release != 'newton'
 
 
 - name: Removing non-used sqlite database
@@ -48,35 +49,18 @@
   shell: keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone
 
 
-- name: Creating Apache Keystone Virtual Host - Public
-  copy: src=wsgi-keystone-public.conf
-        dest=/etc/apache2/sites-available/wsgi-keystone-public.conf
-        owner=root
-        group=root
-        mode=0644
-        backup=yes
-  notify: reload-apache2
+- name: Initialize Fernet credential
+  shell: keystone-manage credential_setup --keystone-user keystone --keystone-group keystone
+  when: openstack_release == 'newton'
 
-- name: Creating Apache Keystone Virtual Host - Internal
-  copy: src=wsgi-keystone-internal.conf
-        dest=/etc/apache2/sites-available/wsgi-keystone-internal.conf
-        owner=root
-        group=root
-        mode=0644
-        backup=yes
-  notify: reload-apache2
 
-- file: src=/etc/apache2/sites-available/wsgi-keystone-public.conf
-        dest=/etc/apache2/sites-enabled/wsgi-keystone-public.conf
-        owner=root
-        group=root
-        state=link
+- name: Bootstrapping Identity Service (Newton)
+  shell: keystone-manage bootstrap --bootstrap-password "{{admin_password}}" --bootstrap-admin-url http://{{controller_addr}}:35357/v3/ --bootstrap-internal-url http://{{controller_addr}}:35357/v3/ --bootstrap-public-url http://{{public_addr}}:5000/v3/ --bootstrap-region-id "{{region}}"
+  when: openstack_release == 'newton'
 
-- file: src=/etc/apache2/sites-available/wsgi-keystone-internal.conf
-        dest=/etc/apache2/sites-enabled/wsgi-keystone-internal.conf
-        owner=root
-        group=root
-        state=link
+
+- include: apache-keystone-files.yml
+  when: openstack_release == 'mitaka'
 
 
 - meta: flush_handlers
@@ -100,6 +84,7 @@
   include: keystone-ldap.yml
   when: ldap_enabled is defined and ldap_enabled == 'yes'
   tags: keystone_conf
+
 
 - meta: flush_handlers
 
