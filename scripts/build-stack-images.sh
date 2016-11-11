@@ -21,19 +21,19 @@
 
 
 # SVAuto directory
-cd ~/svauto
+pushd ~/svauto
 
-
-# Sandvine Cloud Services Images for being released to the public
-time ./svauto.sh --packer-build-cs --heat-templates-cs --libvirt-files --installation-helper --move2webroot --release --operation=cloud-services
-#exit
-
+# Sandvine Cloud Services Images for public release
+time ./svauto.sh --packer-build=cs-prod
 
 # Sandvine Cloud Services Images
-time ./svauto.sh --packer-build-cs --heat-templates-cs --libvirt-files --installation-helper --move2webroot --operation=cloud-services
-#exit
-
+time ./svauto.sh --packer-build=cs-dev-lab
+time ./svauto.sh --packer-build=cs-dev
 
 # Sandvine Stock Images
-time ./svauto.sh --packer-build-sandvine --heat-templates --libvirt-files --installation-helper --move2webroot --operation=sandvine
-#exit
+time ./svauto.sh --packer-build=sandvine-prod
+time ./svauto.sh --packer-build=sandvine-dev-lab
+time ./svauto.sh --packer-build=sandvine-dev
+
+# Sandvine Stock Experimental Images
+time ./svauto.sh --packer-build=sandvine-experimental

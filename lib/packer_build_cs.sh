@@ -17,12 +17,6 @@
 packer_build_cs()
 {
 
-        PTS_VERSION="7.35"
-        SDE_VERSION="7.50"
-        SPB_VERSION="6.65"
-        CSD_VERSION="16.11"
-
-
 	if [ "$DRY_RUN" == "yes" ]; then
 		export DRY_RUN_OPT="--dry-run"
 	fi
@@ -32,35 +26,35 @@ packer_build_cs()
 	# STABLE
 	#
 
-	# SVSDE 7.50 on CentOS 7 + Cloud Services SDE + Cloud Services Daemon (back / front)
-	./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=svsde --version=$SDE_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--ansible-roles=cloud-init,bootstrap,grub-conf,udev-rules,base-os-auto-config,centos-network-setup,centos-firewall-setup,nginx,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
-		--packer-max-tries=3 --packer-to-openstack --os-project=svauto
+	# SVSDE on CentOS 7 + Cloud Services SDE + Cloud Services Daemon (back / front)
+	./svauto.sh --packer-builder --base-os=centos7 --product=svsde --version=$SDE_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+		--ansible-playbook-builder="svsde-servers,cloud-init,bootstrap:base_os_upgrade=yes:sandvine_main_yum_repo=yes:packages_server=$SVAUTO_MAIN_HOST:release_code_name=$RELEASE_CODE_NAME,grub-conf,udev-rules,base-os-auto-config,centos-network-setup:activate_eth1=no,centos-firewall-setup,nginx,svsde:sde_version=$SDE_VERSION:static_packages_server=$STATIC_PACKAGES_SERVER:static_repo=true:versioned_repo=true,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,vmware-tools,post-cleanup-image" \
+		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
-	# SVSDE 7.50 on CentOS 6 + Cloud Services SDE + Cloud Services Daemon (back / front)
-	./svauto.sh --image-factory --release=dev --base-os=centos6 --base-os-upgrade --product=svsde --version=$SDE_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--ansible-roles=cloud-init,bootstrap,grub-conf,base-os-auto-config,centos-network-setup,centos-firewall-setup,nginx,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
-		--packer-max-tries=3 --packer-to-openstack --os-project=svauto
+	# SVSDE on CentOS 6 + Cloud Services SDE + Cloud Services Daemon (back / front)
+	./svauto.sh --packer-builder --base-os=centos6 --product=svsde --version=$SDE_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+		--ansible-playbook-builder="svsde-servers,cloud-init,bootstrap:base_os_upgrade=yes:sandvine_main_yum_repo=yes:packages_server=$SVAUTO_MAIN_HOST:release_code_name=$RELEASE_CODE_NAME,grub-conf,base-os-auto-config,centos-network-setup:activate_eth1=no,centos-firewall-setup,nginx,svsde:sde_version=$SDE_VERSION:static_packages_server=$STATIC_PACKAGES_SERVER:static_repo=true:versioned_repo=true,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,vmware-tools,post-cleanup-image" \
+		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
-	# SVSPB 6.65 on CentOS 6 + Cloud Services
-	./svauto.sh --image-factory --release=dev --base-os=centos6 --base-os-upgrade --product=svspb --version=$SPB_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--ansible-roles=cloud-init,bootstrap,grub-conf,base-os-auto-config,centos-network-setup,centos-firewall-setup,postgresql,svspb,svmcdtext,svreports,svcs-svspb,sandvine-auto-config,vmware-tools,post-cleanup-image,power-cycle $DRY_RUN_OPT --operation=cloud-services \
-		--packer-max-tries=3 --packer-to-openstack --os-project=svauto
+	# SVSPB on CentOS 6 + Cloud Services
+	./svauto.sh --packer-builder --base-os=centos6 --product=svspb --version=$SPB_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+		--ansible-playbook-builder="svspb-servers,cloud-init,bootstrap:base_os_upgrade=yes:sandvine_main_yum_repo=yes:packages_server=$SVAUTO_MAIN_HOST:release_code_name=$RELEASE_CODE_NAME,grub-conf,base-os-auto-config,centos-network-setup:activate_eth1=no,centos-firewall-setup,postgresql,svspb:spb_version=$SPB_VERSION:static_packages_server=$STATIC_PACKAGES_SERVER:static_repo=true:versioned_repo=true,svmcdtext,svreports,svcs-svspb,vmware-tools,post-cleanup-image,power-cycle" \
+		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
-	# SVPTS 7.35 on CentOS 7 + Cloud Services - Linux 3.10, DPDK 16.07
-	./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=svpts --version=$PTS_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--ansible-roles=cloud-init,bootstrap,grub-conf,udev-rules,base-os-auto-config,centos-network-setup,centos-firewall-setup,nginx,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
-		--packer-max-tries=3 --packer-to-openstack --os-project=svauto
+	# SVPTS on CentOS 7 + Cloud Services - Linux 3.10, DPDK 16.07
+	./svauto.sh --packer-builder --base-os=centos7 --product=svpts --version=$PTS_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+		--ansible-playbook-builder="svpts-servers,cloud-init,bootstrap:base_os_upgrade=yes:sandvine_main_yum_repo=yes:packages_server=$SVAUTO_MAIN_HOST:release_code_name=$RELEASE_CODE_NAME,grub-conf,udev-rules,base-os-auto-config,centos-network-setup:activate_eth1=no,centos-firewall-setup,nginx,svpts:pts_version=$PTS_VERSION:static_packages_server=$STATIC_PACKAGES_SERVER:static_repo=true:versioned_repo=true,svprotocols:pts_protocols_version=$PTS_PROTOCOLS_VERSION:static_packages_server=$STATIC_PACKAGES_SERVER:static_repo=true:versioned_repo=true,svusagemanagementpts,svcs-svpts,vmware-tools,post-cleanup-image" \
+		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
-	# SVSDE 7.50 on CentOS 7 + Cloud Services SDE only - No Cloud Services daemon here
-	./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=svsde --version=$SDE_VERSION --product-variant=isolated-svsde-cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--ansible-roles=cloud-init,bootstrap,grub-conf,udev-rules,base-os-auto-config,centos-network-setup,centos-firewall-setup,nginx,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
-		--packer-max-tries=3 --packer-to-openstack --os-project=svauto
+	# SVSDE on CentOS 7 + Cloud Services SDE only - No Cloud Services daemon here
+	./svauto.sh --packer-builder --base-os=centos7 --product=svsde --version=$SDE_VERSION --product-variant=isolated-svsde-cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+		--ansible-playbook-builder="svsde-servers,cloud-init,bootstrap:base_os_upgrade=yes:sandvine_main_yum_repo=yes:packages_server=$SVAUTO_MAIN_HOST:release_code_name=$RELEASE_CODE_NAME,grub-conf,udev-rules,base-os-auto-config,centos-network-setup:activate_eth1=no,centos-firewall-setup,nginx,svsde:sde_version=$SDE_VERSION:static_packages_server=$STATIC_PACKAGES_SERVER:static_repo=true:versioned_repo=true,svusagemanagement,svsubscribermapping,svcs-svsde,vmware-tools,post-cleanup-image" \
+		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
-	# Cloud Services Daemon 16.11 (back / front) on CentOS 7 - No SDE here
-	./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=svcsd --version=$CSD_VERSION --product-variant=isolated-svcsd-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--ansible-roles=centos-xen,cloud-init,bootstrap,grub-conf,udev-rules,base-os-auto-config,centos-network-setup,centos-firewall-setup,nginx,svcs,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
-		--packer-max-tries=3 --packer-to-openstack --os-project=svauto
+	# Cloud Services Daemon (back / front) on CentOS 7 - No SDE here
+	./svauto.sh --packer-builder --base-os=centos7 --product=svcsd --version=$CSD_VERSION --product-variant=isolated-svcsd-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+		--ansible-playbook-builder="svcs-servers,cloud-init,bootstrap:base_os_upgrade=yes:sandvine_main_yum_repo=yes:packages_server=$SVAUTO_MAIN_HOST:release_code_name=$RELEASE_CODE_NAME,grub-conf,udev-rules,base-os-auto-config,centos-network-setup:activate_eth1=no,centos-firewall-setup,nginx,svcs,vmware-tools,post-cleanup-image" \
+		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 
 	#
@@ -68,9 +62,9 @@ packer_build_cs()
 	#
 
 	# SVPTS 7.35 on CentOS 6 + Cloud Services - Linux 3.18 from Xen 4.6 official repo, DPDK 16.04, don't requires igb_uio
-	./svauto.sh --image-factory --release=dev --base-os=centos6 --base-os-upgrade --product=svpts --version=$PTS_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--ansible-roles=centos-xen,cloud-init,bootstrap,grub-conf,base-os-auto-config,centos-network-setup,centos-firewall-setup,nginx,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
-		--packer-max-tries=3 --packer-to-openstack --os-project=svauto
+	./svauto.sh --packer-builder --base-os=centos6 --product=svpts --version=$PTS_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+		--ansible-playbook-builder="svpts-servers,centos-xen,cloud-init,bootstrap:base_os_upgrade=yes:sandvine_main_yum_repo=yes:packages_server=$SVAUTO_MAIN_HOST:release_code_name=$RELEASE_CODE_NAME,grub-conf,base-os-auto-config,centos-network-setup:activate_eth1=no,centos-firewall-setup,nginx,svpts:pts_version=$PTS_VERSION:static_packages_server=$STATIC_PACKAGES_SERVER:static_repo=true:versioned_repo=true,svprotocols:pts_protocols_version=$PTS_PROTOCOLS_VERSION:static_packages_server=$STATIC_PACKAGES_SERVER:static_repo=true:versioned_repo=true,svusagemanagementpts,svcs-svpts,vmware-tools,post-cleanup-image" \
+		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 
 	#
@@ -78,191 +72,44 @@ packer_build_cs()
 	#
 
 	# Cloud Services Build Server (back / front) on CentOS 6 (old Golang 1.5)
-	./svauto.sh --image-factory --release=dev --base-os=centos6 --base-os-upgrade --product=devops --version=6 --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-	        --ansible-roles=centos-xen,cloud-init,bootstrap,grub-conf,base-os-auto-config,centos-network-setup,centos-firewall-setup,golang-env,nodejs-env,ccollab-client,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
-		--packer-max-tries=3 --packer-to-openstack --os-project=svauto
+	./svauto.sh --packer-builder --base-os=centos6 --product=devops --version=6 --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+	        --ansible-playbook-builder="devops-servers,centos-xen,cloud-init,bootstrap:base_os_upgrade=yes,grub-conf,base-os-auto-config,centos-network-setup:activate_eth1=no,centos-firewall-setup,golang-env,nodejs-env,ccollab-client,vmware-tools,post-cleanup-image" \
+		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 	# Cloud Services Build Server (back / front) on CentOS 7 (new Golang 1.6)
-	./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=devops --version=7 --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-	        --ansible-roles=centos-xen,cloud-init,bootstrap,grub-conf,udev-rules,base-os-auto-config,centos-network-setup,centos-firewall-setup,golang-env,nodejs-env,ccollab-client,vmware-tools,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
-		--packer-max-tries=3 --packer-to-openstack --os-project=svauto
+	./svauto.sh --packer-builder --base-os=centos7 --product=devops --version=7 --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+	        --ansible-playbook-builder="devops-servers,centos-xen,cloud-init,bootstrap:base_os_upgrade=yes,grub-conf,udev-rules,base-os-auto-config,centos-network-setup:activate_eth1=no,centos-firewall-setup,golang-env,nodejs-env,ccollab-client,vmware-tools,post-cleanup-image" \
+		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 
 	# Cloud Services Build Server (back) on CentOS 6 (old Golang 1.5)
-#	./svauto.sh --image-factory --release=dev --base-os=centos6 --base-os-upgrade --product=centos --version=6 --product-variant=go-devops-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-#	        --ansible-roles=centos-xen,cloud-init,bootstrap,grub-conf,base-os-auto-config,centos-network-setup,centos-firewall-setup,golang-env,vmware-tools,post-cleanup-image $DRY_RUN_OPT
+#	./svauto.sh --packer-builder --base-os=centos6 --product=centos --version=6 --product-variant=go-devops-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+#	        --ansible-playbook-builder="centos-servers,centos-xen,cloud-init,bootstrap:base_os_upgrade=yes,grub-conf,base-os-auto-config,centos-network-setup:activate_eth1=no,centos-firewall-setup,golang-env,vmware-tools,post-cleanup-image" $DRY_RUN_OPT
 
 	# Cloud Services Build Server (front) on CentOS 6 (NodeJS)
-#	./svauto.sh --image-factory --release=dev --base-os=centos6 --base-os-upgrade --product=centos --version=6 --product-variant=nodejs-devops-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-#	        --ansible-roles=centos-xen,cloud-init,bootstrap,grub-conf,base-os-auto-config,centos-network-setup,centos-firewall-setup,nodejs-env,vmware-tools,post-cleanup-image $DRY_RUN_OPT
+#	./svauto.sh --packer-builder --base-os=centos6 --product=centos --version=6 --product-variant=nodejs-devops-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+#	        --ansible-playbook-builder="centos-servers,centos-xen,cloud-init,bootstrap:base_os_upgrade=yes,grub-conf,base-os-auto-config,centos-network-setup:activate_eth1=no,centos-firewall-setup,nodejs-env,vmware-tools,post-cleanup-image" $DRY_RUN_OPT
 
 
 	# Cloud Services Build Server (back) on CentOS 7 (new Golang 1.6)
-#	./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=centos --version=7 --product-variant=go-devops-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-#	        --ansible-roles=centos-xen,cloud-init,bootstrap,grub-conf,udev-rules,base-os-auto-config,centos-network-setup,centos-firewall-setup,golang-env,vmware-tools,post-cleanup-image $DRY_RUN_OPT
+#	./svauto.sh --packer-builder --base-os=centos7 --product=centos --version=7 --product-variant=go-devops-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+#	        --ansible-playbook-builder="centos-servers,centos-xen,cloud-init,bootstrap:base_os_upgrade=yes,grub-conf,udev-rules,base-os-auto-config,centos-network-setup:activate_eth1=no,centos-firewall-setup,golang-env,vmware-tools,post-cleanup-image" $DRY_RUN_OPT
 
 	# Cloud Services Build Server (front) on CentOS 7 (NodeJS)
-#	./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=centos --version=7 --product-variant=nodejs-devops-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-#	        --ansible-roles=centos-xen,cloud-init,bootstrap,grub-conf,udev-rules,base-os-auto-config,centos-network-setup,centos-firewall-setup,nodejs-env,vmware-tools,post-cleanup-image $DRY_RUN_OPT
+#	./svauto.sh --packer-builder --base-os=centos7 --product=centos --version=7 --product-variant=nodejs-devops-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+#	        --ansible-playbook-builder="centos-servers,centos-xen,cloud-init,bootstrap:base_os_upgrade=yes,grub-conf,udev-rules,base-os-auto-config,centos-network-setup:activate_eth1=no,centos-firewall-setup,nodejs-env,vmware-tools,post-cleanup-image" $DRY_RUN_OPT
 
 
-	if [ "$HEAT_TEMPLATES_CS" == "yes" ]
-	then
+        ./svauto.sh --heat-templates=cs-dev
 
-                if [ "$DRY_RUN" == "yes" ]
-                then
+        ./svauto.sh --libvirt-files=cs-dev
 
-                        echo
-                        echo "Not copying Heat Templates! Skipping this step..."
+        ./svauto.sh --installation-helper=cs-dev
 
-                else
+        ./svauto.sh --move2webroot=cs-dev
 
-			echo
-			echo "Copying Cloud Services Heat Templates into tmp/cs subdirectory..."
+        ./svauto.sh --update-web-dir-sums
 
-			cp misc/os-heat-templates/sandvine-stack-0.1* tmp/cs
-			cp misc/os-heat-templates/sandvine-stack-nubo-0.1* tmp/cs
-
-			sed -i -e 's/{{pts_image}}/svpts-'$PTS_VERSION'-cs-1-centos7-amd64/g' tmp/cs/*.yaml
-			sed -i -e 's/{{sde_image}}/svsde-'$SDE_VERSION'-cs-1-centos7-amd64/g' tmp/cs/*.yaml
-			sed -i -e 's/{{spb_image}}/svspb-'$SPB_VERSION'-cs-1-centos6-amd64/g' tmp/cs/*.yaml
-			sed -i -e 's/{{csd_image}}/svcsd-'$CSD_VERSION'-isolated-svcsd-1-centos7-amd64/g' tmp/cs/*.yaml
-
-		fi
-
-	fi
-
-
-	if [ "$LIBVIRT_FILES" == "yes" ]
-	then
-
-                if [ "$DRY_RUN" == "yes" ]
-                then
-
-                        echo
-                        echo "Not copying Libvirt files! Skipping this step..."
-
-                else
-
-			echo
-			echo "Copying Libvirt files for release into tmp/cs subdirectory..."
-
-			cp misc/libvirt/* tmp/cs/
-
-			find packer/build* -name "*.xml" -exec cp {} tmp/cs/ \;
-
-			sed -i -e 's/{{sde_image}}/svsde-'$SDE_VERSION'-cs-1-centos7-amd64/g' tmp/cs/libvirt-qemu.hook
-
-		fi
-
-	fi
-
-
-	if [ "$MOVE2WEBROOT" == "yes" ]
-	then
-
-                if [ "$DRY_RUN" == "yes" ]
-                then
-                        echo
-                        echo "Not moving to web root! Skipping this step..."
-                else
-
-			echo
-			echo "Moving all images created during this build, to the Web Root."
-			echo "Also, doing some clean ups, to free the way for subsequent builds..."
-
-
-			find packer/build* -name "*.raw" -exec rm -f {} \;
-
-			find packer/build* -name "*.sha256" -exec mv {} $WEB_ROOT_CS \;
-			find packer/build* -name "*.xml" -exec mv {} $WEB_ROOT_CS \;
-			find packer/build* -name "*.qcow2c" -exec mv {} $WEB_ROOT_CS \;
-#			find packer/build* -name "*.vmdk" -exec mv {} $WEB_ROOT_CS \;
-			find packer/build* -name "*.vhd*" -exec mv {} $WEB_ROOT_CS \;
-			find packer/build* -name "*.ova" -exec mv {} $WEB_ROOT_CS \;
-
-
-			echo
-			echo "Merging SHA256SUMS files together..."
-
-			cd $WEB_ROOT_CS
-
-			cat *.sha256 > SHA256SUMS
-			rm -f *.sha256
-
-			cd - &>/dev/null
-
-
-        	        echo
-        	        echo "Updating symbolic link \"current\" to point to \"$BUILD_DATE\"..."
-
-			cd $WEB_ROOT_CS_MAIN
-
-			rm -f current
-			ln -s $BUILD_DATE current
-
-			cd - &>/dev/null
-
-
-			if [ "$HEAT_TEMPLATES_CS" == "yes" ]
-			then
-
-				echo
-				echo "Copying Cloud Services Heat Templates into web public subdirectory..."
-
-				cp tmp/cs/sandvine-stack-0.1-three-1.yaml $WEB_ROOT_CS/cloudservices-stack-0.1.yaml
-				cp tmp/cs/sandvine-stack-0.1-three-flat-1.yaml $WEB_ROOT_CS/cloudservices-stack-0.1-flat-1.yaml
-				cp tmp/cs/sandvine-stack-0.1-three-vlan-1.yaml $WEB_ROOT_CS/cloudservices-stack-0.1-vlan-1.yaml
-				cp tmp/cs/sandvine-stack-0.1-three-rad-1.yaml $WEB_ROOT_CS/cloudservices-stack-0.1-rad-1.yaml
-				cp tmp/cs/sandvine-stack-nubo-0.1-stock-gui-1.yaml $WEB_ROOT_CS/cloudservices-stack-nubo-0.1-stock-gui-1.yaml
-				cp tmp/cs/sandvine-stack-0.1-four-1.yaml $WEB_ROOT_CS/cloudservices-stack-0.1-four-1.yaml
-
-			fi
-
-
-			if [ "$INSTALLATION_HELPER" == "yes" ]
-			then
-
-				echo
-				echo "Creating Cloud Services installation helper script (dev)..."
-
-				cp misc/self-extract/* tmp/cs/
-
-				cd tmp/cs/
-
-				tar -cf sandvine-files.tar *.yaml *.hook *.xml
-
-				cat extract.sh sandvine-files.tar > sandvine-helper.sh_tail
-
-				sed -i -e 's/{{sandvine_release}}/'$SANDVINE_RELEASE'/g' sandvine-helper.sh_template
-
-				sed -i -e 's/read\ FTP_USER//g' sandvine-helper.sh_template
-				sed -i -e 's/read\ \-s\ FTP_PASS//g' sandvine-helper.sh_template
-				sed -i -e 's/\-\-user=\$FTP_USER\ \-\-password=\$FTP_PASS\ //g' sandvine-helper.sh_template
-
-				sed -i -e 's/{{svpts_image_name}}/'svpts-'$PTS_VERSION'-cs-1-centos7-amd64'/g' sandvine-helper.sh_template
-				sed -i -e 's/{{svsde_image_name}}/'svsde-'$SDE_VERSION'-cs-1-centos7-amd64'/g' sandvine-helper.sh_template
-				sed -i -e 's/{{svspb_image_name}}/'svspb-'$SPB_VERSION'-cs-1-centos6-amd64'/g' sandvine-helper.sh_template
-
-				sed -i -e 's/{{packages_server}}/'$SVAUTO_MAIN_HOST'/g' sandvine-helper.sh_template
-				sed -i -e 's/{{packages_path}}/images\/platform\/cloud-services\/'$RELEASE_CODE_NAME'\/current/g' sandvine-helper.sh_template
-
-				cat sandvine-helper.sh_template sandvine-helper.sh_tail > sandvine-cs-helper.sh
-
-				chmod +x sandvine-cs-helper.sh
-
-				cd - &>/dev/null
-
-				cp tmp/cs/sandvine-cs-helper.sh $WEB_ROOT_CS
-
-			fi
-
-
-			# Free the way for subsequent builds:
-			rm -rf packer/build*
-
-		fi
-
-	fi
+        ./svauto.sh --update-web-dir-symlink
 
 }

@@ -123,33 +123,33 @@ This is a resource used to build Sandvine Official Images (development build).
 Resource to build a clean Ubuntu or CentOS images, without Ansible roles, just Packer and upstream ISO media.
 
     # Ubuntu Trusty 14.04 - Blank server
-    ./svauto.sh --image-factory --release=dev --base-os=ubuntu14 --base-os-upgrade --product=ubuntu --version=14.04 --product-variant=r1 --qcow2 --vm-xml --sha256sum
+    ./svauto.sh --image-factory --release=dev --base-os=ubuntu14 --product=ubuntu --version=14.04 --product-variant=r1 --qcow2 --vm-xml --sha256sum
 
     # Ubuntu Xenial 16.04 - Blank server
-    ./svauto.sh --image-factory --release=dev --base-os=ubuntu16 --base-os-upgrade --product=ubuntu --version=16.04 --product-variant=r1 --qcow2 --vm-xml --sha256sum
+    ./svauto.sh --image-factory --release=dev --base-os=ubuntu16 --product=ubuntu --version=16.04 --product-variant=r1 --qcow2 --vm-xml --sha256sum
 
     # CentOS 6 - Blank server - Old Linux 2.6
-    ./svauto.sh --image-factory --release=dev --base-os=centos6 --base-os-upgrade --product=centos --version=6 --product-variant=sv-1 --qcow2 --vm-xml --sha256sum
+    ./svauto.sh --image-factory --release=dev --base-os=centos6 --product=centos --version=6 --product-variant=sv-1 --qcow2 --vm-xml --sha256sum
 
     # CentOS 7 - Blank server - Old Linux 3.10
-    ./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=centos --version=7.1 --product-variant=sv-1 --qcow2 --vm-xml --sha256sum
+    ./svauto.sh --image-factory --release=dev --base-os=centos7 --product=centos --version=7.1 --product-variant=sv-1 --qcow2 --vm-xml --sha256sum
 
 Resource to build a clean Ubuntu or CentOS images, with Packer and Ansible, plus upstream ISO media.
 
     # Ubuntu Trusty 14.04 - Blank server - Bootstrapped
-    ./svauto.sh --image-factory --release=dev --base-os=ubuntu14 --base-os-upgrade --product=ubuntu --version=14.04 --product-variant=r1 --qcow2 --vm-xml --sha256sum --ansible-roles=bootstrap,cloud-init,grub-conf,post-cleanup
+    ./svauto.sh --image-factory --release=dev --base-os=ubuntu14 --product=ubuntu --version=14.04 --product-variant=r1 --qcow2 --vm-xml --sha256sum --ansible-roles=bootstrap,cloud-init,grub-conf,post-cleanup
 
     # Ubuntu Xenial 16.04 - Blank server - Bootstrapped
-    ./svauto.sh --image-factory --release=dev --base-os=ubuntu16 --base-os-upgrade --product=ubuntu --version=16.04 --product-variant=r1 --qcow2 --vm-xml --sha256sum --ansible-roles=bootstrap,cloud-init,grub-conf,post-cleanup
+    ./svauto.sh --image-factory --release=dev --base-os=ubuntu16 --product=ubuntu --version=16.04 --product-variant=r1 --qcow2 --vm-xml --sha256sum --ansible-roles=bootstrap,cloud-init,grub-conf,post-cleanup
 
     # CentOS 6 - Blank server - Old Linux 2.6 - Bootstrapped
-    ./svauto.sh --image-factory --release=dev --base-os=centos6 --base-os-upgrade --product=centos --version=6 --product-variant=sv-1 --qcow2 --vm-xml --sha256sum --ansible-roles=bootstrap,cloud-init,grub-conf,post-cleanup
+    ./svauto.sh --image-factory --release=dev --base-os=centos6 --product=centos --version=6 --product-variant=sv-1 --qcow2 --vm-xml --sha256sum --ansible-roles=bootstrap,cloud-init,grub-conf,post-cleanup
 
     # CentOS 6 - Blank server - Linux 3.18 from Xen 4.4 CentOS Repo - Much better KVM / Xen support - Bootstrapped
-    ./svauto.sh --image-factory --release=dev --base-os=centos6 --base-os-upgrade --product=centos --version=6 --product-variant=sv-1 --qcow2 --vm-xml --sha256sum --ansible-roles=centos-xen,bootstrap,grub-conf,cloud-init,grub-conf,post-cleanup
+    ./svauto.sh --image-factory --release=dev --base-os=centos6 --product=centos --version=6 --product-variant=sv-1 --qcow2 --vm-xml --sha256sum --ansible-roles=centos-xen,bootstrap,grub-conf,cloud-init,grub-conf,post-cleanup
  
     # CentOS 7 - Blank server - Old Linux 3.10 - Bootstrapped
-    ./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=centos --version=7.1 --product-variant=sv-1 --qcow2 --vm-xml --sha256sum --ansible-roles=bootstrap,grub-conf,cloud-init,post-cleanup
+    ./svauto.sh --image-factory --release=dev --base-os=centos7 --product=centos --version=7.1 --product-variant=sv-1 --qcow2 --vm-xml --sha256sum --ansible-roles=bootstrap,grub-conf,cloud-init,post-cleanup
 
     # CentOS 7 - Blank server - Linux 3.18 from Xen 4.6 CentOS Repo - Much better KVM / Xen support - Bootstrapped
-    ./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=centos --version=7.1 --product-variant=sv-1 --qcow2 --vm-xml --sha256sum --ansible-roles=centos-xen,bootstrap,grub-conf,cloud-init,post-cleanup
+    ./svauto.sh --image-factory --release=dev --base-os=centos7 --product=centos --version=7.1 --product-variant=sv-1 --qcow2 --vm-xml --sha256sum --ansible-roles=centos-xen,bootstrap,grub-conf,cloud-init,post-cleanup

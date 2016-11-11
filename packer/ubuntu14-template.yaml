@@ -66,13 +66,11 @@
     },
     {
       "type": "ansible-local",
+      "inventory_file": "",
       "playbook_dir": "ansible/roles",
       "playbook_file": "",
       "group_vars": "ansible/group_vars",
-      "inventory_groups": "",
-      "extra_arguments": [
-          "--extra-vars \"\""
-      ]
+      "inventory_groups": ""
     }
   ]
 }

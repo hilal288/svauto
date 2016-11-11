@@ -22,7 +22,6 @@
     - ansible
     - python34
     - nmap-ncat
-    - firewalld
     - dracut-config-generic
 
 

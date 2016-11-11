@@ -93,7 +93,9 @@
     - silversearcher-ag
     - command-not-found
     - linux-image-generic
+    - linux-tools-generic
     - ubuntu-cloud-keyring
+    - linux-cloud-tools-generic
     - software-properties-common
 
 

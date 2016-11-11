@@ -21,9 +21,11 @@
         group=root
         mode=0755
 
-- name: centos6 - service hostname-fix enabled
-  service: name=hostname-fix state=started enabled=yes
-
+- name: centos6 - service enabling hostname-fix
+  file: src=/etc/init.d/hostname-fix
+        dest=/etc/rc3.d/S55hostname-fix
+        state=link
+        force=yes
 
 - name: centos6 - copy "etc-hosts-fix" init script
   copy: src=centos6/etc-hosts-fix
@@ -32,5 +34,8 @@
         group=root
         mode=0755
 
-- name: centos6 - service etc-hosts-fix enabled
-  service: name=etc-hosts-fix state=restarted enabled=yes
+- name: centos6 - service enabling etc-hosts-fix
+  file: src=/etc/init.d/etc-hosts-fix
+        dest=/etc/rc3.d/S56etc-hosts-fix
+        state=link
+        force=yes

@@ -4,7 +4,11 @@
 	<peers>
 		<peer>
 			<identity>sde</identity>
+{% if sde_srvc_ip is defined %}
+			<hostname>{{ sde_srvc_ip }}</hostname>
+{% else %}
 			<hostname>{{ hostvars[groups['svsde-servers'][0]]['ansible_eth1']['ipv4']['address'] }}</hostname>
+{% endif %}
 			<realm>sandvine.com</realm>
 			<port>3868</port>
 			<bias>2</bias>
@@ -23,7 +27,11 @@
 		</peer>
 		<peer>
 			<identity>cs</identity>
-			<hostname>{{ hostvars[groups['svsde-servers'][0]]['ansible_eth1']['ipv4']['address'] }}</hostname>
+{% if sde_srvc_ip is defined %}
+			<hostname>{{ sde_srvc_ip }}</hostname>
+{% else %}
+			<hostname>{{ hostvars[groups['svde-servers'][0]]['ansible_eth1']['ipv4']['address'] }}</hostname>
+{% endif %}
 			<realm>sandvine.com</realm>
 			<port>3869</port>
 			<bias>2</bias>
@@ -41,7 +49,11 @@
 		</peer>
 		<peer>
 			<identity>ga</identity>
+{% if sde_srvc_ip is defined %}
+		        <hostname>{{ sde_srvc_ip }}</hostname>
+{% else %}
 		        <hostname>{{ hostvars[groups['svsde-servers'][0]]['ansible_eth1']['ipv4']['address'] }}</hostname>
+{% endif %}
 		        <realm>ga.sandvine.com</realm>
 		        <port>3870</port>
 		        <bias>2</bias>

@@ -11,7 +11,9 @@ packer/centos*-tmpl
 packer_cache
 public_dir
 yum_repos
-ansible/tmp/*
+ansible/*.yml
+ansible/*.retry
+ansible/*-hosts-*
 ansible/facts_storage/*
 ansible/vagrant-run-*
 .vagrant

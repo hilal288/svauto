@@ -1,4 +1,4 @@
-heat_template_version: 2013-05-23
+heat_template_version: 2016-04-08
 
 description: >
 
@@ -13,7 +13,7 @@ description: >
   * Build Server and Development Environment
 
 
-  We have 4 Instances:
+  We have 5 Instances:
 
 
   * PTS - CentOS 7
@@ -21,6 +21,8 @@ description: >
   * SDE - CentOS 7
 
   * SPB - CentOS 6
+
+  * SVCSD - CentOS 7
 
   * Traffic Generator - Ubuntu 16.04
 
@@ -30,22 +32,22 @@ description: >
   We want to wire them as:
 
   --------|ctrl_subnet|------------- Control Network (with Internet access via router_i0)
-   |        |        |        |                                |
-  ---      ---      ---      ---                               |
-  | |      | |      | |      | |                               |
-  | |      | |      | |      | |    -------------------        |
-  | |      | |      | |      | |----|data_real_subnet1|        |
-  |D|      |S|      |S|      |S|    -------------------        |
-  |E|      |V|      |V|      |V|            |                  |
-  |V|      |S|      |S|      |P|        -----------            |
-  |O|      |P|      |D|      |T|        |Ubuntu TG|-------------
-  |P|      |B|      |E|      |S|        -----------
-  |S|      | |      | |      | |            |
-  | |      | |      | |      | |    ------------------
-  | |      | |      | |      | |----|data_int_subnet1|
-  | |      | |      | |      | |    ------------------
-  ---      ---      ---      - -
-   |        |        |        |
+   |      |      |      |      |                                |
+  ---    ---    ---    ---    ---                               |
+  | |    | |    | |    | |    | |                               |
+  | |    | |    | |    | |    | |    -------------------        |
+  | |    | |    | |    | |    | |----|data_real_subnet1|        |
+  |D|    |S|    |S|    |S|    |S|    -------------------        |
+  |E|    |V|    |V|    |V|    |V|            |                  |
+  |V|    |C|    |S|    |S|    |P|        -----------            |
+  |O|    |S|    |P|    |D|    |T|        |Ubuntu TG|-------------
+  |P|    |D|    |B|    |E|    |S|        -----------
+  |S|    | |    | |    | |    | |            |
+  | |    | |    | |    | |    | |    ------------------
+  | |    | |    | |    | |    | |----|data_int_subnet1|
+  | |    | |    | |    | |    | |    ------------------
+  ---    ---    ---    ---    - -
+   |      |      |      |      |
    -----|service_subnet|-------  <-- Service Network (not routed - no gateway)
 
 parameters:
@@ -82,6 +84,12 @@ parameters:
     label: "SPB Image (default '{{spb_image}}')"
     description: "SPB Image"
     default: "{{spb_image}}"
+
+  svcsd_image:
+    type: string
+    label: "SVCSD Image (default '{{svcsd_image}}')"
+    description: "SVCSD Image"
+    default: "{{svcsd_image}}"
 
   tg_image:
     type: string
@@ -140,6 +148,12 @@ resources:
     properties:
       floating_network: { get_param: public_network }
 
+  floating_ip_6:
+    type: OS::Neutron::FloatingIP
+    depends_on: router_i0
+    properties:
+      floating_network: { get_param: public_network }
+
   tg_ctrl_sec:
     type: OS::Neutron::SecurityGroup
     properties:
@@ -187,6 +201,29 @@ resources:
         - protocol: tcp
           port_range_min: 22
           port_range_max: 22
+
+  sde_srvc_sec:
+    type: OS::Neutron::SecurityGroup
+    properties:
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-sde-srvc-rules' } }
+      rules:
+        - protocol: icmp
+        - protocol: tcp
+          port_range_min: 1
+          port_range_max: 65535
+        - protocol: udp
+          port_range_min: 1
+          port_range_max: 65535
+
+  svcsd_ctrl_sec:
+    type: OS::Neutron::SecurityGroup
+    properties:
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-svcsd-ctrl-rules' } }
+      rules:
+        - protocol: icmp
+        - protocol: tcp
+          port_range_min: 22
+          port_range_max: 22
         - protocol: tcp
           port_range_min: 80
           port_range_max: 80
@@ -194,10 +231,10 @@ resources:
           port_range_min: 443
           port_range_max: 443
 
-  sde_srvc_sec:
+  svcsd_srvc_sec:
     type: OS::Neutron::SecurityGroup
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-sde-srvc-rules' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-svcsd-srvc-rules' } }
       rules:
         - protocol: icmp
         - protocol: tcp
@@ -266,9 +303,6 @@ resources:
       network: { get_resource: ctrl_net }
       enable_dhcp: True
       cidr: 192.168.192.0/25
-      allocation_pools:
-        - start: 192.168.192.50
-          end: 192.168.192.126
 
   service_net:
     type: OS::Neutron::Net
@@ -321,142 +355,145 @@ resources:
   spb_ctrl_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "spb-ctrl-port"]]}
+      name: { list_join: ["-", [{ get_param: "OS::stack_name" } , "spb-ctrl-port"]]}
       network: { get_resource: ctrl_net }
-      fixed_ips:
-        - ip_address: 192.168.192.10
       security_groups:
         - { get_resource: spb_ctrl_sec }
-
-  spb_floating_ip_assoc:
-    type: OS::Neutron::FloatingIPAssociation
-    properties:
-      floatingip_id: { get_resource: floating_ip_3 }
-      port_id: { get_resource: spb_ctrl_port }
 
   sde_ctrl_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "sde-ctrl-port"]]}
+      name: { list_join: ["-", [{ get_param: "OS::stack_name" } , "sde-ctrl-port"]]}
       network: { get_resource: ctrl_net }
-      fixed_ips:
-        - ip_address: 192.168.192.20
       security_groups:
         - { get_resource: sde_ctrl_sec }
 
-  sde_floating_ip_assoc:
-    type: OS::Neutron::FloatingIPAssociation
+  svcsd_ctrl_port:
+    type: OS::Neutron::Port
     properties:
-      floatingip_id: { get_resource: floating_ip_2 }
-      port_id: { get_resource: sde_ctrl_port }
+      name: { list_join: ["-", [{ get_param: "OS::stack_name" } , "svcsd-port"]]}
+      network: { get_resource: ctrl_net }
+      security_groups:
+        - { get_resource: svcsd_ctrl_sec }
 
   pts_ctrl_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "pts-ctrl-port"]]}
+      name: { list_join: ["-", [{ get_param: "OS::stack_name" } , "pts-ctrl-port"]]}
       network: { get_resource: ctrl_net }
-      fixed_ips:
-        - ip_address: 192.168.192.30
       security_groups:
         - { get_resource: pts_ctrl_sec }
-
-  pts_floating_ip_assoc:
-    type: OS::Neutron::FloatingIPAssociation
-    properties:
-      floatingip_id: { get_resource: floating_ip_1 }
-      port_id: { get_resource: pts_ctrl_port }
 
   devops_ctrl_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "devops-ctrl-port"]]}
+      name: { list_join: ["-", [{ get_param: "OS::stack_name" } , "devops-ctrl-port"]]}
       network: { get_resource: ctrl_net }
-      fixed_ips:
-        - ip_address: 192.168.192.31
       security_groups:
         - { get_resource: devops_ctrl_sec }
-
-  devops_floating_ip_assoc:
-    type: OS::Neutron::FloatingIPAssociation
-    properties:
-      floatingip_id: { get_resource: floating_ip_5 }
-      port_id: { get_resource: devops_ctrl_port }
 
   spb_srvc_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "spb-srvc-port"]]}
+      name: { list_join: ["-", [{ get_param: "OS::stack_name" } , "spb-srvc-port"]]}
       network: { get_resource: service_net }
-      fixed_ips:
-        - ip_address: 192.168.192.130
 
   sde_srvc_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "sde-srvc-port"]]}
+      name: { list_join: ["-", [{ get_param: "OS::stack_name" } , "sde-srvc-port"]]}
       network: { get_resource: service_net }
-      fixed_ips:
-       - ip_address: 192.168.192.140
- 
+
+  svcsd_srvc_port:
+    type: OS::Neutron::Port
+    properties:
+      name: { list_join: ["-", [{ get_param: "OS::stack_name" } , "svcsd-port"]]}
+      network: { get_resource: service_net }
+
   devops_srvc_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "devops-srvc-port"]]}
+      name: { list_join: ["-", [{ get_param: "OS::stack_name" } , "devops-srvc-port"]]}
       network: { get_resource: service_net }
-      fixed_ips:
-        - ip_address: 192.168.192.131
 
   pts_srvc_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "pts-srvc-port"]]}
+      name: { list_join: ["-", [{ get_param: "OS::stack_name" } , "pts-srvc-port"]]}
       network: { get_resource: service_net }
-      fixed_ips:
-        - ip_address: 192.168.192.150
 
   pts_port_int_net1:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "pts-i1-port"]]}
+      name: { list_join: ["-", [{ get_param: "OS::stack_name" } , "pts-i1-port"]]}
       network: { get_resource: data_int_net1 }
       port_security_enabled: False
 
   pts_port_sub_net1:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "pts-s1-port"]]}
+      name: { list_join: ["-", [{ get_param: "OS::stack_name" } , "pts-s1-port"]]}
       network: { get_resource: data_sub_net1 }
       port_security_enabled: False
 
   tg_ctrl_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "pts-port"]]}
+      name: { list_join: ["-", [{ get_param: "OS::stack_name" } , "pts-port"]]}
       network: { get_resource: ctrl_net }
-      fixed_ips:
-        - ip_address: 192.168.192.35
       security_groups:
         - { get_resource: tg_ctrl_sec }
-
-  tg_floating_ip_assoc:
-    type: OS::Neutron::FloatingIPAssociation
-    properties:
-      floatingip_id: { get_resource: floating_ip_4 }
-      port_id: { get_resource: tg_ctrl_port }
 
   tg_sub_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "tg_server-s1-port"]]}
+      name: { list_join: ["-", [{ get_param: "OS::stack_name" } , "tg_server-s1-port"]]}
       network: { get_resource: data_sub_net1 }
       port_security_enabled: False
 
   tg_int_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "tg_server-i1-port"]]}
+      name: { list_join: ["-", [{ get_param: "OS::stack_name" } , "tg_server-i1-port"]]}
       network: { get_resource: data_int_net1 }
       port_security_enabled: False
+
+  # Floating IPs assiciated with Neutron Ports
+  floating_ip_1:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_network }
+      port_id: { get_resource: pts_ctrl_port }
+
+  floating_ip_2:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_network }
+      port_id: { get_resource: spb_ctrl_port }
+
+  floating_ip_3:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_network }
+      port_id: { get_resource: sde_ctrl_port }
+
+  floating_ip_4:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_network }
+      port_id: { get_resource: svcsd_ctrl_port }
+
+  floating_ip_5:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_network }
+      port_id: { get_resource: tg_ctrl_port }
+
+  floating_ip_6:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_network }
+      port_id: { get_resource: devops_ctrl_port }
 
   pts_1:
     type: OS::Nova::Server
@@ -526,6 +563,28 @@ resources:
             sandvine:sandvine
           expire: False
 
+  svcsd_1:
+    type: OS::Nova::Server
+    properties:
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-svcsd-1' } }
+      key_name: { get_param: 'ssh_key' }
+      image: { get_param: 'svcsd_image' }
+      flavor: "m1.little"
+      networks:
+        - port: { get_resource: svcsd_ctrl_port }
+        - port: { get_resource: svcsd_srvc_port }
+      user_data_format: RAW
+      user_data: |
+        #cloud-config
+        system_info:
+          default_user:
+            name: "sandvine"
+        chpasswd:
+          list: |
+            root:sandvine
+            sandvine:sandvine
+          expire: False
+
   tg_1:
     type: OS::Nova::Server
     properties:
@@ -551,7 +610,7 @@ resources:
         runcmd:
         - ifdown ens4
         - ifdown ens5
-        - 'su -c "\curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/svauto-deployments.sh | bash -s -- --base-os=ubuntu16 --ansible-roles=bootstrap,grub-conf,post-cleanup --ansible-extra-vars=base_os_upgrade=yes,ubuntu_install=server,ubuntu_network_setup=yes,ubuntu_primary_interface=ens3" sandvine'
+        - 'su -c "\curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/svauto-deployments.sh | bash -s -- --base-os=ubuntu16 --ansible-playbook-builder=localhost,bootstrap,grub-conf,post-cleanup --ansible-extra-vars=base_os_upgrade=yes,ubuntu_install=server,ubuntu_network_setup=yes,ubuntu_primary_interface=ens3" sandvine'
         - rm -f /etc/network/interfaces.d/50-cloud-init.cfg
 
   devops_1:

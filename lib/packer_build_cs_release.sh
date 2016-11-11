@@ -21,6 +21,8 @@ packer_build_cs_release()
         then
                 echo
                 echo "Not requesting FTP account details on dry run! Skipping this step..."
+
+                export DRY_RUN_OPT="--dry-run"
         else
 		echo
 		echo "Enter your Sandvine's FTP (ftp.support.sandvine.com) account details:"
@@ -35,183 +37,37 @@ packer_build_cs_release()
 	fi
 
 
-        if [ "$DRY_RUN" == "yes" ]; then
-                export DRY_RUN_OPT="--dry-run"
-        fi
-
-
 	#
 	# Production ready images for being released to the public
 	#
 
 	# SDE 7.45 on CentOS 6 + Cloud Services SDE + Cloud Services Daemon (back / front)
-	./svauto.sh --image-factory --release=prod --base-os=centos6 --base-os-upgrade --product=cs-svsde --version=$SANDVINE_RELEASE --qcow2 --ova --vm-xml --sha256sum \
-		--ansible-roles=cloud-init,bootstrap,grub-conf,base-os-auto-config,centos-network-setup,centos-firewall-setup,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,sandvine-auto-config,vmware-tools,cleanrepo,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
-		--packer-max-tries=6
+	./svauto.sh --packer-builder --release=prod --base-os=centos6 --product=cs-svsde --version=$SANDVINE_RELEASE --qcow2 --ova --vm-xml --sha256sum \
+		--ansible-roles=cloud-init,bootstrap,grub-conf,base-os-auto-config,centos-network-setup,centos-firewall-setup,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,vmware-tools,cleanrepo,post-cleanup-image \
+		--packer-max-tries=3 $DRY_RUN_OPT
 
 	# SPB 6.65 on CentOS 6 + Cloud Services customizations
-	./svauto.sh --image-factory --release=prod --base-os=centos6 --base-os-upgrade --product=cs-svspb --version=$SANDVINE_RELEASE --qcow2 --ova --vm-xml --sha256sum \
-		--ansible-roles=cloud-init,bootstrap,grub-conf,base-os-auto-config,centos-network-setup,centos-firewall-setup,postgresql,svspb,svmcdtext,svreports,svcs-svspb,sandvine-auto-config,vmware-tools,cleanrepo,post-cleanup-image,power-cycle $DRY_RUN_OPT --operation=cloud-services \
-		--packer-max-tries=6
+	./svauto.sh --packer-builder --release=prod --base-os=centos6 --product=cs-svspb --version=$SANDVINE_RELEASE --qcow2 --ova --vm-xml --sha256sum \
+		--ansible-roles=cloud-init,bootstrap,grub-conf,base-os-auto-config,centos-network-setup,centos-firewall-setup,postgresql,svspb,svmcdtext,svreports,svcs-svspb,vmware-tools,cleanrepo,post-cleanup-image,power-cycle \
+		--packer-max-tries=3 $DRY_RUN_OPT
 
 	# PTS 7.35 on CentOS 7 + Cloud Services customizations
-	./svauto.sh --image-factory --release=prod --base-os=centos7 --base-os-upgrade --product=cs-svpts --version=$SANDVINE_RELEASE --qcow2 --ova --vm-xml --sha256sum \
-		--ansible-roles=cloud-init,bootstrap,grub-conf,udev-rules,base-os-auto-config,centos-network-setup,centos-firewall-setup,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config,vmware-tools,cleanrepo,post-cleanup-image $DRY_RUN_OPT --operation=cloud-services \
-		--lock-el7-kernel-upgrade --packer-max-tries=6
+	./svauto.sh --packer-builder --release=prod --base-os=centos7 --product=cs-svpts --version=$SANDVINE_RELEASE --qcow2 --ova --vm-xml --sha256sum \
+		--ansible-roles=cloud-init,bootstrap,grub-conf,udev-rules,base-os-auto-config,centos-network-setup,centos-firewall-setup,svpts,svusagemanagementpts,svcs-svpts,vmware-tools,cleanrepo,post-cleanup-image \
+		--lock-el7-kernel-upgrade --packer-max-tries=3 $DRY_RUN_OPT
 
 
-	if [ "$HEAT_TEMPLATES_CS" == "yes" ]
-	then
+        ./svauto.sh --heat-templates=cs-prod
 
-                if [ "$DRY_RUN" == "yes" ]
-                then
+        ./svauto.sh --libvirt-files=cs-prod
 
-                        echo
-                        echo "Not copying Heat Templates! Skipping this step..."
+        ./svauto.sh --installation-helper=cs-prod
 
-                else
+        ./svauto.sh --move2webroot=cs-prod
 
-			echo
-			echo "Copying Cloud Services Heat Templates for release into tmp/cs-rel subdirectory..."
+        ./svauto.sh --update-web-dir-sums
 
-			cp misc/os-heat-templates/sandvine-stack-0.1* tmp/cs-rel
-			cp misc/os-heat-templates/sandvine-stack-nubo-0.1* tmp/cs-rel
+        ./svauto.sh --update-web-dir-symlink
 
-			sed -i -e 's/{{pts_image}}/cs-svpts-'$SANDVINE_RELEASE'-centos7-amd64/g' tmp/cs-rel/*.yaml
-			sed -i -e 's/{{sde_image}}/cs-svsde-'$SANDVINE_RELEASE'-centos7-amd64/g' tmp/cs-rel/*.yaml
-			sed -i -e 's/{{spb_image}}/cs-svspb-'$SANDVINE_RELEASE'-centos6-amd64/g' tmp/cs-rel/*.yaml
-			#sed -i -e 's/{{csd_image}}/cs-svcsd-'$SANDVINE_RELEASE'-centos6-amd64/g' tmp/cs-rel/*.yaml
-
-		fi
-
-	fi
-
-
-	if [ "$LIBVIRT_FILES" == "yes" ]
-	then
-
-                if [ "$DRY_RUN" == "yes" ]
-                then
-
-                        echo
-                        echo "Not copying Libvirt files! Skipping this step..."
-
-                else
-
-			echo
-			echo "Copying Libvirt files for release into tmp/cs-rel subdirectory..."
-
-			cp misc/libvirt/* tmp/cs-rel/
-
-			find packer/build* -name "*.xml" -exec cp {} tmp/cs-rel/ \;
-
-			sed -i -e 's/{{sde_image}}/cs-svsde-'$SANDVINE_RELEASE'-centos7-amd64/g' tmp/cs-rel/libvirt-qemu.hook
-
-		fi
-
-	fi
-
-
-	if [ "$MOVE2WEBROOT" == "yes" ]
-	then
-
-                if [ "$DRY_RUN" == "yes" ]
-                then
-                        echo
-                        echo "Not moving to web root! Skipping this step..."
-                else
-
-			echo
-			echo "Moving all images created during this build, to the Web Root."
-			echo "Also, doing some clean ups, to free the way for subsequent builds..."
-	
-			find packer/build* -name "*.raw" -exec rm -f {} \;
-	
-			find packer/build* -name "*.sha256" -exec mv {} $WEB_ROOT_CS_RELEASE \;
-			find packer/build* -name "*.xml" -exec mv {} $WEB_ROOT_CS_RELEASE \;
-			find packer/build* -name "*.qcow2c" -exec mv {} $WEB_ROOT_CS_RELEASE \;
-			find packer/build* -name "*.vmdk" -exec mv {} $WEB_ROOT_CS_RELEASE \;
-			find packer/build* -name "*.vhd*" -exec mv {} $WEB_ROOT_CS_RELEASE \;
-			find packer/build* -name "*.ova" -exec mv {} $WEB_ROOT_CS_RELEASE \;
-
-
-			echo
-			echo "Merging SHA256SUMS files together..."
-
-			cd $WEB_ROOT_CS_RELEASE
-
-			cat *.sha256 > SHA256SUMS
-			rm -f *.sha256
-
-			cd - &>/dev/null
-
-
-			if [ "$HEAT_TEMPLATES_CS" == "yes" ]
-			then
-
-				echo
-				echo "Copying Cloud Services Heat Templates for release into public web subdirectory..."
-
-				cp tmp/cs-rel/sandvine-stack-0.1-three-1.yaml $WEB_ROOT_CS_RELEASE/cloudservices-stack-$SANDVINE_RELEASE-1.yaml
-				cp tmp/cs-rel/sandvine-stack-0.1-three-flat-1.yaml $WEB_ROOT_CS_RELEASE/cloudservices-stack-$SANDVINE_RELEASE-flat-1.yaml
-				cp tmp/cs-rel/sandvine-stack-0.1-three-vlan-1.yaml $WEB_ROOT_CS_RELEASE/cloudservices-stack-$SANDVINE_RELEASE-vlan-1.yaml
-				cp tmp/cs-rel/sandvine-stack-0.1-three-rad-1.yaml $WEB_ROOT_CS_RELEASE/cloudservices-stack-$SANDVINE_RELEASE-rad-1.yaml
-				cp tmp/cs-rel/sandvine-stack-nubo-0.1-stock-gui-1.yaml $WEB_ROOT_CS_RELEASE/cloudservices-stack-nubo-$SANDVINE_RELEASE-stock-gui-1.yaml
-				#cp tmp/cs-rel/sandvine-stack-0.1-four-1.yaml $WEB_ROOT_CS_RELEASE/cloudservices-stack-$SANDVINE_RELEASE-micro-1.yaml
-
-			fi
-
-
-			if [ "$INSTALLATION_HELPER" == "yes" ]
-			then
-
-				echo
-				echo "Creating Cloud Services installation helper script..."
-
-				cp misc/self-extract/* tmp/cs-rel/
-
-				cd tmp/cs-rel/
-
-				mv sandvine-stack-0.1-three-1.yaml cloudservices-stack-$SANDVINE_RELEASE-1.yaml
-				mv sandvine-stack-0.1-three-flat-1.yaml cloudservices-stack-$SANDVINE_RELEASE-flat-1.yaml
-				mv sandvine-stack-0.1-three-vlan-1.yaml cloudservices-stack-$SANDVINE_RELEASE-vlan-1.yaml
-				mv sandvine-stack-0.1-three-rad-1.yaml cloudservices-stack-$SANDVINE_RELEASE-rad-1.yaml
-				mv sandvine-stack-nubo-0.1-stock-gui-1.yaml cloudservices-stack-nubo-$SANDVINE_RELEASE-stock-gui-1.yaml
-				#mv sandvine-stack-0.1-four-1.yaml cloudservices-stack-$SANDVINE_RELEASE-four-1.yaml
-
-				rm sandvine-stack-0.1-four-1.yaml
-
-				mv libvirt-qemu.hook cs-svsde-$SANDVINE_RELEASE-centos7-amd64.hook
-
-				tar -cf sandvine-files.tar *.yaml *.hook *.xml
-
-				cat extract.sh sandvine-files.tar > sandvine-helper.sh_tail
-
-				sed -i -e 's/{{sandvine_release}}/'$SANDVINE_RELEASE'/g' sandvine-helper.sh_template
-
-				sed -i -e 's/{{svpts_image_name}}/'cs-svpts-\\$RELEASE-centos7-amd64'/g' sandvine-helper.sh_template
-				sed -i -e 's/{{svsde_image_name}}/'cs-svsde-\\$RELEASE-centos7-amd64'/g' sandvine-helper.sh_template
-				sed -i -e 's/{{svspb_image_name}}/'cs-svspb-\\$RELEASE-centos6-amd64'/g' sandvine-helper.sh_template
-
-				sed -i -e 's/{{packages_server}}/'$PUBLIC_PACKAGES_SERVER'/g' sandvine-helper.sh_template
-				sed -i -e 's/{{packages_path}}/release\/CloudServices\/\$RELEASE/g' sandvine-helper.sh_template
-
-				cat sandvine-helper.sh_template sandvine-helper.sh_tail > cloudservices-helper.sh
-
-				chmod +x cloudservices-helper.sh
-
-				cd - &>/dev/null
-
-				cp tmp/cs-rel/cloudservices-helper.sh $WEB_ROOT_CS_RELEASE
-
-			fi
-
-
-			# Free the way for subsequent builds:
-			rm -rf packer/build*
-
-		fi
-
-	fi
 
 }

@@ -21,5 +21,8 @@
         group=root
         mode=0755
 
-- name: centos7 - service "etc-hosts-fix" enabled
-  service: name=etc-hosts-fix state=restarted enabled=yes
+- name: centos7 - service enabling etc-hosts-fix
+  file: src=/etc/init.d/etc-hosts-fix
+        dest=/etc/rc3.d/S56etc-hosts-fix
+        state=link
+        force=yes

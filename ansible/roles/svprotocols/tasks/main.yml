@@ -12,26 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: freebsd8 - copy FreeBSD rc.conf.local file
-  copy: src=rc.conf.local
-        dest=/etc/rc.conf.local
-        owner=root
-        group=wheel
-        mode=0600
-        backup=yes
 
-
-- name: freebsd8 - copy "fetchlabify" file
-  copy: src=fetchlabify
-        dest=/etc/rc.d/fetchlabify
-        owner=root
-        group=wheel
-        mode=0755
-
-
-- name: freebsd8 - copy root's Bash RC
-  copy: src=_bashrc-root
-        dest=/root/.bashrc
-        owner=root
-        group=wheel
-        mode=0640
+- name: centos - include common book
+  include: centos-common.yml
+  when: base_os == 'centos7' or base_os == 'centos6'

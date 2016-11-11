@@ -17,11 +17,6 @@
 packer_build_sandvine_lab()
 {
 
-	PTS_VERSION="7.35.0032"
-	SDE_VERSION="7.50.0132"
-	SPB_VERSION="6.65.0078"
-
-
 	if [ "$DRY_RUN" == "yes" ]; then
 		export DRY_RUN_OPT="--dry-run"
 	fi
@@ -32,111 +27,41 @@ packer_build_sandvine_lab()
 	#
 
 	# Linux SVPTS 7.35 on CentOS 7
-	./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=svpts --version=$PTS_VERSION --product-variant=vpl-1 --operation=sandvine --qcow2 --vmdk --vhd --vm-xml --sha256sum \
-		--ansible-roles=cloud-init,bootstrap,grub-conf,setup-default-interface,nginx,svpts,vmware-tools,post-cleanup-image --static-repo --versioned-repo \
+	./svauto.sh --packer-builder --base-os=centos7 --release=dev --product=svpts --version=$PTS_VERSION --product-variant=vpl-1 --qcow2 --vmdk --vhd --vm-xml --sha256sum \
+		--ansible-playbook-builder=svpts-servers,cloud-init,bootstrap:base_os_upgrade=yes:sandvine_main_yum_repo=yes:packages_server=$SVAUTO_MAIN_HOST:release_code_name=$RELEASE_CODE_NAME,grub-conf,setup-default-interface,nginx,svpts:pts_version=$PTS_VERSION:static_packages_server=$STATIC_PACKAGES_SERVER:static_repo=true:versioned_repo=true,svprotocols:pts_protocols_version=$PTS_PROTOCOLS:static_packages_server=$STATIC_PACKAGES_SERVER:static_repo=true:versioned_repo=true,vmware-tools,labify:setup_server=svpts,post-cleanup-image \
 		--packer-max-tries=3 $DRY_RUN_OPT
 
 
 	# Linux SVPTS 7.35 on CentOS 6 with Linux 3.18 from Xen 4.6 official repo
-	./svauto.sh --image-factory --release=dev --base-os=centos6 --base-os-upgrade --product=svpts --version=$PTS_VERSION --product-variant=vpl-1 --operation=sandvine --qcow2 --vmdk --vhd --vm-xml --sha256sum \
-		--ansible-roles=centos-xen,cloud-init,bootstrap,grub-conf,nginx,svpts,vmware-tools,post-cleanup-image --static-repo --versioned-repo \
+	./svauto.sh --packer-builder --base-os=centos6 --release=dev --product=svpts --version=$PTS_VERSION --product-variant=vpl-1 --qcow2 --vmdk --vhd --vm-xml --sha256sum \
+		--ansible-playbook-builder=svpts-servers,centos-xen,cloud-init,bootstrap:base_os_upgrade=yes:sandvine_main_yum_repo=yes:packages_server=$SVAUTO_MAIN_HOST:release_code_name=$RELEASE_CODE_NAME,grub-conf,nginx,svpts:pts_version=$PTS_VERSION:static_packages_server=$STATIC_PACKAGES_SERVER:static_repo=true:versioned_repo=true,svprotocols:pts_protocols_version=$PTS_PROTOCOLS:static_packages_server=$STATIC_PACKAGES_SERVER:static_repo=true:versioned_repo=true,labify:setup_server=svpts,vmware-tools,post-cleanup-image \
 		--packer-max-tries=3 $DRY_RUN_OPT
 
 
 	# Linux SVSDE 7.50 on CentOS 6
-	./svauto.sh --image-factory --release=dev --base-os=centos6 --base-os-upgrade --product=svsde --version=$SDE_VERSION --product-variant=vpl-1 --operation=sandvine --qcow2 --vmdk --vhd --vm-xml --sha256sum \
-		--ansible-roles=cloud-init,bootstrap,grub-conf,nginx,svsde,vmware-tools,post-cleanup-image --static-repo --versioned-repo \
+	./svauto.sh --packer-builder --base-os=centos6 --release=dev --product=svsde --version=$SDE_VERSION --product-variant=vpl-1 --qcow2 --vmdk --vhd --vm-xml --sha256sum \
+		--ansible-playbook-builder=svsde-servers,cloud-init,bootstrap:base_os_upgrade=yes,grub-conf,nginx,svsde:sde_version=$SDE_VERSION:static_packages_server=$STATIC_PACKAGES_SERVER:static_repo=true:versioned_repo=true,labify,vmware-tools,post-cleanup-image \
 		--packer-max-tries=3 $DRY_RUN_OPT
 
 
 	# Linux SVSDE 7.50 on CentOS 7
-	./svauto.sh --image-factory --release=dev --base-os=centos7 --base-os-upgrade --product=svsde --version=$SDE_VERSION --product-variant=vpl-1 --operation=sandvine --qcow2 --vmd --vhd --vm-xml --sha256sum \
-		--ansible-roles=cloud-init,bootstrap,grub-conf,setup-default-interface,nginx,svsde,vmware-tools,post-cleanup-image --static-repo --versioned-repo \
+	./svauto.sh --packer-builder --base-os=centos7 --release=dev --product=svsde --version=$SDE_VERSION --product-variant=vpl-1 --qcow2 --vmd --vhd --vm-xml --sha256sum \
+		--ansible-playbook-builder=svsde-servers,cloud-init,bootstrap:base_os_upgrade=yes,grub-conf,setup-default-interface,nginx,svsde:sde_version=$SDE_VERSION:static_packages_server=$STATIC_PACKAGES_SERVER:static_repo=true:versioned_repo=true,labify,vmware-tools,post-cleanup-image \
 		--packer-max-tries=3 $DRY_RUN_OPT
 
 
 	# Linux SVSPB 6.65 on CentOS 6
-	./svauto.sh --image-factory --release=dev --base-os=centos6 --base-os-upgrade --product=svspb --version=$SPB_VERSION --product-variant=vpl-1 --operation=sandvine --qcow2 --vmd --vhd --vm-xml --sha256sum \
-		--ansible-roles=cloud-init,bootstrap,grub-conf,postgresql,svspb,vmware-tools,post-cleanup-image,power-cycle --static-repo --versioned-repo \
+	./svauto.sh --packer-builder --base-os=centos6 --release=dev --product=svspb --version=$SPB_VERSION --product-variant=vpl-1 --qcow2 --vmd --vhd --vm-xml --sha256sum \
+		--ansible-playbook-builder=svspb-servers,cloud-init,bootstrap:base_os_upgrade=yes,grub-conf,postgresql,svspb:spb_version=$SPB_VERSION:static_packages_server=$STATIC_PACKAGES_SERVER:static_repo=true:versioned_repo=true,labify,vmware-tools,post-cleanup-image:setup_server=svspb,power-cycle \
 		--packer-max-tries=3 $DRY_RUN_OPT
 
 
-	if [ "$LIBVIRT_FILES" == "yes" ]
-	then
+	./svauto.sh --libvirt-files=sandvine-dev-lab
 
-                if [ "$DRY_RUN" == "yes" ]
-                then
+	./svauto.sh --move2webroot=sandvine-dev-lab
 
-                        echo
-                        echo "Not copying Libvirt files! Skipping this step..."
+        ./svauto.sh --update-web-dir-sums
 
-                else
-
-			echo
-			echo "Copying Libvirt files for release into tmp/cs subdirectory..."
-
-			cp misc/libvirt/* tmp/sv/
-
-			find packer/build* -name "*.xml" -exec cp {} tmp/sv/ \;
-
-			sed -i -e 's/{{sde_image}}/svsde-'$SDE_VERSION'-vpl-1-centos7-amd64/g' tmp/sv/libvirt-qemu.hook
-
-		fi
-
-	fi
-
-
-	if [ "$MOVE2WEBROOT" == "yes" ]
-	then
-
-                if [ "$DRY_RUN" == "yes" ]
-                then
-                        echo
-                        echo "Not moving to web root! Skipping this step..."
-                else
-
-			echo
-			echo "Moving all images created during this build, to the Web Root."
-			echo "Also, doing some clean ups, to free the way for subsequent builds..."
-
-
-			find packer/build* -name "*.raw" -exec rm -f {} \;
-
-			find packer/build* -name "*.sha256" -exec mv {} $WEB_ROOT_STOCK_LAB \;
-			find packer/build* -name "*.xml" -exec mv {} $WEB_ROOT_STOCK_LAB \;
-			find packer/build* -name "*.qcow2c" -exec mv {} $WEB_ROOT_STOCK_LAB \;
-			find packer/build* -name "*.vmdk" -exec mv {} $WEB_ROOT_STOCK_LAB \;
-			find packer/build* -name "*.vhd*" -exec mv {} $WEB_ROOT_STOCK_LAB \;
-			find packer/build* -name "*.ova" -exec mv {} $WEB_ROOT_STOCK_LAB \;
-
-
-			echo
-			echo "Merging SHA256SUMS files together..."
-
-			cd $WEB_ROOT_STOCK_LAB
-
-			cat *.sha256 > SHA256SUMS
-			rm -f *.sha256
-
-			cd - &>/dev/null
-
-
-			echo
-			echo "Updating symbolic link \"current\" to point to \"$BUILD_DATE\"..."
-
-			cd $WEB_ROOT_STOCK_MAIN
-
-			rm -f current
-			ln -s $BUILD_DATE current
-
-			cd - &>/dev/null
-
-
-			# Free the way for subsequent builds:
-			rm -rf packer/build*
-
-		fi
-
-	fi
+        ./svauto.sh --update-web-dir-symlink
 
 }

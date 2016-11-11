@@ -12,10 +12,10 @@ classifier "LinkData" type string
 if true then set Classifier.LinkData = "{{ classifier_linkdata }}"
 {% endif %}
 
-{% if setup_sub_option == 'default' %}
+{% if (setup_mode == 'cloud-services' and setup_sub_option == 'default') %}
 include "/usr/local/sandvine/etc/policy.pts.cs.main.conf"
 {% endif %}
 
-{% if setup_sub_option == 'mdm' %}
+{% if (setup_mode == 'cloud-services' and setup_sub_option == 'mdm') %}
 include "/usr/local/sandvine/etc/policy.pts.cs.mobile_main.conf"
 {% endif %}

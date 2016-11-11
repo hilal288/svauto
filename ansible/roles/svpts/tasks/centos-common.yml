@@ -20,14 +20,6 @@
             mode=0644
 
 
-- name: centos - copy Sandvine SVPTS Protocols repository
-  template: src=centos-common/Sandvine-SVPROTO.repo.j2
-            dest=/etc/yum.repos.d/Sandvine-SVPROTO.repo
-            owner=root
-            group=root
-            mode=0644
-
-
 - name: centos - creating /d2 subdirectory
   file: path=/d2
         state=directory

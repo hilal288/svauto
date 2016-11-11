@@ -16,6 +16,11 @@
   include: centos7.yml
   when: base_os == 'centos7'
 
+
 - name: centos6 - include custom book
   include: centos6.yml
   when: base_os == 'centos6'
+
+
+- name: centos - re-read facts after configuring network interfaces
+  setup: filter=ansible_*

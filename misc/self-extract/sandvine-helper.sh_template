@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# TODO:
+# User types something like: "Deploy Sandvine on KVM", type user/pass, bingo!
 
 export LC_ALL=C
 
@@ -79,12 +81,6 @@ case $i in
 		shift
 		;;
 
-	--sudo-without-pass)
-
-		SUDO_SETUP="yes"
-		shift
-		;;
-
 	--openstack-install)
 
 		OS_INSTALL="yes"
@@ -98,56 +94,11 @@ case $i in
                 shift
                 ;;
 
-	--is-hostname-ok)
-
-		IS_HOSTNAME_OK="yes"
-		shift
-		;;
-
 esac
 done
 
 
-if [ "$IS_HOSTNAME_OK" == "yes" ]
-then
-
-	HOST_NAME=$(hostname)
-	FQDN=$(hostname -f)
-	DOMAIN=$(hostname -d)
-
-
-	echo
-	echo "The detected local configuration are:"
-	echo
-	echo "Hostname:" $HOST_NAME
-	echo "FQDN:" $FQDN
-	echo "Domain:" $DOMAIN
-
-
-	# If the hostname and hosts file aren't configured according, abort.
-	if [ -z $HOST_NAME ]; then
-	        echo "Hostname not found... Configure the file /etc/hostname with your hostname. ABORTING!"
-	        exit 1
-	fi
-
-	if [ -z $DOMAIN ]; then
-	        echo "Domain not found... Configure the file /etc/hosts with your \"IP + FQDN + HOSTNAME\". ABORTING!"
-	        exit 1
-	fi
-
-	if [ -z $FQDN ]; then
-	        echo "FQDN not found... Configure your /etc/hosts according. ABORTING!"
-	        exit 1
-	fi
-
-	echo
-	echo "The /etc/hostname and /etc/hosts files meet configuration requirements."
-
-	exit 0
-
-fi
-
-
+# TODO: Do this via Ansible!
 if [ "$LIBVIRT_UNDEFINE" == "YES" ]
 then
 
@@ -190,6 +141,7 @@ then
 fi
 
 
+# TODO: Do this via Ansible!
 if [ "$DOWNLOAD_IMAGES" == "yes" ]
 then
 
@@ -213,6 +165,7 @@ then
 fi
 
 
+# TODO: Do this via Ansible!
 if [ "$LIBVIRT_INSTALL_IMAGES" == "yes" ]
 then
 
@@ -245,6 +198,7 @@ then
 fi
 
 
+# TODO: Do this via Ansible!
 if [ "$OS_IMAGE_UPLOAD" == "yes" ]
 then
 
@@ -264,7 +218,7 @@ then
 	then
 
 		echo
-		echo "Uploading Cloud Services $RELEASE QCoWs into Glance as public images..."
+		echo "Uploading Sandvine $RELEASE QCoWs into Glance as public images..."
 
 		echo "$SVSDE"
 		glance image-create --file $SVSDE-disk1.qcow2c --is-public true --disk-format qcow2 --container-format bare --name "$SVSDE"
@@ -276,10 +230,10 @@ then
 		glance image-create --file $SVPTS-disk1.qcow2c --is-public true --disk-format qcow2 --container-format bare --name "$SVPTS"
 
 		echo
-		echo "You can launch a Cloud Services Stack now! For example, by running:"
+		echo "You can launch a Sandvine Stack now! For example, by running:"
 		echo
 		echo "source ~/demo-openrc.sh # Assuming that you have an OpenStack Project called \"demo\"..."
-		echo "heat stack-create cs-stack-1 -f ~/cs/cloudservices-stack-$RELEASE-1.yaml"
+		echo "openstack stack create stack-1 -f ~/sv/sandvine-stack-$RELEASE-1.yaml"
 
 	else
 
@@ -296,26 +250,12 @@ then
 		glance image-create --file $SVPTS-disk1.qcow2c --disk-format qcow2 --container-format bare --name "$SVPTS"
 
 		echo
-		echo "You can launch a Cloud Services Stack now! For example, by running:"
+		echo "You can launch a Sandvine Stack now! For example, by running:"
 		echo
 		echo "source ~/"$OS_PROJECT"-openrc.sh"
-		echo "heat stack-create cs-stack-1 -f ~/cs/cloudservices-stack-$RELEASE-1.yaml"
+		echo "openstack stack create stack-1 -f ~/sv/sandvine-stack-$RELEASE-1.yaml"
 
 	fi
-
-	exit 0
-
-fi
-
-
-if [ "$SUDO_SETUP" == "yes" ]
-then
-
-	echo
-	echo "Configuring sudores, so, members of group \"sudo\" will not require to type passwords."
-	echo "You'll need to type your password now (you need to be member of group sudo already):"
-
-	sudo sed -i -e 's/%sudo.*/%sudo ALL=NOPASSWD:ALL/g' /etc/sudoers
 
 	exit 0
 
@@ -328,7 +268,7 @@ then
 	echo
         echo "Installing OpenStack Mitaka (all-in-one) on Ubuntu Xenial with SVAuto:"
 
-	bash <(curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/os-install-lbr.sh)
+	bash <(curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/os-install.sh)
 
 	exit 0
 
@@ -362,6 +302,7 @@ case $KVM_INSTALL in
 esac
 
 
+# TODO: Do this via Ansible!
 if [ "$LIBVIRT_DEFINE" == "yes" ]
 then
 

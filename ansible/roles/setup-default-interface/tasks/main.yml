@@ -18,7 +18,6 @@
         owner=root
         group=root
         mode=0755
-  when: centos7_vmware_net_hack == 'yes'
 
 - name: centos7 - copy Setup Default Interface systemd service
   copy: src=centos7/setup-default-interface.service
@@ -26,8 +25,6 @@
         owner=root
         group=root
         mode=0755
-  when: centos7_vmware_net_hack == 'yes'
 
 - name: centos7 - service Setup Default Interface
   service: name=setup-default-interface enabled=yes
-  when: centos7_vmware_net_hack == 'yes'

@@ -19,179 +19,122 @@
 ansible_playbook_builder()
 {
 
-	for i in "$@"; do
+	ANSIBLE_COUNTER_1=1
 
-		case $i in
 
-		        --ansible-remote-user=*)
+	for i in "$@"
+	do
+	case $i in
 
-		                ANSIBLE_REMOTE_USER="${i#*=}"
-		                shift
-		                ;;
 
-		        --ansible-hosts=*)
+	        --ansible-remote-user=*)
 
-		                ANSIBLE_HOSTS="${i#*=}"
-		                shift
-		                ;;
+	                ANSIBLE_REMOTE_USER="${i#*=}"
+	                shift
+			;;
 
-		        --roles=*)
+		--ansible-playbook-builder=*)
 
-		                ALL_ROLES="${i#*=}"
-		                ROLES="$( echo $ALL_ROLES | sed s/,/\ /g )"
-		                shift
-		                ;;
+			ANSIBLE_HOST_ENTRY="${i#*=}"
 
-		        --get-facts)
+			for W in $ANSIBLE_HOST_ENTRY; do
 
-		                GET_FACTS="yes"
-		                shift
-		                ;;
+				declare "ANSIBLE_HOST_$ANSIBLE_COUNTER_1"="$W"
 
-		esac
+				(( ANSIBLE_COUNTER_1++ ))
 
+			done
+
+			shift
+			;;
+
+	esac
 	done
 
 
-	if [ "$GET_FACTS" == "yes" ]
-	then
-		echo ""
-		echo "- hosts: all"
-		echo "  tasks: [ ]"
+	HOSTS_TOTAL=$[$ANSIBLE_COUNTER_1 -1]
 
-		unset GET_FACTS
-	fi
+	COUNTER_2=1
 
 
-	echo ""
-	echo "- hosts: $ANSIBLE_HOSTS"
-	echo "  user: $ANSIBLE_REMOTE_USER"
-	echo "  become: yes"
-	echo "  roles:"
+	while [ $COUNTER_2 -le $HOSTS_TOTAL ] || [ "$ANSIBLE_FORCE_PLAYBOOK_BUILD" == "yes" ]
+	do
+
+		ITEM=1
+
+		for i in $(eval echo "\$ANSIBLE_HOST_${COUNTER_2}" | sed "s/,/ /g")
+		do
+
+			if [ $ITEM == 1 ]; then
+
+				declare "ANSIBLE_HOST_GROUP_$COUNTER_2"=$(echo "$i")
+
+				echo ""
+				eval echo "- hosts: \$ANSIBLE_HOST_GROUP_$COUNTER_2"
+				echo "  user: $ANSIBLE_REMOTE_USER"
+				echo "  become: yes"
+				echo "  roles:"
+
+			fi
+
+			SUB_ITEM=1
+
+			if [[ $i == *:* ]]; then
+
+				for p in $(echo $i | sed "s/:/ /g")
+				do
+
+					if [ $SUB_ITEM == 1 ]; then
+
+						declare "ROLE_NAME_$COUNTER_2"=$(echo "$p")
+
+						(( SUB_ITEM++ ))
+
+						continue
+
+					fi
+
+					declare "ROLE_PARAM_NAME_$COUNTER_2_$SUB_ITEM"=$(echo $p | cut -d = -f 1)
+					declare "ROLE_PARAM_VALUE_$COUNTER_2_$SUB_ITEM"=$(echo $p | cut -d = -f 2)
+
+					(( SUB_ITEM++ ))
+
+				done
+
+				PARAMS_TOTAL=$[$SUB_ITEM -1]
+
+				COUNTER_3=2
 
 
-	for Y in $ROLES; do
+				eval echo -n "\ \ - { role: \$ROLE_NAME_$COUNTER_2,\ "
 
-		if [ "$Y" == "sandvine-auto-config" ];
-		then
+				while [ $COUNTER_3 -le $PARAMS_TOTAL ]
+				do
 
-			SANDVINE_AUTO_CONFIG="yes"
+					eval echo -n "\$ROLE_PARAM_NAME_$COUNTER_2_$COUNTER_3: \'\$ROLE_PARAM_VALUE_$COUNTER_2_$COUNTER_3\'"
 
-		fi
+					if [ $COUNTER_3 -ne $PARAMS_TOTAL ]; then echo -n ", "; fi
 
-	done
+					(( COUNTER_3++ ))
 
+				done
 
-	for Y in $ROLES; do
+				echo " }"
 
-		if [ "$Y" != "sandvine-auto-config" ]; then
-			echo "  - $Y"
-		fi
+			else
 
-	done
+				if [ $ITEM -ne 1 ]; then echo "  - $i" ; fi
 
+			fi
 
-	if [ "$SANDVINE_AUTO_CONFIG" == "yes" ] && [ "$CONFIG_ONLY_MODE" == "yes" ]
-	then
-
-		for Y in $ANSIBLE_HOSTS; do
-
-			case $Y in
-
-				svpts-servers)
-					echo "  - { role: sandvine-auto-config, setup_server: 'svpts' }"
-					;;
-
-				svsde-servers)
-					echo "  - { role: sandvine-auto-config, setup_server: 'svsde' }"
-					;;
-
-				svspb-servers)
-					echo "  - { role: sandvine-auto-config, setup_server: 'svspb' }"
-					;;
-
-				svnda-servers)
-					echo "  - { role: sandvine-auto-config, setup_server: 'svnda' }"
-					;;
-
-				svtse-servers)
-					echo "  - { role: sandvine-auto-config, setup_server: 'svtse' }"
-					;;
-
-				svtcpa-servers)
-					echo "  - { role: sandvine-auto-config, setup_server: 'svtcpa' }"
-					;;
-
-			esac
+			(( ITEM++ ))
 
 		done
 
-	else
+		(( COUNTER_2++ ))
 
-		for X in $ROLES; do
+		if [ "$ANSIBLE_FORCE_PLAYBOOK_BUILD" == "yes" ]; then break; fi
 
-			case $X in
-
-				svpts)
-
-					if [ "$SANDVINE_AUTO_CONFIG" == "yes" ];
-					then
-						echo "  - { role: sandvine-auto-config, setup_server: 'svpts' }"
-					fi
-					;;
-
-				svsde)
-
-					if [ "$SANDVINE_AUTO_CONFIG" == "yes" ];
-					then
-						echo "  - { role: sandvine-auto-config, setup_server: 'svsde' }"
-					fi
-					;;
-
-				svspb)
-
-					if [ "$SANDVINE_AUTO_CONFIG" == "yes" ];
-					then
-						echo "  - { role: sandvine-auto-config, setup_server: 'svspb' }"
-					fi
-					;;
-
-				svnda)
-
-					if [ "$SANDVINE_AUTO_CONFIG" == "yes" ];
-					then
-						echo "  - { role: sandvine-auto-config, setup_server: 'svnda' }"
-					fi
-					;;
-
-				svtse)
-
-					if [ "$SANDVINE_AUTO_CONFIG" == "yes" ];
-					then
-						echo "  - { role: sandvine-auto-config, setup_server: 'svtse' }"
-					fi
-					;;
-
-				svtcpa)
-
-					if [ "$SANDVINE_AUTO_CONFIG" == "yes" ];
-					then
-						echo "  - { role: sandvine-auto-config, setup_server: 'svtcpa' }"
-					fi
-					;;
-
-				svcs)
-
-					if [ "$SANDVINE_AUTO_CONFIG" == "yes" ];
-					then
-						echo "  - { role: sandvine-auto-config, setup_server: 'svcs' }"
-					fi
-					;;
-
-			esac
-
-		done
-
-	fi
+	done
 
 }

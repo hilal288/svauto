@@ -71,8 +71,8 @@ packages_server: "archive.mydomain.com"
 static_packages_server: "archive.mydomain.com"
 
 # Sandvine's Release Code Name:
-release_code_name: "niagara"
-release_code_number: "16.06"
+release_code_name: "yukon"
+release_code_number: "17.02"
 
 # Sandvine Cluster Name:
 cluster_name: "sandvine"
@@ -101,7 +101,7 @@ activate_eth1: "yes"
 
 # Lock CentOS 7 Kernel upgrade? This is a DPDK RPM package bug workaround.
 lock_el7_kernel_upgrade: "no"
-el7_kernel_version: "3.10.0-327.36.2.el7.x86_64"
+el7_kernel_version: "3.10.0-327.36.3.el7.x86_64"
 
 # Use static, non-upgradable, old fashion, Yum repositories:
 static_repo: "false"
@@ -117,6 +117,7 @@ svnda_install_addons: 'no'
 
 # Products and versions
 pts_version: "7.20"
+pts_protocols_version: "16.09.2230"
 sde_version: "7.30"
 spb_version: "6.60"
 csd_version: "7.50"
@@ -142,6 +143,10 @@ setup_sub_option: "null"
 # The PTS License Server
 license_server: "licenser-server.placeholder.com"
 
+# Cloud Services default options
+google_api_key: "none"
+
+
 #
 # Cloud Services Mobile Data Management options
 #
@@ -155,26 +160,41 @@ flow_is_application: "\"dns\", \"icmp\", \"snmp\", \"ssh\", \"bootp\", \"radius\
 
 rec_gen_time_interval: "30seconds"
 
-quota_manager_report_thresholds: "25%,50%,75%,100%"
-quota_manager_event_thresholds: "25%,50%,75%,100%"
+mdmQMGroup:
+    - { name: "NoQuota", default: "NoQuota1" }
+    - { name: "Basic", default: "Basic1" }
 
-quota_internet_basic_1: "1GB"
-quota_internet_basic_2: "2GB"
-quota_internet_basic_3: "3GB"
-
-quota_intranet_basic_1: "10GB"
-quota_intranet_basic_2: "20GB"
-quota_intranet_basic_3: "30GB"
-
-quota_roaming_basic_1: "100MB"
-quota_roaming_basic_2: "200MB"
-quota_roaming_basic_3: "300MB"
-
-quota_shared_internet: "100GB"
-quota_shared_intranet: "1000GB"
-quota_shared_roaming: "1GB"
-
-google_api_key: "none"
+mdmQM:
+  - wheel:
+    name: "Internet"
+    sharedQuota: "100GB"
+    reportThreshold: "25%,50%,75%,100%"
+    rollover: "1"
+    plan:
+    - { name: "NoQuota1", limit: "1B", event_thresholds: ["100"]}
+    - { name: "Basic1", limit: "1GB", event_thresholds: ["25", "50", "75", "100"]}
+    - { name: "Basic2", limit: "2GB", event_thresholds: ["25", "50", "75", "100"]}
+    - { name: "Basic3", limit: "3GB", event_thresholds: ["25", "50", "75", "100"]}
+  - wheel:
+    name: "Intranet"
+    sharedQuota: "1000GB"
+    reportThreshold: "25%,50%,75%,100%"
+    rollover: "1"
+    plan:
+    - { name: "NoQuota1", limit: "1B", event_thresholds: ["100"]}
+    - { name: "Basic1", limit: "10GB", event_thresholds: ["25", "50", "75", "100"]}
+    - { name: "Basic2", limit: "20GB", event_thresholds: ["25", "50", "75", "100"]}
+    - { name: "Basic3", limit: "30GB", event_thresholds: ["25", "50", "75", "100"]}
+  - wheel:
+    name: "Roaming"
+    sharedQuota: "10GB"
+    reportThreshold: "25%,50%,75%,100%"
+    rollover: "1"
+    plan:
+    - { name: "NoQuota1", limit: "1B", event_thresholds: ["100"]}
+    - { name: "Basic1", limit: "100MB", event_thresholds: ["25", "50", "75", "100"]}
+    - { name: "Basic2", limit: "200MB", event_thresholds: ["25", "50", "75", "100"]}
+    - { name: "Basic3", limit: "300MB", event_thresholds: ["25", "50", "75", "100"]}
 
 
 #

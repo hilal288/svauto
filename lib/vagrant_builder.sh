@@ -73,28 +73,28 @@ vagrant_builder()
 
 			VM_NAME="svpts_1"
 
-			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svpts_1 --roles=bootstrap,svpts >> ansible/$ANSIBLE_PLAYBOOK_FILE
+			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-playbook-builder=svpts_1,bootstrap,svpts >> ansible/$ANSIBLE_PLAYBOOK_FILE
 			;;
 
 		svspb)
 
 			VM_NAME="svspb_1"
 
-			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svspb_1 --roles=bootstrap,svspb >> ansible/$ANSIBLE_PLAYBOOK_FILE
+			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-playbook-builder=svspb_1,bootstrap,svspb >> ansible/$ANSIBLE_PLAYBOOK_FILE
 			;;
 
 		svsde)
 
 			VM_NAME="svsde_1"
 
-			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svsde_1 --roles=bootstrap,svsde >> ansible/$ANSIBLE_PLAYBOOK_FILE
+			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-playbook-builder=svsde_1,bootstrap,svsde >> ansible/$ANSIBLE_PLAYBOOK_FILE
 			;;
 
 		svcs-build)
 
 			VM_NAME="svcs_build_1"
 
-			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-hosts=svcs_build_1 --roles=bootstrap,golang-env,nodejs-env,ccollab-client,vmware-tools,post-cleanup >> ansible/$ANSIBLE_PLAYBOOK_FILE
+			ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" --ansible-playbook-builder=svcs_build_1,bootstrap,golang-env,nodejs-env,ccollab-client,vmware-tools,post-cleanup >> ansible/$ANSIBLE_PLAYBOOK_FILE
 			;;
 
 		*)

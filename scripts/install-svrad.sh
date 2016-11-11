@@ -1,3 +1,3 @@
 #! /bin/bash
 
-curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/svauto.sh | bash -s -- --svauto-deployments --base-os=centos6 --ansible-roles=svrad
+curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/svauto-deployments.sh | bash -s -- --base-os=centos7 --ansible-playbook-builder="localhost,svrad"
