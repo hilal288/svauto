@@ -96,7 +96,7 @@ os_deploy()
 
 
 	ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" \
-		--ansible-playbook-builder="os_aio,bootstrap:base_os_upgrade=yes:ubuntu_network_setup=yes:ubuntu_network_mode=dhcp:ubuntu_setup_dummy_nics=yes:ubuntu_setup_iptables_rc_local=yes,os_clients,ssh_keypair,os_mysql,os_mysql_db,os_rabbitmq,os_memcached,apache2,os_keystone,os_glance,hyper_kvm,os_nova,os_keypair,os_nova_flavors,os_neutron,os_ext_net,os_horizon,os_heat,post-cleanup" --ansible-extra-vars="openstack_release=mitaka,os_aio=yes" >> ansible/$ANSIBLE_PLAYBOOK_FILE
+		--ansible-playbook-builder="localhost,bootstrap:base_os_upgrade=yes:ubuntu_network_setup=yes:ubuntu_network_mode=dhcp:ubuntu_setup_dummy_nics=yes:ubuntu_setup_iptables_rc_local=yes,os_clients,ssh_keypair,os_mysql,os_mysql_db,os_rabbitmq,os_memcached,apache2,os_keystone,os_glance,hyper_kvm,os_nova,os_keypair,os_nova_flavors,os_neutron,os_ext_net,os_horizon,os_heat,post-cleanup" --ansible-extra-vars="openstack_release=mitaka,os_aio=yes" >> ansible/$ANSIBLE_PLAYBOOK_FILE
 
 
 #	NOTE 2: Those are the options that can be used for OpenStack multi-node deployments (here only as a reference).
@@ -120,7 +120,7 @@ os_deploy()
 		echo "Just preparing the environment variables, so you can run Ansible manually, like:"
 		echo
 		echo "cd ~/svauto/ansible"
-		echo "ansible-playbook -c local -i $ANSIBLE_PLAYBOOK_FILE -e $ANSIBLE_EXTRA_VARS $EXTRA_VARS"
+		echo "ansible-playbook -c local $ANSIBLE_PLAYBOOK_FILE -e $ANSIBLE_EXTRA_VARS $EXTRA_VARS"
 		echo
 
 	else
@@ -131,7 +131,7 @@ os_deploy()
 		echo
 		pushd ansible
 
-		ansible-playbook -c local -i $ANSIBLE_PLAYBOOK_FILE -e \""$ANSIBLE_EXTRA_VARS $EXTRA_VARS"\"
+		ansible-playbook -c local $ANSIBLE_PLAYBOOK_FILE -e \""$ANSIBLE_EXTRA_VARS $EXTRA_VARS"\"
 
 	fi
 
