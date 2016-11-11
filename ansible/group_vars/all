@@ -26,7 +26,6 @@ regular_system_user: "sandvine"
 # Ubuntu: ubuntu14, ubuntu16
 # Debian: jessie, stretch
 # CentOS: centos6, centos7
-# FreeBSD: freebsd8
 base_os: "centos6"
 
 # Upgrade Base OS:
@@ -108,9 +107,6 @@ static_repo: "false"
 
 # Use versioned URL repo
 versioned_repo: "false"
-
-# Deploy FreeBSD packages
-deploy_pts_freebsd_pkgs: "no"
 
 # Install SVNDA AddOns
 svnda_install_addons: 'no'

@@ -28,7 +28,7 @@ echo "Running: \"sudo apt install git ansible\""
 
 
 sudo apt-get -y install software-properties-common &>/dev/null
-sudo add-apt-repository -y ppa:sandvine/packages &>/dev/null
+sudo add-apt-repository -y ppa:ansible/ansible &>/dev/null
 sudo apt-get update &>/dev/null
 sudo apt-get -y install git ansible &>/dev/null
 

@@ -56,7 +56,7 @@ case $BASE_OS in
 		echo "Running: \"sudo apt install git ansible\""
 
 		sudo apt -y install software-properties-common &>/dev/null
-		sudo add-apt-repository -y ppa:sandvine/packages &>/dev/null
+		sudo add-apt-repository -y ppa:ansible/ansible &>/dev/null
 		sudo apt update &>/dev/null
 		sudo apt -y install git ansible &>/dev/null
 

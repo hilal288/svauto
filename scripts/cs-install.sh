@@ -26,18 +26,17 @@ echo
 echo
 echo "Installing Git and Ansible..."
 echo
+
 sudo apt -y install software-properties-common
-
-sudo add-apt-repository -y ppa:sandvine/packages
-
+sudo add-apt-repository -y ppa:ansible/ansible
 sudo apt update
-
 sudo apt -y install git ansible
 
 
 echo
 echo "Downloading SVAuto into your home directory..."
 echo
+
 cd ~
 git clone -b dev https://github.com/sandvine-eng/svauto.git
 
@@ -45,5 +44,6 @@ git clone -b dev https://github.com/sandvine-eng/svauto.git
 echo
 echo "Deploying Sandvine Platform from its RPM Packages:"
 echo
+
 cd ~/svauto
-./svauto.sh --os-project=demo --stack=demo --operation=cloud-services --cloud-services-mode=default
+./svauto.sh --os-project=demo --os-stack-name=demo --operation=cloud-services --cloud-services-mode=default
