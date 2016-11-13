@@ -900,7 +900,7 @@ then
 	if [ "$OS_GLANCE_IMPORT_IMAGES" == "yes" ]
 	then
 
-		if [ "$OS_PROJECT" == "admin" ]; then VISIBILITY_PUBLIC="--visibility public" ; fi
+		if [ "$OS_PROJECT" == "admin" ]; then VISIBILITY="--public" ; fi
 
 		echo
 		echo "Downloading and importing basic Cloud images into Glance..."
@@ -921,22 +921,22 @@ then
 
 
 		# Ubuntu Xenial
-		glance image-create --file $UBUNTU1604_64_FILENAME --name "ubuntu-16.04.1-amd64" $VISIBILITY_PUBLIC --container-format bare --disk-format qcow2
+		openstack image create "ubuntu-16.04.1-amd64" --file $UBUNTU1604_64_FILENAME $VISIBILITY --container-format bare --disk-format qcow2
 		# Ubuntu Trusty
-		glance image-create --file $UBUNTU1404_64_FILENAME --name "ubuntu-14.04.4-amd64" $VISIBILITY_PUBLIC --container-format bare --disk-format qcow2
+		openstack image create "ubuntu-14.04.1-amd64" --file $UBUNTU1404_64_FILENAME $VISIBILITY --container-format bare --disk-format qcow2
 		# Ubuntu Precise
-		glance image-create --file $UBUNTU1204_64_FILENAME --name "ubuntu-12.04.5-amd64" $VISIBILITY_PUBLIC --container-format bare --disk-format qcow2
+		openstack image create "ubuntu-12.04.1-amd64" --file $UBUNTU1204_64_FILENAME $VISIBILITY --container-format bare --disk-format qcow2
 		# Debian Jessie
-		glance image-create --file $DEBIAN8_64_FILENAME --name "debian-8.6.0-amd64" $VISIBILITY_PUBLIC --container-format bare --disk-format qcow2
+		openstack image create "debian-8.6.0-amd64" --file $DEBIAN8_64_FILENAME $VISIBILITY --container-format bare --disk-format qcow2
 		# CentOS 6 and 7
-		glance image-create --file $CENTOS7_64_FILENAME --name "centos-7-amd64" $VISIBILITY_PUBLIC --container-format bare --disk-format qcow2
-		glance image-create --file $CENTOS6_64_FILENAME --name "centos-6-amd64" $VISIBILITY_PUBLIC --container-format bare --disk-format qcow2
+		openstack image create "centos-7-amd64" --file $CENTOS7_64_FILENAME $VISIBILITY --container-format bare --disk-format qcow2
+		openstack image create "centos-6-amd64" --file $CENTOS6_64_FILENAME $VISIBILITY --container-format bare --disk-format qcow2
 		# Cirrus Test Image
-		glance image-create --file $CIRROS03_64_FILENAME --name "cirros-0.3.4-amd64" $VISIBILITY_PUBLIC --container-format bare --disk-format qcow2
+		openstack image create "cirros-0.3.4-amd64" --file $CIRROS03_64_FILENAME $VISIBILITY --container-format bare --disk-format qcow2
 
 
 		# Updating O.S. images properties (use with care), below syntax not ready yet for Glance v2:
-		# glance image-update --property hw_scsi_model=virtio-scsi --property hw_disk_bus=scsi "your-image-name-1.0"
+		# openstack image update --property hw_scsi_model=virtio-scsi --property hw_disk_bus=scsi "your-image-name-1.0"
 
 		popd
 
