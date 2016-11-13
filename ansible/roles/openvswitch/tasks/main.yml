@@ -70,3 +70,6 @@
 - name: ubuntu - configuring the number of CPU Cores to OpenvSwitch DPDK
   shell: ovs-vsctl set Open_vSwitch . other_config:pmd-cpu-mask=FF
   when: openvswitch_mode == 'dpdk'
+
+
+- meta: flush_handlers
