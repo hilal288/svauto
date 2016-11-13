@@ -325,9 +325,9 @@ case $i in
 		shift
 		;;
 
-        --os-glance-import-images)
+        --os-import-images)
 
-	        OS_GLANCE_IMPORT_IMAGES="yes"
+	        OS_IMPORT_IMAGES="yes"
 		shift
 		;;
 
@@ -897,7 +897,7 @@ then
 	fi
 
 
-	if [ "$OS_GLANCE_IMPORT_IMAGES" == "yes" ]
+	if [ "$OS_IMPORT_IMAGES" == "yes" ]
 	then
 
 		if [ "$OS_PROJECT" == "admin" ]; then VISIBILITY="--public" ; fi
