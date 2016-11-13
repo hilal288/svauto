@@ -42,6 +42,6 @@ echo
 echo "To install the dependences, run:"
 echo
 echo "cd ~/svauto"
-echo "./svauto.sh --bootstrap-svauto"
+echo "./scripts/bootstrap-svauto-server.sh"
 echo
 echo "NOTE: To use all features that SVAuto provides, you need an Ubuntu 16.04."

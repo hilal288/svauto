@@ -100,22 +100,20 @@ packer_builder()
 	esac
 
 
-	# Defining the dynamic Ansible Inventory and Playbook files location
+	# Defining the dynamic Ansible Inventory and Playbook files location.
+	# It overrides the default values configured on svauto.sh.
+
 	ANSIBLE_INVENTORY_FILE="$PACKER_VM_NAME-ansible-hosts"
 	ANSIBLE_PLAYBOOK_FILE="$PACKER_VM_NAME-ansible-playbook.yaml"
 
 
-	echo "$ANSIBLE_TOP_LEVEL_PLAYBOOK" > packer/$PACKER_FILES/$ANSIBLE_PLAYBOOK_FILE
-
-
-	echo "[$PRODUCT-servers]" > packer/$PACKER_FILES/$ANSIBLE_INVENTORY_FILE
-	echo "localhost base_os=$BASE_OS release=$RELEASE deployment_mode=yes" >> packer/$PACKER_FILES/$ANSIBLE_INVENTORY_FILE
+	echo "$ANSIBLE_INVENTORY_FILE_IN_MEM" > packer/$PACKER_FILES/$ANSIBLE_INVENTORY_FILE
+	echo "$ANSIBLE_PLAYBOOK_FILE_IN_MEM" > packer/$PACKER_FILES/$ANSIBLE_PLAYBOOK_FILE
 
 
 	# Updating Packer VM build template yaml file
 	sed -i -e 's/"output_directory": "",/"output_directory": "packer\/'$PACKER_OUTPUT_DIR'",/g' $PACKER_FILE
 	sed -i -e 's/"vm_name": "",/"vm_name": "'$PACKER_VM_NAME.raw'",/g' $PACKER_FILE
-	sed -i -e 's/"inventory_groups": ""/"inventory_groups": "'$PRODUCT'-servers"/g' $PACKER_FILE
 	sed -i -e 's/"inventory_file": "",/"inventory_file": "packer\/'$PACKER_FILES'\/'$ANSIBLE_INVENTORY_FILE'",/g' $PACKER_FILE
 	sed -i -e 's/"playbook_file": "",/"playbook_file": "packer\/'$PACKER_FILES'\/'$ANSIBLE_PLAYBOOK_FILE'",/g' $PACKER_FILE
 

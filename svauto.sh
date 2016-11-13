@@ -15,7 +15,20 @@
 # limitations under the License.
 
 
-source svauto.conf
+if ! source svauto.conf
+then
+	echo "File svauto.conf not found, aborting!"
+	echo "Run svauto.sh from your SVAuto sub directory."
+
+	exit 1
+fi
+
+
+if ! source lib/include_tools.inc
+then
+	echo "File lib/include_tools.inc not found, aborting!"
+	exit 1
+fi
 
 
 #
@@ -29,11 +42,6 @@ then
 	source ~/.svauto.conf
 fi
 
-
-source lib/include_tools.inc
-
-
-BUILD_RAND=$(openssl rand -hex 4)
 
 TODAY=$(date +"%Y%m%d")
 
@@ -52,6 +60,13 @@ else
 fi
 
 
+ANSIBLE_COUNTER_1=1
+
+ANSIBLE_COUNTER_2=1
+
+BUILD_RAND=$(openssl rand -hex 4)
+
+
 for i in "$@"
 do
 case $i in
@@ -68,16 +83,59 @@ case $i in
 		shift
 		;;
 
-	--bootstrap-svauto)
+	# Options starting with --ansible-* are passed to Ansible itself,
+	# or being used by dynamic stuff.
 
-		BOOTSTRAP_SVAUTO="yes"
+	--ansible-run-against=*)
+
+		ANSIBLE_RUN_AGAINST="${i#*=}"
 		shift
 		;;
 
-	--ansible-playbook=*)
+        --ansible-remote-user=*)
 
-		ANSIBLE_PLAYBOOK_DESTINY="${i#*=}"
+                ANSIBLE_REMOTE_USER="${i#*=}"
+                shift
+                ;;
+
+	--ansible-inventory-builder=*)
+
+		ANSIBLE_INVENTORY_ENTRY="${i#*=}"
+
+		for H in $ANSIBLE_INVENTORY_ENTRY; do
+
+			declare "ANSIBLE_HOST_ENTRY_$ANSIBLE_COUNTER_1"="$H"
+
+			(( ANSIBLE_COUNTER_1++ ))
+
+		done
+
+		ANSIBLE_INVENTORY_TOTAL=$[$ANSIBLE_COUNTER_1 -1]
+
 		shift
+		;;
+
+	--ansible-playbook-builder=*)
+
+		ANSIBLE_PLAYBOOK_ENTRY="${i#*=}"
+
+		for P in $ANSIBLE_PLAYBOOK_ENTRY; do
+
+			declare "ANSIBLE_PLAYBOOK_ENTRY_$ANSIBLE_COUNTER_2"="$P"
+
+			(( ANSIBLE_COUNTER_2++ ))
+
+		done
+
+		ANSIBLE_PLAYBOOK_TOTAL=$[$ANSIBLE_COUNTER_2 -1]
+
+		shift
+		;;
+
+	--ansible-extra-vars=*)
+
+		ALL_ANSIBLE_EXTRA_VARS="${i#*=}"
+		ANSIBLE_EXTRA_VARS="$( echo $ALL_ANSIBLE_EXTRA_VARS | sed s/,/\ /g )"
 		;;
 
 	--vagrant=*)
@@ -236,27 +294,6 @@ case $i in
 	# Packer Builder specific options - END
 	#
 
-	# Options starting with --ansible-* are passed to Ansible itself,
-	# or being used by dynamic stuff.
-
-        --ansible-remote-user=*)
-
-                ANSIBLE_REMOTE_USER="${i#*=}"
-                shift
-                ;;
-
-	--ansible-playbook-builder=*)
-
-		ANSIBLE_HOST_1="${i#*=}"
-		shift
-		;;
-
-	--ansible-extra-vars=*)
-
-		ALL_ANSIBLE_EXTRA_VARS="${i#*=}"
-		ANSIBLE_EXTRA_VARS="$( echo $ALL_ANSIBLE_EXTRA_VARS | sed s/,/\ /g )"
-		;;
-
 	# Options starting with --os-* are OpenStack related
 	--os-project=*)
 
@@ -275,12 +312,6 @@ case $i in
                 OS_STACK_TYPE="${i#*=}"
                 shift
                 ;;
-
-	--os-aio)
-
-		OS_AIO="yes"
-		shift
-		;;
 
         --os-release=*)
 
@@ -420,17 +451,41 @@ esac
 done
 
 
-#
-# SVAuto Ansible Playbook Builder
-# This function stores a top-level playbook for Ansible in memory.
-#
+ANSIBLE_INVENTORY_FILE="ansible-hosts-$BUILD_RAND"
 
-if [ ! -z "$ANSIBLE_HOST_1" ]
+ANSIBLE_PLAYBOOK_FILE="ansible-playbook-$BUILD_RAND.yml"
+
+ANSIBLE_EXTRA_VARS_FILE="@ansible-extra-vars-$BUILD_RAND.json"
+
+
+# SVAuto Ansible Inventory Builder
+#
+# This function stores Ansible's Inventory in memory.
+
+if [ ! -z "$ANSIBLE_INVENTORY_ENTRY" ]
 then
 
-	ANSIBLE_FORCE_PLAYBOOK_BUILD="yes"
+	ANSIBLE_INVENTORY_FILE_IN_MEM=$(ansible_inventory_builder)
 
-	ANSIBLE_TOP_LEVEL_PLAYBOOK=$(ansible_playbook_builder)
+#	echo
+#	echo "Ansible's Inventory:"
+#	echo "$ANSIBLE_INVENTORY_FILE_IN_MEM"
+
+fi
+
+
+# SVAuto Ansible Playbook Builder
+#
+# This function stores Ansible's Top-Level Playbook in memory.
+
+if [ ! -z "$ANSIBLE_PLAYBOOK_ENTRY" ]
+then
+
+	ANSIBLE_PLAYBOOK_FILE_IN_MEM=$(ansible_playbook_builder)
+
+#	echo
+#	echo "Ansible's Top-Level Playbook:"
+#	echo "$ANSIBLE_PLAYBOOK_FILE_IN_MEM"
 
 fi
 
@@ -492,6 +547,27 @@ fi
 # Ubuntu Settings
 #
 
+if [ "$OS_HYBRID_FW" == "yes" ]
+then
+	EXTRA_VARS="$EXTRA_VARS firewall_driver=iptables_hybrid "
+else
+	EXTRA_VARS="$EXTRA_VARS firewall_driver=openvswitch "
+fi
+
+
+# Disabling Security Groups entirely
+if [ "$OS_NO_SEC" == "yes" ]
+then
+	EXTRA_VARS="$EXTRA_VARS firewall_driver=neutron.agent.firewall.NoopFirewall "
+fi
+
+
+if [ "$OS_OPEN_PROVIDER_NETS_TO_REGULAR_USERS" == "yes" ]
+then
+	EXTRA_VARS="$EXTRA_VARS os_open_provider_nets_to_regular_users=yes "
+fi
+
+
 if [ "$UBUNTU_NETWORK_DETECT_DEFAULT_NIC" == "yes" ]
 then
 
@@ -516,40 +592,7 @@ then
 
 
 	EXTRA_VARS="$EXTRA_VARS ubuntu_primary_interface=$UBUNTU_PRIMARY_INTERFACE "
-
-fi
-
-
-ANSIBLE_PLAYBOOK_FILE="top-level-playbook-$BUILD_RAND.yml"
-
-
-#
-# Pure Ansible deployments, can be local or remote.
-#
-
-if [ ! -z "$ANSIBLE_PLAYBOOK_DESTINY" ]
-then
-
-	echo "$ANSIBLE_TOP_LEVEL_PLAYBOOK" > ansible/$ANSIBLE_PLAYBOOK_FILE
-
-
-	if [ "$ANSIBLE_PLAYBOOK_DESTINY" == "local" ]
-	then
-		pushd ansible &>/dev/null
-
-		sudo ansible-playbook -c local $ANSIBLE_PLAYBOOK_FILE -e \""$ANSIBLE_EXTRA_VARS $EXTRA_VARS"\"
-
-		#popd
-
-		exit 0
-
-	else
-
-		TODO_ANSIBLE_DESTINATION="$ANSIBLE_PLAYBOOK_DESTINY"
-
-		echo ansible-playbook -i todo-dynamic-inventiry-hosts $ANSIBLE_PLAYBOOK_FILE -e \""$ANSIBLE_EXTRA_VARS $EXTRA_VARS"\"
-
-	fi
+	EXTRA_VARS="$EXTRA_VARS os_mgmt=$UBUNTU_PRIMARY_INTERFACE "
 
 fi
 
@@ -561,19 +604,20 @@ fi
 if [ "$CLEAN_ALL" == "yes" ]
 then
 
-	echo
-	echo "Cleaning it up..."
-
-
 	if pushd $SVAUTO_DIR &>/dev/null
 	then
-		rm -rf build-date.txt packer/build* tmp/cs-rel/* tmp/cs/* tmp/sv/*  ansible/*.retry ansible/*.yml ansible/*-hosts-* ansible/facts_storage
+		echo
+		echo "Cleaning it up..."
+
+		rm -rf build-date.txt packer/build* tmp/cs-rel/* tmp/cs/* tmp/sv/*  ansible/*.retry ansible/*.yml ansible/*-hosts-* ansible/*-extra-vars-* ansible/facts_storage
+
+		exit 0
+	else
+		echo
+		echo "Not cleaning anything! Could not enter into SVAuto's subdir..."
+
+		exit 1
 	fi
-
-
-	echo
-
-	exit 0
 
 fi
 
@@ -594,20 +638,6 @@ then
 	sudo wget -c $CENTOS6_64_ISO
 
 	popd
-
-	exit 0
-
-fi
-
-
-if [ "$BOOTSTRAP_SVAUTO" == "yes" ]
-then
-
-	echo
-	echo "Installing SVAuto dependencies via APT:"
-	echo
-
-	sudo ~/svauto/scripts/bootstrap-svauto-server.sh
 
 	exit 0
 
@@ -777,6 +807,64 @@ then
 fi
 
 
+if [ -z "$ANSIBLE_REMOTE_USER" ]
+then
+
+	echo
+	echo "Warning! You must specify the --ansible-remote-user option!"
+	echo "Example: --ansible-remote-user=sandvine"
+
+	exit 1
+
+fi
+
+
+#
+# Pure Ansible deployments, can be local or remote.
+#
+
+if [ ! -z "$ANSIBLE_RUN_AGAINST" ]
+then
+
+        cpu_check
+
+        hostname_check
+
+	echo
+
+	echo "$ANSIBLE_INVENTORY_FILE_IN_MEM" > ansible/$ANSIBLE_INVENTORY_FILE
+	echo "$ANSIBLE_PLAYBOOK_FILE_IN_MEM" > ansible/$ANSIBLE_PLAYBOOK_FILE
+	#echo "$ANSIBLE_EXTRA_VARS_FILE_IN_MEM" > ansible/$ANSIBLE_EXTRA_VARS_FILE
+
+
+	if [ "$ANSIBLE_RUN_AGAINST" == "local" ]
+	then
+
+		pushd ansible &>/dev/null
+
+
+		if ansible-playbook -i "$ANSIBLE_INVENTORY_FILE" "$ANSIBLE_PLAYBOOK_FILE" # -e "$ANSIBLE_EXTRA_VARS_FILE"
+		then
+
+			echo
+			echo "Ansilble applied the playbook correctly... Success!"
+			echo
+
+			exit 0
+
+		else
+
+			echo "Ansible Playbook failed to apply! ABORTING!!!"
+
+			exit 1
+
+		fi
+
+	fi
+
+fi
+
+
 if [ -z "$OPERATION" ]
 then
 
@@ -784,23 +872,10 @@ then
 	echo "No operation mode was specified, use one of the following ./svauto.sh options:"
 
 	echo
-	echo "--operation=sandvine|cloud-services|openstack"
+	echo "--operation=sandvine|cloud-services"
 	echo
 
 	exit 1
-
-fi
-
-
-if [ "$OPERATION" == "openstack" ]
-then
-
-	echo
-	echo "Installing OpenStack with SVAuto:"
-
-	os_deploy
-
-	exit 0
 
 fi
 
@@ -825,6 +900,8 @@ then
 	if [ "$OS_GLANCE_IMPORT_IMAGES" == "yes" ]
 	then
 
+		if [ "$OS_PROJECT" == "admin" ]; then VISIBILITY_PUBLIC="--visibility public" ; fi
+
 		echo
 		echo "Downloading and importing basic Cloud images into Glance..."
 
@@ -844,18 +921,18 @@ then
 
 
 		# Ubuntu Xenial
-		glance image-create --file $UBUNTU1604_64_FILENAME --name "ubuntu-16.04.1-amd64" --visibility public --container-format bare --disk-format qcow2
+		glance image-create --file $UBUNTU1604_64_FILENAME --name "ubuntu-16.04.1-amd64" $VISIBILITY_PUBLIC --container-format bare --disk-format qcow2
 		# Ubuntu Trusty
-		glance image-create --file $UBUNTU1404_64_FILENAME --name "ubuntu-14.04.4-amd64" --visibility public --container-format bare --disk-format qcow2
+		glance image-create --file $UBUNTU1404_64_FILENAME --name "ubuntu-14.04.4-amd64" $VISIBILITY_PUBLIC --container-format bare --disk-format qcow2
 		# Ubuntu Precise
-		glance image-create --file $UBUNTU1204_64_FILENAME --name "ubuntu-12.04.5-amd64" --visibility public --container-format bare --disk-format qcow2
+		glance image-create --file $UBUNTU1204_64_FILENAME --name "ubuntu-12.04.5-amd64" $VISIBILITY_PUBLIC --container-format bare --disk-format qcow2
 		# Debian Jessie
-		glance image-create --file $DEBIAN8_64_FILENAME --name "debian-8.6.0-amd64" --visibility public --container-format bare --disk-format qcow2
+		glance image-create --file $DEBIAN8_64_FILENAME --name "debian-8.6.0-amd64" $VISIBILITY_PUBLIC --container-format bare --disk-format qcow2
 		# CentOS 6 and 7
-		glance image-create --file $CENTOS7_64_FILENAME --name "centos-7-amd64" --visibility public --container-format bare --disk-format qcow2
-		glance image-create --file $CENTOS6_64_FILENAME --name "centos-6-amd64" --visibility public --container-format bare --disk-format qcow2
+		glance image-create --file $CENTOS7_64_FILENAME --name "centos-7-amd64" $VISIBILITY_PUBLIC --container-format bare --disk-format qcow2
+		glance image-create --file $CENTOS6_64_FILENAME --name "centos-6-amd64" $VISIBILITY_PUBLIC --container-format bare --disk-format qcow2
 		# Cirrus Test Image
-		glance image-create --file $CIRROS03_64_FILENAME --name "cirros-0.3.4-amd64" --visibility public --container-format bare --disk-format qcow2
+		glance image-create --file $CIRROS03_64_FILENAME --name "cirros-0.3.4-amd64" $VISIBILITY_PUBLIC --container-format bare --disk-format qcow2
 
 
 		# Updating O.S. images properties (use with care), below syntax not ready yet for Glance v2:
@@ -1010,6 +1087,9 @@ then
 	echo
 	echo "Creating Ansible Inventory: \"ansible/$ANSIBLE_INVENTORY_FILE\"."
 
+#	FUTURE!
+#
+#	ANSIBLE_HOST_ENTRY_1="svpts-servers,'$PTS_ACCESS',ansible_user='$ANSIBLE_REMOTE_USER',base_os=centos7;svsde-servers,'$SDE_ACCESS',,ansible_user='$ANSIBLE_REMOTE_USER',base_os=centos7;svspb-servers,'$SPB_ACCESS',ansible_user='$ANSIBLE_REMOTE_USER',base_os=centos6" ansible_inventory_builder
 
 	cp hosts $ANSIBLE_INVENTORY_FILE
 
@@ -1047,16 +1127,6 @@ then
 	if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then OPERATION="svtse-demo"; fi
 
 	popd
-
-fi
-
-
-if [ -z "$ANSIBLE_REMOTE_USER" ]
-then
-
-	echo
-	echo "Warning! You must specify the --ansible-remote-user option!"
-	echo "Example: --ansible-remote-user=sandvine"
 
 fi
 
@@ -1256,32 +1326,36 @@ else
 	echo "ansible-playbook -i $ANSIBLE_INVENTORY_FILE $ANSIBLE_PLAYBOOK_FILE"
 	echo
 
-	if ansible-playbook -i $ANSIBLE_INVENTORY_FILE $ANSIBLE_PLAYBOOK_FILE -e \""$ANSIBLE_EXTRA_VARS $EXTRA_VARS"\"
+	if ansible-playbook -i $ANSIBLE_INVENTORY_FILE $ANSIBLE_PLAYBOOK_FILE # -e \""$ANSIBLE_EXTRA_VARS $EXTRA_VARS"\"
 	then
 
-		echo "Your brand new Sandvine's Stack is reachable through SSH:"
+		if [ -z $OS_STACK_NAME ] || [ "$LABIFY" == "yes" ]
 
-		echo
-		echo "ssh sandvine@$PTS_ACCESS # PTS"
-		echo "ssh sandvine@$SDE_ACCESS # SDE"
-		echo "ssh sandvine@$SPB_ACCESS # SPB"
+			echo "Your brand new Sandvine's Stack is reachable through SSH:"
 
-		if [ "$OPERATION" == "cloud-services" ] && [ "$OS_STACK_TYPE" == "svcsd-three" ]; then echo "ssh sandvine@$SDE_ACCESS # SVCS"; fi
-		if [ "$OPERATION" == "cloud-services" ] && [ "$OS_STACK_TYPE" == "svcsd-four" ]; then echo "ssh sandvine@$CSD_ACCESS # SVCS"; fi
+			echo
+			echo "ssh sandvine@$PTS_ACCESS # PTS"
+			echo "ssh sandvine@$SDE_ACCESS # SDE"
+			echo "ssh sandvine@$SPB_ACCESS # SPB"
 
-		if [ "$OS_STACK_TYPE" == "svnda" ]; then echo "ssh sandvine@$NDA_ACCESS # NDA"; fi
+			if [ "$OPERATION" == "cloud-services" ] && [ "$OS_STACK_TYPE" == "svcsd-three" ]; then echo "ssh sandvine@$SDE_ACCESS # SVCS"; fi
+			if [ "$OPERATION" == "cloud-services" ] && [ "$OS_STACK_TYPE" == "svcsd-four" ]; then echo "ssh sandvine@$CSD_ACCESS # SVCS"; fi
 
-		if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then echo "ssh sandvine@$TSE_ACCESS # TSE"; fi
-		if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then echo "ssh sandvine@$TCPA_ACCESS # TCP Accelerator"; fi
+			if [ "$OS_STACK_TYPE" == "svnda" ]; then echo "ssh sandvine@$NDA_ACCESS # NDA"; fi
 
-		echo
-	else
+			if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then echo "ssh sandvine@$TSE_ACCESS # TSE"; fi
+			if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then echo "ssh sandvine@$TCPA_ACCESS # TCP Accelerator"; fi
 
-		echo
-		echo "Ansible Playbook failed to apply! ABORTING!!!"
-		echo
+			echo
+		else
 
-		exit 1
+			echo
+			echo "Ansible Playbook failed to apply! ABORTING!!!"
+			echo
+
+			exit 1
+
+		fi
 
 	fi
 

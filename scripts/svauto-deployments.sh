@@ -25,9 +25,27 @@ case $i in
                 shift
                 ;;
 
+	--ansible-run-against=*)
+
+		ANSIBLE_RUN_AGAINST="${i#*=}"
+		shift
+		;;
+
+	--ansible-remote-user=*)
+
+		ANSIBLE_REMOTE_USER="${i#*=}"
+		shift
+		;;
+
+	--ansible-inventory-builder=*)
+
+		ANSIBLE_INVENTORY_ENTRY_1="${i#*=}"
+		shift
+		;;
+
 	--ansible-playbook-builder=*)
 
-		ANSIBLE_HOST_1="${i#*=}"
+		ANSIBLE_PLAYBOOK_ENTRY_1="${i#*=}"
 		shift
 		;;
 
@@ -41,6 +59,9 @@ esac
 done
 
 
+clear
+
+
 echo
 echo "Welcome to SVAuto, the Sandvine Automation!"
 
@@ -48,38 +69,89 @@ echo
 echo "Installing SVAuto basic dependencies (Git & Ansible):"
 
 
-case $BASE_OS in
+GIT_BINARY=$(which git)
+ANSIBLE_BINARY=$(which ansible)
 
-	ubuntu*)
 
-		echo
-		echo "Running: \"sudo apt install git ansible\""
+if ! file "$GIT_BINARY" &>/dev/null
+then
 
-		sudo apt -y install software-properties-common &>/dev/null
-		sudo add-apt-repository -y ppa:ansible/ansible &>/dev/null
-		sudo apt update &>/dev/null
-		sudo apt -y install git ansible &>/dev/null
+	echo
+	echo "Git not found, trying to install..."
 
-		;;
+	case $BASE_OS in
 
-	centos*)
+		ubuntu*)
 
-		echo
-		echo "Running: \"sudo yum install git ansible\""
+			echo
+			echo "Running: \"sudo apt install git\""
 
-		sudo yum --enablerepo=epel-testing -y install git ansible libselinux-python &>/dev/null
-		;;
+			sudo apt update &>/dev/null
+			sudo apt -y install git &>/dev/null
 
-	*)
+			;;
 
-                echo
-                echo "Operation System not detected, aborting!"
+		centos*)
 
-                exit 1
+			echo
+			echo "Running: \"sudo yum install git ansible\""
 
-                ;;
+			sudo yum -y install git &>/dev/null
+			;;
 
-esac
+		*)
+
+        	        echo
+                	echo "Operation System and/or Git wasn't detected, aborting!"
+
+        	        exit 1
+
+                	;;
+
+	esac
+
+fi
+
+
+if ! file "$ANSIBLE_BINARY" &>/dev/null
+then
+
+	echo "Ansible not found, trying to install..."
+
+	case $BASE_OS in
+
+		ubuntu*)
+
+			echo
+			echo "Running: \"sudo apt install ansible\""
+
+			sudo apt -y install software-properties-common &>/dev/null
+			sudo add-apt-repository -y ppa:ansible/ansible &>/dev/null
+			sudo apt update &>/dev/null
+			sudo apt -y install ansible &>/dev/null
+
+			;;
+
+		centos*)
+
+			echo
+			echo "Running: \"sudo yum install ansible\""
+
+			sudo yum --enablerepo=epel-testing -y install ansible libselinux-python &>/dev/null
+			;;
+
+		*)
+
+        	        echo
+                	echo "Operation System and/or Ansible wasn't detected, aborting!"
+
+			exit 1
+
+			;;
+
+	esac
+
+fi
 
 
 if  [ ! -d ~/svauto ]
@@ -109,14 +181,6 @@ then
 fi
 
 
-echo
-echo "Bootstrapping \"--base-os=$BASE_OS\" with SVAuto (Ansible)..."
-echo
-echo "Roles: $ANSIBLE_HOST_1"
-echo
-echo "Extra Vars: base_os=$BASE_OS,$ALL_ANSIBLE_EXTRA_VARS"
-echo
-
 pushd ~/svauto &>/dev/null
 
-./svauto.sh --ansible-playbook=local --ansible-remote-user=root --ansible-playbook-builder=$ANSIBLE_HOST_1 --ansible-extra-vars="base_os=$BASE_OS,$ALL_ANSIBLE_EXTRA_VARS"
+./svauto.sh --ansible-run-against="$ANSIBLE_RUN_AGAINST" --ansible-remote-user="$ANSIBLE_REMOTE_USER" --ansible-inventory-builder="$ANSIBLE_INVENTORY_ENTRY_1" --ansible-playbook-builder="$ANSIBLE_PLAYBOOK_ENTRY_1" --ansible-extra-vars="base_os=$BASE_OS,$ALL_ANSIBLE_EXTRA_VARS" --dry-run

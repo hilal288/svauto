@@ -14,6 +14,7 @@ yum_repos
 ansible/*.yml
 ansible/*.retry
 ansible/*-hosts-*
+ansible/*-extra-vars-*
 ansible/facts_storage/*
 ansible/vagrant-run-*
 .vagrant

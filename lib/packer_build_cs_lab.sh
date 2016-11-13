@@ -28,17 +28,23 @@ packer_build_cs_lab()
 
 	# SDE 7.50 on CentOS 7 + Cloud Services SDE + Cloud Services Daemon (back / front) - Labified
 	./svauto.sh --packer-builder --release=dev --base-os=centos7 --product=svsde --version=$SDE_VERSION --product-variant=cs-1 --qcow2 --vmdk --vhd --vm-xml --sha256sum \
-		--ansible-playbook-builder="localhost,cloud-init,bootstrap,grub-conf,setup-default-interface,nginx,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,vmware-tools,labify,post-cleanup-image" \
+		--ansible-remote-user="root" \
+		--ansible-inventory-builder="svbox,localhost,ansible_connection=local,base_os=centos7,deployment_mode=yes,static_packages_server=$STATIC_PACKAGES_SERVER,static_repo=true,versioned_repo=true" \
+		--ansible-playbook-builder="svbox,cloud-init,bootstrap,grub-conf,setup-default-interface,nginx,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,vmware-tools,labify,post-cleanup-image" \
 		--packer-max-tries=3 $DRY_RUN_OPT
 
 	# SPB 6.65 on CentOS 6 + Cloud Services - Labified
 	./svauto.sh --packer-builder --release=dev --base-os=centos6 --product=svspb --version=$SPB_VERSION --product-variant=cs-1 --qcow2 --vmdk --vhd --vm-xml --sha256sum \
-		--ansible-playbook-builder="localhost,cloud-init,bootstrap,grub-conf,postgresql,svspb,svmcdtext,svreports,svcs-svspb,vmware-tools,labify,post-cleanup-image,power-cycle" \
+		--ansible-remote-user="root" \
+		--ansible-inventory-builder="svbox,localhost,ansible_connection=local,base_os=centos6,deployment_mode=yes,static_packages_server=$STATIC_PACKAGES_SERVER,static_repo=true,versioned_repo=true" \
+		--ansible-playbook-builder="svbox,cloud-init,bootstrap,grub-conf,postgresql,svspb,svmcdtext,svreports,svcs-svspb,vmware-tools,labify,post-cleanup-image,power-cycle" \
 		--packer-max-tries=3 $DRY_RUN_OPT
 
 	# PTS 7.35 on CentOS 7 + Cloud Services - Linux 3.10, DPDK 16.07, requires igb_uio - Labified
 	./svauto.sh --packer-builder --release=dev --base-os=centos7 --product=svpts --version=$PTS_VERSION --product-variant=cs-1 --qcow2 --vmdk --vhd --vm-xml --sha256sum \
-		--ansible-playbook-builder="localhost,cloud-init,bootstrap,grub-conf,setup-default-interface,nginx,svpts,svusagemanagementpts,svcs-svpts,vmware-tools,labify:setup_mode=cloud-services,post-cleanup-image" \
+		--ansible-remote-user="root" \
+		--ansible-inventory-builder="svbox,localhost,ansible_connection=local,base_os=centos7,deployment_mode=yes,static_packages_server=$STATIC_PACKAGES_SERVER,static_repo=true,versioned_repo=true" \
+		--ansible-playbook-builder="svbox,cloud-init,bootstrap,grub-conf,setup-default-interface,nginx,svpts,svusagemanagementpts,svcs-svpts,vmware-tools,labify;setup_mode=cloud-services,post-cleanup-image" \
 		--packer-max-tries=3 $DRY_RUN_OPT
 
 

@@ -43,17 +43,17 @@ vagrant_run: "no"
 # Deployment mode:
 deployment_mode: "no"
 
-# Use old Linux interface name "ethX" on CentOS:
+# grub: Use old Linux interface name "ethX" on CentOS:
 centos_old_ifnames: "yes"
 
-# Open vSwitch with DPDK?
+# openvswitch: Open vSwitch with DPDK?
 openvswitch_mode: "null"
 
-# NIC Interface ordering via PCI ID
+# udev-rules: NIC Interface ordering via PCI ID
 eth0_pci_id: "0000:00:03.0"
 eth1_pci_id: "0000:00:04.0"
 
-# Enable Sandvine's Main Yum Repository:
+# bootstrap: Enable Sandvine's Main Yum Repository:
 sandvine_main_yum_repo: "no"
 
 
@@ -232,11 +232,11 @@ ubuntu_setup_iptables_rc_local: "no"
 # Ubuntu's DPDK Setup
 #
 
-grub_enable_hugepages: "no"
+enable_hugepages: "no"
 
-grub_nr_1g_pages: "4"
+grub_nr_1g_pages: "0"
 
-dpdk_nr_1g_pages: "{{grub_nr_1g_pages}}"
+dpdk_nr_1g_pages: "0"
 dpdk_nr_2m_pages: "512"
 
 dpdk_bus: "pci"
@@ -335,7 +335,6 @@ demo_openrc_env:
   OS_PASSWORD: "demo_pass"
   OS_AUTH_URL: "http://{{public_addr}}:5000/v3"
   OS_IDENTITY_API_VERSION: "3"
-  OS_IMAGE_API_VERSION: "1"
 
 admin_openrc_env:
   OS_PROJECT_DOMAIN_NAME: "default"
@@ -345,7 +344,6 @@ admin_openrc_env:
   OS_PASSWORD: "admin_pass"
   OS_AUTH_URL: "http://{{controller_addr}}:35357/v3"
   OS_IDENTITY_API_VERSION: "3"
-  OS_IMAGE_API_VERSION: "1"
 
 mysql_databases:
   - { os_project: "keystone", db_name: "keystone", db_host: "%", db_user: "keystoneUser", db_pass: "keystonePass" }

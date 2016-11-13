@@ -14,6 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+UBUNTU_HOSTNAME="controller-1"
+DOMAIN="yourdomain.com"
+
 
 clear
 
@@ -24,28 +27,24 @@ echo
 
 
 echo
-echo "Installing Git and Ansible..."
-echo
-
-sudo apt -y install software-properties-common
-sudo add-apt-repository -y ppa:ansible/ansible
-sudo apt update
-sudo apt -y install git ansible
-
-
-echo
-echo "Downloading SVAuto into your home directory..."
-echo
-
-cd ~
-git clone -b dev https://github.com/sandvine-eng/svauto.git
-
-
-echo
 echo "Deploying OpenStack..."
 echo
 echo "Bridge Mode: Linux Bridges"
 echo
 
-cd ~/svauto
-./svauto.sh --operation=openstack --base-os=ubuntu16 --ubuntu-network-setup --ubuntu-network-detect-default-nic --ubuntu-network-mode=dhcp --ubuntu-dummies --ubuntu-iptables-rc-local --os-release=mitaka --os-aio --os-bridge-mode=LBR
+
+pushd ~/svauto
+
+
+# Hardcoded values, bad but, good for a moment...
+#
+# ubuntu_primary_interface=em1
+# os_external=dumm0
+# os_data=dumm1
+
+
+./svauto.sh --ubuntu-network-detect-default-nic \
+	--ansible-run-against=local \
+	--ansible-remote-user=root \
+	--ansible-inventory-builder="os_aio,localhost,ansible_connection=local,regular_system_user=ubuntu,base_os=ubuntu16,openstack_release=mitaka,ubuntu_primary_interface=em1,your_domain=$YOUR_DOMAIN,public_addr=$UBUNTU_HOSTNAME.$YOUR_DOMAIN,controller_addr=$UBUNTU_HOSTNAME.$YOUR_DOMAIN,deployment_mode=yes,os_mgmt=em1" \
+	--ansible-playbook-builder="localhost,bootstrap;base_os_upgrade=yes;ubuntu_network_setup=yes;ubuntu_network_mode=dhcp;ubuntu_setup_dummy_nics=yes;ubuntu_setup_iptables_rc_local=yes,os_clients,ssh_keypair,os_mysql,os_mysql_db,os_rabbitmq,os_memcached,apache2,os_keystone,os_glance,hyper_kvm,os_nova;os_nova_ctrl=yes;os_nova_cmpt=yes;linuxnet_interface_driver=nova.network.linux_net.LinuxBridgeInterfaceDriver,os_keypair,os_nova_flavors,os_neutron;os_aio=yes;os_neutron_ctrl=yes;os_neutron_net=yes;br_mode=LBR;neutron_interface_driver=neutron.agent.linux.interface.BridgeInterfaceDriver;mechanism_drivers=openvswitch;firewall_driver=iptables;os_external=dummy0;os_data=dummy1,os_ext_net,os_horizon,os_heat,post-cleanup"

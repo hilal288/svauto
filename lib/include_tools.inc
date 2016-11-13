@@ -4,12 +4,7 @@ source lib/cpu_check.sh
 source lib/hostname_check.sh
 
 
-# OpenStack (TODO: try to get rid of it, by using new --ansible-playbook=local)
-
-source lib/os_deploy.sh
-
-
-# Packer build presets (TODO: move it to scripts)
+# Packer build presets (TODO: move it to scripts/)
 
 source lib/packer_build_cs_release.sh
 source lib/packer_build_cs.sh
@@ -22,6 +17,7 @@ source lib/packer_build_sandvine_experimental.sh
 
 # Builders
 
+source lib/ansible_inventory_builder.sh
 source lib/ansible_playbook_builder.sh
 source lib/packer_builder.sh
 source lib/vagrant_builder.sh

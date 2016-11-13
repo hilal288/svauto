@@ -28,32 +28,44 @@ packer_build_cs()
 
 	# SVSDE on CentOS 7 + Cloud Services SDE + Cloud Services Daemon (back / front)
 	./svauto.sh --packer-builder --base-os=centos7 --product=svsde --version=$SDE_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--ansible-playbook-builder="svsde-servers,cloud-init,bootstrap:base_os_upgrade=yes:sandvine_main_yum_repo=yes:packages_server=$SVAUTO_MAIN_HOST:release_code_name=$RELEASE_CODE_NAME,grub-conf,udev-rules,base-os-auto-config,centos-network-setup:activate_eth1=no,centos-firewall-setup,nginx,svsde:sde_version=$SDE_VERSION:static_packages_server=$STATIC_PACKAGES_SERVER:static_repo=true:versioned_repo=true,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,vmware-tools,post-cleanup-image" \
+		--ansible-remote-user="root" \
+		--ansible-inventory-builder="svbox,localhost,ansible_connection=local,base_os=centos7,deployment_mode=yes,static_packages_server=$STATIC_PACKAGES_SERVER,static_repo=true,versioned_repo=true" \
+		--ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes;packages_server=$SVAUTO_MAIN_HOST;release_code_name=$RELEASE_CODE_NAME,grub-conf,udev-rules,base-os-auto-config,centos-network-setup;activate_eth1=no,centos-firewall-setup,nginx,svsde;sde_version=$SDE_VERSION,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,vmware-tools,post-cleanup-image" \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 	# SVSDE on CentOS 6 + Cloud Services SDE + Cloud Services Daemon (back / front)
 	./svauto.sh --packer-builder --base-os=centos6 --product=svsde --version=$SDE_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--ansible-playbook-builder="svsde-servers,cloud-init,bootstrap:base_os_upgrade=yes:sandvine_main_yum_repo=yes:packages_server=$SVAUTO_MAIN_HOST:release_code_name=$RELEASE_CODE_NAME,grub-conf,base-os-auto-config,centos-network-setup:activate_eth1=no,centos-firewall-setup,nginx,svsde:sde_version=$SDE_VERSION:static_packages_server=$STATIC_PACKAGES_SERVER:static_repo=true:versioned_repo=true,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,vmware-tools,post-cleanup-image" \
+		--ansible-remote-user="root" \
+		--ansible-inventory-builder="svbox,localhost,ansible_connection=local,base_os=centos6,deployment_mode=yes,static_packages_server=$STATIC_PACKAGES_SERVER,static_repo=true,versioned_repo=true" \
+		--ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes;packages_server=$SVAUTO_MAIN_HOST;release_code_name=$RELEASE_CODE_NAME,grub-conf,base-os-auto-config,centos-network-setup;activate_eth1=no,centos-firewall-setup,nginx,svsde;sde_version=$SDE_VERSION,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,vmware-tools,post-cleanup-image" \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 	# SVSPB on CentOS 6 + Cloud Services
 	./svauto.sh --packer-builder --base-os=centos6 --product=svspb --version=$SPB_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--ansible-playbook-builder="svspb-servers,cloud-init,bootstrap:base_os_upgrade=yes:sandvine_main_yum_repo=yes:packages_server=$SVAUTO_MAIN_HOST:release_code_name=$RELEASE_CODE_NAME,grub-conf,base-os-auto-config,centos-network-setup:activate_eth1=no,centos-firewall-setup,postgresql,svspb:spb_version=$SPB_VERSION:static_packages_server=$STATIC_PACKAGES_SERVER:static_repo=true:versioned_repo=true,svmcdtext,svreports,svcs-svspb,vmware-tools,post-cleanup-image,power-cycle" \
+		--ansible-remote-user="root" \
+		--ansible-inventory-builder="svbox,localhost,ansible_connection=local,base_os=centos6,deployment_mode=yes,static_packages_server=$STATIC_PACKAGES_SERVER,static_repo=true,versioned_repo=true" \
+		--ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes;packages_server=$SVAUTO_MAIN_HOST;release_code_name=$RELEASE_CODE_NAME,grub-conf,base-os-auto-config,centos-network-setup;activate_eth1=no,centos-firewall-setup,postgresql,svspb;spb_version=$SPB_VERSION,svmcdtext,svreports,svcs-svspb,vmware-tools,post-cleanup-image,power-cycle" \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 	# SVPTS on CentOS 7 + Cloud Services - Linux 3.10, DPDK 16.07
 	./svauto.sh --packer-builder --base-os=centos7 --product=svpts --version=$PTS_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--ansible-playbook-builder="svpts-servers,cloud-init,bootstrap:base_os_upgrade=yes:sandvine_main_yum_repo=yes:packages_server=$SVAUTO_MAIN_HOST:release_code_name=$RELEASE_CODE_NAME,grub-conf,udev-rules,base-os-auto-config,centos-network-setup:activate_eth1=no,centos-firewall-setup,nginx,svpts:pts_version=$PTS_VERSION:static_packages_server=$STATIC_PACKAGES_SERVER:static_repo=true:versioned_repo=true,svprotocols:pts_protocols_version=$PTS_PROTOCOLS_VERSION:static_packages_server=$STATIC_PACKAGES_SERVER:static_repo=true:versioned_repo=true,svusagemanagementpts,svcs-svpts,vmware-tools,post-cleanup-image" \
+		--ansible-remote-user="root" \
+		--ansible-inventory-builder="svbox,localhost,ansible_connection=local,base_os=centos6,deployment_mode=yes,static_packages_server=$STATIC_PACKAGES_SERVER,static_repo=true,versioned_repo=true" \
+		--ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes;packages_server=$SVAUTO_MAIN_HOST;release_code_name=$RELEASE_CODE_NAME,grub-conf,udev-rules,base-os-auto-config,centos-network-setup;activate_eth1=no,centos-firewall-setup,nginx,svpts;pts_version=$PTS_VERSION,svprotocols;pts_protocols_version=$PTS_PROTOCOLS_VERSION,svusagemanagementpts,svcs-svpts,vmware-tools,post-cleanup-image" \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 	# SVSDE on CentOS 7 + Cloud Services SDE only - No Cloud Services daemon here
 	./svauto.sh --packer-builder --base-os=centos7 --product=svsde --version=$SDE_VERSION --product-variant=isolated-svsde-cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--ansible-playbook-builder="svsde-servers,cloud-init,bootstrap:base_os_upgrade=yes:sandvine_main_yum_repo=yes:packages_server=$SVAUTO_MAIN_HOST:release_code_name=$RELEASE_CODE_NAME,grub-conf,udev-rules,base-os-auto-config,centos-network-setup:activate_eth1=no,centos-firewall-setup,nginx,svsde:sde_version=$SDE_VERSION:static_packages_server=$STATIC_PACKAGES_SERVER:static_repo=true:versioned_repo=true,svusagemanagement,svsubscribermapping,svcs-svsde,vmware-tools,post-cleanup-image" \
+		--ansible-remote-user="root" \
+		--ansible-inventory-builder="svbox,localhost,ansible_connection=local,base_os=centos7,deployment_mode=yes,static_packages_server=$STATIC_PACKAGES_SERVER,static_repo=true,versioned_repo=true" \
+		--ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes;packages_server=$SVAUTO_MAIN_HOST;release_code_name=$RELEASE_CODE_NAME,grub-conf,udev-rules,base-os-auto-config,centos-network-setup;activate_eth1=no,centos-firewall-setup,nginx,svsde;sde_version=$SDE_VERSION,svusagemanagement,svsubscribermapping,svcs-svsde,vmware-tools,post-cleanup-image" \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 	# Cloud Services Daemon (back / front) on CentOS 7 - No SDE here
 	./svauto.sh --packer-builder --base-os=centos7 --product=svcsd --version=$CSD_VERSION --product-variant=isolated-svcsd-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--ansible-playbook-builder="svcs-servers,cloud-init,bootstrap:base_os_upgrade=yes:sandvine_main_yum_repo=yes:packages_server=$SVAUTO_MAIN_HOST:release_code_name=$RELEASE_CODE_NAME,grub-conf,udev-rules,base-os-auto-config,centos-network-setup:activate_eth1=no,centos-firewall-setup,nginx,svcs,vmware-tools,post-cleanup-image" \
+		--ansible-remote-user="root" \
+		--ansible-inventory-builder="svbox,localhost,ansible_connection=local,base_os=centos7,deployment_mode=yes" \
+		--ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes;packages_server=$SVAUTO_MAIN_HOST;release_code_name=$RELEASE_CODE_NAME,grub-conf,udev-rules,base-os-auto-config,centos-network-setup;activate_eth1=no,centos-firewall-setup,nginx,svcs,vmware-tools,post-cleanup-image" \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 
@@ -63,7 +75,9 @@ packer_build_cs()
 
 	# SVPTS 7.35 on CentOS 6 + Cloud Services - Linux 3.18 from Xen 4.6 official repo, DPDK 16.04, don't requires igb_uio
 	./svauto.sh --packer-builder --base-os=centos6 --product=svpts --version=$PTS_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--ansible-playbook-builder="svpts-servers,centos-xen,cloud-init,bootstrap:base_os_upgrade=yes:sandvine_main_yum_repo=yes:packages_server=$SVAUTO_MAIN_HOST:release_code_name=$RELEASE_CODE_NAME,grub-conf,base-os-auto-config,centos-network-setup:activate_eth1=no,centos-firewall-setup,nginx,svpts:pts_version=$PTS_VERSION:static_packages_server=$STATIC_PACKAGES_SERVER:static_repo=true:versioned_repo=true,svprotocols:pts_protocols_version=$PTS_PROTOCOLS_VERSION:static_packages_server=$STATIC_PACKAGES_SERVER:static_repo=true:versioned_repo=true,svusagemanagementpts,svcs-svpts,vmware-tools,post-cleanup-image" \
+		--ansible-remote-user="root" \
+		--ansible-inventory-builder="svbox,localhost,ansible_connection=local,base_os=centos6,deployment_mode=yes,static_packages_server=$STATIC_PACKAGES_SERVER,static_repo=true,versioned_repo=true" \
+		--ansible-playbook-builder="svbox,centos-xen,cloud-init,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes;packages_server=$SVAUTO_MAIN_HOST;release_code_name=$RELEASE_CODE_NAME,grub-conf,base-os-auto-config,centos-network-setup;activate_eth1=no,centos-firewall-setup,nginx,svpts;pts_version=$PTS_VERSION,svprotocols;pts_protocols_version=$PTS_PROTOCOLS_VERSION,svusagemanagementpts,svcs-svpts,vmware-tools,post-cleanup-image" \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 
@@ -73,31 +87,43 @@ packer_build_cs()
 
 	# Cloud Services Build Server (back / front) on CentOS 6 (old Golang 1.5)
 	./svauto.sh --packer-builder --base-os=centos6 --product=devops --version=6 --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-	        --ansible-playbook-builder="devops-servers,centos-xen,cloud-init,bootstrap:base_os_upgrade=yes,grub-conf,base-os-auto-config,centos-network-setup:activate_eth1=no,centos-firewall-setup,golang-env,nodejs-env,ccollab-client,vmware-tools,post-cleanup-image" \
+		--ansible-remote-user="root" \
+		--ansible-inventory-builder="svbox,localhost,ansible_connection=local,base_os=centos6,deployment_mode=yes" \
+	        --ansible-playbook-builder="svbox,centos-xen,cloud-init,bootstrap;base_os_upgrade=yes,grub-conf,base-os-auto-config,centos-network-setup;activate_eth1=no,centos-firewall-setup,golang-env,nodejs-env,ccollab-client,vmware-tools,post-cleanup-image" \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 	# Cloud Services Build Server (back / front) on CentOS 7 (new Golang 1.6)
 	./svauto.sh --packer-builder --base-os=centos7 --product=devops --version=7 --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-	        --ansible-playbook-builder="devops-servers,centos-xen,cloud-init,bootstrap:base_os_upgrade=yes,grub-conf,udev-rules,base-os-auto-config,centos-network-setup:activate_eth1=no,centos-firewall-setup,golang-env,nodejs-env,ccollab-client,vmware-tools,post-cleanup-image" \
+		--ansible-remote-user="root" \
+		--ansible-inventory-builder="svbox,localhost,ansible_connection=local,base_os=centos7,deployment_mode=yes" \
+	        --ansible-playbook-builder="svbox,centos-xen,cloud-init,bootstrap;base_os_upgrade=yes,grub-conf,udev-rules,base-os-auto-config,centos-network-setup;activate_eth1=no,centos-firewall-setup,golang-env,nodejs-env,ccollab-client,vmware-tools,post-cleanup-image" \
 		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 
 	# Cloud Services Build Server (back) on CentOS 6 (old Golang 1.5)
 #	./svauto.sh --packer-builder --base-os=centos6 --product=centos --version=6 --product-variant=go-devops-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-#	        --ansible-playbook-builder="centos-servers,centos-xen,cloud-init,bootstrap:base_os_upgrade=yes,grub-conf,base-os-auto-config,centos-network-setup:activate_eth1=no,centos-firewall-setup,golang-env,vmware-tools,post-cleanup-image" $DRY_RUN_OPT
+#		--ansible-remote-user="root" \
+#		--ansible-inventory-builder="svbox,localhost,ansible_connection=local,base_os=centos6,deployment_mode=yes" \
+#	        --ansible-playbook-builder="svbox,centos-xen,cloud-init,bootstrap;base_os_upgrade=yes,grub-conf,base-os-auto-config,centos-network-setup;activate_eth1=no,centos-firewall-setup,golang-env,vmware-tools,post-cleanup-image" $DRY_RUN_OPT
 
 	# Cloud Services Build Server (front) on CentOS 6 (NodeJS)
 #	./svauto.sh --packer-builder --base-os=centos6 --product=centos --version=6 --product-variant=nodejs-devops-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-#	        --ansible-playbook-builder="centos-servers,centos-xen,cloud-init,bootstrap:base_os_upgrade=yes,grub-conf,base-os-auto-config,centos-network-setup:activate_eth1=no,centos-firewall-setup,nodejs-env,vmware-tools,post-cleanup-image" $DRY_RUN_OPT
+#		--ansible-remote-user="root" \
+#		--ansible-inventory-builder="svbox,localhost,ansible_connection=local,base_os=centos6,deployment_mode=yes" \
+#	        --ansible-playbook-builder="svbox,centos-xen,cloud-init,bootstrap;base_os_upgrade=yes,grub-conf,base-os-auto-config,centos-network-setup;activate_eth1=no,centos-firewall-setup,nodejs-env,vmware-tools,post-cleanup-image" $DRY_RUN_OPT
 
 
 	# Cloud Services Build Server (back) on CentOS 7 (new Golang 1.6)
 #	./svauto.sh --packer-builder --base-os=centos7 --product=centos --version=7 --product-variant=go-devops-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-#	        --ansible-playbook-builder="centos-servers,centos-xen,cloud-init,bootstrap:base_os_upgrade=yes,grub-conf,udev-rules,base-os-auto-config,centos-network-setup:activate_eth1=no,centos-firewall-setup,golang-env,vmware-tools,post-cleanup-image" $DRY_RUN_OPT
+#		--ansible-remote-user="root" \
+#		--ansible-inventory-builder="svbox,localhost,ansible_connection=local,base_os=centos7,deployment_mode=yes" \
+#	        --ansible-playbook-builder="svbox,centos-xen,cloud-init,bootstrap;base_os_upgrade=yes,grub-conf,udev-rules,base-os-auto-config,centos-network-setup;activate_eth1=no,centos-firewall-setup,golang-env,vmware-tools,post-cleanup-image" $DRY_RUN_OPT
 
 	# Cloud Services Build Server (front) on CentOS 7 (NodeJS)
 #	./svauto.sh --packer-builder --base-os=centos7 --product=centos --version=7 --product-variant=nodejs-devops-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-#	        --ansible-playbook-builder="centos-servers,centos-xen,cloud-init,bootstrap:base_os_upgrade=yes,grub-conf,udev-rules,base-os-auto-config,centos-network-setup:activate_eth1=no,centos-firewall-setup,nodejs-env,vmware-tools,post-cleanup-image" $DRY_RUN_OPT
+#		--ansible-remote-user="root" \
+#		--ansible-inventory-builder="svbox,localhost,ansible_connection=local,base_os=centos7,deployment_mode=yes" \
+#	        --ansible-playbook-builder="svbox,centos-xen,cloud-init,bootstrap;base_os_upgrade=yes,grub-conf,udev-rules,base-os-auto-config,centos-network-setup;activate_eth1=no,centos-firewall-setup,nodejs-env,vmware-tools,post-cleanup-image" $DRY_RUN_OPT
 
 
         ./svauto.sh --heat-templates=cs-dev

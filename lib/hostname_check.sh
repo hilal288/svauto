@@ -46,7 +46,7 @@ hostname_check()
 
 	# Display local configuration
 	echo
-	echo "The detected local configuration are:"
+	echo "Auto-detected local configuration:"
 	echo
 	echo -e "* Username:"'\t'$WHOAMI
 	echo -e "* Hostname:"'\t'$UBUNTU_HOSTNAME
