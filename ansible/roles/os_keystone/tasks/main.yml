@@ -42,14 +42,15 @@
   notify: reload-apache2
   tags: keystone_conf
 
+
 - name: Populating Keystone Database
   shell: su -s /bin/sh -c "keystone-manage db_sync" keystone
+
 
 - name: Initialize Fernet keys
   shell: keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone
 
-
-- name: Initialize Fernet credential
+- name: Initialize Fernet credential (Newton)
   shell: keystone-manage credential_setup --keystone-user keystone --keystone-group keystone
   when: openstack_release == 'newton'
 
@@ -66,7 +67,8 @@
 - meta: flush_handlers
 
 
-- include: openstack-keystone-init.yml
+- name: Including Keystone Init 
+  include: openstack-keystone-init-{{openstack_release}}.yml
   when: deployment_mode == 'yes'
 
 

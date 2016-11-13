@@ -14,6 +14,7 @@
 
 # Reference:
 # http://docs.openstack.org/mitaka/install-guide-ubuntu/neutron-controller-install.html
+# http://docs.openstack.org/newton/install-guide-ubuntu/neutron-controller-install.html
 
 - name: Creating OpenStack Neutron Service
   environment: "{{admin_openrc_env}}"

@@ -33,7 +33,7 @@
 
 
 - name: Updating openstack-dashboard.conf
-  template: src=openstack-dashboard.conf
+  template: src={{openstack_release}}/openstack-dashboard.conf
             dest=/etc/apache2/conf-available/openstack-dashboard.conf
             owner=root
             group=root

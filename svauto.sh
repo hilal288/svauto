@@ -609,7 +609,7 @@ then
 		echo
 		echo "Cleaning it up..."
 
-		rm -rf build-date.txt packer/build* tmp/cs-rel/* tmp/cs/* tmp/sv/*  ansible/*.retry ansible/*.yml ansible/*-hosts-* ansible/*-extra-vars-* ansible/facts_storage
+		rm -rf build-date.txt packer/build* tmp/cs-rel/* tmp/cs/* tmp/sv/* tmp/*.qcow2c tmp/*.img ansible/*.retry ansible/*.yml ansible/*-hosts-* ansible/*-extra-vars-* ansible/facts_storage
 
 		exit 0
 	else

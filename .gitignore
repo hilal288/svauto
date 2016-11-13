@@ -1,6 +1,7 @@
 *.swp
 *.qcow2
 *.qcow2c
+*.img
 *.vmdk
 *.retry
 *.log

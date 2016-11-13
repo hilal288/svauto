@@ -300,8 +300,6 @@ os_open_provider_nets_to_regular_users: "no"
 
 linuxnet_interface_driver: "nova.network.linux_net.LinuxBridgeInterfaceDriver"
 neutron_interface_driver: "neutron.agent.linux.interface.BridgeInterfaceDriver"
-mechanism_drivers: "linuxbridge"
-firewall_driver: "iptables"
 
 # Neutron's External Network (Floating IPs comes from here):
 ext_net_subnet: "172.31.254.128/25"
