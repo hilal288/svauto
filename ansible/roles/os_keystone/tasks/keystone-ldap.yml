@@ -21,12 +21,14 @@
     - python-ldap
     - python-ldappool
 
+
 - name: Ensure the keystone/domains directory exists
   file: path=/etc/keystone/domains
         state=directory
         owner=keystone
         group=keystone
         mode=0775
+
 
 - name: Update keystone ldap configuration
   template: src={{openstack_release}}/keystone.domain.conf.j2

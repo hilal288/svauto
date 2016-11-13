@@ -12,11 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Reference:
+# http://docs.openstack.org/mitaka/install-guide-ubuntu/glance-install.html
+# http://docs.openstack.org/newton/install-guide-ubuntu/glance-install.html
+
 - include: openstack-glance-init.yml
   when: deployment_mode == 'yes'
 
-# Reference:
-# http://docs.openstack.org/mitaka/install-guide-ubuntu/glance-install.html
 
 - name: Installing Glance Server
   apt: name={{item}} state=latest

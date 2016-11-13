@@ -14,12 +14,13 @@
 
 # Reference:
 # http://docs.openstack.org/mitaka/install-guide-ubuntu/glance-install.html
+# http://docs.openstack.org/newton/install-guide-ubuntu/glance-install.html
 
 - name: Creating OpenStack Glance Service
   environment: "{{admin_openrc_env}}"
   command: "{{item}}"
   with_items:
-  - openstack service create --name glance --description "OpenStack Image service" image
+  - openstack service create --name glance --description "OpenStack Image" image
 
 
 - name: Creating OpenStack Glance Endpoint
