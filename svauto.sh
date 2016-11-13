@@ -807,17 +807,6 @@ then
 fi
 
 
-if [ -z "$ANSIBLE_REMOTE_USER" ]
-then
-
-	echo
-	echo "Warning! You must specify the --ansible-remote-user option!"
-	echo "Example: --ansible-remote-user=sandvine"
-
-	exit 1
-
-fi
-
 
 #
 # Pure Ansible deployments, can be local or remote.
@@ -825,6 +814,18 @@ fi
 
 if [ ! -z "$ANSIBLE_RUN_AGAINST" ]
 then
+
+	if [ -z "$ANSIBLE_REMOTE_USER" ]
+	then
+
+		echo
+		echo "Warning! You must specify the --ansible-remote-user option!"
+		echo "Example: --ansible-remote-user=sandvine"
+
+		exit 1
+
+	fi
+
 
         cpu_check
 
@@ -869,13 +870,11 @@ if [ -z "$OPERATION" ]
 then
 
 	echo
-	echo "No operation mode was specified, use one of the following ./svauto.sh options:"
+	echo "Warning! No operation mode was specified, use one of the following ./svauto.sh options:"
 
 	echo
 	echo "--operation=sandvine|cloud-services"
 	echo
-
-	exit 1
 
 fi
 
@@ -907,7 +906,7 @@ then
 
 		pushd ~/svauto
 
-		mkdir tmp
+		if [ ! -d tmp ] ; then mkdir tmp ; fi
 
 		pushd tmp
 
