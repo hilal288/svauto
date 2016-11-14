@@ -779,7 +779,7 @@ REST_API_REQUIRED_SETTINGS = ['OPENSTACK_HYPERVISOR_FEATURES',
 DEFAULT_THEME = 'ubuntu'
 
 # Default Ubuntu apache configuration uses /horizon as the application root.
-WEBROOT='/horizon/'
+#WEBROOT='/horizon/'
 
 # By default, validation of the HTTP Host header is disabled.  Production
 # installations should have this set accordingly.  For more information
