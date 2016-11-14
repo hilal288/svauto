@@ -429,9 +429,21 @@ case $i in
 		shift
 		;;
 
+        --download-sandvine-images)
+
+	        DOWNLOAD_SANDVINE_IMAGES="yes"
+		shift
+		;;
+
         --download-iso-images)
 
 	        DOWNLOAD_ISO_IMAGES="yes"
+		shift
+		;;
+
+	--libvirt-install-images)
+
+		LIBVIRT_INSTALL_IMAGES="yes"
 		shift
 		;;
 
@@ -638,6 +650,62 @@ then
 	sudo wget -c $CENTOS6_64_ISO
 
 	popd
+
+	exit 0
+
+fi
+
+
+# TODO: Do this via Ansible!
+if [ "$DOWNLOAD_SANDVINE_IMAGES" == "yes" ]
+then
+
+        echo
+        echo "Enter your Sandvine's FTP (ftp.support.sandvine.com) account details:"
+        echo
+
+        echo -n "Username: "
+#	read FTP_USER
+
+        echo -n "Password: "
+#	read -s FTP_PASS
+
+	echo
+
+	pushd downloads
+
+#	wget -c --user=$FTP_USER --password=$FTP_PASS $PTS_IMG_URL
+#	wget -c --user=$FTP_USER --password=$FTP_PASS $SDE_IMG_URL
+#	wget -c --user=$FTP_USER --password=$FTP_PASS $SPB_IMG_URL
+
+	wget -c $PTS_IMG_URL
+	wget -c $SDE_IMG_URL
+	wget -c $SPB_IMG_URL
+
+	popd
+
+	exit 0
+
+fi
+
+
+# TODO: Do this via Ansible!
+if [ "$LIBVIRT_INSTALL_IMAGES" == "yes" ]
+then
+
+	echo
+	echo "Deploying QCoW2 images into /var/lib/libvirt/images subdirectory..."
+
+
+	pushd downloads
+
+
+	sudo qemu-img convert -p -f qcow2 -O qcow2 -o preallocation=metadata $PTS_IMG_FILENAME /var/lib/libvirt/images/stack-1-pts-1-disk1.qcow2
+
+	sudo qemu-img convert -p -f qcow2 -O qcow2 -o preallocation=metadata $SDE_IMG_FILENAME /var/lib/libvirt/images/stack-1-sde-1-disk1.qcow2
+
+	sudo qemu-img convert -p -f qcow2 -O qcow2 -o preallocation=metadata $SPB_IMG_FILENAME /var/lib/libvirt/images/stack-1-spb-1-disk1.qcow2
+
 
 	exit 0
 
@@ -901,14 +969,13 @@ then
 
 		if [ "$OS_PROJECT" == "admin" ]; then VISIBILITY="--public" ; fi
 
+
 		echo
 		echo "Downloading and importing basic Cloud images into Glance..."
 
-		pushd ~/svauto
 
-		if [ ! -d tmp ] ; then mkdir tmp ; fi
+		pushd ~/svauto/downloads
 
-		pushd tmp
 
 		wget -c $UBUNTU1604_64_CLOUD_IMG_URL
 		wget -c $UBUNTU1404_64_CLOUD_IMG_URL
@@ -937,7 +1004,9 @@ then
 		# Updating O.S. images properties (use with care), below syntax not ready yet for Glance v2:
 		# openstack image update --property hw_scsi_model=virtio-scsi --property hw_disk_bus=scsi "your-image-name-1.0"
 
+
 		popd
+
 
 		exit 0
 
