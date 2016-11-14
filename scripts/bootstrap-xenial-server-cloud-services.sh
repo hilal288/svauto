@@ -1,0 +1,3 @@
+#! /bin/bash
+
+curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/svauto-deployments.sh | bash -s -- --base-os=ubuntu16 --ansible-run-against="local" --ansible-remote-user="root" --ansible-inventory-builder="all,localhost,ansible_connection=local,regular_system_user=ubuntu,base_os=ubuntu16,os_release=newton" --ansible-playbook-builder="localhost,bootstrap;base_os_upgrade=yes;ubuntu_install=server,grub-conf;enable_hugepages=yes;grub_nr_1g_pages=16,ssh_keypair,hyper_kvm,dpdk;enable_hugepages=yes;dpdk_nr_1g_pages=16;dpdk_id_1=0000:06:00.0;dpdk_driver_1=uio_pci_generic;dpdk_id_2=0000:06:00.1;dpdk_driver_2=uio_pci_generic,openvswitch;openvswitch_mode=regular,os_clients,post-cleanup"

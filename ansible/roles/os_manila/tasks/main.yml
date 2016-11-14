@@ -33,7 +33,7 @@
 
 
 - name: Updating manila.conf
-  template: src={{openstack_release}}/manila.conf
+  template: src={{os_release}}/manila.conf
         dest=/etc/manila/manila.conf
         owner=manila
         group=manila

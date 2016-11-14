@@ -21,31 +21,55 @@
 - name: ubuntu - apt installing Open vSwitch with DPDK
   apt: name={{item}} state=latest
   with_items:
+    - openvswitch-switch
+    - python-openvswitch
+  notify: restart-openvswitch
+  when: openvswitch_mode == 'regular'
+
+
+- name: ubuntu - apt installing Open vSwitch with DPDK
+  apt: name={{item}} state=latest
+  with_items:
     - openvswitch-switch-dpdk
     - python-openvswitch
   notify: restart-openvswitch
-
-
-- name: ubuntu - copy openvswitch defaults
-  template: src=etc_default_openvswitch-switch.j2
-            dest=/etc/default/openvswitch-switch
-            owner=root
-            group=root
-            mode=0644
-            backup=yes
-  notify: restart-openvswitch
+  when: openvswitch_mode == 'dpdk'
 
 
 - name: ubuntu - ovs-vswitchd as default for OVS vSwitch
   alternatives: name=ovs-vswitchd path=/usr/lib/openvswitch-switch/ovs-vswitchd
   notify: restart-openvswitch
-  when: ovs_dpdk == 'no'
+  when: openvswitch_mode == 'regular'
 
 
 - name: ubuntu - ovs-vswitchd-dpdk as default for OVS vSwitch
   alternatives: name=ovs-vswitchd path=/usr/lib/openvswitch-switch-dpdk/ovs-vswitchd-dpdk
   notify: restart-openvswitch
-  when: ovs_dpdk == 'yes'
+  when: openvswitch_mode == 'dpdk'
+
+
+- meta: flush_handlers
+
+
+- name: ubuntu - enabling OpenvSwitch's DPDK mode
+  shell: ovs-vsctl --no-wait set Open_vSwitch . other_config:dpdk-init=true
+  when: openvswitch_mode == 'dpdk'
+
+
+- name: ubuntu - allowing Libvirt user to access OpenvSwitch Unix Sockets
+  shell: ovs-vsctl --no-wait set Open_vSwitch . other_config:dpdk-extra="--vhost-owner libvirt-qemu:kvm --vhost-perm 0664"
+  when: openvswitch_mode == 'dpdk'
+
+
+- name: ubuntu - enabling OpenvSwitch's 1G Hugepages
+  shell: ovs-vsctl --no-wait set Open_vSwitch . other_config:dpdk-socket-mem="2048,0"
+  when: openvswitch_mode == 'dpdk' and processor_count_1g_hugepages >= 1
+
+
+# CPU Mask values: F=2, FF=4, FFF=6, FFFF=8
+- name: ubuntu - configuring the number of CPU Cores to OpenvSwitch DPDK
+  shell: ovs-vsctl set Open_vSwitch . other_config:pmd-cpu-mask=FF
+  when: openvswitch_mode == 'dpdk'
 
 
 - meta: flush_handlers

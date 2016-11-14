@@ -17,41 +17,30 @@
 move2webroot()
 {
 
-        if [ "$DRY_RUN" == "yes" ]
+	WEB_ROOT_STOCK="$WEB_ROOT_STOCK/$BUILD_DATE"
+
+        echo
+        echo "Moving all images created during this build, to the Web Root."
+
+
+        find packer/build* -name "*.raw" -exec rm -f {} \;
+
+	find packer/build* -name "*.sha256" -exec mv {} $WEB_ROOT_STOCK \;
+	find packer/build* -name "*.xml" -exec mv {} $WEB_ROOT_STOCK \;
+	find packer/build* -name "*.qcow2c" -exec mv {} $WEB_ROOT_STOCK \;
+	find packer/build* -name "*.vmdk" -exec mv {} $WEB_ROOT_STOCK \;
+	find packer/build* -name "*.vhd*" -exec mv {} $WEB_ROOT_STOCK \;
+	find packer/build* -name "*.ova" -exec mv {} $WEB_ROOT_STOCK \;
+
+
+        if [ "$HEAT_TEMPLATES" == "yes" ]
         then
+
                 echo
-                echo "Not creating to web root directory structure! Skipping this step..."
-        else
+                echo "Copying Sandvine's Heat Templates into web public subdirectory..."
 
-		# Web Public directory details
+                cp tmp/sv/sandvine-stack-*.yaml $WEB_ROOT_STOCK/
 
-		# Sandvine Stock images directory:
-		WEB_ROOT_STOCK_MAIN=$DOCUMENT_ROOT/images/platform/stock/$RELEASE_CODE_NAME
-
-		WEB_ROOT_STOCK=$WEB_ROOT_STOCK_MAIN/$BUILD_DATE
-		WEB_ROOT_STOCK_LAB=$WEB_ROOT_STOCK_MAIN/$BUILD_DATE/lab
-		WEB_ROOT_STOCK_RELEASE=$WEB_ROOT_STOCK_MAIN/$BUILD_DATE/to-be-released
-#		WEB_ROOT_STOCK_RELEASE_LAB=$WEB_ROOT_STOCK_MAIN/$BUILD_DATE/to-be-released/lab
-
-		# Sandvine Stock mages + Cloud Services directory:
-		WEB_ROOT_CS_MAIN=$DOCUMENT_ROOT/images/platform/cloud-services/$RELEASE_CODE_NAME
-
-		WEB_ROOT_CS=$WEB_ROOT_CS_MAIN/$BUILD_DATE
-		WEB_ROOT_CS_LAB=$WEB_ROOT_CS_MAIN/$BUILD_DATE/lab
-		WEB_ROOT_CS_RELEASE=$WEB_ROOT_CS_MAIN/$BUILD_DATE/to-be-released
-#		WEB_ROOT_CS_RELEASE_LAB=$WEB_ROOT_CS_MAIN/$BUILD_DATE/to-be-released/lab
-
-
-		echo
-		echo "Creating web root directory structure..."
-
-		# Creating the Web directory structure:
-		mkdir -p $WEB_ROOT_STOCK_LAB
-		mkdir -p $WEB_ROOT_STOCK_RELEASE
-
-		mkdir -p $WEB_ROOT_CS_LAB
-		mkdir -p $WEB_ROOT_CS_RELEASE
-
-	fi
+        fi
 
 }

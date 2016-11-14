@@ -1,28 +1,10 @@
-#! /bin/bash
+# Requirements checks
 
-# Copyright 2016, Sandvine Incorporated.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+source lib/cpu_check.sh
+source lib/hostname_check.sh
 
-source svauto.conf
 
-source lib/os_deploy.sh
-
-source lib/move2webroot.sh
-
-source lib/build_yum_repo_agawa.sh
-source lib/build_yum_repo_niagara.sh
-source lib/build_yum_repo_yukon.sh
+# Packer build presets (TODO: move it to scripts/)
 
 source lib/packer_build_cs_release.sh
 source lib/packer_build_cs.sh
@@ -32,6 +14,32 @@ source lib/packer_build_sandvine.sh
 source lib/packer_build_sandvine_lab.sh
 source lib/packer_build_sandvine_experimental.sh
 
-source lib/ansible_playbook_builder.sh
 
-source lib/svauto_deployments.sh
+# Builders
+
+source lib/ansible_inventory_builder.sh
+source lib/ansible_playbook_builder.sh
+source lib/packer_builder.sh
+source lib/vagrant_builder.sh
+source lib/yum_repo_builder.sh
+
+
+# Post Packer build helpers
+
+source lib/mkwebrootsubdirs.sh
+
+source lib/update_web_dir_sums.sh
+source lib/update_web_dir_symlink.sh
+
+source lib/installation_helper.sh
+source lib/installation_helper_cs.sh
+source lib/installation_helper_cs_prod.sh
+
+source lib/libvirt_files.sh
+source lib/libvirt_files_cs.sh
+
+source lib/heat_templates.sh
+source lib/heat_templates_cs.sh
+
+source lib/move2webroot.sh
+source lib/move2webroot_cs.sh

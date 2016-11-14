@@ -20,12 +20,24 @@
             mode=0644
 
 
-- name: centos - yum installing the SVNDA
+- name: centos - yum installing SVNDA
   yum: pkg={{item}} state=latest update_cache=yes
   with_items:
     - postgresql93-server
     - tomcat-6.0.20
     - svnda
+
+
+- name: centos - yum installing SVNDA AddOns
+  yum: pkg={{item}} state=latest update_cache=yes
+  with_items:
+    - svnda-accessdevice
+    - svnda-capacityplanning
+    - svnda-re
+    - svnda-rte
+    - svnda-um
+    - svnda-tm
+  when: svnda_install_addons == 'yes'
 
 
 - name: centos - copy Sandvine SVNDA login logo generator

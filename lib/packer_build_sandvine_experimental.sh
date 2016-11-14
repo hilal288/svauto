@@ -17,11 +17,7 @@
 packer_build_sandvine_experimental()
 {
 
-	SVTSE_VERSION="1.00"
-	SVPTS_VERSION="7.40.0123.pts_tse_dev_integration"
-	SVTCPA_VERSION="5.40"
-	SVNDA_VERSION="5.20"
-
+	TSE_EXPERIMENTAL_VERSION="1.00.0041"
 
 	if [ "$DRY_RUN" == "yes" ]; then
 		export DRY_RUN_OPT="--dry-run"
@@ -33,104 +29,32 @@ packer_build_sandvine_experimental()
 	#
 
 
-        # Linux SVPTS 7.40 on CentOS 7
-        ./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svpts --version=$SVPTS_VERSION --product-variant=vpl-test-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
-                --roles=cloud-init,bootstrap,grub-conf,nginx,svpts,vmware-tools,post-cleanup-image --versioned-repo \
-                --packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
+        # Linux PTS on CentOS 7
+#        ./svauto.sh --packer-builder --base-os=centos7 --release=dev --product=svpts --version=$PTS_EXPERIMENTAL_VERSION --product-variant=vpl-test-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+#		--ansible-remote-user="root" \
+#		--ansible-inventory-builder="svbox,localhost,ansible_connection=local,base_os=centos7,deployment_mode=yes,static_packages_server=$STATIC_PACKAGES_SERVER,static_repo=true,versioned_repo=true" \
+#                --ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes;packages_server=$SVAUTO_MAIN_HOST;release_code_name=$RELEASE_CODE_NAME,grub-conf,udev-rules,nginx,svpts;pts_version=$PTS_VERSION,svprotocols;pts_protocols_version=$PTS_PROTOCOLS_VERSION,vmware-tools,post-cleanup-image" \
+#                --packer-max-tries=1 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
-	# Linux SVTSE 1.00 on CentOS 7
-	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svtse --version=$SVTSE_VERSION --product-variant=vpl-test-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--roles=cloud-init,bootstrap,grub-conf,nginx,svtse,vmware-tools,post-cleanup-image --versioned-repo \
-		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
+	# Linux SVTSE on CentOS 7
+	./svauto.sh --packer-builder --base-os=centos7 --release=dev --product=svtse --version=$TSE_EXPERIMENTAL_VERSION --product-variant=vpl-test-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+		--ansible-remote-user="root" \
+		--ansible-inventory-builder="svbox,localhost,ansible_connection=local,base_os=centos7,deployment_mode=yes,static_packages_server=$STATIC_PACKAGES_SERVER,static_repo=true,versioned_repo=true" \
+		--ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes;packages_server=$SVAUTO_MAIN_HOST;release_code_name=$RELEASE_CODE_NAME,grub-conf,udev-rules,nginx,svtse;svtse_version=$TSE_EXPERIMENTAL_VERSION,vmware-tools,post-cleanup-image" \
+		--packer-max-tries=1 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
-	# Linux SVTCP Accelerator 5.40 on CentOS 7
-	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svtcpa --version=$SVTCPA_VERSION --product-variant=vpl-test-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--roles=cloud-init,bootstrap,grub-conf,nginx,svtcpa,vmware-tools,post-cleanup-image --versioned-repo \
-		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
+	# Linux SVTCP Accelerator on CentOS 7
+	./svauto.sh --packer-builder --base-os=centos7 --release=dev --product=svtcpa --version=$TCPA_VERSION --product-variant=vpl-test-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+		--ansible-remote-user="root" \
+		--ansible-inventory-builder="svbox,localhost,ansible_connection=local,base_os=centos7,deployment_mode=yes,static_packages_server=$STATIC_PACKAGES_SERVER,static_repo=true,versioned_repo=true" \
+		--ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes;packages_server=$SVAUTO_MAIN_HOST;release_code_name=$RELEASE_CODE_NAME,grub-conf,udev-rules,nginx,svtcpa;svtcpa_version=$TCPA_VERSION,vmware-tools,post-cleanup-image" \
+		--packer-max-tries=1 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
-#	# Linux SVNDA 5.20 on Centos 7
-#        ./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svnda --version=$SVNDA_VERSION --product-variant=vpl-test-1 --operation=sandvine --qcow2 --ova --vhd --vm-xml --sha256sum \
-#                --roles=cloud-init,bootstrap,grub-conf,nginx,postgresql,svnda,vmware-tools,post-cleanup-image --versioned-repo \
-#                --packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
-
-
-
-	if [ "$LIBVIRT_FILES" == "yes" ]
-	then
-
-                if [ "$DRY_RUN" == "yes" ]
-                then
-
-                        echo
-                        echo "Not copying Libvirt files! Skipping this step..."
-
-                else
-
-			echo
-			echo "Copying Libvirt files for release into tmp/cs subdirectory..."
-
-			cp misc/libvirt/* tmp/cs/
-
-			find packer/build* -name "*.xml" -exec cp {} tmp/cs/ \;
-
-			sed -i -e 's/{{sde_image}}/svsde-'$SDE_VERSION'-cs-1-centos7-amd64/g' tmp/cs/libvirt-qemu.hook
-
-		fi
-
-	fi
-
-
-	if [ "$MOVE2WEBROOT" == "yes" ]
-	then
-
-                if [ "$DRY_RUN" == "yes" ]
-                then
-                        echo
-                        echo "Not moving to web root! Skipping this step..."
-                else
-
-			echo
-			echo "Moving all images created during this build, to the Web Root."
-			echo "Also, doing some clean ups, to free the way for subsequent builds..."
-
-
-			find packer/build* -name "*.raw" -exec rm -f {} \;
-
-			find packer/build* -name "*.sha256" -exec mv {} $WEB_ROOT_CS \;
-			find packer/build* -name "*.xml" -exec mv {} $WEB_ROOT_CS \;
-			find packer/build* -name "*.qcow2c" -exec mv {} $WEB_ROOT_CS \;
-#			find packer/build* -name "*.vmdk" -exec mv {} $WEB_ROOT_CS \;
-			find packer/build* -name "*.vhd*" -exec mv {} $WEB_ROOT_CS \;
-			find packer/build* -name "*.ova" -exec mv {} $WEB_ROOT_CS \;
-
-
-			echo
-			echo "Merging SHA256SUMS files together..."
-
-			cd $WEB_ROOT_CS
-
-			cat *.sha256 > SHA256SUMS
-			rm -f *.sha256
-
-			cd - &>/dev/null
-
-
-        	        echo
-        	        echo "Updating symbolic link \"current\" to point to \"$BUILD_DATE\"..."
-
-			cd $WEB_ROOT_CS_MAIN
-
-			rm -f current
-			ln -s $BUILD_DATE current
-
-			cd - &>/dev/null
-
-
-			# Free the way for subsequent builds:
-			rm -rf packer/build*
-
-		fi
-
-	fi
+#	# Linux NDA on Centos 7
+#        ./svauto.sh --packer-builder --base-os=centos7 --release=dev --product=svnda --version=$NDA_VERSION --product-variant=vpl-test-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+#		--ansible-remote-user=root \
+#		--ansible-inventory-builder="svbox,localhost,ansible_connection=local,base_os=centos7,deployment_mode=yes,static_packages_server=$STATIC_PACKAGES_SERVER,static_repo=true,versioned_repo=true" \
+#                --ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes,grub-conf,udev-rules,nginx,postgresql,svnda;svnda_version=$NDA_VERSION,vmware-tools,post-cleanup-image" \
+#                --packer-max-tries=1 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 }

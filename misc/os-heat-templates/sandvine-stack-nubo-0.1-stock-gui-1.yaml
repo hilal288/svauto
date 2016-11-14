@@ -4,12 +4,18 @@ description: >
 
   HOT template to create Sandvine Stack, it have an Instance acting as a L2 Bridge between two VXLAN networks.
 
+
   We have 4 Instances:
 
-  * SVPTS - CentOS 7
-  * SVSDE - CentOS 7
-  * SVSPB - CentOS 6
+
+  * PTS - CentOS 7
+
+  * SDE - CentOS 7
+
+  * SPB - CentOS 6
+
   * GUI - Windows or Android
+
 
   We want to wire them as:
 
@@ -49,23 +55,23 @@ parameters:
     description: Public Network with Floating IP addresses
     default: "ext-net"
 
-  svpts_image:
+  pts_image:
     type: string
-    label: "SVPTS Image (default '{{svpts_image}}')"
-    description: "SVPTS Image"
-    default: "{{svpts_image}}"
+    label: "PTS Image (default '{{pts_image}}')"
+    description: "PTS Image"
+    default: "{{pts_image}}"
 
-  svsde_image:
+  sde_image:
     type: string
-    label: "SVSDE Image (default '{{svsde_image}}')"
-    description: "SVSDE Image"
-    default: "{{svsde_image}}"
+    label: "SDE Image (default '{{sde_image}}')"
+    description: "SDE Image"
+    default: "{{sde_image}}"
 
-  svspb_image:
+  spb_image:
     type: string
-    label: "SVSPB Image (default '{{svspb_image}}')"
-    description: "SVSPB Image"
-    default: "{{svspb_image}}"
+    label: "SPB Image (default '{{spb_image}}')"
+    description: "SPB Image"
+    default: "{{spb_image}}"
 
   gui_image:
     type: string
@@ -108,7 +114,6 @@ resources:
     type: OS::Neutron::Subnet
     properties:
       name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-service' } }
-      dns_nameservers: [8.8.4.4, 8.8.8.8]
       network: { get_resource: service_net }
       enable_dhcp: True
       cidr: 192.168.192.128/25
@@ -152,64 +157,64 @@ resources:
       network_id: { get_resource: data_int_net1 }
       cidr: 10.192.0.0/16
 
-  svspb_ctrl_port:
+  spb_ctrl_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "svspb-port"]]}
+      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "spb-port"]]}
       network_id: { get_resource: ctrl_net }
       fixed_ips:
         - ip_address: 192.168.192.10
 
-  svpts_ctrl_port:
+  pts_ctrl_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "svpts-port"]]}
+      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "pts-port"]]}
       network_id: { get_resource: ctrl_net }
       fixed_ips:
         - ip_address: 192.168.192.30
 
-  svsde_ctrl_port:
+  sde_ctrl_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "svsde-port"]]}
+      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "sde-port"]]}
       network_id: { get_resource: ctrl_net }
       fixed_ips:
         - ip_address: 192.168.192.20
 
-  svspb_srvc_port:
+  spb_srvc_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "svspb-port"]]}
+      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "spb-port"]]}
       network: { get_resource: service_net }
       fixed_ips:
         - ip_address: 192.168.192.130
 
-  svsde_srvc_port:
+  sde_srvc_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "svsde-port"]]}
+      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "sde-port"]]}
       network: { get_resource: service_net }
       fixed_ips:
        - ip_address: 192.168.192.140
  
-  svpts_srvc_port:
+  pts_srvc_port:
     type: OS::Neutron::Port
     properties:
-      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "svpts-port"]]}
+      name: {"Fn::Join": ["-", [{ get_param: "OS::stack_name" } , "pts-port"]]}
       network: { get_resource: service_net }
       fixed_ips:
         - ip_address: 192.168.192.150
 
-  svpts_1:
+  pts_1:
     type: OS::Nova::Server
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-svpts-1' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-pts-1' } }
       key_name: { get_param: 'ssh_key' }
-      image: { get_param: 'svpts_image' }
+      image: { get_param: 'pts_image' }
       flavor: "m1.medium"
       networks:
-        - port: { get_resource: svpts_ctrl_port }
-        - port: { get_resource: svpts_srvc_port }
+        - port: { get_resource: pts_ctrl_port }
+        - port: { get_resource: pts_srvc_port }
         - network: { get_resource: data_sub_net1 }
         - network: { get_resource: data_int_net1 }
       user_data_format: RAW
@@ -224,16 +229,16 @@ resources:
             sandvine:sandvine
           expire: False
 
-  svspb_1:
+  spb_1:
     type: OS::Nova::Server
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-svspb-1' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-spb-1' } }
       key_name: { get_param: 'ssh_key' }
-      image: { get_param: 'svspb_image' }
+      image: { get_param: 'spb_image' }
       flavor: "m1.medium"
       networks:
-        - port: { get_resource: svspb_ctrl_port }
-        - port: { get_resource: svspb_srvc_port }
+        - port: { get_resource: spb_ctrl_port }
+        - port: { get_resource: spb_srvc_port }
       user_data_format: RAW
       user_data: |
         #cloud-config
@@ -246,16 +251,16 @@ resources:
             sandvine:sandvine
           expire: False
 
-  svsde_1:
+  sde_1:
     type: OS::Nova::Server
     properties:
-      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-svsde-1' } }
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-sde-1' } }
       key_name: { get_param: 'ssh_key' }
-      image: { get_param: 'svsde_image' }
+      image: { get_param: 'sde_image' }
       flavor: "m1.medium"
       networks:
-        - port: { get_resource: svsde_ctrl_port }
-        - port: { get_resource: svsde_srvc_port }
+        - port: { get_resource: sde_ctrl_port }
+        - port: { get_resource: sde_srvc_port }
       user_data_format: RAW
       user_data: |
         #cloud-config

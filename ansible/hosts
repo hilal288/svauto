@@ -3,21 +3,33 @@
 #
 
 [svsde-servers]
-#SDE_IP base_os=centos7 setup_server=svsde setup_mode=sandvine
+#SDE_ACCESS ansible_user={{ANSIBLE_REMOTE_USER}} base_os={{SDE_BASE_OS}}
 #ec2-54-16X-Y3-1Z1.compute-1.amazonaws.com
 
 [svpts-servers]
-#PTS_IP base_os=centos7 setup_server=svpts setup_mode=sandvine
-#FREEBSD_PTS_IP ansible_python_interpreter=/usr/local/bin/python2.7
+#PTS_ACCESS ansible_user={{ANSIBLE_REMOTE_USER}} base_os={{PTS_BASE_OS}}
 #alex+instance+nubo
 
 [svspb-servers]
-#SPB_IP setup_server=svspb setup_server=svspb setup_mode=sandvine
+#SPB_ACCESS ansible_user={{ANSIBLE_REMOTE_USER}} base_os={{SPB_BASE_OS}}
+#10.128.243.249
+
+[svnda-servers]
+#NDA_ACCESS ansible_user={{ANSIBLE_REMOTE_USER}} base_os={{NDA_BASE_OS}}
 #10.128.243.249
 
 [svcs-servers]
-#CSD_IP
+#CSD_ACCESS ansible_user={{ANSIBLE_REMOTE_USER}} base_os={{SVCS_BASE_OS}}
 #10.128.243.2
+
+[svtse-servers]
+#SVTSE_ACCESS ansible_user={{ANSIBLE_REMOTE_USER}} base_os={{TSE_BASE_OS}}
+#10.128.243.249
+
+[svtcpa-servers]
+#SVTCPA_ACCESS ansible_user={{ANSIBLE_REMOTE_USER}} base_os={{TCPA_BASE_OS}}
+#10.128.243.249
+
 
 #
 # List of servers to deploy OpenStack

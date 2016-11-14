@@ -2,15 +2,19 @@ heat_template_version: 2013-05-23
 
 description: >
 
-
   HOT template to create standard NFV setup, acting as a L2 Bridge between two VXLAN (or VLAN) networks.
+
 
   NOTE: The "NFV Image" is just a plain Ubuntu Trusty without any kind of NFV configured. To make it work, you'll need to create a Linux L2 Bridge (or a DPDK App), using the Virtual NICs "eth2 + eth3". You can use the /etc/network/interfaces file to create the L2 Network Bridge between eth2 and eth3 (i.e., the "NFV Magic").
 
+
   We have 3 Instances:
 
+
   * Linux acting as a L2 Bridge and Policy Control
+
   * Linux as Engine
+
   * Linux Database
 
 
@@ -57,19 +61,19 @@ parameters:
     type: string
     label: "NFV L2 Bridge Image (default 'nfv')"
     description: "NFV Image"
-    default: "Ubuntu 16.04.1 LTS - Xenial Xerus - 64-bit - Cloud Based Image"
+    default: "ubuntu-16.04.1-amd64"
 
   engine_image:
     type: string
     label: "Engine Image (default 'engine')"
     description: "Engine Image"
-    default: "Ubuntu 16.04.1 LTS - Xenial Xerus - 64-bit - Cloud Based Image"
+    default: "ubuntu-16.04.1-amd64"
 
   database_image:
     type: string
     label: "Database Image (default 'database')"
     description: "Database Image"
-    default: "Ubuntu 16.04.1 LTS - Xenial Xerus - 64-bit - Cloud Based Image"
+    default: "ubuntu-16.04.1-amd64"
 
 resources:
   rtr:
@@ -400,14 +404,3 @@ resources:
           expire: False
 
 outputs:
-  nfv_floating_ip:
-    description: The IP address of the deployed NFV instance
-    value: { get_attr: [floating_ip_1, floating_ip_address] }
-
-  engine_floating_ip:
-    description: The IP address of the deployed Engine instance
-    value: { get_attr: [floating_ip_2, floating_ip_address] }
-
-  database_floating_ip:
-    description: The IP address of the deployed Database instance
-    value: { get_attr: [floating_ip_3, floating_ip_address] }

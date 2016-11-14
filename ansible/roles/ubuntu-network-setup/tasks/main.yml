@@ -1,0 +1,70 @@
+# Copyright 2016, Sandvine Incorporated
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+#- name: ubuntu - module nf_conntrack blacklisted
+#  lineinfile: dest=/etc/modprobe.d/blacklist.conf line="blacklist nf_conntrack"
+
+
+# Activating br_netfilter module for bringing /proc/sys/net/bridge back.
+# https://askubuntu.com/questions/645638/directory-proc-sys-net-bridge-missing
+- name: ubuntu - config br_netfilter module
+  lineinfile: dest=/etc/modules line="br_netfilter"
+
+- name: ubuntu - loading br_netfilter module
+  command: 'modprobe br_netfilter'
+
+
+# Enabling /etc/network/interfaces.d subdirectory.
+- name: ubuntu - copy global network config file
+  copy: src=ubuntu-common/etc_network_interfaces
+        dest=/etc/network/interfaces
+        owner=root
+        group=root
+        mode=0644
+        backup=yes
+
+- name: ubuntu - creating global network config directory
+  file: path=/etc/network/interfaces.d
+        state=directory
+
+
+# Configuring Ubuntu's default NIC.
+- name: ubuntu - copy primary network interface config
+  template: src=ubuntu-common/primary_interface_cfg.j2
+            dest=/etc/network/interfaces.d/{{ ubuntu_primary_interface }}.cfg
+            owner=root
+            group=root
+            mode=0644
+            backup=yes
+  when: ubuntu_install == 'server'
+
+
+# Including Dummy NIC setup.
+- name: ubuntu - include dummy NICs setup
+  include: ubuntu-dummies.yml
+  when: ubuntu_setup_dummy_nics == 'yes'
+
+
+# Including Neutron Bridges.
+- name: ubuntu - include Neutron dummy OVS bridges
+  include: neutron-bridges.yml
+  when: os_neutron_ovs_enabled == 'yes'
+
+
+# Because OpenStack's br-ex is by default, of top of dummy0, we need to activate
+# an iptables rule on each boot, after Nova.
+- name: ubuntu - include iptables setup via rc.local
+  include: ubuntu-iptables-via-rc-local.yml
+  when: ubuntu_setup_iptables_rc_local == 'yes'

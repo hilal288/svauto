@@ -1,6 +1,7 @@
 *.swp
 *.qcow2
 *.qcow2c
+*.img
 *.vmdk
 *.retry
 *.log
@@ -9,8 +10,13 @@ packer/build*
 packer/ubuntu*-tmpl
 packer/centos*-tmpl
 packer_cache
+downloads
 public_dir
 yum_repos
-ansible/tmp/*.yml
-ansible/tmp/*.retry
+ansible/*.yml
+ansible/*.retry
+ansible/*-hosts-*
+ansible/*-extra-vars-*
 ansible/facts_storage/*
+ansible/vagrant-run-*
+.vagrant

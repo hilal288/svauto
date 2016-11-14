@@ -12,11 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Reference:
+# http://docs.openstack.org/mitaka/install-guide-ubuntu/glance-install.html
+# http://docs.openstack.org/newton/install-guide-ubuntu/glance-install.html
+
 - include: openstack-glance-init.yml
   when: deployment_mode == 'yes'
 
-# Reference:
-# http://docs.openstack.org/mitaka/install-guide-ubuntu/glance-install.html
 
 - name: Installing Glance Server
   apt: name={{item}} state=latest
@@ -31,7 +33,7 @@
 
 
 - name: Updating glance-api.conf
-  template: src={{openstack_release}}/glance-api.conf
+  template: src={{os_release}}/glance-api.conf
         dest=/etc/glance/glance-api.conf
         owner=glance
         group=glance
@@ -43,7 +45,7 @@
 
 
 - name: Updating glance-registry.conf
-  template: src={{openstack_release}}/glance-registry.conf
+  template: src={{os_release}}/glance-registry.conf
         dest=/etc/glance/glance-registry.conf
         owner=glance
         group=glance

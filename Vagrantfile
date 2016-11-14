@@ -14,7 +14,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
-  config.vm.box = "ubuntu/xenial64"
+  # config.vm.box = "ubuntu/xenial64"
+  config.vm.box = "yk0/ubuntu-xenial"
+  #config.vm.box = "peru/ubuntu-16.04-server-amd64"
 
   # config.ssh.insert_key = false
 
@@ -46,6 +48,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
   # Example for VirtualBox:
+
+  config.vm.provider :libvirt do |v|
+    #v.name = "os"
+    # increase nic adapter count to be greater than 8 for all VMs.
+    v.nic_adapter_count = 64
+    v.cpus = 4
+    v.memory = 4096
+    v.nic_model_type = 'virtio'
+  end
 
   config.vm.provider :virtualbox do |v|
     v.name = "os"
@@ -90,8 +101,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Ansible provisioner.
   config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "ansible/site-openstack.yml"
+    ansible.playbook = "ansible/{{openstack-aio-top-book}}"
     ansible.inventory_path = "ansible/hosts"
+    #ansible.verbose = true
     ansible.sudo = true
   end
 

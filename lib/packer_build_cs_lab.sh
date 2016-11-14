@@ -17,11 +17,6 @@
 packer_build_cs_lab()
 {
 
-        PTS_VERSION="7.35"
-        SDE_VERSION="7.50"
-        SPB_VERSION="6.65"
-
-
 	if [ "$DRY_RUN" == "yes" ]; then
 		export DRY_RUN_OPT="--dry-run"
 	fi
@@ -32,97 +27,29 @@ packer_build_cs_lab()
 	#
 
 	# SDE 7.50 on CentOS 7 + Cloud Services SDE + Cloud Services Daemon (back / front) - Labified
-	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svsde --version=$SDE_VERSION --product-variant=cs-1 --operation=cloud-services --qcow2 --vmdk --vhd --vm-xml --sha256sum \
-		--roles=cloud-init,bootstrap,grub-conf,nginx,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,sandvine-auto-config,vmware-tools,labify,post-cleanup-image $DRY_RUN_OPT \
-		--setup-default-interface-script --packer-max-tries=3
+	./svauto.sh --packer-builder --release=dev --base-os=centos7 --product=svsde --version=$SDE_VERSION --product-variant=cs-1 --qcow2 --vmdk --vhd --vm-xml --sha256sum \
+		--ansible-remote-user="root" \
+		--ansible-inventory-builder="svbox,localhost,ansible_connection=local,base_os=centos7,deployment_mode=yes,static_packages_server=$STATIC_PACKAGES_SERVER,static_repo=true,versioned_repo=true" \
+		--ansible-playbook-builder="svbox,cloud-init,bootstrap,grub-conf,setup-default-interface,nginx,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,vmware-tools,labify,post-cleanup-image" \
+		--packer-max-tries=3 $DRY_RUN_OPT
 
 	# SPB 6.65 on CentOS 6 + Cloud Services - Labified
-	./image-factory.sh --release=dev --base-os=centos6 --base-os-upgrade --product=svspb --version=$SPB_VERSION --product-variant=cs-1 --operation=cloud-services --qcow2 --vmdk --vhd --vm-xml --sha256sum \
-		--roles=cloud-init,bootstrap,grub-conf,postgresql,svspb,svmcdtext,svreports,svcs-svspb,sandvine-auto-config,vmware-tools,labify,post-cleanup-image,power-cycle $DRY_RUN_OPT \
-		--packer-max-tries=3
+	./svauto.sh --packer-builder --release=dev --base-os=centos6 --product=svspb --version=$SPB_VERSION --product-variant=cs-1 --qcow2 --vmdk --vhd --vm-xml --sha256sum \
+		--ansible-remote-user="root" \
+		--ansible-inventory-builder="svbox,localhost,ansible_connection=local,base_os=centos6,deployment_mode=yes,static_packages_server=$STATIC_PACKAGES_SERVER,static_repo=true,versioned_repo=true" \
+		--ansible-playbook-builder="svbox,cloud-init,bootstrap,grub-conf,postgresql,svspb,svmcdtext,svreports,svcs-svspb,vmware-tools,labify,post-cleanup-image,power-cycle" \
+		--packer-max-tries=3 $DRY_RUN_OPT
 
 	# PTS 7.35 on CentOS 7 + Cloud Services - Linux 3.10, DPDK 16.07, requires igb_uio - Labified
-	./image-factory.sh --release=dev --base-os=centos7 --base-os-upgrade --product=svpts --version=$PTS_VERSION --product-variant=cs-1 --operation=cloud-services --qcow2 --vmdk --vhd --vm-xml --sha256sum \
-		--roles=cloud-init,bootstrap,grub-conf,nginx,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config,vmware-tools,labify,post-cleanup-image $DRY_RUN_OPT \
-		--setup-default-interface-script --packer-max-tries=3
+	./svauto.sh --packer-builder --release=dev --base-os=centos7 --product=svpts --version=$PTS_VERSION --product-variant=cs-1 --qcow2 --vmdk --vhd --vm-xml --sha256sum \
+		--ansible-remote-user="root" \
+		--ansible-inventory-builder="svbox,localhost,ansible_connection=local,base_os=centos7,deployment_mode=yes,static_packages_server=$STATIC_PACKAGES_SERVER,static_repo=true,versioned_repo=true" \
+		--ansible-playbook-builder="svbox,cloud-init,bootstrap,grub-conf,setup-default-interface,nginx,svpts,svusagemanagementpts,svcs-svpts,vmware-tools,labify;setup_mode=cloud-services,post-cleanup-image" \
+		--packer-max-tries=3 $DRY_RUN_OPT
 
 
-	if [ "$LIBVIRT_FILES" == "yes" ]
-	then
+        ./svauto.sh --libvirt-files=cs-dev-lab
 
-                if [ "$DRY_RUN" == "yes" ]
-                then
-
-                        echo
-                        echo "Not copying Libvirt files! Skipping this step..."
-
-                else
-
-			echo
-			echo "Copying Libvirt files for release into tmp/cs subdirectory..."
-
-			cp misc/libvirt/* tmp/cs/
-
-			find packer/build* -name "*.xml" -exec cp {} tmp/cs/ \;
-
-			sed -i -e 's/{{sde_image}}/svsde-'$SDE_VERSION'-cs-1-centos6-amd64/g' tmp/cs/libvirt-qemu.hook
-
-		fi
-
-	fi
-
-
-	if [ "$MOVE2WEBROOT" == "yes" ]
-	then
-
-                if [ "$DRY_RUN" == "yes" ]
-                then
-                        echo
-                        echo "Not moving to web root! Skipping this step..."
-                else
-
-			echo
-			echo "Moving all images created during this build, to the Web Root."
-			echo "Also, doing some clean ups, to free the way for subsequent builds..."
-
-
-			find packer/build* -name "*.raw" -exec rm -f {} \;
-
-			find packer/build* -name "*.sha256" -exec mv {} $WEB_ROOT_CS_LAB \;
-			find packer/build* -name "*.xml" -exec mv {} $WEB_ROOT_CS_LAB \;
-			find packer/build* -name "*.qcow2c" -exec mv {} $WEB_ROOT_CS_LAB \;
-			find packer/build* -name "*.vmdk" -exec mv {} $WEB_ROOT_CS_LAB \;
-			find packer/build* -name "*.vhd*" -exec mv {} $WEB_ROOT_CS_LAB \;
-			find packer/build* -name "*.ova" -exec mv {} $WEB_ROOT_CS_LAB \;
-
-
-			echo
-			echo "Merging SHA256SUMS files together (lab)..."
-
-			cd $WEB_ROOT_CS_LAB
-
-			cat *.sha256 > SHA256SUMS
-			rm -f *.sha256
-
-			cd - &>/dev/null
-
-
-        	        echo
-        	        echo "Updating symbolic link \"current\" to point to \"$BUILD_DATE\"..."
-
-			cd $WEB_ROOT_CS_MAIN
-
-			rm -f current
-			ln -s $BUILD_DATE current
-
-			cd - &>/dev/null
-
-
-			# Free the way for subsequent builds:
-			rm -rf packer/build*
-
-		fi
-
-	fi
+        # ./svauto.sh --move2webroot=cs-dev-lab
 
 }

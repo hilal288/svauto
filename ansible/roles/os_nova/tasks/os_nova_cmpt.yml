@@ -14,7 +14,7 @@
 
 # References:
 # http://docs.openstack.org/mitaka/install-guide-ubuntu/nova-compute-install.html
-
+# http://docs.openstack.org/newton/install-guide-ubuntu/nova-compute-install.html
 
 - name: Installing Nova Compute KVM
   apt: name={{item}} state=latest
@@ -37,7 +37,7 @@
 
 
 - name: Updating nova.conf
-  template: src={{openstack_release}}/nova.conf
+  template: src={{os_release}}/nova.conf
             dest=/etc/nova/nova.conf
             owner=nova
             group=nova
@@ -45,14 +45,4 @@
             backup=yes
   when: item.os_project == "nova"
   with_items: '{{mysql_databases}}'
-  notify: restart-nova-compute
-
-
-- name: Updating nova-compute.conf
-  copy: src=nova-compute.conf
-        dest=/etc/nova/nova-compute.conf
-        owner=nova
-        group=nova
-        mode=0640
-        backup=yes
   notify: restart-nova-compute

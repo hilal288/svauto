@@ -105,8 +105,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Ansible provisioner.
   config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "../../ansible/{{playbook_name}}.yml"
+    ansible.playbook = "../../ansible/{{ansible_playbook_file}}"
     ansible.sudo = true
+    #ansible.verbose = true
     ansible.host_vars = {
       "{{vm_name}}" => {"base_os" => "{{base_os}}",
                   "activate_eth1" => "no"}

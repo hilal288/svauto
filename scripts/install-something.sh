@@ -1,3 +1,3 @@
 #! /bin/bash
 
-curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/svauto-deployments.sh | bash -s -- --base-os=centos6 --ansible-roles=bootstrap,grub-conf, --ansible-extra-vars=""
+curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/svauto-deployments.sh | bash -s -- --base-os=centos7 --ansible-run-against="local" --ansible-remote-user="root" --ansible-inventory-builder="all,localhost,ansible_connection=local,base_os=centos7" --ansible-playbook-builder="localhost,bootstrap;base_os_upgrade=yes,grub-conf" --ansible-extra-vars="spb_service_ip=1.1.1.1,cluster_name=sandvine"

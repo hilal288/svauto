@@ -23,6 +23,7 @@
 
 - name: Stopping and disabling Keystone (it runs under Apache)
   service: name=keystone state=stopped enabled=no
+  when: os_release != 'newton'
 
 
 - name: Removing non-used sqlite database
@@ -30,7 +31,7 @@
 
 
 - name: Updating keystone.conf
-  template: src={{openstack_release}}/keystone.conf
+  template: src={{os_release}}/keystone.conf
             dest=/etc/keystone/keystone.conf
             owner=root
             group=root
@@ -41,53 +42,38 @@
   notify: reload-apache2
   tags: keystone_conf
 
+
 - name: Populating Keystone Database
   shell: su -s /bin/sh -c "keystone-manage db_sync" keystone
+
 
 - name: Initialize Fernet keys
   shell: keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone
 
+- name: Initialize Fernet credential (Newton)
+  shell: keystone-manage credential_setup --keystone-user keystone --keystone-group keystone
+  when: os_release == 'newton'
 
-- name: Creating Apache Keystone Virtual Host - Public
-  copy: src=wsgi-keystone-public.conf
-        dest=/etc/apache2/sites-available/wsgi-keystone-public.conf
-        owner=root
-        group=root
-        mode=0644
-        backup=yes
-  notify: reload-apache2
 
-- name: Creating Apache Keystone Virtual Host - Internal
-  copy: src=wsgi-keystone-internal.conf
-        dest=/etc/apache2/sites-available/wsgi-keystone-internal.conf
-        owner=root
-        group=root
-        mode=0644
-        backup=yes
-  notify: reload-apache2
+- name: Bootstrapping Identity Service (Newton)
+  shell: keystone-manage bootstrap --bootstrap-password "{{admin_password}}" --bootstrap-admin-url http://{{os_admin_addr}}:35357/v3/ --bootstrap-internal-url http://{{os_admin_addr}}:35357/v3/ --bootstrap-public-url http://{{os_public_addr}}:5000/v3/ --bootstrap-region-id "{{region}}"
+  when: os_release == 'newton'
 
-- file: src=/etc/apache2/sites-available/wsgi-keystone-public.conf
-        dest=/etc/apache2/sites-enabled/wsgi-keystone-public.conf
-        owner=root
-        group=root
-        state=link
 
-- file: src=/etc/apache2/sites-available/wsgi-keystone-internal.conf
-        dest=/etc/apache2/sites-enabled/wsgi-keystone-internal.conf
-        owner=root
-        group=root
-        state=link
+- include: apache-keystone-files.yml
+  when: os_release == 'mitaka'
 
 
 - meta: flush_handlers
 
 
-- include: openstack-keystone-init.yml
+- name: Including Keystone Init 
+  include: openstack-keystone-init-{{os_release}}.yml
   when: deployment_mode == 'yes'
 
 
 - name: Updating keystone-paste.ini
-  copy: src={{openstack_release}}/keystone-paste.ini
+  copy: src={{os_release}}/keystone-paste.ini
         dest=/etc/keystone/keystone-paste.ini
         owner=root
         group=root
@@ -100,6 +86,7 @@
   include: keystone-ldap.yml
   when: ldap_enabled is defined and ldap_enabled == 'yes'
   tags: keystone_conf
+
 
 - meta: flush_handlers
 

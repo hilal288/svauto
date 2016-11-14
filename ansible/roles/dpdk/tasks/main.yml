@@ -22,6 +22,8 @@
   apt: name={{item}} state=latest
   with_items:
     - dpdk
+    - dpdk-igb-uio-dkms
+    - dpdk-rte-kni-dkms
 
 
 - name: ubuntu - copy dpdk.conf
@@ -40,3 +42,10 @@
             group=root
             mode=0644
             backup=yes
+
+
+- name: ubuntu - service dpdk enabled
+  service: name=dpdk enabled=yes
+
+
+- meta: flush_handlers

@@ -14,6 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+#
+# *** OBSOLETE SCRIPT ***
+#
+# Keeping it for reference only.
+#
+# With future versions of SVAuto, we'll be able to dynamically build OpenStack
+# on Vagrant, by just passing Ansible roles we want.
+
 WHOAMI=vagrant
 
 HOSTNAME=controller-1
@@ -23,28 +31,12 @@ DOMAIN=yourdomain.com
 
 # Display local configuration
 echo
-echo "The detected local configuration are:"
+echo "The hardcoded local configuration is:"
 echo
 echo -e "* Username:"'\t'$WHOAMI
 echo -e "* Hostname:"'\t'$HOSTNAME
 echo -e "* FQDN:"'\t''\t'$FQDN
 echo -e "* Domain:"'\t'$DOMAIN
-
-
-if [ -z $HOSTNAME ]; then
-        echo "Hostname not found... Configure the file /etc/hostname with your hostname. ABORTING!"
-        exit 1
-fi
-
-if [ -z $DOMAIN ]; then
-        echo "Domain not found... Configure the file /etc/hosts with your \"IP + FQDN + HOSTNAME\". ABORTING!"
-        exit 2
-fi
-
-if [ -z $FQDN ]; then
-        echo "FQDN not found... Configure your /etc/hosts according. ABORTING!"
-        exit 3
-fi
 
 
 echo
@@ -73,7 +65,18 @@ sed -i -e 's/os_mgmt:.*/os_mgmt: "'$PRIMARY_INTERFACE'"/' ansible/group_vars/all
 
 
 echo
+echo "Building top-level Ansible's Playbook file."
+
+ANSIBLE_PLAYBOOK_FILE="openstack-aio-$BUILD_RAND.yml"
+
+ansible_playbook_builder --ansible-remote-user=\"{{\ regular_system_user\ }}\" \
+	--ansible-playbook-builder=os_vagrant_aio,bootstrap,os_clients,ssh_keypair,os_mysql,os_mysql_db,os_rabbitmq,os_memcached,apache2,os_keystone,os_glance,os_glance_images,hyper_kvm,os_nova,os_keypair,os_nova_flavors,os_neutron,os_ext_net,os_horizon,os_heat,post-cleanup >> ansible/$ANSIBLE_PLAYBOOK_FILE
+
+sed -i -e 's/{{openstack-aio-top-book}}/"'$ANSIBLE_PLAYBOOK_FILE'"/' Vagrantfile
+
+
+echo
 echo "Running Ansible through Vagrant, deploying OpenStack:"
 echo
 
-vagrant up
+vagrant up --provider=libvirt

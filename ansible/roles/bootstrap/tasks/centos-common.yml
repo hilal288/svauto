@@ -30,11 +30,15 @@
             owner=root
             group=root
             mode=0644
-  when: disable_autoconf != 'yes'
+  when: sandvine_main_yum_repo == 'yes'
 
 
-- name: centos - sudo members of wheel group without password
-  lineinfile: "validate='visudo -cf %s' dest=/etc/sudoers state=present regexp='^%wheel' line='%wheel ALL=(ALL) NOPASSWD: ALL'"
+- name: centos - copy sudoers config file for members of group "wheel"
+  copy: src=centos-common/wheel-group
+        dest=/etc/sudoers.d/wheel-group
+        owner=root
+        group=root
+        mode=0644
 
 
 - name: centos - ZeroConf disabled
@@ -48,6 +52,55 @@
 - name: centos6 - include custom book
   include: centos6.yml
   when: base_os == 'centos6'
+
+
+- name: centos - yum installing basic common tools
+  yum: pkg={{item}} state=latest update_cache=yes
+  with_items:
+    - at
+    - git
+    - vim
+    - man
+    - zip
+    - ntp
+    - gpm
+    - htop
+    - lftp
+    - curl
+    - wget
+    - tmux
+    - lsof
+    - nmap
+    - lshw
+    - unzip
+    - iotop
+    - iftop
+    - acpid
+    - which
+    - bwm-ng
+    - figlet
+    - telnet
+    - psmisc
+    - iperf3
+    - parted
+    - tcpick
+    - cronie
+    - mlocate
+    - tcpdump
+    - sysstat
+    - rsyslog
+    - numactl
+    - dos2unix
+    - pciutils
+    - deltarpm
+    - tcpreplay
+    - dmidecode
+    - man-pages
+    - yum-utils
+    - bind-utils
+    - traceroute
+    - conntrack-tools
+    - libhugetlbfs-utils
 
 
 - name: centos - copy root's Bash RC 

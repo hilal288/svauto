@@ -13,5 +13,5 @@
 # limitations under the License.
 
 - name: restart-cloudservices
-  shell: /etc/init.d/csd restart
+  service: name=csd state=started enabled=yes
   when: deployment_mode != 'yes'

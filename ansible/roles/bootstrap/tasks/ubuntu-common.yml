@@ -17,6 +17,10 @@
   when: base_os_upgrade == 'yes'
 
 
+- name: ubuntu - add Ansible's PPA Repository
+  apt_repository: repo='ppa:ansible/ansible'
+
+
 - name: ubuntu - add Sandvine's PPA Repository
   apt_repository: repo='ppa:sandvine/packages'
 
@@ -71,6 +75,7 @@
     - psmisc
     - tzdata
     - tshark
+    - netperf
     - pm-utils
     - xfsprogs
     - dos2unix
@@ -87,11 +92,14 @@
     - btrfs-tools
     - python-minimal
     - python-mysqldb
+    - ecryptfs-utils
     - python-httplib2
     - silversearcher-ag
     - command-not-found
     - linux-image-generic
+    - linux-tools-generic
     - ubuntu-cloud-keyring
+    - linux-cloud-tools-generic
     - software-properties-common
 
 
@@ -104,16 +112,22 @@
   when: ubuntu_install == 'server'
 
 
+- name: ubuntu - dpkg enabling MultiArch on Desktops
+  shell: dpkg --add-architecture i386
+  when: ubuntu_install == 'desktop'
+
+
 - name: ubuntu - apt installing Desktop tools
   apt: name={{item}} state=latest update_cache=yes
   with_items:
     - vim
     - mtr
     - vlc
+    - cups
     - gksu
     - meld
     - skype
-    - diodon
+    - clipit
     - kdiff3
     - xine-ui
     - gparted
@@ -169,5 +183,13 @@
 
 
 - name: ubuntu - group add regular system user to know Desktop groups
-  user: name={{ regular_system_user }} groups=adm,cdrom,sudo,dip,plugdev,lpadmin,sambashare append=yes
+  user: name={{ regular_system_user }} groups=adm,cdrom,sudo,dip,plugdev,lpadmin append=yes
   when: ubuntu_install == 'desktop'
+
+
+- name: ubuntu - copy sudoers config file for members of group "sudo"
+  copy: src=ubuntu-common/sudo-group
+        dest=/etc/sudoers.d/sudo-group
+        owner=root
+        group=root
+        mode=0644

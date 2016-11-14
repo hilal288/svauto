@@ -15,38 +15,55 @@
 # limitations under the License.
 
 
-clear
-
-
 for i in "$@"
 do
 case $i in
 
-	--base-os=*)
+        --base-os=*)
 
-	        BASE_OS="${i#*=}"
-	        shift
-	        ;;
+                BASE_OS="${i#*=}"
+                shift
+                ;;
 
-	--ansible-roles=*)
+	--ansible-run-against=*)
 
-	        ANSIBLE_ROLES="${i#*=}"
-	        shift
-	        ;;
+		ANSIBLE_RUN_AGAINST="${i#*=}"
+		shift
+		;;
+
+	--ansible-remote-user=*)
+
+		ANSIBLE_REMOTE_USER="${i#*=}"
+		shift
+		;;
+
+	--ansible-inventory-builder=*)
+
+		ANSIBLE_INVENTORY_ENTRY_1="${i#*=}"
+		shift
+		;;
+
+	--ansible-playbook-builder=*)
+
+		ANSIBLE_PLAYBOOK_ENTRY_1="${i#*=}"
+		shift
+		;;
 
 	--ansible-extra-vars=*)
 
-	        ANSIBLE_EXTRA_VARS="${i#*=}"
-	        shift
-	        ;;
+		ALL_ANSIBLE_EXTRA_VARS="${i#*=}"
+		shift
+		;;
 
 esac
 done
 
 
+clear
+
+
 echo
 echo "Welcome to SVAuto, the Sandvine Automation!"
-
 
 echo
 echo "Installing SVAuto basic dependencies (Git & Ansible):"
@@ -57,41 +74,37 @@ case $BASE_OS in
 	ubuntu*)
 
 		echo
+		echo "Running: \"sudo apt install git ansible\""
 
-		sudo apt -y install software-properties-common
-
-		sudo add-apt-repository -y ppa:sandvine/packages
-
-		sudo apt update
-
-		sudo apt -y install git ansible
+		sudo apt -y install software-properties-common &>/dev/null
+		sudo add-apt-repository -y ppa:ansible/ansible &>/dev/null
+		sudo apt update &>/dev/null
+		sudo apt -y install git ansible &>/dev/null
 
 		;;
 
 	centos*)
 
 		echo
+		echo "Running: \"sudo yum install git ansible\""
 
-		sudo yum --enablerepo=epel-testing -y install git ansible libselinux-python
-
+		sudo yum --enablerepo=epel-testing -y install git ansible libselinux-python &>/dev/null
 		;;
 
 	*)
 
-                echo
-                echo "Operation System not detected, aborting!"
+	        echo
+		echo "O.S. not detected, aborting!"
 
-                exit 1
+		exit 1
 
-                ;;
+		;;
 
 esac
 
 
-echo
-
-
-if  [ ! -d ~/svauto ]; then
+if  [ ! -d ~/svauto ]
+then
         echo
         echo "Downloading SVAuto into your home directory..."
         echo
@@ -105,15 +118,18 @@ else
 fi
 
 
-if  [ ! -f ~/svauto/svauto.sh ]; then
+if  [ ! -f ~/svauto/svauto.sh ]
+then
 	echo
 	echo "WARNING!"
 	echo "SVAuto main script not found, Git clone might have failed."
 
 	echo
+
 	exit 1
 fi
 
 
-cd ~/svauto
-./svauto.sh --svauto-deployments --base-os=$BASE_OS --ansible-roles=$ANSIBLE_ROLES --ansible-extra-vars=$ANSIBLE_EXTRA_VARS
+pushd ~/svauto &>/dev/null
+
+./svauto.sh --ansible-run-against="$ANSIBLE_RUN_AGAINST" --ansible-remote-user="$ANSIBLE_REMOTE_USER" --ansible-inventory-builder="$ANSIBLE_INVENTORY_ENTRY_1" --ansible-playbook-builder="$ANSIBLE_PLAYBOOK_ENTRY_1" --ansible-extra-vars="base_os=$BASE_OS,$ALL_ANSIBLE_EXTRA_VARS"

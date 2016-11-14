@@ -12,45 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: centos7 - copy "etc-hosts-fix" init script
-  copy: src=centos7/etc-hosts-fix
-        dest=/etc/init.d/etc-hosts-fix
-        owner=root
-        group=root
-        mode=0755
-  when: disable_autoconf != 'yes'
-
-- name: centos7 - service "etc-hosts-fix" enabled
-  service: name=etc-hosts-fix state=restarted enabled=yes
-  when: disable_autoconf != 'yes'
-
-
-- name: centos7 - copy eth0 config file
-  copy: src=centos7/ifcfg-eth0
-        dest=/etc/sysconfig/network-scripts/ifcfg-eth0
-        owner=root
-        group=root
-        mode=0644
-
-- name: centos7 - starting up eth0
-  shell: ifup eth0
-  when: lab_stack == 'yes'
-  ignore_errors: yes
-
-- name: centos7 - copy eth1 config file
-  copy: src=centos7/ifcfg-eth1
-        dest=/etc/sysconfig/network-scripts/ifcfg-eth1
-        owner=root
-        group=root
-        mode=0644
-  when: disable_autoconf != 'yes'
-
-- name: centos7 - starting up eth1
-  shell: ifup eth1
-  when: activate_eth1 == "yes"
-  ignore_errors: yes
-
-
 - name: centos7 - yum installing epel repository
   yum: pkg=epel-release state=installed
 
@@ -58,57 +19,10 @@
 - name: centos7 - yum installing basic tools
   yum: pkg={{item}} state=latest update_cache=yes
   with_items:
-    - at
-    - git
-    - vim
-    - man
-    - zip
-    - ntp
-    - gpm
-    - lftp
-    - curl
-    - wget
-    - tmux
-    - lsof
-    - nmap
-    - lshw
-    - unzip
-    - iotop
-    - iftop
-    - figlet
-    - iperf3
-    - tcpick
-    - parted
-    - mlocate
     - ansible
-    - numactl
-    - dos2unix
-    - deltarpm
     - python34
     - nmap-ncat
-    - tcpreplay
-    - man-pages
-    - firewalld
-    - yum-utils
-    - bind-utils
-    - conntrack-tools
-    - libhugetlbfs-utils
     - dracut-config-generic
-    - traceroute
-    - pciutils
-    - rsyslog
-    - sysstat
-    - tcpdump
-    - telnet
-    - psmisc
-    - cronie
-    - acpid
-    - which
-
-
-- name: centos7 - service firewalld enabled
-  service: name=firewalld enabled=yes
-  when: disable_autoconf != 'yes' and lab_stack != 'yes'
 
 
 - name: centos7 - yum uninstalling Network Manager
@@ -133,48 +47,10 @@
         backup=yes
 
 
-- name: centos - copy e1000 udev rules
-  copy: src=centos7/68-e1000-net.rules.j2
-        dest=/etc/udev/rules.d/68-e1000-net.rules
-        owner=root
-        group=root
-        mode=0644
-  when: centos7_vmware_net_hack != 'yes'
-
-
-- name: centos - copy vmxnet3 udev rules
-  copy: src=centos7/69-vmxnet3-net.rules.j2
-        dest=/etc/udev/rules.d/69-vmxnet3-net.rules
-        owner=root
-        group=root
-        mode=0644
-  when: centos7_vmware_net_hack != 'yes'
-
-
-- name: centos7 - copy Setup Default Interface Script
-  copy: src=centos7/setupDefaultInterface
-        dest=/usr/local/sbin/setupDefaultInterface
-        owner=root
-        group=root
-        mode=0755
-  when: centos7_vmware_net_hack == 'yes'
-
-- name: centos7 - copy Setup Default Interface systemd service
-  copy: src=centos7/setup-default-interface.service
-        dest=/lib/systemd/system/setup-default-interface.service
-        owner=root
-        group=root
-        mode=0755
-  when: centos7_vmware_net_hack == 'yes'
-
-- name: centos7 - service Setup Default Interface
-  service: name=setup-default-interface enabled=yes
-  when: centos7_vmware_net_hack == 'yes'
-
-
 # Lock Kernel upgrade only when building Linux PTS on CentOS 7.
 # It is realy, really required, only if "release == 'prod'".
 # This is a DPDK RPM Package limitation, that we're work arouding it.
+
 - name: centos7 - yum installing Kernel, DPDK RPM workaround
   yum: pkg={{item}}
   with_items:

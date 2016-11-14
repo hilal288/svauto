@@ -12,58 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: centos6 - copy "hostname-fix" init script
-  copy: src=centos6/hostname-fix
-        dest=/etc/init.d/hostname-fix
-        owner=root
-        group=root
-        mode=0755
-  when: disable_autoconf != 'yes'
-
-- name: centos6 - service hostname-fix enabled
-  service: name=hostname-fix state=started enabled=yes
-  when: disable_autoconf != 'yes'
-
-
-- name: centos6 - copy "etc-hosts-fix" init script
-  copy: src=centos6/etc-hosts-fix
-        dest=/etc/init.d/etc-hosts-fix
-        owner=root
-        group=root
-        mode=0755
-  when: disable_autoconf != 'yes'
-
-- name: centos6 - service etc-hosts-fix enabled
-  service: name=etc-hosts-fix state=restarted enabled=yes
-  when: disable_autoconf != 'yes'
-
-
-- name: centos6 - copy eth0 config file
-  copy: src=centos6/ifcfg-eth0
-        dest=/etc/sysconfig/network-scripts/ifcfg-eth0
-        owner=root
-        group=root
-        mode=0644
-
-- name: centos6 - starting up eth0
-  shell: ifup eth0
-  when: lab_stack == 'yes'
-  ignore_errors: yes
-
-- name: centos6 - copy eth1 config file
-  copy: src=centos6/ifcfg-eth1
-        dest=/etc/sysconfig/network-scripts/ifcfg-eth1
-        owner=root
-        group=root
-        mode=0644
-  when: disable_autoconf != 'yes'
-
-- name: centos6 - starting up eth1
-  shell: ifup eth1
-  when: activate_eth1 == "yes"
-  ignore_errors: yes
-
-
 - name: centos6 - yum EPEL repository
   yum: pkg=http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
 
@@ -75,52 +23,16 @@
 - name: centos6 - yum installing basic tools
   yum: pkg={{item}} state=latest update_cache=yes
   with_items:
-    - at
     - nc
-    - git 
-    - vim 
     - man
-    - zip
-    - ntp
-    - gpm
-    - lftp
-    - curl
-    - wget 
-    - lsof 
-    - tmux
-    - nmap
-    - lshw
-    - unzip
-    - acpid 
-    - iotop 
-    - iftop
-    - which
-    - figlet
-    - iperf3
-    - bwm-ng
-    - telnet 
-    - parted
-    - psmisc 
-    - cronie
-    - tcpick
-    - sysstat 
-    - rsyslog
-    - tcpdump  
-    - numactl
-    - mlocate
-    - ansible
     - python33
-    - pciutils 
-    - deltarpm
-    - dos2unix
-    - dmidecode
-    - man-pages
-    - tcpreplay
-    - yum-utils
-    - bind-utils
-    - traceroute
-    - conntrack-tools
-    - libhugetlbfs-utils
+
+
+- name: centos6 - yum installing Ansible from EPEL Testing
+  yum: pkg={{item}} state=latest update_cache=yes enablerepo=epel-testing
+  with_items:
+    - ansible
+    - libselinux-python
 
 
 - name: centos6 - copy SSH Daemon config

@@ -1,0 +1,25 @@
+# Override configuration defaults by changing this file
+#not_read_rc_defaults="YES"
+if [ -z ${not_read_rc_defaults} ]
+then
+    for i in /usr/local/sandvine/etc/rc.conf.default*
+    do
+        if [ -f  $i ]
+        then
+            . $i
+        fi
+    done
+fi
+install_base=/usr/local/sandvine
+# Change defaults below this line
+
+SVSUPPORT=none@localhost
+
+{% if spb_srvc_ip is defined %}
+spb_spb_servers={{ spb_srvc_ip }}
+{% else %}
+spb_spb_servers={{ hostvars[groups['svspb-servers'][0]]['ansible_eth1']['ipv4']['address'] }}
+{% endif %}
+
+cluster_name="{{ cluster_name }}"
+cluster_stat_name="{{ cluster_name }}"

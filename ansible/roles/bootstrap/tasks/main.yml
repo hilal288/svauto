@@ -31,16 +31,16 @@
   when: base_os == 'ubuntu14'
 
 - name: ubuntu14 - include uca book
-  include: ubuntu14-uca-{{openstack_release}}.yml
+  include: ubuntu14-uca-{{os_release}}.yml
   when: base_os == 'ubuntu14'
+
+- name: ubuntu16 - include uca book
+  include: ubuntu16-uca-{{os_release}}.yml
+  when: base_os == 'ubuntu16' and os_release == 'newton'
 
 - name: ubuntu - include common book
   include: ubuntu-common.yml
   when: base_os == 'ubuntu16' or base_os == 'ubuntu14'
-
-- name: ubuntu - include custom book
-  include: ubuntu-networking.yml
-  when: (base_os == 'ubuntu16' or base_os == 'ubuntu14') and ubuntu_network_setup == 'yes'
 
 
 # Common across distributions
