@@ -926,7 +926,7 @@ then
 		# Ubuntu Precise
 		openstack image create "ubuntu-12.04.1-amd64" --file $UBUNTU1204_64_FILENAME $VISIBILITY --container-format bare --disk-format qcow2
 		# Debian Jessie
-		openstack image create "debian-8.6.0-amd64" --file $DEBIAN8_64_FILENAME $VISIBILITY --container-format bare --disk-format qcow2
+		openstack image create "debian-8.6.1-amd64" --file $DEBIAN8_64_FILENAME $VISIBILITY --container-format bare --disk-format qcow2
 		# CentOS 6 and 7
 		openstack image create "centos-7-amd64" --file $CENTOS7_64_FILENAME $VISIBILITY --container-format bare --disk-format qcow2
 		openstack image create "centos-6-amd64" --file $CENTOS6_64_FILENAME $VISIBILITY --container-format bare --disk-format qcow2
@@ -1329,6 +1329,7 @@ else
 	then
 
 		if [ -z $OS_STACK_NAME ] || [ "$LABIFY" == "yes" ]
+		then
 
 			echo "Your brand new Sandvine's Stack is reachable through SSH:"
 

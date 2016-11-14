@@ -4,13 +4,13 @@ parameters:
     type: string
     label: "Ubuntu Server - 64-bit"
     description: "Ubuntu - Trusty Thar - LTS"
-    default: "Ubuntu 14.04.3 LTS - Trusty Tahr - 64-bit - Cloud Based Image"
+    default: "ubuntu-16.04.1-amd64"
 
   debiansrv1_image:
     type: string
     label: "Debian - 64-bit"
     description: "Debian - Jessie"
-    default: "Debian 8.1.0 - Jessie - 64-bit - Cloud Based Image"
+    default: "debian-8.6.1-amd64"
 
 resources:
 

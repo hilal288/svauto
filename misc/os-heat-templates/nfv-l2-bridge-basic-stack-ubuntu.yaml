@@ -63,13 +63,13 @@ parameters:
     type: string
     label: "NFV L2 Bridge Image (default 'nfv')"
     description: "NFV Image"
-    default: "Ubuntu 16.04.1 LTS - Xenial Xerus - 64-bit - Cloud Based Image"
+    default: "ubuntu-16.04.1-amd64"
 
   ubuntu_image:
     type: string
     label: "Ubuntu Server - 64-bit"
     description: "Ubuntu - Xenial Xerus - LTS"
-    default: "Ubuntu 16.04.1 LTS - Xenial Xerus - 64-bit - Cloud Based Image"
+    default: "ubuntu-16.04.1-amd64"
 
 resources:
   rtr:

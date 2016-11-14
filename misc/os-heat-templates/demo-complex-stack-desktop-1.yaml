@@ -47,7 +47,7 @@ parameters:
     type: string
     label: "Ubuntu Server - 64-bit"
     description: "Ubuntu - Xenial Xerus - LTS"
-    default: "Ubuntu 16.04.1 64-bit"
+    default: "ubuntu-16.04.1-amd64"
 
 resources:
 
