@@ -27,3 +27,8 @@ ovs-vsctl set interface dpdk1 options:n_rxq=4
 
 # Give mode CPU Cores to ovs-vswitchd PMD threads
 # ovs-vsctl set Open_vSwitch . other_config:pmd-cpu-mask=FF
+
+
+# Ninja OpenFlow rules
+ovs-ofctl add-flow flat-br-0 "in_port=1, actions=mod_vlan_vid:2600,2"
+ovs-ofctl add-flow flat-br-1 "in_port=1, actions=mod_vlan_vid:2500,2"
