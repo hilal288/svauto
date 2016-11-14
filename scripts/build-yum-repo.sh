@@ -83,6 +83,12 @@
 
 ./svauto.sh --yum-repo-builder --base-os=centos6 --product=svspb --latest
 
+
+# SVMCDTEXT (Protocols)
+
+./svauto.sh --yum-repo-builder --base-os=centos6 --product=svmcdtext --latest
+
+
 # NDS
 
 ./svauto.sh --yum-repo-builder --base-os=centos6 --product=svreports --latest

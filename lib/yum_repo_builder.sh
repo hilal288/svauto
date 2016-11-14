@@ -105,6 +105,12 @@ case "$PRODUCT" in
 		if [ "$EXPERIMENTAL_REPO" == "yes" ] ; then VERSION="$UM_PTS_EXPERIMENTAL_VERSION" ; else VERSION="$UM_PTS_VERSION" ; fi
 		;;
 
+	svmcdtext)
+
+		PROD_DIR="MCDTEXT"
+		if [ "$EXPERIMENTAL_REPO" == "yes" ] ; then VERSION="$SPB_PROTOCOLS_EXPERIMENTAL_VERSION" ; else VERSION="$SPB_PROTOCOLS_VERSION" ; fi
+		;;
+
 	svreports)
 
 		PROD_DIR="NDS"
