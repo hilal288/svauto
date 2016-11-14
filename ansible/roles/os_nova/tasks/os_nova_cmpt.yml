@@ -37,7 +37,7 @@
 
 
 - name: Updating nova.conf
-  template: src={{openstack_release}}/nova.conf
+  template: src={{os_release}}/nova.conf
             dest=/etc/nova/nova.conf
             owner=nova
             group=nova

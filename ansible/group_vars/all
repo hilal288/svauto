@@ -260,12 +260,12 @@ dpdk_driver_4: "vfio-pci"
 
 os_aio: "no"
 
-openstack_release: "mitaka"
+os_release: "mitaka"
 
-your_domain: "yourdomain.com"
+os_dns_domain: "yourdomain.com"
 
-public_addr: "controller-1.yourdomain.com"
-controller_addr: "controller-1.yourdomain.com"
+os_public_addr: "controller-1.yourdomain.com"
+os_admin_addr: "controller-1.yourdomain.com"
 
 os_nova_ctrl: "no"
 os_nova_cmpt: "no"
@@ -282,7 +282,10 @@ os_data: "dummy1"
 
 os_cinder: "dummy2"
 
-br_mode: "LBR"
+os_neutron_lbr_enabled: "no"
+os_neutron_ovs_enabled: "no"
+os_neutron_ovs_dpdk_enabled: "no"
+os_neutron_sriov_enabled: "no"
 
 os_neutron_external_bridge: "br-ex"
 
@@ -322,7 +325,7 @@ metadata_secret: "UltraMeta13"
 
 openstack_env:
   OS_TOKEN: "{{admin_token}}"
-  OS_URL: "http://{{controller_addr}}:35357/v3"
+  OS_URL: "http://{{os_admin_addr}}:35357/v3"
   OS_IDENTITY_API_VERSION: "3"
 
 demo_openrc_env:
@@ -331,7 +334,7 @@ demo_openrc_env:
   OS_PROJECT_NAME: "demo"
   OS_USERNAME: "demo"
   OS_PASSWORD: "demo_pass"
-  OS_AUTH_URL: "http://{{public_addr}}:5000/v3"
+  OS_AUTH_URL: "http://{{os_public_addr}}:5000/v3"
   OS_IDENTITY_API_VERSION: "3"
 
 admin_openrc_env:
@@ -340,7 +343,7 @@ admin_openrc_env:
   OS_PROJECT_NAME: "admin"
   OS_USERNAME: "admin"
   OS_PASSWORD: "admin_pass"
-  OS_AUTH_URL: "http://{{controller_addr}}:35357/v3"
+  OS_AUTH_URL: "http://{{os_admin_addr}}:35357/v3"
   OS_IDENTITY_API_VERSION: "3"
 
 mysql_databases:

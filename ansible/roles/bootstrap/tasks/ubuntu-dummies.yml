@@ -31,7 +31,7 @@
         owner=root
         group=root
         mode=0644
-  when: br_mode == 'LBR'
+  when: os_neutron_lbr_enabled == 'yes'
 
 - name: ubuntu - copy br-ex config file for OVS
   copy: src=ubuntu-common/interface_br-ex
@@ -39,7 +39,7 @@
         owner=root
         group=root
         mode=0644
-  when: br_mode == 'OVS'
+  when: os_neutron_ovs_enabled == 'yes'
 
 - name: ubuntu - copy dummybr0 config file for OVS
   copy: src=ubuntu-common/interface_dummybr0
@@ -47,7 +47,7 @@
         owner=root
         group=root
         mode=0644
-  when: br_mode == 'OVS'
+  when: os_neutron_ovs_enabled == 'yes'
 
 - name: ubuntu - copy dummybr1 config file for OVS
   copy: src=ubuntu-common/interface_dummybr1
@@ -55,7 +55,7 @@
         owner=root
         group=root
         mode=0644
-  when: br_mode == 'OVS'
+  when: os_neutron_ovs_enabled == 'yes'
 
 
 - name: ubuntu - copy dummy1 config file for LBR
@@ -89,19 +89,24 @@
 
 - name: ubuntu - starting up dummy0
   shell: 'ifup dummy0'
-  when: br_mode == 'LBR'
+  when: os_neutron_lbr_enabled == 'yes'
+  ignore_errors: yes
 
 - name: ubuntu - starting up dummy1
   shell: 'ifup dummy1'
+  ignore_errors: yes
 
 - name: ubuntu - starting up dummy2
   shell: 'ifup dummy1'
+  ignore_errors: yes
 
 - name: ubuntu - starting up dummy4
   shell: 'ifup dummy4'
+  ignore_errors: yes
 
 - name: ubuntu - starting up dummy5
   shell: 'ifup dummy5'
+  ignore_errors: yes
 
 
 - name: ubuntu - re-read facts after configuring network interfaces

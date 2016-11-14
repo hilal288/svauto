@@ -33,7 +33,7 @@
 
 
 - name: Updating glance-api.conf
-  template: src={{openstack_release}}/glance-api.conf
+  template: src={{os_release}}/glance-api.conf
         dest=/etc/glance/glance-api.conf
         owner=glance
         group=glance
@@ -45,7 +45,7 @@
 
 
 - name: Updating glance-registry.conf
-  template: src={{openstack_release}}/glance-registry.conf
+  template: src={{os_release}}/glance-registry.conf
         dest=/etc/glance/glance-registry.conf
         owner=glance
         group=glance

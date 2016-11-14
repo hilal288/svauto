@@ -14,15 +14,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 UBUNTU_HOSTNAME="controller-1"
 DOMAIN="yourdomain.com"
+UBUNTU_PRIMARY_INTERFACE="em1"
 
 
 clear
 
 
 echo
-echo "Welcome to SVAuto's OpenStack Mitaka deployment!"
+echo "Welcome to SVAuto's OpenStack Newton deployment!"
 echo
 
 
@@ -38,7 +40,6 @@ pushd ~/svauto
 
 # Hardcoded values, bad but, good for a moment...
 #
-# ubuntu_primary_interface=em1
 # os_external=dumm0
 # os_data=dumm1
 
@@ -46,5 +47,5 @@ pushd ~/svauto
 ./svauto.sh --ubuntu-network-detect-default-nic \
 	--ansible-run-against=local \
 	--ansible-remote-user=root \
-	--ansible-inventory-builder="os_aio,localhost,ansible_connection=local,regular_system_user=ubuntu,base_os=ubuntu16,os_release=mitaka,ubuntu_primary_interface=em1,os_dns_domain=$YOUR_DOMAIN,os_public_addr=$UBUNTU_HOSTNAME.$YOUR_DOMAIN,os_admin_addr=$UBUNTU_HOSTNAME.$YOUR_DOMAIN,deployment_mode=yes,os_mgmt=em1" \
+	--ansible-inventory-builder="os_aio,localhost,ansible_connection=local,regular_system_user=ubuntu,base_os=ubuntu16,os_release=newton,ubuntu_primary_interface=$UBUNTU_PRIMARY_INTERFACE,os_dns_domain=$YOUR_DOMAIN,os_public_addr=$UBUNTU_HOSTNAME.$YOUR_DOMAIN,os_admin_addr=$UBUNTU_HOSTNAME.$YOUR_DOMAIN,deployment_mode=yes,os_mgmt=$UBUNTU_PRIMARY_INTERFACE" \
 	--ansible-playbook-builder="localhost,bootstrap;base_os_upgrade=yes;ubuntu_network_setup=yes;ubuntu_network_mode=dhcp;ubuntu_setup_dummy_nics=yes;ubuntu_setup_iptables_rc_local=yes,os_clients,ssh_keypair,os_mysql,os_mysql_db,os_rabbitmq,os_memcached,apache2,os_keystone,os_glance,hyper_kvm,os_nova;os_nova_ctrl=yes;os_nova_cmpt=yes;linuxnet_interface_driver=nova.network.linux_net.LinuxBridgeInterfaceDriver,os_keypair,os_nova_flavors,os_neutron;os_aio=yes;os_neutron_ctrl=yes;os_neutron_net=yes;os_neutron_lbr_enabled=yes;neutron_interface_driver=neutron.agent.linux.interface.BridgeInterfaceDriver;os_external=dummy0;os_data=dummy1,os_ext_net,os_horizon,os_heat,post-cleanup"

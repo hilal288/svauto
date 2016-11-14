@@ -140,7 +140,7 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '{{controller_addr}}:11211',
+        'LOCATION': '{{os_admin_addr}}:11211',
     },
 }
 
@@ -167,7 +167,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 #    ('http://cluster2.example.com:5000/v2.0', 'cluster2'),
 #]
 
-OPENSTACK_HOST = "{{public_addr}}"
+OPENSTACK_HOST = "{{os_public_addr}}"
 OPENSTACK_KEYSTONE_URL = "http://%s:5000/v3" % OPENSTACK_HOST
 OPENSTACK_KEYSTONE_DEFAULT_ROLE = "user"
 

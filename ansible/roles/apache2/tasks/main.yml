@@ -32,7 +32,7 @@
 
 - name: ubuntu - Apache HTTP Virtual Host
   template: src=mydomain-template.com.conf
-            dest=/etc/apache2/sites-available/{{public_addr}}.conf
+            dest=/etc/apache2/sites-available/{{os_public_addr}}.conf
             owner=root
             group=root
             mode=0644
@@ -42,7 +42,7 @@
 
 - name: ubuntu - Apache HTTPS Virtual Host
   template: src=mydomain-template.com-ssl.conf
-            dest=/etc/apache2/sites-available/{{public_addr}}-ssl.conf
+            dest=/etc/apache2/sites-available/{{os_public_addr}}-ssl.conf
             owner=root
             group=root
             mode=0644
@@ -51,8 +51,8 @@
 
 
 - name: ubuntu - Apache activating Virtual Host
-  file: src=/etc/apache2/sites-available/{{public_addr}}.conf
-        dest=/etc/apache2/sites-enabled/{{public_addr}}.conf
+  file: src=/etc/apache2/sites-available/{{os_public_addr}}.conf
+        dest=/etc/apache2/sites-enabled/{{os_public_addr}}.conf
         owner=root
         group=root
         state=link
@@ -60,8 +60,8 @@
 
 
 - name: ubuntu - Apache activating SSL Virtual Host
-  file: src=/etc/apache2/sites-available/{{public_addr}}-ssl.conf
-        dest=/etc/apache2/sites-enabled/{{public_addr}}-ssl.conf
+  file: src=/etc/apache2/sites-available/{{os_public_addr}}-ssl.conf
+        dest=/etc/apache2/sites-enabled/{{os_public_addr}}-ssl.conf
         owner=root
         group=root
         state=link

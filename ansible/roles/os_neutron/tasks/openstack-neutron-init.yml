@@ -27,14 +27,14 @@
   environment: "{{admin_openrc_env}}"
   command: "{{item}}"
   with_items:
-  - openstack endpoint create --region "{{region}}" network public http://{{public_addr}}:9696
-  - openstack endpoint create --region "{{region}}" network internal http://{{controller_addr}}:9696
-  - openstack endpoint create --region "{{region}}" network admin http://{{controller_addr}}:9696
+  - openstack endpoint create --region "{{region}}" network public http://{{os_public_addr}}:9696
+  - openstack endpoint create --region "{{region}}" network internal http://{{os_admin_addr}}:9696
+  - openstack endpoint create --region "{{region}}" network admin http://{{os_admin_addr}}:9696
 
 
 - name: Creating OpenStack Neutron User and Role
   environment: "{{admin_openrc_env}}"
   command: "{{item}}"
   with_items:
-  - openstack user create --domain default --password "{{service_password}}" --email neutron@{{your_domain}} neutron
+  - openstack user create --domain default --password "{{service_password}}" --email neutron@{{os_dns_domain}} neutron
   - openstack role add --project service --user neutron --user-domain default admin

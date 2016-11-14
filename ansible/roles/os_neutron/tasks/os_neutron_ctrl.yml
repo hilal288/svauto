@@ -34,7 +34,7 @@
 
 
 - name: Updating neutron.conf
-  template: src={{openstack_release}}/neutron.conf
+  template: src={{os_release}}/neutron.conf
             dest=/etc/neutron/neutron.conf
             owner=root
             group=neutron
@@ -46,7 +46,7 @@
 
 
 - name: Updating ml2_conf.ini
-  template: src={{openstack_release}}/ml2/ml2_conf.ini
+  template: src={{os_release}}/ml2/ml2_conf.ini
             dest=/etc/neutron/plugins/ml2/ml2_conf.ini
             owner=root
             group=neutron

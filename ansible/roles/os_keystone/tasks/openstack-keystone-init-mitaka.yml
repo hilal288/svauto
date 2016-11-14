@@ -29,13 +29,13 @@
   command: "{{item}}"
   with_items:
   # Identify v3
-  - openstack endpoint create --region "{{region}}" identity public http://{{public_addr}}:5000/v3
-  - openstack endpoint create --region "{{region}}" identity internal http://{{controller_addr}}:5000/v3
-  - openstack endpoint create --region "{{region}}" identity admin http://{{controller_addr}}:35357/v3
+  - openstack endpoint create --region "{{region}}" identity public http://{{os_public_addr}}:5000/v3
+  - openstack endpoint create --region "{{region}}" identity internal http://{{os_admin_addr}}:5000/v3
+  - openstack endpoint create --region "{{region}}" identity admin http://{{os_admin_addr}}:35357/v3
   # EC2
-  #- openstack endpoint create --region "{{region}}" ec2 public http://{{public_addr}}:8773/services/Cloud
-  #- openstack endpoint create --region "{{region}}" ec2 internal http://{{controller_addr}}:8773/services/Cloud
-  #- openstack endpoint create --region "{{region}}" ec2 admin http://{{controller_addr}}:8773/services/Admin
+  #- openstack endpoint create --region "{{region}}" ec2 public http://{{os_public_addr}}:8773/services/Cloud
+  #- openstack endpoint create --region "{{region}}" ec2 internal http://{{os_admin_addr}}:8773/services/Cloud
+  #- openstack endpoint create --region "{{region}}" ec2 admin http://{{os_admin_addr}}:8773/services/Admin
 
 
 # Reference:
@@ -47,12 +47,12 @@
   with_items:
   - openstack domain create --description "Default Domain" default
   - openstack project create --domain default --description "Admin Project" admin
-  - openstack user create --domain default --password "{{admin_password}}" --email admin@{{your_domain}} admin
+  - openstack user create --domain default --password "{{admin_password}}" --email admin@{{os_dns_domain}} admin
   - openstack role create admin
   - openstack role add --project admin --user admin --user-domain default admin
   - openstack project create --domain default --description "Service Project" service
   - openstack project create --domain default --description "Demo Project" demo
-  - openstack user create --domain default --password "{{demo_password}}" --email demo@{{your_domain}} demo
+  - openstack user create --domain default --password "{{demo_password}}" --email demo@{{os_dns_domain}} demo
   - openstack role create user
   - openstack role add --project demo --user demo --user-domain default user
 

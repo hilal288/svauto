@@ -27,14 +27,14 @@
   environment: "{{admin_openrc_env}}"
   command: "{{item}}"
   with_items:
-  - openstack endpoint create --region "{{region}}" image public http://{{public_addr}}:9292
-  - openstack endpoint create --region "{{region}}" image internal http://{{controller_addr}}:9292
-  - openstack endpoint create --region "{{region}}" image admin http://{{controller_addr}}:9292
+  - openstack endpoint create --region "{{region}}" image public http://{{os_public_addr}}:9292
+  - openstack endpoint create --region "{{region}}" image internal http://{{os_admin_addr}}:9292
+  - openstack endpoint create --region "{{region}}" image admin http://{{os_admin_addr}}:9292
 
 
 - name: Creating OpenStack Glance User and Role
   environment: "{{admin_openrc_env}}"
   command: "{{item}}"
   with_items:
-  - openstack user create --domain default --password "{{service_password}}" --email glance@{{your_domain}} glance
+  - openstack user create --domain default --password "{{service_password}}" --email glance@{{os_dns_domain}} glance
   - openstack role add --project service --user glance --user-domain default admin

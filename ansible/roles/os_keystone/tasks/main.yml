@@ -23,7 +23,7 @@
 
 - name: Stopping and disabling Keystone (it runs under Apache)
   service: name=keystone state=stopped enabled=no
-  when: openstack_release != 'newton'
+  when: os_release != 'newton'
 
 
 - name: Removing non-used sqlite database
@@ -31,7 +31,7 @@
 
 
 - name: Updating keystone.conf
-  template: src={{openstack_release}}/keystone.conf
+  template: src={{os_release}}/keystone.conf
             dest=/etc/keystone/keystone.conf
             owner=root
             group=root
@@ -52,28 +52,28 @@
 
 - name: Initialize Fernet credential (Newton)
   shell: keystone-manage credential_setup --keystone-user keystone --keystone-group keystone
-  when: openstack_release == 'newton'
+  when: os_release == 'newton'
 
 
 - name: Bootstrapping Identity Service (Newton)
-  shell: keystone-manage bootstrap --bootstrap-password "{{admin_password}}" --bootstrap-admin-url http://{{controller_addr}}:35357/v3/ --bootstrap-internal-url http://{{controller_addr}}:35357/v3/ --bootstrap-public-url http://{{public_addr}}:5000/v3/ --bootstrap-region-id "{{region}}"
-  when: openstack_release == 'newton'
+  shell: keystone-manage bootstrap --bootstrap-password "{{admin_password}}" --bootstrap-admin-url http://{{os_admin_addr}}:35357/v3/ --bootstrap-internal-url http://{{os_admin_addr}}:35357/v3/ --bootstrap-public-url http://{{os_public_addr}}:5000/v3/ --bootstrap-region-id "{{region}}"
+  when: os_release == 'newton'
 
 
 - include: apache-keystone-files.yml
-  when: openstack_release == 'mitaka'
+  when: os_release == 'mitaka'
 
 
 - meta: flush_handlers
 
 
 - name: Including Keystone Init 
-  include: openstack-keystone-init-{{openstack_release}}.yml
+  include: openstack-keystone-init-{{os_release}}.yml
   when: deployment_mode == 'yes'
 
 
 - name: Updating keystone-paste.ini
-  copy: src={{openstack_release}}/keystone-paste.ini
+  copy: src={{os_release}}/keystone-paste.ini
         dest=/etc/keystone/keystone-paste.ini
         owner=root
         group=root
