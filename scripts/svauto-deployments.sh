@@ -69,89 +69,38 @@ echo
 echo "Installing SVAuto basic dependencies (Git & Ansible):"
 
 
-GIT_BINARY=$(which git)
-ANSIBLE_BINARY=$(which ansible)
+case $BASE_OS in
 
+	ubuntu*)
 
-if ! file "$GIT_BINARY" &>/dev/null
-then
+		echo
+		echo "Running: \"sudo apt install ansible\""
 
-	echo
-	echo "Git not found, trying to install..."
+		sudo apt -y install software-properties-common &>/dev/null
+		sudo add-apt-repository -y ppa:ansible/ansible &>/dev/null
+		sudo apt update &>/dev/null
+		sudo apt -y install git ansible &>/dev/null
 
-	case $BASE_OS in
+		;;
 
-		ubuntu*)
+	centos*)
 
-			echo
-			echo "Running: \"sudo apt install git\""
+		echo
+		echo "Running: \"sudo yum install git ansible\""
 
-			sudo apt update &>/dev/null
-			sudo apt -y install git &>/dev/null
+		sudo yum --enablerepo=epel-testing -y install git ansible libselinux-python &>/dev/null
+		;;
 
-			;;
+	*)
 
-		centos*)
+	        echo
+		echo "O.S. not detected, aborting!"
 
-			echo
-			echo "Running: \"sudo yum install git ansible\""
+		exit 1
 
-			sudo yum -y install git &>/dev/null
-			;;
+		;;
 
-		*)
-
-        	        echo
-                	echo "Operation System and/or Git wasn't detected, aborting!"
-
-        	        exit 1
-
-                	;;
-
-	esac
-
-fi
-
-
-if ! file "$ANSIBLE_BINARY" &>/dev/null
-then
-
-	echo "Ansible not found, trying to install..."
-
-	case $BASE_OS in
-
-		ubuntu*)
-
-			echo
-			echo "Running: \"sudo apt install ansible\""
-
-			sudo apt -y install software-properties-common &>/dev/null
-			sudo add-apt-repository -y ppa:ansible/ansible &>/dev/null
-			sudo apt update &>/dev/null
-			sudo apt -y install ansible &>/dev/null
-
-			;;
-
-		centos*)
-
-			echo
-			echo "Running: \"sudo yum install ansible\""
-
-			sudo yum --enablerepo=epel-testing -y install ansible libselinux-python &>/dev/null
-			;;
-
-		*)
-
-        	        echo
-                	echo "Operation System and/or Ansible wasn't detected, aborting!"
-
-			exit 1
-
-			;;
-
-	esac
-
-fi
+esac
 
 
 if  [ ! -d ~/svauto ]
