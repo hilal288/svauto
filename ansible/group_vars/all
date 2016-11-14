@@ -211,8 +211,6 @@ pts_set_port_fastpath_1_5: "0000:00:07.0"
 
 ubuntu_install: "server"
 
-ubuntu_network_setup: "no"
-
 ubuntu_primary_interface: "eth0"
 
 ubuntu_network_mode: "dhcp"

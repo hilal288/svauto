@@ -124,49 +124,6 @@
   notify: restart-neutron
 
 
-- name: Creating Open vSwitch Bridge - External Bridge
-  openvswitch_bridge: bridge="{{os_neutron_external_bridge}}" state=present
-  when: os_neutron_ovs_enabled == 'yes'
-
-- name: Configuring Open vSwitch Bridge Port - External Bridge
-  openvswitch_port: bridge="{{os_neutron_external_bridge}}" port="{{os_external}}" state=present
-  when: os_neutron_ovs_enabled == 'yes'
-
-
-- name: Creating Open vSwitch Bridge - Provider Network 1
-  openvswitch_bridge: bridge="{{os_provider_net_1_ovs_bridge_interface}}" state=present
-  when: os_neutron_ovs_enabled == 'yes'
-
-- name: Configuring Open vSwitch Bridge Port - Provider Network 1
-  openvswitch_port: bridge="{{os_provider_net_1_ovs_bridge_interface}}" port="{{os_provider_net_1_ovs_interface}}" state=present
-  when: os_neutron_ovs_enabled == 'yes'
-
-
-- name: Creating Open vSwitch Bridge - Provider Network 2
-  openvswitch_bridge: bridge="{{os_provider_net_2_ovs_bridge_interface}}" state=present
-  when: os_neutron_ovs_enabled == 'yes'
-
-- name: Configuring Open vSwitch Bridge Port - Provider Network 2
-  openvswitch_port: bridge="{{os_provider_net_2_ovs_bridge_interface}}" port="{{os_provider_net_2_ovs_interface}}" state=present
-  when: os_neutron_ovs_enabled == 'yes'
-
-
-- name: Enabling br-ex Interface
-  shell: 'ifup br-ex'
-  when: os_neutron_ovs_enabled == 'yes' and ubuntu_network_setup == 'yes'
-  ignore_errors: yes
-
-- name: Enabling dummybr0 Interface
-  shell: 'ifup dummybr0'
-  when: os_neutron_ovs_enabled == 'yes'
-  ignore_errors: yes
-
-- name: Enabling dummybr1 Interface
-  shell: 'ifup dummybr1'
-  when: os_neutron_ovs_enabled == 'yes'
-  ignore_errors: yes
-
-
 - name: Write custom sysctl.conf
   copy: src=sysctl.conf
         dest=/etc/sysctl.conf
