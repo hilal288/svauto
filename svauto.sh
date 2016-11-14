@@ -827,9 +827,9 @@ then
 	fi
 
 
-        cpu_check
+        # cpu_check
 
-        hostname_check
+        # hostname_check
 
 	echo
 
