@@ -66,6 +66,11 @@ ANSIBLE_COUNTER_2=1
 
 BUILD_RAND=$(openssl rand -hex 4)
 
+# If there are no arguments to script, bork...
+if (( "$#" == 0 )); then
+	echo "ERROR: No arguments were specified. " >&2
+	exit 1
+fi
 
 for i in "$@"
 do
@@ -457,6 +462,11 @@ case $i in
 
 		DRY_RUN="yes"
 		shift
+		;;
+
+	*)
+		echo "ERROR: <$i> is an unrecognized command." >&2
+		exit 1
 		;;
 
 esac
