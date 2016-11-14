@@ -91,6 +91,7 @@
     - nbd-client
     - btrfs-tools
     - python-minimal
+    - python-libvirt
     - python-mysqldb
     - ecryptfs-utils
     - python-httplib2
