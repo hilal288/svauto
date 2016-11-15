@@ -48,7 +48,7 @@
             group=root
             mode=0644
             backup=yes
-  when: ubuntu_install == 'server'
+  when: ubuntu_primary_interface_via_ifupdown == 'yes'
 
 
 # Including Dummy NIC setup.

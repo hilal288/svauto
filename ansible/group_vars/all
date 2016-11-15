@@ -213,6 +213,8 @@ ubuntu_install: "server"
 
 ubuntu_primary_interface: "eth0"
 
+ubuntu_primary_interface_via_ifupdown: "no"
+
 ubuntu_network_mode: "dhcp"
 
 ubuntu_static_ip_mask: "192.168.1.2/24"
