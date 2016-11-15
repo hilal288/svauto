@@ -434,15 +434,10 @@ case $i in
 		shift
 		;;
 
-        --download-sandvine-images)
 
-	        DOWNLOAD_SANDVINE_IMAGES="yes"
-		shift
-		;;
+        --download-images=*)
 
-        --download-iso-images)
-
-	        DOWNLOAD_ISO_IMAGES="yes"
+	        DOWNLOAD_IMAGES="${i#*=}"
 		shift
 		;;
 
@@ -644,82 +639,86 @@ then
 fi
 
 
-if [ "$DOWNLOAD_ISO_IMAGES" == "yes" ]
-then
+case $DOWNLOAD_IMAGES in
 
-	echo
-	echo "Download ISO images into Libvirt subdir:"
+	iso-for-kvm)
 
-	sudo mkdir /var/lib/libvirt/ISO -p
+		echo
+		echo "Download ISO images into Libvirt subdir:"
 
-	pushd /var/lib/libvirt/ISO
+		sudo mkdir /var/lib/libvirt/ISO -p
 
-	sudo wget -c $UBUNTU1604_64_ISO
-	sudo wget -c $UBUNTU1404_64_ISO
-	sudo wget -c $CENTOS7_64_ISO
-	sudo wget -c $CENTOS6_64_ISO
+		pushd /var/lib/libvirt/ISO
 
-	popd
+		sudo wget -c $UBUNTU1604_64_ISO
+		sudo wget -c $UBUNTU1404_64_ISO
+		sudo wget -c $CENTOS7_64_ISO
+		sudo wget -c $CENTOS6_64_ISO
 
-	exit 0
+		popd
 
-fi
+		exit 0
 
+		;;
 
-# TODO: Do this via Ansible!
-if [ "$DOWNLOAD_SANDVINE_IMAGES" == "yes" ]
-then
+	sandvine)
 
-        echo
-        echo "Enter your Sandvine's FTP (ftp.support.sandvine.com) account details:"
-        echo
+		echo
+		echo "Enter your Sandvine's FTP (ftp.support.sandvine.com) account details:"
+		echo
 
-        echo -n "Username: "
-#	read FTP_USER
+		echo -n "Username: "
+#		read FTP_USER
 
-        echo -n "Password: "
-#	read -s FTP_PASS
+		echo -n "Password: "
+#		read -s FTP_PASS
 
-	echo
+		echo
 
-	pushd downloads
+		pushd downloads
 
-#	wget -c --user=$FTP_USER --password=$FTP_PASS $PTS_IMG_URL
-#	wget -c --user=$FTP_USER --password=$FTP_PASS $SDE_IMG_URL
-#	wget -c --user=$FTP_USER --password=$FTP_PASS $SPB_IMG_URL
+#		wget -c --user=$FTP_USER --password=$FTP_PASS $PTS_IMG_URL
+#		wget -c --user=$FTP_USER --password=$FTP_PASS $SDE_IMG_URL
+#		wget -c --user=$FTP_USER --password=$FTP_PASS $SPB_IMG_URL
 
-	wget -c $PTS_IMG_URL
-	wget -c $SDE_IMG_URL
-	wget -c $SPB_IMG_URL
+		wget -c $PTS_IMG_URL
+		wget -c $SDE_IMG_URL
+		wget -c $SPB_IMG_URL
 
-	popd
+		popd
 
-	exit 0
+		exit 0
 
-fi
+		;;
 
+	cloud-services)
 
-# TODO: Do this via Ansible!
-if [ "$LIBVIRT_INSTALL_IMAGES" == "yes" ]
-then
+		echo
+		echo "TODO!"
 
-	echo
-	echo "Deploying QCoW2 images into /var/lib/libvirt/images subdirectory..."
+		;;
 
+	generic)
 
-	pushd downloads
+		echo
 
+		pushd downloads
 
-	sudo qemu-img convert -p -f qcow2 -O qcow2 -o preallocation=metadata $PTS_IMG_FILENAME /var/lib/libvirt/images/stack-1-pts-1-disk1.qcow2
+		wget -c $UBUNTU1604_64_CLOUD_IMG_URL
+		wget -c $UBUNTU1404_64_CLOUD_IMG_URL
+		wget -c $UBUNTU1204_64_CLOUD_IMG_URL
+		wget -c $DEBIAN8_64_CLOUD_IMG_URL
+		wget -c $CENTOS7_64_CLOUD_IMG_URL
+		wget -c $CENTOS6_64_CLOUD_IMG_URL
+		wget -c $CIRROS03_64_CLOUD_IMG_URL
 
-	sudo qemu-img convert -p -f qcow2 -O qcow2 -o preallocation=metadata $SDE_IMG_FILENAME /var/lib/libvirt/images/stack-1-sde-1-disk1.qcow2
+		popd
 
-	sudo qemu-img convert -p -f qcow2 -O qcow2 -o preallocation=metadata $SPB_IMG_FILENAME /var/lib/libvirt/images/stack-1-spb-1-disk1.qcow2
+		exit0
 
+		;;
 
-	exit 0
-
-fi
+esac
 
 
 if [ ! -z "$PACKER_BUILD_WHAT" ]
@@ -978,55 +977,6 @@ then
 		echo "Loading OpenStack credentials for "$OS_PROJECT" account..."
 
 		source ~/$OS_PROJECT-openrc.sh
-	fi
-
-
-	if [ "$OS_IMPORT_IMAGES" == "yes" ]
-	then
-
-		if [ "$OS_PROJECT" == "admin" ]; then VISIBILITY="--public" ; fi
-
-
-		echo
-		echo "Downloading and importing basic Cloud images into Glance..."
-
-
-		pushd ~/svauto/downloads
-
-
-		wget -c $UBUNTU1604_64_CLOUD_IMG_URL
-		wget -c $UBUNTU1404_64_CLOUD_IMG_URL
-		wget -c $UBUNTU1204_64_CLOUD_IMG_URL
-		wget -c $DEBIAN8_64_CLOUD_IMG_URL
-		wget -c $CENTOS7_64_CLOUD_IMG_URL
-		wget -c $CENTOS6_64_CLOUD_IMG_URL
-		wget -c $CIRROS03_64_CLOUD_IMG_URL
-
-
-		# Ubuntu Xenial
-		openstack image create "ubuntu-16.04.1-amd64" --file $UBUNTU1604_64_FILENAME $VISIBILITY --container-format bare --disk-format qcow2
-		# Ubuntu Trusty
-		openstack image create "ubuntu-14.04.1-amd64" --file $UBUNTU1404_64_FILENAME $VISIBILITY --container-format bare --disk-format qcow2
-		# Ubuntu Precise
-		openstack image create "ubuntu-12.04.1-amd64" --file $UBUNTU1204_64_FILENAME $VISIBILITY --container-format bare --disk-format qcow2
-		# Debian Jessie
-		openstack image create "debian-8.6.1-amd64" --file $DEBIAN8_64_FILENAME $VISIBILITY --container-format bare --disk-format qcow2
-		# CentOS 6 and 7
-		openstack image create "centos-7-amd64" --file $CENTOS7_64_FILENAME $VISIBILITY --container-format bare --disk-format qcow2
-		openstack image create "centos-6-amd64" --file $CENTOS6_64_FILENAME $VISIBILITY --container-format bare --disk-format qcow2
-		# Cirrus Test Image
-		openstack image create "cirros-0.3.4-amd64" --file $CIRROS03_64_FILENAME $VISIBILITY --container-format bare --disk-format qcow2
-
-
-		# Updating O.S. images properties (use with care), below syntax not ready yet for Glance v2:
-		# openstack image update --property hw_scsi_model=virtio-scsi --property hw_disk_bus=scsi "your-image-name-1.0"
-
-
-		popd
-
-
-		exit 0
-
 	fi
 
 

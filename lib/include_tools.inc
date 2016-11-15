@@ -31,10 +31,6 @@ source lib/mkwebrootsubdirs.sh
 source lib/update_web_dir_sums.sh
 source lib/update_web_dir_symlink.sh
 
-source lib/installation_helper.sh
-source lib/installation_helper_cs.sh
-source lib/installation_helper_cs_prod.sh
-
 source lib/libvirt_files.sh
 source lib/libvirt_files_cs.sh
 

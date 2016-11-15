@@ -11,7 +11,7 @@ baseurl=ftp://{{ftp_username}}:{{ftp_password}}@ftp.support.sandvine.com/release
 baseurl=ftp://{{ packages_server }}/centos/{{ release_code_name }}/$releasever/svrepos/$basearch/svsubscribermapping
 {% endif %}
 {% if (release == 'dev' and versioned_repo == 'true') %}
-baseurl=ftp://{{ packages_server }}/centos/{{ release_code_name }}/$releasever/svrepos/$basearch/svsubscribermapping-{{ sde_version }}
+baseurl=ftp://{{ packages_server }}/centos/{{ release_code_name }}/$releasever/svrepos/$basearch/svsubscribermapping-{{ sm_version }}
 {% endif %}
 enabled=1
 protect=0

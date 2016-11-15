@@ -112,11 +112,12 @@ versioned_repo: "false"
 svnda_install_addons: 'no'
 
 # Products and versions
-pts_version: "7.20"
+pts_version: "7.40"
 pts_protocols_version: "16.09.2230"
-sde_version: "7.30"
-spb_version: "6.60"
-csd_version: "7.50"
+sde_version: "7.50"
+sm_version: "7.50"
+spb_version: "6.65"
+csd_version: "16.11"
 svtse_version: "1.00"
 svtcpa_version: "5.40"
 svnda_version: "5.20"

@@ -130,8 +130,6 @@ packer_build_cs()
 
         ./svauto.sh --libvirt-files=cs-dev
 
-        ./svauto.sh --installation-helper=cs-dev
-
         ./svauto.sh --move2webroot=cs-dev
 
         ./svauto.sh --update-web-dir-sums

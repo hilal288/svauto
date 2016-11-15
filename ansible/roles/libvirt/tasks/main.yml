@@ -69,3 +69,24 @@
 
 #- name: ubntu - start stack-1-sde-1
 #  virt: name=stack-1-sde-1 state=running
+
+
+- stat: path=/home/{{regular_system_user}}/svauto/downloads/svpts-7.40.0164-vpl-1-centos7-amd64-disk1.qcow2c
+  register: svpts_image_register
+
+- shell: qemu-img convert -p -f qcow2 -O qcow2 -o preallocation=metadata /home/{{regular_system_user}}/svauto/downloads/svpts-7.40.0164-vpl-1-centos7-amd64-disk1.qcow2c /var/lib/libvirt/images/stack-1-pts-1-disk1.qcow2
+  when: svpts_image_register.stat.exists == False
+
+
+- stat: path=/home/{{regular_system_user}}/svauto/downloads/svsde-7.50.0230-vpl-1-centos7-amd64-disk1.qcow2c
+  register: svsde_image_register
+
+- shell: qemu-img convert -p -f qcow2 -O qcow2 -o preallocation=metadata /home/{{regular_system_user}}/svauto/downloads/svsde-7.50.0230-vpl-1-centos7-amd64-disk1.qcow2c /var/lib/libvirt/images/stack-1-pts-1-disk1.qcow2
+  when: svsde_image_register.stat.exists == False
+
+
+- stat: path=/home/{{regular_system_user}}/svauto/downloads/svspb-6.65.0078-vpl-1-centos6-amd64-disk1.qcow2c
+  register: svspb_image_register
+
+- shell: qemu-img convert -p -f qcow2 -O qcow2 -o preallocation=metadata /home/{{regular_system_user}}/svauto/downloads/svspb-6.65.0078-vpl-1-centos6-amd64-disk1.qcow2c /var/lib/libvirt/images/stack-1-spb-1-disk1.qcow2
+  when: svspb_image_register.stat.exists == False

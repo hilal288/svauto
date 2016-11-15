@@ -67,8 +67,6 @@ packer_build_cs_release()
 
         ./svauto.sh --libvirt-files=cs-prod
 
-        ./svauto.sh --installation-helper=cs-prod
-
         ./svauto.sh --move2webroot=cs-prod
 
         ./svauto.sh --update-web-dir-sums

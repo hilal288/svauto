@@ -89,8 +89,6 @@ packer_build_sandvine()
 
         ./svauto.sh --libvirt-files=sandvine-dev
 
-        ./svauto.sh --installation-helper=sandvine-dev
-
         ./svauto.sh --move2webroot=sandvine-dev
 
         ./svauto.sh --update-web-dir-sums
