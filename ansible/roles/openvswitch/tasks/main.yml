@@ -18,7 +18,7 @@
   tags: processor_count_1g_hugepages
 
 
-- name: ubuntu - apt installing Open vSwitch with DPDK
+- name: ubuntu - apt installing Open vSwitch
   apt: name={{item}} state=latest
   with_items:
     - openvswitch-switch
@@ -36,13 +36,13 @@
   when: openvswitch_mode == 'dpdk'
 
 
-- name: ubuntu - ovs-vswitchd as default for OVS vSwitch
+- name: ubuntu - ovs-vswitchd as default for OVS vSwitch Daemon
   alternatives: name=ovs-vswitchd path=/usr/lib/openvswitch-switch/ovs-vswitchd
   notify: restart-openvswitch
   when: openvswitch_mode == 'regular'
 
 
-- name: ubuntu - ovs-vswitchd-dpdk as default for OVS vSwitch
+- name: ubuntu - ovs-vswitchd-dpdk as default for OVS vSwitch Daemon with DPDK
   alternatives: name=ovs-vswitchd path=/usr/lib/openvswitch-switch-dpdk/ovs-vswitchd-dpdk
   notify: restart-openvswitch
   when: openvswitch_mode == 'dpdk'
@@ -61,7 +61,7 @@
   when: openvswitch_mode == 'dpdk'
 
 
-- name: ubuntu - enabling OpenvSwitch's 1G Hugepages
+- name: ubuntu - configuring OpenvSwitch's DPDK Socket Mem value
   shell: ovs-vsctl --no-wait set Open_vSwitch . other_config:dpdk-socket-mem="2048,0"
   when: openvswitch_mode == 'dpdk' and processor_count_1g_hugepages >= 1
 
