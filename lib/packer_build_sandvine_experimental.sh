@@ -35,7 +35,7 @@ packer_build_sandvine_experimental()
                 --packer-max-tries=1 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 	# Linux SVSDE on CentOS 7
-	./svauto.sh --packer-builder --base-os=centos7 --release=dev --product=svsde --version=$TSE_VERSION --product-variant=vpl-test-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+	./svauto.sh --packer-builder --base-os=centos7 --release=dev --product=svsde --version=$SDE_VERSION --product-variant=vpl-test-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
 		--ansible-remote-user="root" \
 		--ansible-inventory-builder="svbox,localhost,ansible_connection=local,base_os=centos7,deployment_mode=yes,sandvine_yum_host=$SV_YUM_HOST" \
 		--ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes;svauto_yum_host=$SVAUTO_YUM_HOST;release_code_name=$RELEASE_CODE_NAME,grub-conf,udev-rules,nginx,svsde;sde_version=$SDE_VERSION,svfairshare-sde;tm_version=$TM_VERSION,vmware-tools,post-cleanup-image" \
