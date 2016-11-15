@@ -102,7 +102,7 @@ case "$PRODUCT" in
 	svusagemanagementpts)
 
 		PROD_DIR="USAGE_MANAGEMENT_PTS"
-		if [ "$EXPERIMENTAL_REPO" == "yes" ] ; then VERSION="$UM_PTS_EXPERIMENTAL_VERSION" ; else VERSION="$UM_PTS_VERSION" ; fi
+		if [ "$EXPERIMENTAL_REPO" == "yes" ] ; then VERSION="$UM_EXPERIMENTAL_VERSION" ; else VERSION="$UM_VERSION" ; fi
 		;;
 
 	svmcdtext)

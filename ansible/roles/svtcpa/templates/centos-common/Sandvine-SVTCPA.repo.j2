@@ -4,17 +4,11 @@
 
 [sandvine-svtcpa]
 name=Sandvine - SVTCPA (Sandvine TCP Accelerator)
-{% if (release == 'dev' and static_repo != 'true' and versioned_repo != 'true') %}
-baseurl=ftp://{{ packages_server }}/centos/{{ release_code_name }}/$releasever/svrepos/$basearch/svtcpa
+{% if (release == 'dev' and base_os == 'centos6') %}
+baseurl=ftp://{{ sandvine_yum_url }}/images/Linux/CENTOS6-x64/TCPA/svtcpa-LNX-{{ svtcpa_version }}
 {% endif %}
-{% if (release == 'dev' and static_repo != 'true' and versioned_repo == 'true') %}
-baseurl=ftp://{{ packages_server }}/centos/{{ release_code_name }}/$releasever/svrepos/$basearch/svtcpa-{{ svtcpa_version }}
-{% endif %}
-{% if (release == 'dev' and static_repo == 'true' and versioned_repo == 'true' and base_os == 'centos6') %}
-baseurl=ftp://{{ static_packages_server }}/images/Linux/CENTOS6-x64/TCPA/svtcpa-LNX-{{ svtcpa_version }}
-{% endif %}
-{% if (release == 'dev' and static_repo == 'true' and versioned_repo == 'true' and base_os == 'centos7') %}
-baseurl=ftp://{{ static_packages_server }}/images/Linux/RHEL7-x64/TCPA/svtcpa-LNX-{{ svtcpa_version }}
+{% if (release == 'dev' and base_os == 'centos7') %}
+baseurl=ftp://{{ sandvine_yum_url }}/images/Linux/RHEL7-x64/TCPA/svtcpa-LNX-{{ svtcpa_version }}
 {% endif %}
 enabled=1
 protect=0

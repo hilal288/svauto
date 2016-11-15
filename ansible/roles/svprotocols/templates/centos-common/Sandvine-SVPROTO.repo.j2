@@ -4,17 +4,11 @@
 
 [sandvine-svproto]
 name=Sandvine - SVPTS (Policy Traffic Switch) - Protocols
-{% if release == 'prod' %}
-baseurl=ftp://{{ftp_username}}:{{ftp_password}}@ftp.support.sandvine.com/release/CloudServices/{{ release_code_number }}/$releasever/svrepos/$basearch/svprotocols
+{% if (release == 'dev' and base_os == 'centos6') %}
+baseurl=ftp://{{ sandvine_yum_url }}/images/Linux/CENTOS6-x64/PTSD_PROTOCOLS/svprotocols-LNX-{{ pts_protocols_version }}
 {% endif %}
-{% if release == 'dev' %}
-baseurl=ftp://{{ packages_server }}/centos/{{ release_code_name }}/$releasever/svrepos/$basearch/svprotocols
-{% endif %}
-{% if (release == 'dev' and static_repo == 'true' and versioned_repo == 'true' and base_os == 'centos6') %}
-baseurl=ftp://{{ static_packages_server }}/images/Linux/CENTOS6-x64/PTSD_PROTOCOLS/svprotocols-LNX-{{ pts_protocols_version }}
-{% endif %}
-{% if (release == 'dev' and static_repo == 'true' and versioned_repo == 'true' and base_os == 'centos7') %}
-baseurl=ftp://{{ static_packages_server }}/images/Linux/CENTOS7-x64/PTSD_PROTOCOLS/svprotocols-LNX-{{ pts_protocols_version }}
+{% if (release == 'dev' and base_os == 'centos7') %}
+baseurl=ftp://{{ sandvine_yum_url }}/images/Linux/CENTOS7-x64/PTSD_PROTOCOLS/svprotocols-LNX-{{ pts_protocols_version }}
 {% endif %}
 enabled=1
 protect=0

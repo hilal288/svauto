@@ -65,9 +65,9 @@ sandvine_main_yum_repo: "no"
 ftp_username: customer.sandvine.com
 ftp_password: lerolero
 
-# Yum or APT Reposiory server:
-packages_server: "archive.mydomain.com"
-static_packages_server: "archive.mydomain.com"
+# Yum or APT Reposiory servers:
+svauto_yum_url: "archive.mydomain.com"
+sandvine_yum_url: "archive.mydomain.com"
 
 # Sandvine's Release Code Name:
 release_code_name: "yukon"
@@ -89,9 +89,6 @@ cs_db_host: "%"
 cs_db_user: "svadmin"
 cs_db_pass: "sandvine"
 
-# Is Experimental Repo:
-is_experimental: "no"
-
 # Is Linux Container (LXD / Docker):
 is_container: "no"
 
@@ -102,26 +99,31 @@ activate_eth1: "yes"
 lock_el7_kernel_upgrade: "no"
 el7_kernel_version: "3.10.0-327.36.3.el7.x86_64"
 
-# Use static, non-upgradable, old fashion, Yum repositories:
-static_repo: "false"
-
-# Use versioned URL repo
-versioned_repo: "false"
-
 # Install SVNDA AddOns
 svnda_install_addons: 'no'
 
 # Products and versions
-pts_version: "7.40"
-pts_protocols_version: "16.09.2230"
-sde_version: "7.50"
-sm_version: "7.50"
-spb_version: "6.65"
-csd_version: "16.11"
-svtse_version: "1.00"
-svtcpa_version: "5.40"
-svnda_version: "5.20"
-svcontrol-center_version: "7.20"
+pts_version: "null"
+pts_protocols_version: "null"
+
+sde_version: "null"
+
+sm_version: "null"
+
+um_version: "null"
+
+fairshare_version: "null"
+
+spb_version: "null"
+spb_protocols_version: "null"
+nds_version: "null"
+
+csd_version: "null"
+
+svtse_version: "null"
+svtcpa_version: "null"
+svnda_version: "null"
+svcontrol-center_version: "null"
 
 
 #

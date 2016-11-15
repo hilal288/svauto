@@ -4,13 +4,8 @@
 
 [sandvine]
 name=Sandvine - Main
-{% if release == 'prod' %}
-baseurl=ftp://{{ftp_username}}:{{ftp_password}}@ftp.support.sandvine.com/release/CloudServices/{{ release_code_number }}/$releasever/os/$basearch
-{% endif %}
-{% if (release == 'dev' and is_experimental == 'yes') %}
-baseurl=ftp://{{ packages_server }}/centos/{{ release_code_name }}/$releasever/os-experimental/$basearch
 {% elif release == 'dev' %}
-baseurl=ftp://{{ packages_server }}/centos/{{ release_code_name }}/$releasever/os/$basearch
+baseurl=ftp://{{ svauto_yum_url }}/centos/{{ release_code_name }}/$releasever/os/$basearch
 {% endif %}
 enabled=1
 protect=0

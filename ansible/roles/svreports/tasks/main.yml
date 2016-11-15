@@ -12,16 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: copy - Sandvine SVNDS repository
-  template: src=Sandvine-SVNDS.repo.j2
-            dest=/etc/yum.repos.d/Sandvine-SVNDS.repo
+- name: copy - Sandvine NDS repository
+  template: src=Sandvine-NDS.repo.j2
+            dest=/etc/yum.repos.d/Sandvine-NDS.repo
             owner=root
             group=root
             mode=0644
 
 
-- name: yum - installing SVNDS
+- name: yum - installing NDS
   yum: pkg={{item}} state=latest update_cache=yes
   with_items:
-    - dmidecode
     - svreports
