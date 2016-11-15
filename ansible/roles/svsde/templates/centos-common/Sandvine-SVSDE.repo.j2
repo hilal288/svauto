@@ -5,10 +5,10 @@
 [sandvine-svsde]
 name=Sandvine - SVSDE (Sandvine Service Delivery Engine)
 {% if (release == 'dev' and base_os == 'centos6') %}
-baseurl=ftp://{{ sandvine_yum_url }}/images/Linux/CENTOS6-x64/SDE/svsde-LNX-{{ sde_version }}
+baseurl=ftp://{{ sandvine_yum_host }}/images/Linux/CENTOS6-x64/SDE/svsde-LNX-{{ sde_version }}
 {% endif %}
 {% if (release == 'dev' and base_os == 'centos7') %}
-baseurl=ftp://{{ sandvine_yum_url }}/images/Linux/RHEL7-x64/SDE/svsde-LNX-{{ sde_version }}
+baseurl=ftp://{{ sandvine_yum_host }}/images/Linux/RHEL7-x64/SDE/svsde-LNX-{{ sde_version }}
 {% endif %}
 enabled=1
 protect=0

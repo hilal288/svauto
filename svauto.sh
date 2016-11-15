@@ -159,12 +159,6 @@ case $i in
 		shift
 		;;
 
-	--experimental-yum-repo)
-
-		EXPERIMENTAL_REPO="yes"
-		shift
-		;;
-
 	--release-code-name=*)
 
 		RELEASE_CODE_NAME="${i#*=}"
@@ -190,6 +184,12 @@ case $i in
 	#
 	# Packer Builder specific options - BEGIN
 	#
+
+	--packer-build=*)
+
+		PACKER_BUILD_WHAT="${i#*=}"
+		shift
+		;;
 
 	--packer-builder)
 
@@ -357,12 +357,6 @@ case $i in
 	--labify)
 
 		LABIFY="yes"
-		shift
-		;;
-
-	--packer-build=*)
-
-		PACKER_BUILD_WHAT="${i#*=}"
 		shift
 		;;
 
@@ -628,6 +622,8 @@ then
 
 		rm -rf build-date.txt packer/build* tmp/cs-rel/* tmp/cs/* tmp/sv/* tmp/*.qcow2c tmp/*.img ansible/*.retry ansible/*.yml ansible/*-hosts-* ansible/*-extra-vars-* ansible/facts_storage
 
+		echo
+
 		exit 0
 	else
 		echo
@@ -757,6 +753,12 @@ then
 		cs-prod)
 
 			packer_build_cs_release
+			;;
+
+		*)
+			echo "ERROR: <$i> is an unrecognized command." >&2
+
+			exit 1
 			;;
 
 	esac

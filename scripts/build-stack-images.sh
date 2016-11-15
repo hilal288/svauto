@@ -36,4 +36,4 @@ time ./svauto.sh --packer-build=sandvine-dev-lab
 time ./svauto.sh --packer-build=sandvine-dev
 
 # Sandvine Stock Experimental Images
-time ./svauto.sh --packer-build=sandvine-experimental
+time ./svauto.sh --packer-build=sandvine-dev-experimental

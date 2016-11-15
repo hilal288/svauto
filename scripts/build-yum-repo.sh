@@ -55,9 +55,6 @@
 
 ./svauto.sh --yum-repo-builder --base-os=centos6 --product=svusagemanagementpts --latest
 
-./svauto.sh --yum-repo-builder --base-os=centos7 --product=svpts --experimental-yum-repo --latest-of-serie
-./svauto.sh --yum-repo-builder --base-os=centos6 --product=svpts --experimental-yum-repo --latest-of-serie
-
 
 #
 # SDE stuff
@@ -92,11 +89,6 @@
 # NDS
 
 ./svauto.sh --yum-repo-builder --base-os=centos6 --product=svreports --latest
-
-
-# Experimental
-
-./svauto.sh --yum-repo-builder --base-os=centos6 --product=svspb --experimental-yum-repo --latest-of-serie
 
 
 #

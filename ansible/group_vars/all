@@ -66,8 +66,8 @@ ftp_username: customer.sandvine.com
 ftp_password: lerolero
 
 # Yum or APT Reposiory servers:
-svauto_yum_url: "archive.mydomain.com"
-sandvine_yum_url: "archive.mydomain.com"
+svauto_yum_host: "null"
+sandvine_yum_host: "null"
 
 # Sandvine's Release Code Name:
 release_code_name: "yukon"
@@ -105,25 +105,18 @@ svnda_install_addons: 'no'
 # Products and versions
 pts_version: "null"
 pts_protocols_version: "null"
-
 sde_version: "null"
-
-sm_version: "null"
-
-um_version: "null"
-
-fairshare_version: "null"
-
-spb_version: "null"
-spb_protocols_version: "null"
-nds_version: "null"
-
-csd_version: "null"
-
 svtse_version: "null"
 svtcpa_version: "null"
 svnda_version: "null"
-svcontrol-center_version: "null"
+spb_version: "null"
+spb_protocols_version: "null"
+nds_version: "null"
+cc_version: "null"
+sm_version: "null"
+um_version: "null"
+tm_version: "null"
+csd_version: "null"
 
 
 #

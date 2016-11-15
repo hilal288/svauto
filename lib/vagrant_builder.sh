@@ -122,8 +122,8 @@ vagrant_builder()
 
 			sed -i -e 's/vagrant_run:.*/vagrant_run: "yes"/' ansible/group_vars/all
 
-			sed -i -e 's/svauto_yum_url:.*/svauto_yum_url: \"'$SVAUTO_MAIN_HOST'\"/' ansible/group_vars/all
-			sed -i -e 's/sandvine_yum_repo:.*/sandvine_yum_url: \"'$STATIC_PACKAGES_SERVER'\"/' ansible/group_vars/all
+			sed -i -e 's/svauto_yum_host:.*/svauto_yum_url: \"'$SVAUTO_YUM_HOST'\"/' ansible/group_vars/all
+			sed -i -e 's/sandvine_yum_host:.*/sandvine_yum_url: \"'$SV_YUM_HOST'\"/' ansible/group_vars/all
 
 
 			VBOX_SANITIZED=$(echo $VBOX | sed -e 's/\//\\\//g')

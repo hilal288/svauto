@@ -5,10 +5,10 @@
 [sandvine-svspb]
 name=Sandvine - SVSPB
 {% if (release == 'dev' and base_os == 'centos6') %}
-baseurl=ftp://{{ sandvine_yum_url }}/images/Linux/CENTOS6-x64/SPB/svspb-LNX-{{ spb_version }}
+baseurl=ftp://{{ sandvine_yum_host }}/images/Linux/CENTOS6-x64/SPB/svspb-LNX-{{ spb_version }}
 {% endif %}
 {% if (release == 'dev' and base_os == 'centos7') %}
-baseurl=ftp://{{ sandvine_yum_url }}/images/Linux/RHEL7-x64/SVSPB/svspb-LNX-{{ spb_version }}
+baseurl=ftp://{{ sandvine_yum_host }}/images/Linux/RHEL7-x64/SVSPB/svspb-LNX-{{ spb_version }}
 {% endif %}
 enabled=1
 protect=0

@@ -48,85 +48,71 @@ case "$PRODUCT" in
 	svcontrol-center)
 
 		PROD_DIR="CONTROL_CENTER"
-		if [ "$EXPERIMENTAL_REPO" == "yes" ] ; then VERSION="$CC_EXPERIMENTAL_VERSION" ; else VERSION="$CC_VERSION" ; fi
 		;;
 
 	svnda)
 
 		PROD_DIR="NA"
-		if [ "$EXPERIMENTAL_REPO" == "yes" ] ; then VERSION="$NDA_EXPERIMENTAL_VERSION" ; else VERSION="$NDA_VERSION" ; fi
 		;;
 
 	svtcpa)
 
 		PROD_DIR="TCPA"
-		if [ "$EXPERIMENTAL_REPO" == "yes" ] ; then VERSION="$TCPA_EXPERIMENTAL_VERSION" ; else VERSION="$TCPA_VERSION" ; fi
 		;;
 
 	svtse)
 
 		PROD_DIR="SVTSE"
-		if [ "$EXPERIMENTAL_REPO" == "yes" ] ; then VERSION="$TSE_EXPERIMENTAL_VERSION" ; else VERSION="$TSE_VERSION" ; fi
 		;;
 
 	svpts)
 
 		PROD_DIR="SVPTS"
-		if [ "$EXPERIMENTAL_REPO" == "yes" ] ; then VERSION="$PTS_EXPERIMENTAL_VERSION" ; else VERSION="$PTS_VERSION" ; fi
 		;;
 
 	svprotocols)
 
 		PROD_DIR="PTSD_PROTOCOLS"
-		if [ "$EXPERIMENTAL_REPO" == "yes" ] ; then VERSION="$PTS_PROTOCOLS_EXPERIMENTAL_VERSION" ; else VERSION="$PTS_PROTOCOLS_VERSION" ; fi
 		;;
 
 	svspb)
 
 		PROD_DIR="SPB"
-		if [ "$EXPERIMENTAL_REPO" == "yes" ] ; then VERSION="$SPB_EXPERIMENTAL_VERSION" ; else VERSION="$SPB_VERSION" ; fi
 		;;
 
 	svsde)
 
 		PROD_DIR="SDE"
-		if [ "$EXPERIMENTAL_REPO" == "yes" ] ; then VERSION="$SDE_EXPERIMENTAL_VERSION" ; else VERSION="$SDE_VERSION" ; fi
 		;;
 
 	svusagemanagement)
 
 		PROD_DIR="USAGE_MANAGEMENT"
-		if [ "$EXPERIMENTAL_REPO" == "yes" ] ; then VERSION="$UM_EXPERIMENTAL_VERSION" ; else VERSION="$UM_VERSION" ; fi
 		;;
 
 	svusagemanagementpts)
 
 		PROD_DIR="USAGE_MANAGEMENT_PTS"
-		if [ "$EXPERIMENTAL_REPO" == "yes" ] ; then VERSION="$UM_EXPERIMENTAL_VERSION" ; else VERSION="$UM_VERSION" ; fi
 		;;
 
 	svmcdtext)
 
 		PROD_DIR="MCDTEXT"
-		if [ "$EXPERIMENTAL_REPO" == "yes" ] ; then VERSION="$SPB_PROTOCOLS_EXPERIMENTAL_VERSION" ; else VERSION="$SPB_PROTOCOLS_VERSION" ; fi
 		;;
 
 	svreports)
 
 		PROD_DIR="NDS"
-		if [ "$EXPERIMENTAL_REPO" == "yes" ] ; then VERSION="$NDS_EXPERIMENTAL_VERSION" ; else VERSION="$NDS_VERSION" ; fi
 		;;
 
 	svsubscribermapping)
 
 		PROD_DIR="SUBSCRIBER_MAPPING"
-		if [ "$EXPERIMENTAL_REPO" == "yes" ] ; then VERSION="$SM_C6_EXPERIMENTAL_VERSION" ; else VERSION="$SM_C6_VERSION" ; fi
 		;;
 
 	subscriber_mapping)
 
 		PROD_DIR="RPM_COMMON/SUBSCRIBER_MAPPING"
-		if [ "$EXPERIMENTAL_REPO" == "yes" ] ; then VERSION="$SM_C7_EXPERIMENTAL_VERSION" ; else VERSION="$SM_C7_VERSION" ; fi
 		;;
 
 	*)
@@ -134,27 +120,6 @@ case "$PRODUCT" in
 		echo "You must select a product to mirror..."
 		exit 1
 		;;
-
-esac
-
-
-case "$RELEASE" in
-
-        prod)
-
-                UPSTREAM_HOST="$PUBLIC_PACKAGES_SERVER"
-                ;;
-
-        dev)
-
-                UPSTREAM_HOST="$STATIC_PACKAGES_SERVER"
-                ;;
-
-        *)
-                echo
-                echo "Usage: $0 --release={prod|dev}"
-                exit 1
-                ;;
 
 esac
 
@@ -217,9 +182,9 @@ mkdir -p $FULL_PATH/Packages
 # location are different.
 if [ "$PRODUCT" == "subscriber_mapping" ]
 then
-	wget -c -P $FULL_PATH/Packages ftp://$UPSTREAM_HOST/images/Linux/$BASE_OS/$PROD_DIR/$SHORT_NAME*el7.x86_64.rpm
+	wget -c -P $FULL_PATH/Packages ftp://$SV_YUM_HOST/images/Linux/$BASE_OS/$PROD_DIR/$SHORT_NAME*el7.x86_64.rpm
 else
-	wget -c -P $FULL_PATH/Packages ftp://$UPSTREAM_HOST/images/Linux/$BASE_OS/$PROD_DIR/$FULL_NAME/*.rpm
+	wget -c -P $FULL_PATH/Packages ftp://$SV_YUM_HOST/images/Linux/$BASE_OS/$PROD_DIR/$FULL_NAME/*.rpm
 fi
 
 

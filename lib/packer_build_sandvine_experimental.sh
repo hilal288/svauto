@@ -17,43 +17,55 @@
 packer_build_sandvine_experimental()
 {
 
-	TSE_EXPERIMENTAL_VERSION="1.00.0041"
-
 	if [ "$DRY_RUN" == "yes" ]; then
 		export DRY_RUN_OPT="--dry-run"
 	fi
 
 
 	#
-	# EXPERIMENTAL
+	# Experimental builds
 	#
 
 
         # Linux PTS on CentOS 7
-#        ./svauto.sh --packer-builder --base-os=centos7 --release=dev --product=svpts --version=$PTS_EXPERIMENTAL_VERSION --product-variant=vpl-test-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-#		--ansible-remote-user="root" \
-#		--ansible-inventory-builder="svbox,localhost,ansible_connection=local,base_os=centos7,deployment_mode=yes,sandvine_yum_repo=$STATIC_PACKAGES_SERVER" \
-#                --ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes;svauto_yum_url=$SVAUTO_MAIN_HOST;release_code_name=$RELEASE_CODE_NAME,grub-conf,udev-rules,nginx,svpts;pts_version=$PTS_VERSION,svprotocols;pts_protocols_version=$PTS_PROTOCOLS_VERSION,vmware-tools,post-cleanup-image" \
-#                --packer-max-tries=1 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
+        ./svauto.sh --packer-builder --base-os=centos7 --release=dev --product=svpts --version=$PTS_VERSION --product-variant=vpl-test-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+		--ansible-remote-user="root" \
+		--ansible-inventory-builder="svbox,localhost,ansible_connection=local,base_os=centos7,deployment_mode=yes,sandvine_yum_host=$SV_YUM_HOST" \
+                --ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes;svauto_yum_host=$SVAUTO_YUM_HOST;release_code_name=$RELEASE_CODE_NAME,grub-conf,udev-rules,nginx,svpts;pts_version=$PTS_VERSION,svprotocols;pts_protocols_version=$PTS_PROTOCOLS_VERSION,vmware-tools,post-cleanup-image" \
+                --packer-max-tries=1 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
+
+	# Linux SVSDE on CentOS 7
+	./svauto.sh --packer-builder --base-os=centos7 --release=dev --product=svsde --version=$TSE_VERSION --product-variant=vpl-test-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+		--ansible-remote-user="root" \
+		--ansible-inventory-builder="svbox,localhost,ansible_connection=local,base_os=centos7,deployment_mode=yes,sandvine_yum_host=$SV_YUM_HOST" \
+		--ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes;svauto_yum_host=$SVAUTO_YUM_HOST;release_code_name=$RELEASE_CODE_NAME,grub-conf,udev-rules,nginx,svsde;sde_version=$SDE_VERSION,svfairshare-sde;tm_version=$TM_VERSION,vmware-tools,post-cleanup-image" \
+		--packer-max-tries=1 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
+
+	# Linux SVSPB on CentOS 6
+	./svauto.sh --packer-builder --base-os=centos6 --release=dev --product=svspb --version=$SPB_VERSION --product-variant=vpl-1 --qcow2 --ova --vhd --vm-xml --sha256sum --ansible-remote-user=root \
+		--ansible-remote-user="root" \
+		--ansible-inventory-builder="sv-box,localhost,base_os=centos6,deployment_mode=yes" \
+		--ansible-playbook-builder="sv-box,cloud-init,bootstrap;base_os_upgrade=yes,grub-conf,nginx,postgresql,svspb;spb_version=$SPB_VERSION;sandvine_yum_host=$SV_YUM_HOST,svcontrol-center;cc_version=$CC_VERSION,vmware-tools,post-cleanup-image;setup_server=svspb,power-cycle" \
+		--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 	# Linux SVTSE on CentOS 7
-	./svauto.sh --packer-builder --base-os=centos7 --release=dev --product=svtse --version=$TSE_EXPERIMENTAL_VERSION --product-variant=vpl-test-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--ansible-remote-user="root" \
-		--ansible-inventory-builder="svbox,localhost,ansible_connection=local,base_os=centos7,deployment_mode=yes,sandvine_yum_repo=$STATIC_PACKAGES_SERVER" \
-		--ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes;svauto_yum_url=$SVAUTO_MAIN_HOST;release_code_name=$RELEASE_CODE_NAME,grub-conf,udev-rules,nginx,svtse;svtse_version=$TSE_EXPERIMENTAL_VERSION,vmware-tools,post-cleanup-image" \
-		--packer-max-tries=1 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
+#	./svauto.sh --packer-builder --base-os=centos7 --release=dev --product=svtse --version=$TSE_VERSION --product-variant=vpl-test-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+#		--ansible-remote-user="root" \
+#		--ansible-inventory-builder="svbox,localhost,ansible_connection=local,base_os=centos7,deployment_mode=yes,sandvine_yum_host=$SV_YUM_HOST" \
+#		--ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes;svauto_yum_host=$SVAUTO_YUM_HOST;release_code_name=$RELEASE_CODE_NAME,grub-conf,udev-rules,nginx,svtse;svtse_version=$TSE_VERSION,vmware-tools,post-cleanup-image" \
+#		--packer-max-tries=1 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 	# Linux SVTCP Accelerator on CentOS 7
-	./svauto.sh --packer-builder --base-os=centos7 --release=dev --product=svtcpa --version=$TCPA_VERSION --product-variant=vpl-test-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
-		--ansible-remote-user="root" \
-		--ansible-inventory-builder="svbox,localhost,ansible_connection=local,base_os=centos7,deployment_mode=yes,sandvine_yum_repo=$STATIC_PACKAGES_SERVER" \
-		--ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes;svauto_yum_url=$SVAUTO_MAIN_HOST;release_code_name=$RELEASE_CODE_NAME,grub-conf,udev-rules,nginx,svtcpa;svtcpa_version=$TCPA_VERSION,vmware-tools,post-cleanup-image" \
-		--packer-max-tries=1 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
+#	./svauto.sh --packer-builder --base-os=centos7 --release=dev --product=svtcpa --version=$TCPA_VERSION --product-variant=vpl-test-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+#		--ansible-remote-user="root" \
+#		--ansible-inventory-builder="svbox,localhost,ansible_connection=local,base_os=centos7,deployment_mode=yes,sandvine_yum_host=$SV_YUM_HOST" \
+#		--ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes;svauto_yum_host=$SVAUTO_YUM_HOST;release_code_name=$RELEASE_CODE_NAME,grub-conf,udev-rules,nginx,svtcpa;svtcpa_version=$TCPA_VERSION,vmware-tools,post-cleanup-image" \
+#		--packer-max-tries=1 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 #	# Linux NDA on Centos 7
 #        ./svauto.sh --packer-builder --base-os=centos7 --release=dev --product=svnda --version=$NDA_VERSION --product-variant=vpl-test-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
 #		--ansible-remote-user=root \
-#		--ansible-inventory-builder="svbox,localhost,ansible_connection=local,base_os=centos7,deployment_mode=yes,sandvine_yum_repo=$STATIC_PACKAGES_SERVER" \
+#		--ansible-inventory-builder="svbox,localhost,ansible_connection=local,base_os=centos7,deployment_mode=yes,sandvine_yum_host=$SV_YUM_HOST" \
 #                --ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes,grub-conf,udev-rules,nginx,postgresql,svnda;svnda_version=$NDA_VERSION,vmware-tools,post-cleanup-image" \
 #                --packer-max-tries=1 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
