@@ -60,6 +60,24 @@ packer_builder()
 	fi
 
 
+	FIND_PREVIOUS_RAW_IMAGE=$(find packer -name "$PACKER_VM_NAME.raw")
+
+
+	if file $FIND_PREVIOUS_RAW_IMAGE &>/dev/null
+	then
+
+		echo
+		echo "Warning! SVAuto found a previous build of this very same image."
+		echo "Not building it again... Aborting this build!"
+
+		echo
+		echo "Build found: $FIND_PREVIOUS_RAW_IMAGE"
+
+		exit 0
+
+	fi
+
+
 	echo
 	echo "Preparing Packer build temp dir (packer/"$PACKER_FILES")..."
 
@@ -207,6 +225,7 @@ packer_builder()
 		echo packer build packer/$PACKER_FILES/$PACKER_VM_NAME-packer.yaml
 
 	else
+
 
 		if [ ! -z $MAX_TRIES ] && [ $MAX_TRIES -gt 1 ]
 		then
