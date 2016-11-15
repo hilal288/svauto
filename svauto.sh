@@ -1428,7 +1428,7 @@ else
 	if ansible-playbook -i $ANSIBLE_INVENTORY_FILE $ANSIBLE_PLAYBOOK_FILE # -e \""$ANSIBLE_EXTRA_VARS $EXTRA_VARS"\"
 	then
 
-		if [ -z $OS_STACK_NAME ] || [ "$LABIFY" == "yes" ]
+		if [ ! -z $OS_STACK_NAME ] || [ "$LABIFY" == "yes" ]
 		then
 
 			echo "Your brand new Sandvine's Stack is reachable through SSH:"
