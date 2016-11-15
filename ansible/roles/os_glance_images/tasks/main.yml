@@ -1,0 +1,60 @@
+# Copyright 2016, Sandvine Incorporated
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- stat: path=/home/{{regular_system_user}}/svauto/downloads/svpts-7.40.0164-vpl-1-centos7-amd64-disk1.qcow2c
+  register: svpts_image_register
+
+- name: uploading svpts-7.40.0164-vpl-1-centos7-amd64-disk1.qcow2c
+  environment: "{{admin_openrc_env}}"
+  os_image:
+    name: svpts-7.40.0164-vpl-1-centos7-amd64
+    container_format: bare
+    disk_format: qcow2
+    state: present
+    filename: /home/{{regular_system_user}}/svauto/downloads/svpts-7.40.0164-vpl-1-centos7-amd64-disk1.qcow2c
+    properties:
+      cpu_arch: x86_64
+  when: svpts_image_register.stat.exists == True
+
+
+- stat: path=/home/{{regular_system_user}}/svauto/downloads/svsde-7.50.0230-vpl-1-centos7-amd64-disk1.qcow2c
+  register: svsde_image_register
+
+- name: uploading svsde-7.50.0230-vpl-1-centos7-amd64-disk1.qcow2c
+  environment: "{{admin_openrc_env}}"
+  os_image:
+    name: svsde-7.50.0230-vpl-1-centos7-amd64
+    container_format: bare
+    disk_format: qcow2
+    state: present
+    filename: /home/{{regular_system_user}}/svauto/downloads/svsde-7.50.0230-vpl-1-centos7-amd64-disk1.qcow2c
+    properties:
+      cpu_arch: x86_64
+  when: svsde_image_register.stat.exists == True
+
+
+- stat: path=/home/{{regular_system_user}}/svauto/downloads/svspb-6.65.0078-vpl-1-centos6-amd64-disk1.qcow2c
+  register: svspb_image_register
+
+- name: uploading svspb-6.65.0078-vpl-1-centos6-amd64-disk1.qcow2c
+  environment: "{{admin_openrc_env}}"
+  os_image:
+    name: svspb-6.65.0078-vpl-1-centos6-amd64
+    container_format: bare 
+    disk_format: qcow2
+    state: present
+    filename: /home/{{regular_system_user}}/svauto/downloads/svspb-6.65.0078-vpl-1-centos6-amd64-disk1.qcow2c
+    properties:
+      cpu_arch: x86_64
+  when: svspb_image_register.stat.exists == True
