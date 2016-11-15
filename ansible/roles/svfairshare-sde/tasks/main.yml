@@ -13,8 +13,8 @@
 # limitations under the License.
 
 - name: centos copy Sandvine Traffic Management (Fairshare) repository
-  template: src=Sandvine-SVUM.repo.j2
-            dest=/etc/yum.repos.d/Sandvine-SVUM.repo
+  template: src=Sandvine-SVTM.repo.j2
+            dest=/etc/yum.repos.d/Sandvine-SVTM.repo
             owner=root
             group=root
             mode=0644
