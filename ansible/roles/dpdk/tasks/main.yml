@@ -45,7 +45,12 @@
 
 
 - name: ubuntu - service dpdk enabled
-  service: name=dpdk enabled=yes
+  shell: systemctl enable dpdk
+
+
+# Not working:
+#- name: ubuntu - service dpdk enabled
+#  service: name=dpdk enabled=yes
 
 
 - meta: flush_handlers
