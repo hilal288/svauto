@@ -384,12 +384,6 @@ case $i in
 		shift
 		;;
 
-	--cloud-services-mode=*)
-
-		CLOUD_SERVICES_MODE="${i#*=}"
-		shift
-		;;
-
 	--heat-templates=*)
 
 		HEAT_TEMPLATES="${i#*=}"
@@ -1113,57 +1107,76 @@ then
 	pushd ansible &>/dev/null
 
 
-	# TODO:
-	# * Create a directory for each stack with its hosts and playbook.
-	# * Create an "ansible_inventory_builder" function, to autogenerate it, instead of just copying it.
-
-
 	ANSIBLE_INVENTORY_FILE="openstack-hosts-$BUILD_RAND"
 
 
 	echo
 	echo "Creating Ansible Inventory: \"ansible/$ANSIBLE_INVENTORY_FILE\"."
 
-#	FUTURE!
-#
-#	ANSIBLE_HOST_ENTRY_1="svpts-servers,'$PTS_ACCESS',ansible_user='$ANSIBLE_REMOTE_USER',base_os=centos7;svsde-servers,'$SDE_ACCESS',,ansible_user='$ANSIBLE_REMOTE_USER',base_os=centos7;svspb-servers,'$SPB_ACCESS',ansible_user='$ANSIBLE_REMOTE_USER',base_os=centos6" ansible_inventory_builder
 
-	cp hosts $ANSIBLE_INVENTORY_FILE
+	ANSIBLE_INVENTORY_TOTAL=3
+
+	ANSIBLE_HOST_ENTRY_1="svpts-servers,$PTS_ACCESS,ansible_user=$ANSIBLE_REMOTE_USER,base_os=centos7"
+	ANSIBLE_HOST_ENTRY_2="svsde-servers,$SDE_ACCESS,ansible_user=$ANSIBLE_REMOTE_USER,base_os=centos7"
+	ANSIBLE_HOST_ENTRY_3="svspb-servers,$SPB_ACCESS,ansible_user=$ANSIBLE_REMOTE_USER,base_os=centos6"
 
 
-	sed -i -e 's/{{ANSIBLE_REMOTE_USER}}/'$ANSIBLE_REMOTE_USER'/g' $ANSIBLE_INVENTORY_FILE
+	ansible_inventory_builder > $ANSIBLE_INVENTORY_FILE
 
-	sed -i -e 's/^#PTS_ACCESS/'$PTS_ACCESS'/g' $ANSIBLE_INVENTORY_FILE
-	sed -i -e 's/{{PTS_BASE_OS}}/centos7/g' $ANSIBLE_INVENTORY_FILE
 
-	sed -i -e 's/^#SDE_ACCESS/'$SDE_ACCESS'/g' $ANSIBLE_INVENTORY_FILE
-	sed -i -e 's/{{SDE_BASE_OS}}/centos7/g' $ANSIBLE_INVENTORY_FILE
+	if [ "$OPERATION" == "cloud-services" ]
+	then
 
-	sed -i -e 's/^#SPB_ACCESS/'$SPB_ACCESS'/g' $ANSIBLE_INVENTORY_FILE
-	sed -i -e 's/{{SPB_BASE_OS}}/centos6/g' $ANSIBLE_INVENTORY_FILE
+		if [ "$OS_STACK_TYPE" == "svcsd-three" ]
+		then
 
-	if [ "$OPERATION" == "cloud-services" ]; then
+			ANSIBLE_INVENTORY_TOTAL=1
 
-		if [ "$OS_STACK_TYPE" == "svcsd-three" ]; then
-			sed -i -e 's/^#CSD_ACCESS/'$SDE_ACCESS'/g' $ANSIBLE_INVENTORY_FILE
-			sed -i -e 's/{{SDE_BASE_OS}}/centos7/g' $ANSIBLE_INVENTORY_FILE
+			ANSIBLE_HOST_ENTRY_1="svcs-servers,$SDE_ACCESS,ansible_user=$ANSIBLE_REMOTE_USER,base_os=centos7"
+
+			ansible_inventory_builder >> $ANSIBLE_INVENTORY_FILE
+
 		fi
 
-		if [ "$OS_STACK_TYPE" == "svcsd-four" ]; then
-			sed -i -e 's/^#CSD_ACCESS/'$CSD_ACCESS'/g' $ANSIBLE_INVENTORY_FILE
-			sed -i -e 's/{{CSD_BASE_OS}}/centos7/g' $ANSIBLE_INVENTORY_FILE
+		if [ "$OS_STACK_TYPE" == "svcsd-four" ]
+		then
+
+			ANSIBLE_INVENTORY_TOTAL=1
+
+			ANSIBLE_HOST_ENTRY_1="svcs-servers,$CSD_ACCESS,ansible_user=$ANSIBLE_REMOTE_USER,base_os=centos7"
+
+			ansible_inventory_builder >> $ANSIBLE_INVENTORY_FILE
+
 		fi
 
 	fi
 
-	if [ "$OS_STACK_TYPE" == "svnda" ]; then sed -i -e 's/^#NDA_ACCESS/'$NDA_ACCESS'/g' $ANSIBLE_INVENTORY_FILE; fi
+	if [ "$OS_STACK_TYPE" == "svnda" ]
+	then
 
-	if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then sed -i -e 's/^#TSE_ACCESS/'$TSE_ACCESS'/g' $ANSIBLE_INVENTORY_FILE; fi
-	if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then sed -i -e 's/^#TCPA_ACCESS/'$TCPA_ACCESS'/g' $ANSIBLE_INVENTORY_FILE; fi
+		ANSIBLE_INVENTORY_TOTAL=1
 
-	if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then OPERATION="svtse-demo"; fi
+		ANSIBLE_HOST_ENTRY_1="svnda-servers,$NDA_ACCESS,ansible_user=$ANSIBLE_REMOTE_USER,base_os=centos7"
 
-	popd
+		ansible_inventory_builder >> $ANSIBLE_INVENTORY_FILE
+
+	fi
+
+	if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]
+	then
+
+		ANSIBLE_INVENTORY_TOTAL=2
+
+		ANSIBLE_HOST_ENTRY_1="svtse-servers,$TSE_ACCESS,ansible_user=$ANSIBLE_REMOTE_USER,base_os=centos7"
+		ANSIBLE_HOST_ENTRY_2="svtcpa-servers,$TCPA_ACCESS,ansible_user=$ANSIBLE_REMOTE_USER,base_os=centos7"
+
+		ansible_inventory_builder >> $ANSIBLE_INVENTORY_FILE
+
+		OPERATION="svtse-demo"
+
+	fi
+
+	popd &>/dev/null
 
 fi
 
@@ -1182,28 +1195,41 @@ echo
 echo "Creating Ansible Playbook: \"ansible/$ANSIBLE_PLAYBOOK_FILE\"."
 
 
+pushd ansible &>/dev/null
+
+
 if [ "$CENTOS_NETWORK_SETUP" == "yes" ]
 then
 
 	if [ "$OS_STACK_TYPE" == "svnda" ]
 	then
-		ansible_playbook_builder --ansible-remote-user="$ANSIBLE_REMOTE_USER" \
-			--ansible-playbook-builder="svnda-servers,centos-network-setup" >> $ANSIBLE_PLAYBOOK_FILE
+
+		ANSIBLE_PLAYBOOK_TOTAL=1
+
+		ANSIBLE_PLAYBOOK_ENTRY_1="svnda-servers,centos-network-setup"
+
+		ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
 	fi
 
 
 	if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]
 	then
-		ansible_playbook_builder --ansible-remote-user="$ANSIBLE_REMOTE_USER" \
-			--ansible-playbook-builder="svtcpa-servers,centos-network-setup" \
-			--ansible-playbook-builder="svtse-servers,centos-network-setup" >> $ANSIBLE_PLAYBOOK_FILE
+		ANSIBLE_PLAYBOOK_TOTAL=2
+
+		ANSIBLE_PLAYBOOK_ENTRY_1="svtcpa-servers,centos-network-setup"
+		ANSIBLE_PLAYBOOK_ENTRY_2="svtse-servers,centos-network-setup"
+
+		ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
 	fi
 
 
-	ansible_playbook_builder --ansible-remote-user="$ANSIBLE_REMOTE_USER" \
-		--ansible-playbook-builder="svspb-servers,centos-network-setup" \
-		--ansible-playbook-builder="svsde-servers,centos-network-setup" \
-		--ansible-playbook-builder="svpts-servers,centos-network-setup:setup_server=svpts" >> $ANSIBLE_PLAYBOOK_FILE
+	ANSIBLE_PLAYBOOK_TOTAL=3
+
+	ANSIBLE_PLAYBOOK_ENTRY_1="svspb-servers,centos-network-setup"
+	ANSIBLE_PLAYBOOK_ENTRY_2="svsde-servers,centos-network-setup"
+	ANSIBLE_PLAYBOOK_ENTRY_3="svpts-servers,centos-network-setup;setup_server=svpts"
+
+	ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
 
 fi
 
@@ -1218,26 +1244,49 @@ case "$RUNTIME_MODE" in
 
 		if [ "$OS_STACK_TYPE" == "svnda" ]
 		then
-			ansible_playbook_builder --ansible-remote-user="$ANSIBLE_REMOTE_USER" \
-				--ansible-playbook-builder="svnda-servers,sandvine-auto-config:setup_server=svnda:setup_mode=$OPERATION" >> $ANSIBLE_PLAYBOOK_FILE
+
+			ANSIBLE_PLAYBOOK_TOTAL=1
+
+			ANSIBLE_PLAYBOOK_ENTRY_1="svnda-servers,sandvine-auto-config;setup_server=svnda;setup_mode=$OPERATION"
+
+			ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
 		fi
 
 
 		if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]
 		then
-			ansible_playbook_builder --ansible-remote-user="$ANSIBLE_REMOTE_USER" \
-				--ansible-playbook-builder="svtcpa-servers,sandvine-auto-config:setup_server=svtcpa:setup_mode=$OPERATION" \
-				--ansible-playbook-builder="svtse-servers,sandvine-auto-config:setup_server=svtse:setup_mode=$OPERATION:license_server=$LICENSE_SERVER" >> $ANSIBLE_PLAYBOOK_FILE
+
+			ANSIBLE_PLAYBOOK_TOTAL=2
+
+			ANSIBLE_PLAYBOOK_ENTRY_1="svtcpa-servers,sandvine-auto-config;setup_server=svtcpa;setup_mode=$OPERATION"
+			ANSIBLE_PLAYBOOK_ENTRY_2="svtse-servers,sandvine-auto-config;setup_server=svtse;setup_mode=$OPERATION;license_server=$LICENSE_SERVER"
+
+			ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
+		fi
+
+
+		if [ "$OPERATION" == "cloud-services" ] && [ -z "$CLOUD_SERVICES_MODE" ]
+		then
+
+			echo
+			echo "For operation=cloud-services, you have to also, specify --cloud-services-mode=default|mdm"
+
+			exit 1
+
 		fi
 
 
 		if [ "$OPERATION" == "sandvine" ]; then CLOUD_SERVICES_MODE=null; fi
 
 
-		ansible_playbook_builder --ansible-remote-user="$ANSIBLE_REMOTE_USER" \
-			--ansible-playbook-builder="svspb-servers,sandvine-auto-config:setup_server=svspb:setup_mode=$OPERATION:setup_sub_option=$CLOUD_SERVICES_MODE" \
-			--ansible-playbook-builder="svsde-servers,sandvine-auto-config:setup_server=svsde:setup_mode=$OPERATION:setup_sub_option=$CLOUD_SERVICES_MODE" \
-			--ansible-playbook-builder="svpts-servers,sandvine-auto-config:setup_server=svpts:setup_mode=$OPERATION:setup_sub_option=$CLOUD_SERVICES_MODE:license_server=$LICENSE_SERVER" >> $ANSIBLE_PLAYBOOK_FILE
+		ANSIBLE_PLAYBOOK_TOTAL=3
+
+		ANSIBLE_PLAYBOOK_ENTRY_1="svspb-servers,sandvine-auto-config;setup_server=svspb;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE"
+		ANSIBLE_PLAYBOOK_ENTRY_2="svsde-servers,sandvine-auto-config;setup_server=svsde;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE"
+		ANSIBLE_PLAYBOOK_ENTRY_3="svpts-servers,sandvine-auto-config;setup_server=svpts;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE;license_server=$LICENSE_SERVER"
+
+
+		ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
 		;;
 
 	full-deployment)
@@ -1249,19 +1298,26 @@ case "$RUNTIME_MODE" in
 		case $OPERATION in
 
 			sandvine)
-				ansible_playbook_builder --ansible-remote-user="$ANSIBLE_REMOTE_USER" \
-					--ansible-playbook-builder="svpts-servers,bootstrap:base_os_upgrade=yes:sandvine_main_yum_repo=yes:packages_server=$SVAUTO_MAIN_HOST:release_code_name=$RELEASE_CODE_NAME,svpts:pts_version=$PTS_VERSION:static_packages_server=$STATIC_PACKAGES_SERVER:static_repo=true:versioned_repo=true,svprotocols:pts_protocols_version=$PTS_PROTOCOLS_VERSION:static_packages_server=$STATIC_PACKAGES_SERVER:static_repo=true:versioned_repo=true,sandvine-auto-config:setup_mode=$OPERATION:deployment_mode=yes:license_server=$LICENSE_SERVER,post-cleanup,power-cycle" \
-					--ansible-playbook-builder="svsde-servers,bootstrap:base_os_upgrade=yes,svsde:sde_version=$SDE_VERSION:static_packages_server=$STATIC_PACKAGES_SERVER:static_repo=true:versioned_repo=true,sandvine-auto-config:setup_mode=$OPERATION:deployment_mode=yes,post-cleanup,power-cycle" \
-					--ansible-playbook-builder="svspb-servers,bootstrap:base_os_upgrade=yes,svspb:spb_version=$SPB_VERSION:static_packages_server=$STATIC_PACKAGES_SERVER:static_repo=true:versioned_repo=true:deployment_mode=yes,sandvine-auto-config:setup_mode=$OPERATION:deployment_mode=yes,post-cleanup,power-cycle" >> $ANSIBLE_PLAYBOOK_FILE
-					;;
+
+				ANSIBLE_PLAYBOOK_TOTAL=3
+
+				ANSIBLE_PLAYBOOK_ENTRY_1="svpts-servers,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes;svauto_yum_host=$SVAUTO_YUM_HOST;release_code_name=$RELEASE_CODE_NAME,svpts;pts_version=$PTS_VERSION;sandvine_yum_host=$SV_YUM_HOST,svprotocols;pts_protocols_version=$PTS_PROTOCOLS_VERSION;sandvine_yum_host=$SV_YUM_HOST,sandvine-auto-config;setup_mode=$OPERATION;deployment_mode=yes;license_server=$LICENSE_SERVER,post-cleanup,power-cycle"
+				ANSIBLE_PLAYBOOK_ENTRY_2="svsde-servers,bootstrap;base_os_upgrade=yes,svsde;sde_version=$SDE_VERSION;sandvine_yum_host=$SV_YUM_HOST,sandvine-auto-config;setup_mode=$OPERATION;deployment_mode=yes,post-cleanup,power-cycle"
+				ANSIBLE_PLAYBOOK_ENTRY_3="svspb-servers,bootstrap;base_os_upgrade=yes,svspb;spb_version=$SPB_VERSION;sandvine_yum_host=$SV_YUM_HOST;deployment_mode=yes,sandvine-auto-config;setup_mode=$OPERATION;deployment_mode=yes,post-cleanup,power-cycle"
+
+				ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
+				;;
 
 			cloud-services)
 
-				ansible_playbook_builder --ansible-remote-user="$ANSIBLE_REMOTE_USER" \
-					--ansible-playbook-builder="svpts-servers,bootstrap:base_os_upgrade=yes:sandvine_main_yum_repo=yes:packages_server=$SVAUTO_MAIN_HOST:release_code_name=$RELEASE_CODE_NAME,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config:setup_mode=$OPERATION:setup_sub_option=$CLOUD_SERVICES_MODE:license_server=$LICENSE_SERVER,post-cleanup,power-cycle" \
-					--ansible-playbook-builder="svsde-servers,bootstrap:base_os_upgrade=yes,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,sandvine-auto-config:setup_mode=$OPERATION:setup_sub_option=$CLOUD_SERVICES_MODE,post-cleanup,power-cycle" \
-					--ansible-playbook-builder="svspb-servers,bootstrap:base_os_upgrade=yes,svspb,svreports,svcs-svspb,sandvine-auto-config:setup_mode=$OPERATION:setup_sub_option=$CLOUD_SERVICES_MODE,post-cleanup,power-cycle" >> $ANSIBLE_PLAYBOOK_FILE
-					;;
+				ANSIBLE_PLAYBOOK_TOTAL=3
+
+				ANSIBLE_PLAYBOOK_ENTRY_1="svpts-servers,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes;svauto_yum_host=$SVAUTO_YUM_HOST;release_code_name=$RELEASE_CODE_NAME,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE;license_server=$LICENSE_SERVER,post-cleanup,power-cycle"
+				ANSIBLE_PLAYBOOK_ENTRY_2="svsde-servers,bootstrap;base_os_upgrade=yes,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,sandvine-auto-config;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE,post-cleanup,power-cycle"
+				ANSIBLE_PLAYBOOK_ENTRY_3="svspb-servers,bootstrap;base_os_upgrade=yes,svspb,svreports,svcs-svspb,sandvine-auto-config;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE,post-cleanup,power-cycle"
+
+				ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
+				;;
 
 		esac
 		;;
@@ -1272,7 +1328,7 @@ case "$RUNTIME_MODE" in
 		echo "Warning! Runtime mode not supported!"
 		echo "Usage: $0 --runtime-mode={full-deployemnt|config-only}"
 
-#		exit 1
+		exit 1
 		;;
 
 esac
@@ -1327,18 +1383,20 @@ then
 	echo "Creating Ansible Inventory: \"ansible/$ANSIBLE_INVENTORY_FILE\"."
 
 
-	cp hosts $ANSIBLE_INVENTORY_FILE
+	ANSIBLE_INVENTORY_TOTAL=4
+
+	ANSIBLE_HOST_ENTRY_1="svpts-servers,$PTS_ACCESS,ansible_user=$ANSIBLE_REMOTE_USER,base_os=centos7"
+	ANSIBLE_HOST_ENTRY_2="svsde-servers,$SDE_ACCESS,ansible_user=$ANSIBLE_REMOTE_USER,base_os=centos7"
+	ANSIBLE_HOST_ENTRY_3="svspb-servers,$SPB_ACCESS,ansible_user=$ANSIBLE_REMOTE_USER,base_os=centos6"
+	ANSIBLE_HOST_ENTRY_4="svcs-servers,$SDE_ACCESS,ansible_user=$ANSIBLE_REMOTE_USER,base_os=centos7"
 
 
-	echo
-	echo "Configuring \"$ANSIBLE_INVENTORY_FILE\"..."
-
-	sed -i -e 's/^#SPB_ACCESS/'$SPB_ACCESS'/g' $ANSIBLE_INVENTORY_FILE
-	sed -i -e 's/^#SDE_ACCESS/'$SDE_ACCESS'/g' $ANSIBLE_INVENTORY_FILE
-	sed -i -e 's/^#CSD_ACCESS/'$SDE_ACCESS'/g' $ANSIBLE_INVENTORY_FILE
-	sed -i -e 's/^#PTS_ACCESS/'$PTS_ACCESS'/g' $ANSIBLE_INVENTORY_FILE
+	ansible_inventory_builder > $ANSIBLE_INVENTORY_FILE
 
 fi
+
+
+popd &>/dev/null
 
 
 if [ "$DRY_RUN" == "yes" ]
@@ -1362,6 +1420,10 @@ else
 	echo "cd ansible/"
 	echo "ansible-playbook -i $ANSIBLE_INVENTORY_FILE $ANSIBLE_PLAYBOOK_FILE"
 	echo
+
+
+	pushd ansible
+
 
 	if ansible-playbook -i $ANSIBLE_INVENTORY_FILE $ANSIBLE_PLAYBOOK_FILE # -e \""$ANSIBLE_EXTRA_VARS $EXTRA_VARS"\"
 	then
@@ -1396,5 +1458,7 @@ else
 		fi
 
 	fi
+
+	popd &>/dev/null
 
 fi
