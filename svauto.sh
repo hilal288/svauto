@@ -921,7 +921,14 @@ then
 
 		pushd ansible &>/dev/null
 
+		echo
+		echo "SVAuto is running Ansible to deploy your setup!"
 
+		echo
+		echo "pushd ansible"
+		echo "ansible-playbook -i "$ANSIBLE_INVENTORY_FILE" "$ANSIBLE_PLAYBOOK_FILE""
+
+		echo
 		if ansible-playbook -i "$ANSIBLE_INVENTORY_FILE" "$ANSIBLE_PLAYBOOK_FILE" # -e "$ANSIBLE_EXTRA_VARS_FILE"
 		then
 

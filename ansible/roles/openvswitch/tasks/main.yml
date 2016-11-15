@@ -22,7 +22,6 @@
   apt: name={{item}} state=latest
   with_items:
     - openvswitch-switch
-    - python-openvswitch
   notify: restart-openvswitch
   when: openvswitch_mode == 'regular'
 
@@ -31,7 +30,6 @@
   apt: name={{item}} state=latest
   with_items:
     - openvswitch-switch-dpdk
-    - python-openvswitch
   notify: restart-openvswitch
   when: openvswitch_mode == 'dpdk'
 

@@ -33,31 +33,6 @@
         mode=0644
   when: os_neutron_lbr_enabled == 'yes'
 
-- name: ubuntu - copy br-ex config file for OVS
-  copy: src=ubuntu-common/interface_br-ex
-        dest=/etc/network/interfaces.d/br-ex.cfg
-        owner=root
-        group=root
-        mode=0644
-  when: os_neutron_ovs_enabled == 'yes'
-
-- name: ubuntu - copy dummybr0 config file for OVS
-  copy: src=ubuntu-common/interface_dummybr0
-        dest=/etc/network/interfaces.d/dummybr0.cfg
-        owner=root
-        group=root
-        mode=0644
-  when: os_neutron_ovs_enabled == 'yes'
-
-- name: ubuntu - copy dummybr1 config file for OVS
-  copy: src=ubuntu-common/interface_dummybr1
-        dest=/etc/network/interfaces.d/dummybr1.cfg
-        owner=root
-        group=root
-        mode=0644
-  when: os_neutron_ovs_enabled == 'yes'
-
-
 - name: ubuntu - copy dummy1 config file for LBR
   copy: src=ubuntu-common/interface_dummy1
         dest=/etc/network/interfaces.d/dummy1.cfg

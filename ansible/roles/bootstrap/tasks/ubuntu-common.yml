@@ -90,11 +90,12 @@
     - sysfsutils
     - nbd-client
     - btrfs-tools
+    - ecryptfs-utils
     - python-minimal
     - python-libvirt
     - python-mysqldb
-    - ecryptfs-utils
     - python-httplib2
+    - python-openvswitch
     - silversearcher-ag
     - command-not-found
     - linux-image-generic
