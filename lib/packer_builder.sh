@@ -129,9 +129,9 @@ packer_builder()
 		echo "Creating "$PACKER_VM_NAME" VM OVF file..."
 
 		if [ "$PRODUCT" == "svpts" ] || [ "$PRODUCT" == "cs-svpts" ] ; then
-			cp packer/ovf-template-4nic.ovf packer/$PACKER_FILES/"$PACKER_VM_NAME".ovf
+			cp misc/vmware/ovf-template-4nic.ovf packer/$PACKER_FILES/"$PACKER_VM_NAME".ovf
 		else
-			cp packer/ovf-template-2nic.ovf packer/$PACKER_FILES/"$PACKER_VM_NAME".ovf
+			cp misc/vmware/ovf-template-2nic.ovf packer/$PACKER_FILES/"$PACKER_VM_NAME".ovf
 		fi
 
 		sed -i -e 's/{{vm_name}}/'"$PACKER_VM_NAME"'/g' packer/$PACKER_FILES/"$PACKER_VM_NAME".ovf
@@ -170,18 +170,18 @@ packer_builder()
 
 		        ubuntu*)
 				if [ "$PRODUCT" == "svpts" ] || [ "$PRODUCT" == "cs-svpts" ] ; then
-					cp packer/libvirt-ubuntu-4nic.xml packer/$PACKER_FILES/"$PACKER_VM_NAME".xml
+					cp misc/libvirt/libvirt-ubuntu-4nic.xml packer/$PACKER_FILES/"$PACKER_VM_NAME".xml
 				else
-					cp packer/libvirt-ubuntu-2nic.xml packer/$PACKER_FILES/"$PACKER_VM_NAME".xml
+					cp misc/libvirt/libvirt-ubuntu-2nic.xml packer/$PACKER_FILES/"$PACKER_VM_NAME".xml
 				fi
 				sed -i -e 's/{{vm_name}}/'"$PACKER_VM_NAME"'/g' packer/$PACKER_FILES/"$PACKER_VM_NAME".xml
 				;;
 
 			centos*)
 				if [ "$PRODUCT" == "svpts" ] || [ "$PRODUCT" == "cs-svpts" ] ; then
-					cp packer/libvirt-centos-4nic.xml packer/$PACKER_FILES/"$PACKER_VM_NAME".xml
+					cp misc/libvirt/libvirt-centos-4nic.xml packer/$PACKER_FILES/"$PACKER_VM_NAME".xml
 				else
-					cp packer/libvirt-centos-2nic.xml packer/$PACKER_FILES/"$PACKER_VM_NAME".xml
+					cp misc/libvirt/libvirt-centos-2nic.xml packer/$PACKER_FILES/"$PACKER_VM_NAME".xml
 				fi
 				sed -i -e 's/{{vm_name}}/'"$PACKER_VM_NAME"'/g' packer/$PACKER_FILES/"$PACKER_VM_NAME".xml
 				;;
