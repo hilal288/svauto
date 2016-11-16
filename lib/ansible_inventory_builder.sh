@@ -35,9 +35,16 @@ ansible_inventory_builder()
 				echo
 				echo "[$i]"
 
+				WHO_IS_ITEM_1="$i"
+
 			fi
 
-			if [ ! $ITEM -le 1 ]; then echo -n "$i " ; fi
+			if [ "$WHO_IS_ITEM_1" == "all:vars" ]
+			then
+				if [ ! $ITEM -le 1 ]; then echo "$i " ; fi
+			else
+				if [ ! $ITEM -le 1 ]; then echo -n "$i " ; fi
+			fi
 
 			(( ITEM++ ))
 
