@@ -42,7 +42,7 @@ packer_build_sandvine_experimental()
 		--packer-max-tries=1 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 	# Linux SVSPB on CentOS 6
-	./svauto.sh --packer-builder --base-os=centos6 --release=dev --product=svspb --version=$SPB_VERSION --product-variant=vpl-1 --qcow2 --ova --vhd --vm-xml --sha256sum --ansible-remote-user=root \
+	./svauto.sh --packer-builder --base-os=centos6 --release=dev --product=svspb --version=$SPB_VERSION --product-variant=vpl-test-1 --qcow2 --ova --vhd --vm-xml --sha256sum --ansible-remote-user=root \
 		--ansible-remote-user="root" \
 		--ansible-inventory-builder="sv-box,localhost,ansible_connection=local,base_os=centos6,deployment_mode=yes,sandvine_yum_host=$SV_YUM_HOST" \
 		--ansible-playbook-builder="sv-box,cloud-init,bootstrap;base_os_upgrade=yes,grub-conf,nginx,postgresql,svspb;spb_version=$SPB_VERSION,svcontrol-center;cc_version=$CC_VERSION,vmware-tools,post-cleanup-image;setup_server=svspb,power-cycle" \
