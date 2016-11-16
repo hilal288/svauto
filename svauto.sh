@@ -31,18 +31,6 @@ then
 fi
 
 
-#
-# ATTENTION:
-#
-# To override the values locate from main svauto.conf, use your local file located in
-# your home: ~/.svauto.conf
-
-if [ -f ~/.svauto.conf ]
-then
-	source ~/.svauto.conf
-fi
-
-
 TODAY=$(date +"%Y%m%d")
 
 
@@ -1028,14 +1016,7 @@ then
                         SPB_ACCESS=$(nova floating-ip-list | grep `nova list | grep $OS_STACK_NAME-spb-1 | awk $'{print $2}'` | awk $'{print $4}')
                         ;;
 
-                svcsd-three)
-
-                        PTS_ACCESS=$(nova floating-ip-list | grep `nova list | grep $OS_STACK_NAME-pts-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        SDE_ACCESS=$(nova floating-ip-list | grep `nova list | grep $OS_STACK_NAME-sde-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        SPB_ACCESS=$(nova floating-ip-list | grep `nova list | grep $OS_STACK_NAME-spb-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        ;;
-
-                svcsd-four)
+                svcsd)
 
                         PTS_ACCESS=$(nova floating-ip-list | grep `nova list | grep $OS_STACK_NAME-pts-1 | awk $'{print $2}'` | awk $'{print $4}')
                         SDE_ACCESS=$(nova floating-ip-list | grep `nova list | grep $OS_STACK_NAME-sde-1 | awk $'{print $2}'` | awk $'{print $4}')
@@ -1064,7 +1045,7 @@ then
 		*)
 
 			echo
-			echo "Usage: $0 --os-stack-type={stock|svcsd-three|svcsd-four|svnda|svtse-demo-mycloud}"
+			echo "Usage: $0 --os-stack-type={stock|svcsd|svnda|svtse-demo-mycloud}"
 
 			exit 1
 			;;
@@ -1095,8 +1076,8 @@ then
 	echo SDE: $SDE_ACCESS
 	echo SPB: $SPB_ACCESS
 
-	if [ "$OPERATION" == "cloud-services" ] && [ "$OS_STACK_TYPE" == "svcsd-three" ]; then echo SVCSD: $SDE_ACCESS; fi
-	if [ "$OPERATION" == "cloud-services" ] && [ "$OS_STACK_TYPE" == "svcsd-four" ]; then echo SVCSD: $CSD_ACCESS; fi
+	if [ "$OPERATION" == "cloud-services" ] && [ "$OS_STACK_TYPE" == "stock" ]; then echo SVCSD: $SDE_ACCESS; fi
+	if [ "$OPERATION" == "cloud-services" ] && [ "$OS_STACK_TYPE" == "svcsd" ]; then echo SVCSD: $CSD_ACCESS; fi
 
 	if [ "$OS_STACK_TYPE" == "svnda" ]; then echo NDA: $NDA_ACCESS; fi
 
@@ -1128,7 +1109,7 @@ then
 	if [ "$OPERATION" == "cloud-services" ]
 	then
 
-		if [ "$OS_STACK_TYPE" == "svcsd-three" ]
+		if [ "$OS_STACK_TYPE" == "stock" ]
 		then
 
 			ANSIBLE_INVENTORY_TOTAL=1
@@ -1139,7 +1120,7 @@ then
 
 		fi
 
-		if [ "$OS_STACK_TYPE" == "svcsd-four" ]
+		if [ "$OS_STACK_TYPE" == "svcsd" ]
 		then
 
 			ANSIBLE_INVENTORY_TOTAL=1
@@ -1302,9 +1283,9 @@ case "$RUNTIME_MODE" in
 
 				ANSIBLE_PLAYBOOK_TOTAL=3
 
-				ANSIBLE_PLAYBOOK_ENTRY_1="svpts-servers,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes;svpts;pts_version=$PTS_VERSION,svprotocols;pts_protocols_version=$PTS_PROTOCOLS_VERSION,sandvine-auto-config;setup_mode=$OPERATION;deployment_mode=yes;license_server=$LICENSE_SERVER,post-cleanup,power-cycle"
+				ANSIBLE_PLAYBOOK_ENTRY_1="svpts-servers,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes,svpts;pts_version=$PTS_VERSION,svprotocols;pts_protocols_version=$PTS_PROTOCOLS_VERSION,sandvine-auto-config;setup_mode=$OPERATION;deployment_mode=yes;license_server=$LICENSE_SERVER,post-cleanup,power-cycle"
 				ANSIBLE_PLAYBOOK_ENTRY_2="svsde-servers,bootstrap;base_os_upgrade=yes,svsde;sde_version=$SDE_VERSION,sandvine-auto-config;setup_mode=$OPERATION;deployment_mode=yes,post-cleanup,power-cycle"
-				ANSIBLE_PLAYBOOK_ENTRY_3="svspb-servers,bootstrap;base_os_upgrade=yes,svspb;spb_version=$SPB_VERSION,deployment_mode=yes,sandvine-auto-config;setup_mode=$OPERATION;deployment_mode=yes,post-cleanup,power-cycle"
+				ANSIBLE_PLAYBOOK_ENTRY_3="svspb-servers,bootstrap;base_os_upgrade=yes,svspb;spb_version=$SPB_VERSION;deployment_mode=yes,sandvine-auto-config;setup_mode=$OPERATION;deployment_mode=yes,post-cleanup,power-cycle"
 
 				ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
 				;;
@@ -1313,7 +1294,7 @@ case "$RUNTIME_MODE" in
 
 				ANSIBLE_PLAYBOOK_TOTAL=3
 
-				ANSIBLE_PLAYBOOK_ENTRY_1="svpts-servers,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes;svpts;pts_version=$PTS_VERSION,svprotocols;pts_protocols_version=$PTS_PROTOCOLS_VERSION,svusagemanagementpts;um_version=$UM_VERSION,svcs-svpts,sandvine-auto-config;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE;license_server=$LICENSE_SERVER,post-cleanup,power-cycle"
+				ANSIBLE_PLAYBOOK_ENTRY_1="svpts-servers,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes,svpts;pts_version=$PTS_VERSION,svprotocols;pts_protocols_version=$PTS_PROTOCOLS_VERSION,svusagemanagementpts;um_version=$UM_VERSION,svcs-svpts,sandvine-auto-config;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE;license_server=$LICENSE_SERVER,post-cleanup,power-cycle"
 				ANSIBLE_PLAYBOOK_ENTRY_2="svsde-servers,bootstrap;base_os_upgrade=yes,svsde;sde_version=$SDE_VERSION,svusagemanagement;um_version=$UM_VERSION,svsubscribermapping;sm_version=$SM_C7_VERSION,svcs-svsde,svcs,sandvine-auto-config;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE,post-cleanup,power-cycle"
 				ANSIBLE_PLAYBOOK_ENTRY_3="svspb-servers,bootstrap;base_os_upgrade=yes,svspb;spb_version=$SPB_VERSION,svmcdtext;spb_protocols_version=$SPB_PROTOCOLS_VERSION,svreports;nds_version=$NDS_VERSION,svcs-svspb,sandvine-auto-config;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE,post-cleanup,power-cycle"
 
@@ -1441,8 +1422,8 @@ else
 			echo "ssh sandvine@$SDE_ACCESS # SDE"
 			echo "ssh sandvine@$SPB_ACCESS # SPB"
 
-			if [ "$OPERATION" == "cloud-services" ] && [ "$OS_STACK_TYPE" == "svcsd-three" ]; then echo "ssh sandvine@$SDE_ACCESS # SVCS"; fi
-			if [ "$OPERATION" == "cloud-services" ] && [ "$OS_STACK_TYPE" == "svcsd-four" ]; then echo "ssh sandvine@$CSD_ACCESS # SVCS"; fi
+			if [ "$OPERATION" == "cloud-services" ] && [ "$OS_STACK_TYPE" == "stock" ]; then echo "ssh sandvine@$SDE_ACCESS # SVCS"; fi
+			if [ "$OPERATION" == "cloud-services" ] && [ "$OS_STACK_TYPE" == "svcsd" ]; then echo "ssh sandvine@$CSD_ACCESS # SVCS"; fi
 
 			if [ "$OS_STACK_TYPE" == "svnda" ]; then echo "ssh sandvine@$NDA_ACCESS # NDA"; fi
 
@@ -1462,7 +1443,6 @@ else
 
 	fi
 
-	echo
 	popd
 
 fi
