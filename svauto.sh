@@ -971,7 +971,7 @@ then
 		echo "However, the following Stack(s) was detected under your account:"
 		echo
 
-		openstack stack list
+		openstack stack list 2>/dev/null
 
 		echo
 		echo "Run this script with the following arguments:"
@@ -993,7 +993,7 @@ then
 	fi
 
 
-	if openstack stack show $OS_STACK_NAME 2>&1 > /dev/null
+	if openstack stack show $OS_STACK_NAME 2>/dev/null
 	then
 		echo
 		echo "Stack found, proceeding..."
@@ -1011,34 +1011,34 @@ then
 
                 stock)
 
-                        PTS_ACCESS=$(nova floating-ip-list | grep `nova list | grep $OS_STACK_NAME-pts-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        SDE_ACCESS=$(nova floating-ip-list | grep `nova list | grep $OS_STACK_NAME-sde-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        SPB_ACCESS=$(nova floating-ip-list | grep `nova list | grep $OS_STACK_NAME-spb-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        PTS_ACCESS=$(nova floating-ip-list 2>/dev/null | grep `nova list | grep $OS_STACK_NAME-pts-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        SDE_ACCESS=$(nova floating-ip-list 2>/dev/null | grep `nova list | grep $OS_STACK_NAME-sde-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        SPB_ACCESS=$(nova floating-ip-list 2>/dev/null | grep `nova list | grep $OS_STACK_NAME-spb-1 | awk $'{print $2}'` | awk $'{print $4}')
                         ;;
 
                 svcsd)
 
-                        PTS_ACCESS=$(nova floating-ip-list | grep `nova list | grep $OS_STACK_NAME-pts-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        SDE_ACCESS=$(nova floating-ip-list | grep `nova list | grep $OS_STACK_NAME-sde-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        SPB_ACCESS=$(nova floating-ip-list | grep `nova list | grep $OS_STACK_NAME-spb-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        CSD_ACCESS=$(nova floating-ip-list | grep `nova list | grep $OS_STACK_NAME-svcsd-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        PTS_ACCESS=$(nova floating-ip-list 2>/dev/null | grep `nova list | grep $OS_STACK_NAME-pts-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        SDE_ACCESS=$(nova floating-ip-list 2>/dev/null | grep `nova list | grep $OS_STACK_NAME-sde-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        SPB_ACCESS=$(nova floating-ip-list 2>/dev/null | grep `nova list | grep $OS_STACK_NAME-spb-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        CSD_ACCESS=$(nova floating-ip-list 2>/dev/null | grep `nova list | grep $OS_STACK_NAME-svcsd-1 | awk $'{print $2}'` | awk $'{print $4}')
                         ;;
 
                 svnda)
 
-                        PTS_ACCESS=$(nova floating-ip-list | grep `nova list | grep $OS_STACK_NAME-pts-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        SDE_ACCESS=$(nova floating-ip-list | grep `nova list | grep $OS_STACK_NAME-sde-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        SPB_ACCESS=$(nova floating-ip-list | grep `nova list | grep $OS_STACK_NAME-spb-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        NDA_ACCESS=$(nova floating-ip-list | grep `nova list | grep $OS_STACK_NAME-nda-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        PTS_ACCESS=$(nova floating-ip-list 2>/dev/null | grep `nova list | grep $OS_STACK_NAME-pts-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        SDE_ACCESS=$(nova floating-ip-list 2>/dev/null | grep `nova list | grep $OS_STACK_NAME-sde-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        SPB_ACCESS=$(nova floating-ip-list 2>/dev/null | grep `nova list | grep $OS_STACK_NAME-spb-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        NDA_ACCESS=$(nova floating-ip-list 2>/dev/null | grep `nova list | grep $OS_STACK_NAME-nda-1 | awk $'{print $2}'` | awk $'{print $4}')
                         ;;
 
                 svtse-demo-mycloud)
 
-                        PTS_ACCESS=$(nova floating-ip-list | grep `nova list | grep $OS_STACK_NAME-pts-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        SDE_ACCESS=$(nova floating-ip-list | grep `nova list | grep $OS_STACK_NAME-sde-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        SPB_ACCESS=$(nova floating-ip-list | grep `nova list | grep $OS_STACK_NAME-spb-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        TSE_ACCESS=$(nova floating-ip-list | grep `nova list | grep $OS_STACK_NAME-tse-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        TCPA_ACCESS=$(nova floating-ip-list | grep `nova list | grep $OS_STACK_NAME-tcpa-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        PTS_ACCESS=$(nova floating-ip-list 2>/dev/null | grep `nova list | grep $OS_STACK_NAME-pts-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        SDE_ACCESS=$(nova floating-ip-list 2>/dev/null | grep `nova list | grep $OS_STACK_NAME-sde-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        SPB_ACCESS=$(nova floating-ip-list 2>/dev/null | grep `nova list | grep $OS_STACK_NAME-spb-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        TSE_ACCESS=$(nova floating-ip-list 2>/dev/null | grep `nova list | grep $OS_STACK_NAME-tse-1 | awk $'{print $2}'` | awk $'{print $4}')
+                        TCPA_ACCESS=$(nova floating-ip-list 2>/dev/null | grep `nova list | grep $OS_STACK_NAME-tcpa-1 | awk $'{print $2}'` | awk $'{print $4}')
                         ;;
 
 
