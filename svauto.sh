@@ -1114,11 +1114,12 @@ then
 	echo "Creating Ansible Inventory: \"ansible/$ANSIBLE_INVENTORY_FILE\"."
 
 
-	ANSIBLE_INVENTORY_TOTAL=3
+	ANSIBLE_INVENTORY_TOTAL=4
 
-	ANSIBLE_HOST_ENTRY_1="svpts-servers,$PTS_ACCESS,ansible_user=$ANSIBLE_REMOTE_USER,base_os=centos7"
-	ANSIBLE_HOST_ENTRY_2="svsde-servers,$SDE_ACCESS,ansible_user=$ANSIBLE_REMOTE_USER,base_os=centos7"
-	ANSIBLE_HOST_ENTRY_3="svspb-servers,$SPB_ACCESS,ansible_user=$ANSIBLE_REMOTE_USER,base_os=centos6"
+	ANSIBLE_HOST_ENTRY_1="all:vars,ansible_user=$ANSIBLE_REMOTE_USER,svauto_yum_host=$SVAUTO_YUM_HOST,release_code_name=$RELEASE_CODE_NAME,sandvine_yum_host=$SV_YUM_HOST"
+	ANSIBLE_HOST_ENTRY_2="svpts-servers,$PTS_ACCESS,base_os=centos7"
+	ANSIBLE_HOST_ENTRY_3="svsde-servers,$SDE_ACCESS,base_os=centos7"
+	ANSIBLE_HOST_ENTRY_4="svspb-servers,$SPB_ACCESS,base_os=centos6"
 
 
 	ansible_inventory_builder > $ANSIBLE_INVENTORY_FILE
@@ -1132,7 +1133,7 @@ then
 
 			ANSIBLE_INVENTORY_TOTAL=1
 
-			ANSIBLE_HOST_ENTRY_1="svcs-servers,$SDE_ACCESS,ansible_user=$ANSIBLE_REMOTE_USER,base_os=centos7"
+			ANSIBLE_HOST_ENTRY_1="svcs-servers,$SDE_ACCESS,base_os=centos7"
 
 			ansible_inventory_builder >> $ANSIBLE_INVENTORY_FILE
 
@@ -1143,7 +1144,7 @@ then
 
 			ANSIBLE_INVENTORY_TOTAL=1
 
-			ANSIBLE_HOST_ENTRY_1="svcs-servers,$CSD_ACCESS,ansible_user=$ANSIBLE_REMOTE_USER,base_os=centos7"
+			ANSIBLE_HOST_ENTRY_1="svcs-servers,$CSD_ACCESS,base_os=centos7"
 
 			ansible_inventory_builder >> $ANSIBLE_INVENTORY_FILE
 
@@ -1156,7 +1157,7 @@ then
 
 		ANSIBLE_INVENTORY_TOTAL=1
 
-		ANSIBLE_HOST_ENTRY_1="svnda-servers,$NDA_ACCESS,ansible_user=$ANSIBLE_REMOTE_USER,base_os=centos7"
+		ANSIBLE_HOST_ENTRY_1="svnda-servers,$NDA_ACCESS,base_os=centos7"
 
 		ansible_inventory_builder >> $ANSIBLE_INVENTORY_FILE
 
@@ -1167,8 +1168,8 @@ then
 
 		ANSIBLE_INVENTORY_TOTAL=2
 
-		ANSIBLE_HOST_ENTRY_1="svtse-servers,$TSE_ACCESS,ansible_user=$ANSIBLE_REMOTE_USER,base_os=centos7"
-		ANSIBLE_HOST_ENTRY_2="svtcpa-servers,$TCPA_ACCESS,ansible_user=$ANSIBLE_REMOTE_USER,base_os=centos7"
+		ANSIBLE_HOST_ENTRY_1="svtse-servers,$TSE_ACCESS,base_os=centos7"
+		ANSIBLE_HOST_ENTRY_2="svtcpa-servers,$TCPA_ACCESS,base_os=centos7"
 
 		ansible_inventory_builder >> $ANSIBLE_INVENTORY_FILE
 
@@ -1301,9 +1302,9 @@ case "$RUNTIME_MODE" in
 
 				ANSIBLE_PLAYBOOK_TOTAL=3
 
-				ANSIBLE_PLAYBOOK_ENTRY_1="svpts-servers,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes;svauto_yum_host=$SVAUTO_YUM_HOST;release_code_name=$RELEASE_CODE_NAME,svpts;pts_version=$PTS_VERSION;sandvine_yum_host=$SV_YUM_HOST,svprotocols;pts_protocols_version=$PTS_PROTOCOLS_VERSION;sandvine_yum_host=$SV_YUM_HOST,sandvine-auto-config;setup_mode=$OPERATION;deployment_mode=yes;license_server=$LICENSE_SERVER,post-cleanup,power-cycle"
-				ANSIBLE_PLAYBOOK_ENTRY_2="svsde-servers,bootstrap;base_os_upgrade=yes,svsde;sde_version=$SDE_VERSION;sandvine_yum_host=$SV_YUM_HOST,sandvine-auto-config;setup_mode=$OPERATION;deployment_mode=yes,post-cleanup,power-cycle"
-				ANSIBLE_PLAYBOOK_ENTRY_3="svspb-servers,bootstrap;base_os_upgrade=yes,svspb;spb_version=$SPB_VERSION;sandvine_yum_host=$SV_YUM_HOST;deployment_mode=yes,sandvine-auto-config;setup_mode=$OPERATION;deployment_mode=yes,post-cleanup,power-cycle"
+				ANSIBLE_PLAYBOOK_ENTRY_1="svpts-servers,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes;svpts;pts_version=$PTS_VERSION,svprotocols;pts_protocols_version=$PTS_PROTOCOLS_VERSION,sandvine-auto-config;setup_mode=$OPERATION;deployment_mode=yes;license_server=$LICENSE_SERVER,post-cleanup,power-cycle"
+				ANSIBLE_PLAYBOOK_ENTRY_2="svsde-servers,bootstrap;base_os_upgrade=yes,svsde;sde_version=$SDE_VERSION,sandvine-auto-config;setup_mode=$OPERATION;deployment_mode=yes,post-cleanup,power-cycle"
+				ANSIBLE_PLAYBOOK_ENTRY_3="svspb-servers,bootstrap;base_os_upgrade=yes,svspb;spb_version=$SPB_VERSION,deployment_mode=yes,sandvine-auto-config;setup_mode=$OPERATION;deployment_mode=yes,post-cleanup,power-cycle"
 
 				ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
 				;;
@@ -1312,9 +1313,9 @@ case "$RUNTIME_MODE" in
 
 				ANSIBLE_PLAYBOOK_TOTAL=3
 
-				ANSIBLE_PLAYBOOK_ENTRY_1="svpts-servers,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes;svauto_yum_host=$SVAUTO_YUM_HOST;release_code_name=$RELEASE_CODE_NAME,svpts,svusagemanagementpts,svcs-svpts,sandvine-auto-config;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE;license_server=$LICENSE_SERVER,post-cleanup,power-cycle"
-				ANSIBLE_PLAYBOOK_ENTRY_2="svsde-servers,bootstrap;base_os_upgrade=yes,svsde,svusagemanagement,svsubscribermapping,svcs-svsde,svcs,sandvine-auto-config;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE,post-cleanup,power-cycle"
-				ANSIBLE_PLAYBOOK_ENTRY_3="svspb-servers,bootstrap;base_os_upgrade=yes,svspb,svreports,svcs-svspb,sandvine-auto-config;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE,post-cleanup,power-cycle"
+				ANSIBLE_PLAYBOOK_ENTRY_1="svpts-servers,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes;svpts;pts_version=$PTS_VERSION,svprotocols;pts_protocols_version=$PTS_PROTOCOLS_VERSION,svusagemanagementpts;um_version=$UM_VERSION,svcs-svpts,sandvine-auto-config;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE;license_server=$LICENSE_SERVER,post-cleanup,power-cycle"
+				ANSIBLE_PLAYBOOK_ENTRY_2="svsde-servers,bootstrap;base_os_upgrade=yes,svsde;sde_version=$SDE_VERSION,svusagemanagement;um_version=$UM_VERSION,svsubscribermapping;sm_version=$SM_C7_VERSION,svcs-svsde,svcs,sandvine-auto-config;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE,post-cleanup,power-cycle"
+				ANSIBLE_PLAYBOOK_ENTRY_3="svspb-servers,bootstrap;base_os_upgrade=yes,svspb;spb_version=$SPB_VERSION,svmcdtext;spb_protocols_version=$SPB_PROTOCOLS_VERSION,svreports;nds_version=$NDS_VERSION,svcs-svspb,sandvine-auto-config;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE,post-cleanup,power-cycle"
 
 				ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
 				;;
@@ -1383,12 +1384,13 @@ then
 	echo "Creating Ansible Inventory: \"ansible/$ANSIBLE_INVENTORY_FILE\"."
 
 
-	ANSIBLE_INVENTORY_TOTAL=4
+	ANSIBLE_INVENTORY_TOTAL=5
 
-	ANSIBLE_HOST_ENTRY_1="svpts-servers,$PTS_ACCESS,ansible_user=$ANSIBLE_REMOTE_USER,base_os=centos7"
-	ANSIBLE_HOST_ENTRY_2="svsde-servers,$SDE_ACCESS,ansible_user=$ANSIBLE_REMOTE_USER,base_os=centos7"
-	ANSIBLE_HOST_ENTRY_3="svspb-servers,$SPB_ACCESS,ansible_user=$ANSIBLE_REMOTE_USER,base_os=centos6"
-	ANSIBLE_HOST_ENTRY_4="svcs-servers,$SDE_ACCESS,ansible_user=$ANSIBLE_REMOTE_USER,base_os=centos7"
+	ANSIBLE_HOST_ENTRY_1="all:vars,ansible_user=$ANSIBLE_REMOTE_USER,svauto_yum_host=$SVAUTO_YUM_HOST,release_code_name=$RELEASE_CODE_NAME,sandvine_yum_host=$SV_YUM_HOST"
+	ANSIBLE_HOST_ENTRY_2="svpts-servers,$PTS_ACCESS,base_os=centos7"
+	ANSIBLE_HOST_ENTRY_3="svsde-servers,$SDE_ACCESS,base_os=centos7"
+	ANSIBLE_HOST_ENTRY_4="svspb-servers,$SPB_ACCESS,base_os=centos6"
+	ANSIBLE_HOST_ENTRY_5="svcs-servers,$SDE_ACCESS,base_os=centos7"
 
 
 	ansible_inventory_builder > $ANSIBLE_INVENTORY_FILE
@@ -1422,6 +1424,7 @@ else
 	echo
 
 
+	echo
 	pushd ansible
 
 
@@ -1459,6 +1462,7 @@ else
 
 	fi
 
-	popd &>/dev/null
+	echo
+	popd
 
 fi

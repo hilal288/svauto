@@ -19,23 +19,21 @@
 ansible_playbook_builder()
 {
 
-	COUNTER_1=1
+	ENTRY_COUNTER=1
 
 
-	while [ $COUNTER_1 -le $ANSIBLE_PLAYBOOK_TOTAL ]
+	while [ $ENTRY_COUNTER -le $ANSIBLE_PLAYBOOK_TOTAL ]
 	do
 
 		ITEM=1
 
-		for i in $(eval echo "\$ANSIBLE_PLAYBOOK_ENTRY_${COUNTER_1}" | sed "s/,/ /g")
+		for i in $(eval echo "\$ANSIBLE_PLAYBOOK_ENTRY_${ENTRY_COUNTER}" | sed "s/,/ /g")
 		do
 
 			if [ $ITEM == 1 ]; then
 
-				declare "ANSIBLE_HOST_GROUP_$COUNTER_1"=$(echo "$i")
-
 				echo ""
-				eval echo "- hosts: \$ANSIBLE_HOST_GROUP_$COUNTER_1"
+				echo "- hosts: $i"
 				echo "  user: $ANSIBLE_REMOTE_USER"
 				echo "  become: yes"
 				echo "  roles:"
@@ -51,7 +49,7 @@ ansible_playbook_builder()
 
 					if [ $SUB_ITEM == 1 ]; then
 
-						declare "ROLE_NAME_$COUNTER_1"=$(echo "$p")
+						declare "ROLE_NAME_$ENTRY_COUNTER"="$p"
 
 						(( SUB_ITEM++ ))
 
@@ -59,8 +57,8 @@ ansible_playbook_builder()
 
 					fi
 
-					declare "ROLE_PARAM_NAME_$COUNTER_1_$SUB_ITEM"=$(echo $p | cut -d = -f 1)
-					declare "ROLE_PARAM_VALUE_$COUNTER_1_$SUB_ITEM"=$(echo $p | cut -d = -f 2)
+					declare "ROLE_PARAM_NAME_$ENTRY_COUNTER_$SUB_ITEM"=$(echo $p | cut -d = -f 1)
+					declare "ROLE_PARAM_VALUE_$ENTRY_COUNTER_$SUB_ITEM"=$(echo $p | cut -d = -f 2)
 
 					(( SUB_ITEM++ ))
 
@@ -71,12 +69,12 @@ ansible_playbook_builder()
 				COUNTER_2=2
 
 
-				eval echo -n "\ \ - { role: \$ROLE_NAME_$COUNTER_1,\ "
+				eval echo -n "\ \ - { role: \$ROLE_NAME_$ENTRY_COUNTER,\ "
 
 				while [ $COUNTER_2 -le $PARAMS_TOTAL ]
 				do
 
-					eval echo -n "\$ROLE_PARAM_NAME_$COUNTER_1_$COUNTER_2: \'\$ROLE_PARAM_VALUE_$COUNTER_1_$COUNTER_2\'"
+					eval echo -n "\$ROLE_PARAM_NAME_$ENTRY_COUNTER_$COUNTER_2: \'\$ROLE_PARAM_VALUE_$ENTRY_COUNTER_$COUNTER_2\'"
 
 					if [ $COUNTER_2 -ne $PARAMS_TOTAL ]; then echo -n ", "; fi
 
@@ -96,9 +94,7 @@ ansible_playbook_builder()
 
 		done
 
-		(( COUNTER_1++ ))
-
-#		if [ "$ANSIBLE_FORCE_PLAYBOOK_BUILD" == "yes" ]; then break; fi
+		(( ENTRY_COUNTER++ ))
 
 	done
 

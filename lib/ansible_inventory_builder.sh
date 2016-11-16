@@ -19,42 +19,25 @@
 ansible_inventory_builder()
 {
 
-	COUNTER_1=1
+	ENTRY_COUNTER=1
 
 
-	while [ $COUNTER_1 -le $ANSIBLE_INVENTORY_TOTAL ]
+	while [ $ENTRY_COUNTER -le $ANSIBLE_INVENTORY_TOTAL ]
 	do
 
 		ITEM=1
 
-		for i in $(eval echo "\$ANSIBLE_HOST_ENTRY_${COUNTER_1}" | sed "s/,/ /g")
+		for i in $(eval echo "\$ANSIBLE_HOST_ENTRY_${ENTRY_COUNTER}" | sed "s/,/ /g")
 		do
 
 			if [ $ITEM == 1 ]; then
 
-				declare "ANSIBLE_HOST_GROUP_$COUNTER_1"="$i"
-
 				echo
-
-				eval echo "[\$ANSIBLE_HOST_GROUP_$COUNTER_1]"
-
-			fi
-
-
-			if [ $ITEM == 2 ]; then
-
-				echo -n "$i "
-
-				if [ ! -z "$ANSIBLE_REMOTE_USER" ]
-				then
-					echo -n "ansible_user=$ANSIBLE_REMOTE_USER "
-				fi
+				echo "[$i]"
 
 			fi
 
-
-			if [ ! $ITEM -le 2 ]; then echo -n "$i " ; fi
-
+			if [ ! $ITEM -le 1 ]; then echo -n "$i " ; fi
 
 			(( ITEM++ ))
 
@@ -62,7 +45,7 @@ ansible_inventory_builder()
 
 		echo
 
-		(( COUNTER_1++ ))
+		(( ENTRY_COUNTER++ ))
 
 	done
 
