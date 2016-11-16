@@ -902,16 +902,20 @@ then
 	if [ "$ANSIBLE_RUN_AGAINST" == "local" ]
 	then
 
-		pushd ansible &>/dev/null
 
 		echo
 		echo "SVAuto is running Ansible to deploy your setup!"
 
 		echo
 		echo "pushd ansible"
-		echo "ansible-playbook -i "$ANSIBLE_INVENTORY_FILE" "$ANSIBLE_PLAYBOOK_FILE""
 
 		echo
+		pushd ansible
+
+		echo
+		echo "ansible-playbook -i "$ANSIBLE_INVENTORY_FILE" "$ANSIBLE_PLAYBOOK_FILE""
+
+
 		if ansible-playbook -i "$ANSIBLE_INVENTORY_FILE" "$ANSIBLE_PLAYBOOK_FILE" # -e "$ANSIBLE_EXTRA_VARS_FILE"
 		then
 
@@ -1400,13 +1404,13 @@ else
         echo
         echo "SVAuto is running Ansible:"
         echo
-	echo "cd ansible/"
-	echo "ansible-playbook -i $ANSIBLE_INVENTORY_FILE $ANSIBLE_PLAYBOOK_FILE"
-	echo
-
+	echo "pushd ansible"
 
 	echo
 	pushd ansible
+
+	echo
+	echo "ansible-playbook -i $ANSIBLE_INVENTORY_FILE $ANSIBLE_PLAYBOOK_FILE"
 
 
 	if ansible-playbook -i $ANSIBLE_INVENTORY_FILE $ANSIBLE_PLAYBOOK_FILE # -e \""$ANSIBLE_EXTRA_VARS $EXTRA_VARS"\"

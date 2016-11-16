@@ -39,7 +39,6 @@
 - name: centos - yum installing the SVPTS
   yum: pkg={{item}} state=latest update_cache=yes
   with_items:
-    - dpdk
     - svpts
 
 

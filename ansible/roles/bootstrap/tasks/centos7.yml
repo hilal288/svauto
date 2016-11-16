@@ -23,6 +23,8 @@
     - python34
     - nmap-ncat
     - dracut-config-generic
+    - kernel
+    - kernel-tools
 
 
 - name: centos7 - yum uninstalling Network Manager
@@ -45,19 +47,3 @@
         group=root
         mode=0600
         backup=yes
-
-
-# Lock Kernel upgrade only when building Linux PTS on CentOS 7.
-# It is realy, really required, only if "release == 'prod'".
-# This is a DPDK RPM Package limitation, that we're work arouding it.
-
-- name: centos7 - yum installing Kernel, DPDK RPM workaround
-  yum: pkg={{item}}
-  with_items:
-    - kernel-{{el7_kernel_version}}
-    - kernel-tools-{{el7_kernel_version}}
-  when: lock_el7_kernel_upgrade == 'yes'
-
-- name: centos7 - yum excluding the Kernel from upgrade process, DPDK RPM workarond
-  lineinfile: dest=/etc/yum.conf line="exclude=kernel"
-  when: lock_el7_kernel_upgrade == 'yes'

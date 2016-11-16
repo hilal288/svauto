@@ -26,6 +26,7 @@
     - nc
     - man
     - python33
+    - kernel
 
 
 - name: centos6 - yum installing Ansible from EPEL Testing
