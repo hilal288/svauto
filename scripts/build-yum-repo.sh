@@ -14,85 +14,47 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#
-# NA stuff
-#
-
+# NA
 ./svauto.sh --yum-repo-builder --base-os=centos7 --product=svnda --latest
 
-
-
-#
-# TSE stuff
-#
-
+# TSE
 ./svauto.sh --yum-repo-builder --base-os=centos7 --product=svtse --latest
 
-
-#
-# TCP Accelerator stuff
-#
-
+# TCP Accelerator
 ./svauto.sh --yum-repo-builder --base-os=centos7 --product=svtcpa --latest
 
-
-#
-# PTS stuff
-#
-
+# PTS
 ./svauto.sh --yum-repo-builder --base-os=centos7 --product=svpts --latest
 ./svauto.sh --yum-repo-builder --base-os=centos7 --product=svprotocols --latest
 
 # Usage Management PTS
-
 ./svauto.sh --yum-repo-builder --base-os=centos7 --product=svusagemanagementpts --latest
 
-
 # Experimental
-
 ./svauto.sh --yum-repo-builder --base-os=centos6 --product=svpts --latest
 ./svauto.sh --yum-repo-builder --base-os=centos6 --product=svprotocols --latest
-
 ./svauto.sh --yum-repo-builder --base-os=centos6 --product=svusagemanagementpts --latest
 
-
-#
-# SDE stuff
-#
-
+# SDE
 ./svauto.sh --yum-repo-builder --base-os=centos7 --product=svsde --latest
 ./svauto.sh --yum-repo-builder --base-os=centos6 --product=svsde --latest
 
 # Usage Management
-
 ./svauto.sh --yum-repo-builder --base-os=centos7 --product=svusagemanagement --latest
 ./svauto.sh --yum-repo-builder --base-os=centos6 --product=svusagemanagement --latest
 
 # Subscriber Mapping
-
 ./svauto.sh --yum-repo-builder --base-os=centos6 --product=svsubscribermapping --latest
 ./svauto.sh --yum-repo-builder --base-os=centos7 --product=subscriber_mapping --latest
 
-
-#
-# SPB stuff
-#
-
+# SPB
 ./svauto.sh --yum-repo-builder --base-os=centos6 --product=svspb --latest
 
-
 # SVMCDTEXT (Protocols)
-
 ./svauto.sh --yum-repo-builder --base-os=centos6 --product=svmcdtext --latest
 
-
 # NDS
-
 ./svauto.sh --yum-repo-builder --base-os=centos6 --product=svreports --latest
 
-
-#
 # Control Center
-#
-
 ./svauto.sh --yum-repo-builder --base-os=centos6 --product=svcontrol-center --latest
