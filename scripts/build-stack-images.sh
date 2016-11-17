@@ -29,6 +29,7 @@ time ./svauto.sh --packer-build=cs-prod
 # Sandvine Cloud Services Images
 time ./svauto.sh --packer-build=cs-dev-lab
 time ./svauto.sh --packer-build=cs-dev
+time ./svauto.sh --packer-build=cs-dev-vmware
 
 # Sandvine Stock Images
 time ./svauto.sh --packer-build=sandvine-prod

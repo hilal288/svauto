@@ -46,6 +46,15 @@ deployment_mode: "no"
 # grub: Use old Linux interface name "ethX" on CentOS:
 centos_old_ifnames: "yes"
 
+eth0_bootproto: "dhcp"
+eth1_bootproto: "dhcp"
+
+centos_eth0_ip: "null"
+centos_eth0_mask: "null"
+
+centos_eth1_ip: "null"
+centos_eth1_mask: "null"
+
 # openvswitch: Open vSwitch with DPDK?
 openvswitch_mode: "null"
 

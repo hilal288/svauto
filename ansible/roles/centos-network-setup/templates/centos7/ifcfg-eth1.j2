@@ -3,7 +3,11 @@ NM_CONTROLLED="no"
 ONBOOT="yes"
 NAME="eth1"
 DEVICE="eth1"
-BOOTPROTO="dhcp"
+BOOTPROTO="{{ eth1_bootproto }}"
+{% if eth1_bootproto == 'static' %}
+IPADDR={{ centos_eth1_ip }}
+NETMASK={{ centos_eth1_mask }}
+{% endif %}
 DEFROUTE="no"
 PEERROUTES="no"
 PEERDNS="no"

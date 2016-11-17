@@ -705,6 +705,11 @@ then
 			packer_build_cs
 			;;
 
+		cs-dev-vmware)
+
+			packer_build_cs_vmware
+			;;
+
 		cs-dev-lab)
 
 			packer_build_cs_lab

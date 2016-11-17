@@ -8,6 +8,7 @@ source lib/hostname_check.sh
 
 source lib/packer_build_cs_release.sh
 source lib/packer_build_cs.sh
+source lib/packer_build_cs_vmware.sh
 source lib/packer_build_cs_lab.sh
 
 source lib/packer_build_sandvine.sh
