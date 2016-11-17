@@ -1100,97 +1100,97 @@ fi
 if [ -n "$RUNTIME_MODE" ]
 then
 
-case "$RUNTIME_MODE" in
-
-	config-only)
-
-		echo
-		echo "Configuring Sandvine Platform with Ansible..."
-
-		if [ "$OS_STACK_TYPE" == "svnda" ]
-		then
-
-			ANSIBLE_PLAYBOOK_TOTAL=1
-
-			ANSIBLE_PLAYBOOK_ENTRY_1="svnda-servers,sandvine-auto-config;setup_server=svnda;setup_mode=$OPERATION"
-
-			ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
-		fi
-
-		if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]
-		then
-
-			ANSIBLE_PLAYBOOK_TOTAL=2
-
-			ANSIBLE_PLAYBOOK_ENTRY_1="svtcpa-servers,sandvine-auto-config;setup_server=svtcpa;setup_mode=$OPERATION"
-			ANSIBLE_PLAYBOOK_ENTRY_2="svtse-servers,sandvine-auto-config;setup_server=svtse;setup_mode=$OPERATION;license_server=$LICENSE_SERVER"
-
-			ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
-		fi
-
-		if [ "$OPERATION" == "cloud-services" ] && [ -z "$CLOUD_SERVICES_MODE" ]
-		then
-
+	case "$RUNTIME_MODE" in
+	
+		config-only)
+	
 			echo
-			echo "For operation=cloud-services, you have to also, specify --cloud-services-mode=default|mdm"
-
+			echo "Configuring Sandvine Platform with Ansible..."
+	
+			if [ "$OS_STACK_TYPE" == "svnda" ]
+			then
+	
+				ANSIBLE_PLAYBOOK_TOTAL=1
+	
+				ANSIBLE_PLAYBOOK_ENTRY_1="svnda-servers,sandvine-auto-config;setup_server=svnda;setup_mode=$OPERATION"
+	
+				ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
+			fi
+	
+			if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]
+			then
+	
+				ANSIBLE_PLAYBOOK_TOTAL=2
+	
+				ANSIBLE_PLAYBOOK_ENTRY_1="svtcpa-servers,sandvine-auto-config;setup_server=svtcpa;setup_mode=$OPERATION"
+				ANSIBLE_PLAYBOOK_ENTRY_2="svtse-servers,sandvine-auto-config;setup_server=svtse;setup_mode=$OPERATION;license_server=$LICENSE_SERVER"
+	
+				ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
+			fi
+	
+			if [ "$OPERATION" == "cloud-services" ] && [ -z "$CLOUD_SERVICES_MODE" ]
+			then
+	
+				echo
+				echo "For operation=cloud-services, you have to also, specify --cloud-services-mode=default|mdm"
+	
+				exit 1
+	
+			fi
+	
+			if [ "$OPERATION" == "sandvine" ]; then CLOUD_SERVICES_MODE=null; fi
+	
+			ANSIBLE_PLAYBOOK_TOTAL=3
+	
+			ANSIBLE_PLAYBOOK_ENTRY_1="svspb-servers,sandvine-auto-config;setup_server=svspb;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE"
+			ANSIBLE_PLAYBOOK_ENTRY_2="svsde-servers,sandvine-auto-config;setup_server=svsde;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE"
+			ANSIBLE_PLAYBOOK_ENTRY_3="svpts-servers,sandvine-auto-config;setup_server=svpts;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE;license_server=$LICENSE_SERVER"
+	
+			ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
+			;;
+	
+		full-deployment)
+	
+			echo
+			echo "Deploying Sandvine's RPM packages with Ansible..."
+	
+			case $OPERATION in
+	
+				sandvine)
+	
+					ANSIBLE_PLAYBOOK_TOTAL=3
+	
+					ANSIBLE_PLAYBOOK_ENTRY_1="svpts-servers,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes,svpts;pts_version=$PTS_VERSION,svprotocols;pts_protocols_version=$PTS_PROTOCOLS_VERSION,sandvine-auto-config;setup_mode=$OPERATION;deployment_mode=yes;license_server=$LICENSE_SERVER,post-cleanup,power-cycle"
+					ANSIBLE_PLAYBOOK_ENTRY_2="svsde-servers,bootstrap;base_os_upgrade=yes,svsde;sde_version=$SDE_VERSION,sandvine-auto-config;setup_mode=$OPERATION;deployment_mode=yes,post-cleanup,power-cycle"
+					ANSIBLE_PLAYBOOK_ENTRY_3="svspb-servers,bootstrap;base_os_upgrade=yes,svspb;spb_version=$SPB_VERSION;deployment_mode=yes,sandvine-auto-config;setup_mode=$OPERATION;deployment_mode=yes,post-cleanup,power-cycle"
+	
+					ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
+					;;
+	
+				cloud-services)
+	
+					ANSIBLE_PLAYBOOK_TOTAL=3
+	
+					ANSIBLE_PLAYBOOK_ENTRY_1="svpts-servers,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes,svpts;pts_version=$PTS_VERSION,svprotocols;pts_protocols_version=$PTS_PROTOCOLS_VERSION,svusagemanagementpts;um_version=$UM_VERSION,svcs-svpts,sandvine-auto-config;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE;license_server=$LICENSE_SERVER,post-cleanup,power-cycle"
+					ANSIBLE_PLAYBOOK_ENTRY_2="svsde-servers,bootstrap;base_os_upgrade=yes,svsde;sde_version=$SDE_VERSION,svusagemanagement;um_version=$UM_VERSION,svsubscribermapping;sm_version=$SM_C7_VERSION,svcs-svsde,svcs,sandvine-auto-config;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE,post-cleanup,power-cycle"
+					ANSIBLE_PLAYBOOK_ENTRY_3="svspb-servers,bootstrap;base_os_upgrade=yes,svspb;spb_version=$SPB_VERSION,svmcdtext;spb_protocols_version=$SPB_PROTOCOLS_VERSION,svreports;nds_version=$NDS_VERSION,svcs-svspb,sandvine-auto-config;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE,post-cleanup,power-cycle"
+	
+					ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
+					;;
+	
+			esac
+			;;
+	
+		*)
+	
+			echo
+			echo "Warning! Runtime mode not supported!"
+			echo "Usage: $0 --runtime-mode={full-deployemnt|config-only}"
+	
 			exit 1
-
-		fi
-
-		if [ "$OPERATION" == "sandvine" ]; then CLOUD_SERVICES_MODE=null; fi
-
-		ANSIBLE_PLAYBOOK_TOTAL=3
-
-		ANSIBLE_PLAYBOOK_ENTRY_1="svspb-servers,sandvine-auto-config;setup_server=svspb;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE"
-		ANSIBLE_PLAYBOOK_ENTRY_2="svsde-servers,sandvine-auto-config;setup_server=svsde;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE"
-		ANSIBLE_PLAYBOOK_ENTRY_3="svpts-servers,sandvine-auto-config;setup_server=svpts;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE;license_server=$LICENSE_SERVER"
-
-		ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
-		;;
-
-	full-deployment)
-
-		echo
-		echo "Deploying Sandvine's RPM packages with Ansible..."
-
-		case $OPERATION in
-
-			sandvine)
-
-				ANSIBLE_PLAYBOOK_TOTAL=3
-
-				ANSIBLE_PLAYBOOK_ENTRY_1="svpts-servers,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes,svpts;pts_version=$PTS_VERSION,svprotocols;pts_protocols_version=$PTS_PROTOCOLS_VERSION,sandvine-auto-config;setup_mode=$OPERATION;deployment_mode=yes;license_server=$LICENSE_SERVER,post-cleanup,power-cycle"
-				ANSIBLE_PLAYBOOK_ENTRY_2="svsde-servers,bootstrap;base_os_upgrade=yes,svsde;sde_version=$SDE_VERSION,sandvine-auto-config;setup_mode=$OPERATION;deployment_mode=yes,post-cleanup,power-cycle"
-				ANSIBLE_PLAYBOOK_ENTRY_3="svspb-servers,bootstrap;base_os_upgrade=yes,svspb;spb_version=$SPB_VERSION;deployment_mode=yes,sandvine-auto-config;setup_mode=$OPERATION;deployment_mode=yes,post-cleanup,power-cycle"
-
-				ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
-				;;
-
-			cloud-services)
-
-				ANSIBLE_PLAYBOOK_TOTAL=3
-
-				ANSIBLE_PLAYBOOK_ENTRY_1="svpts-servers,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes,svpts;pts_version=$PTS_VERSION,svprotocols;pts_protocols_version=$PTS_PROTOCOLS_VERSION,svusagemanagementpts;um_version=$UM_VERSION,svcs-svpts,sandvine-auto-config;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE;license_server=$LICENSE_SERVER,post-cleanup,power-cycle"
-				ANSIBLE_PLAYBOOK_ENTRY_2="svsde-servers,bootstrap;base_os_upgrade=yes,svsde;sde_version=$SDE_VERSION,svusagemanagement;um_version=$UM_VERSION,svsubscribermapping;sm_version=$SM_C7_VERSION,svcs-svsde,svcs,sandvine-auto-config;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE,post-cleanup,power-cycle"
-				ANSIBLE_PLAYBOOK_ENTRY_3="svspb-servers,bootstrap;base_os_upgrade=yes,svspb;spb_version=$SPB_VERSION,svmcdtext;spb_protocols_version=$SPB_PROTOCOLS_VERSION,svreports;nds_version=$NDS_VERSION,svcs-svspb,sandvine-auto-config;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE,post-cleanup,power-cycle"
-
-				ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
-				;;
-
-		esac
-		;;
-
-	*)
-
-		echo
-		echo "Warning! Runtime mode not supported!"
-		echo "Usage: $0 --runtime-mode={full-deployemnt|config-only}"
-
-		exit 1
-		;;
-
-esac
+			;;
+	
+	esac
 
 fi
 
