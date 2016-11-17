@@ -27,7 +27,7 @@ case $i in
 
 	--ansible-run-against=*)
 
-		ANSIBLE_RUN_AGAINST="${i#*=}"
+		/bin/true
 		shift
 		;;
 
@@ -132,4 +132,4 @@ fi
 
 pushd ~/svauto &>/dev/null
 
-./svauto.sh --ansible-run-against="$ANSIBLE_RUN_AGAINST" --ansible-remote-user="$ANSIBLE_REMOTE_USER" --ansible-inventory-builder="$ANSIBLE_INVENTORY_ENTRY_1" --ansible-playbook-builder="$ANSIBLE_PLAYBOOK_ENTRY_1" --ansible-extra-vars="base_os=$BASE_OS,$ALL_ANSIBLE_EXTRA_VARS"
+./svauto.sh --ansible-remote-user="$ANSIBLE_REMOTE_USER" --ansible-inventory-builder="$ANSIBLE_INVENTORY_ENTRY_1" --ansible-playbook-builder="$ANSIBLE_PLAYBOOK_ENTRY_1" --ansible-extra-vars="base_os=$BASE_OS,$ALL_ANSIBLE_EXTRA_VARS"

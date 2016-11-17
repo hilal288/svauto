@@ -14,9 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 TODAY=$(date +"%Y%m%d")
-
 
 # Create a file that contains the build date
 if  [ ! -f build-date.txt ]
@@ -31,7 +29,6 @@ else
 
 fi
 
-
 if ! source svauto.conf
 then
 	echo "File svauto.conf not found, aborting!"
@@ -40,13 +37,11 @@ then
 	exit 1
 fi
 
-
 if ! source lib/include_tools.inc
 then
 	echo "File lib/include_tools.inc not found, aborting!"
 	exit 1
 fi
-
 
 ANSIBLE_COUNTER_1=1
 
@@ -81,7 +76,7 @@ case $i in
 
 	--ansible-run-against=*)
 
-		ANSIBLE_RUN_AGAINST="${i#*=}"
+		/bin/true
 		shift
 		;;
 
@@ -443,13 +438,11 @@ case $i in
 esac
 done
 
-
 ANSIBLE_INVENTORY_FILE="ansible-hosts-$BUILD_RAND"
 
 ANSIBLE_PLAYBOOK_FILE="ansible-playbook-$BUILD_RAND.yml"
 
 ANSIBLE_EXTRA_VARS_FILE="@ansible-extra-vars-$BUILD_RAND.json"
-
 
 # SVAuto Ansible Inventory Builder
 #
@@ -466,7 +459,6 @@ then
 
 fi
 
-
 # SVAuto Ansible Playbook Builder
 #
 # This function stores Ansible's Top-Level Playbook in memory.
@@ -482,7 +474,6 @@ then
 
 fi
 
-
 #
 # SVAuto Packer Builder - To build images using Packer and Ansible
 #
@@ -496,7 +487,6 @@ then
 
 fi
 
-
 #
 # SVAuto Vagrant - To bootstrap boxes using Vagrant and Ansible
 #
@@ -509,7 +499,6 @@ then
 	exit 0
 
 fi
-
 
 #
 # SVAuto Local Yum Repo - To host Sandvine's RPM packages locally and install
@@ -525,7 +514,6 @@ then
 
 fi
 
-
 #
 # Operation System setup on playbook vars
 #
@@ -534,7 +522,6 @@ if [ ! -z "$BASE_OS" ]
 then
 	EXTRA_VARS="base_os=$BASE_OS "
 fi
-
 
 #
 # Ubuntu Settings
@@ -547,19 +534,16 @@ else
 	EXTRA_VARS="$EXTRA_VARS firewall_driver=openvswitch "
 fi
 
-
 # Disabling Security Groups entirely
 if [ "$OS_NO_SEC" == "yes" ]
 then
 	EXTRA_VARS="$EXTRA_VARS firewall_driver=neutron.agent.firewall.NoopFirewall "
 fi
 
-
 if [ "$OS_OPEN_PROVIDER_NETS_TO_REGULAR_USERS" == "yes" ]
 then
 	EXTRA_VARS="$EXTRA_VARS os_open_provider_nets_to_regular_users=yes "
 fi
-
 
 if [ "$UBUNTU_NETWORK_DETECT_DEFAULT_NIC" == "yes" ]
 then
@@ -567,7 +551,6 @@ then
 	# Configuring the default interface
 	unset UBUNTU_PRIMARY_INTERFACE
 	UBUNTU_PRIMARY_INTERFACE=$(ip r | grep default | awk '{print $5}')
-
 
 	if [ -z "$UBUNTU_PRIMARY_INTERFACE" ]
 	then
@@ -578,17 +561,14 @@ then
 		exit 1
 	fi
 
-
 	echo
 	echo "Your primary network interface is:"
 	echo "dafault route via:" $UBUNTU_PRIMARY_INTERFACE
-
 
 	EXTRA_VARS="$EXTRA_VARS ubuntu_primary_interface=$UBUNTU_PRIMARY_INTERFACE "
 	EXTRA_VARS="$EXTRA_VARS os_mgmt=$UBUNTU_PRIMARY_INTERFACE "
 
 fi
-
 
 #
 # SVAuto Functions
@@ -615,7 +595,6 @@ then
 	fi
 
 fi
-
 
 case $DOWNLOAD_IMAGES in
 
@@ -698,7 +677,6 @@ case $DOWNLOAD_IMAGES in
 
 esac
 
-
 if [ ! -z "$PACKER_BUILD_WHAT" ]
 then
 
@@ -749,7 +727,6 @@ then
 
 fi
 
-
 #
 # Post-Image creation options
 #
@@ -763,7 +740,6 @@ then
 
 fi
 
-
 if [ "$UPDATE_WEB_DIR_SYMLINK" == "yes" ]
 then
 
@@ -772,7 +748,6 @@ then
 	exit 0
 
 fi
-
 
 if [ ! -z "$MOVE2WEBROOT_BUILD" ]
 then
@@ -810,7 +785,6 @@ then
 
 fi
 
-
 if [ ! -z "$HEAT_TEMPLATES" ]
 then
 
@@ -828,7 +802,6 @@ then
 	exit 0
 
 fi
-
 
 if [ ! -z "$INSTALLATION_HELPER" ]
 then
@@ -848,7 +821,6 @@ then
 
 fi
 
-
 if [ ! -z "$LIBVIRT_FILES" ]
 then
 
@@ -867,89 +839,20 @@ then
 
 fi
 
-
-
-#
-# Pure Ansible deployments, can be local or remote.
-#
-
-if [ ! -z "$ANSIBLE_RUN_AGAINST" ]
-then
-
-	if [ -z "$ANSIBLE_REMOTE_USER" ]
-	then
-
-		echo
-		echo "Warning! You must specify the --ansible-remote-user option!"
-		echo "Example: --ansible-remote-user=sandvine"
-
-		exit 1
-
-	fi
-
-
-        # cpu_check
-
-        # hostname_check
-
-	echo
-
-	echo "$ANSIBLE_INVENTORY_FILE_IN_MEM" > ansible/$ANSIBLE_INVENTORY_FILE
-	echo "$ANSIBLE_PLAYBOOK_FILE_IN_MEM" > ansible/$ANSIBLE_PLAYBOOK_FILE
-	#echo "$ANSIBLE_EXTRA_VARS_FILE_IN_MEM" > ansible/$ANSIBLE_EXTRA_VARS_FILE
-
-
-	if [ "$ANSIBLE_RUN_AGAINST" == "local" ]
-	then
-
-
-		echo
-		echo "SVAuto is running Ansible to deploy your setup!"
-
-		echo
-		echo "pushd ansible"
-
-		echo
-		pushd ansible
-
-		echo
-		echo "ansible-playbook -i "$ANSIBLE_INVENTORY_FILE" "$ANSIBLE_PLAYBOOK_FILE""
-
-
-		if ansible-playbook -i "$ANSIBLE_INVENTORY_FILE" "$ANSIBLE_PLAYBOOK_FILE" # -e "$ANSIBLE_EXTRA_VARS_FILE"
-		then
-
-			echo
-			echo "Ansilble applied the playbook correctly... Success!"
-			echo
-
-			exit 0
-
-		else
-
-			echo "Ansible Playbook failed to apply! ABORTING!!!"
-
-			exit 1
-
-		fi
-
-	fi
-
-fi
-
-
-if [ -z "$OPERATION" ]
+if [ -z "$ANSIBLE_REMOTE_USER" ]
 then
 
 	echo
-	echo "Warning! No operation mode was specified, use one of the following ./svauto.sh options:"
+	echo "Warning! You must specify the --ansible-remote-user option!"
+	echo "Example: --ansible-remote-user=sandvine"
 
-	echo
-	echo "--operation=sandvine|cloud-services"
-	echo
+	exit 1
 
 fi
 
+# cpu_check
+
+# hostname_check
 
 if [ -n "$OS_PROJECT" ]
 then
@@ -966,7 +869,6 @@ then
 
 		source ~/$OS_PROJECT-openrc.sh
 	fi
-
 
 	if [ -z $OS_STACK_NAME ]
 	then
@@ -996,7 +898,6 @@ then
 		exit 1
 	fi
 
-
 	if openstack stack show $OS_STACK_NAME 2>/dev/null
 	then
 		echo
@@ -1007,7 +908,6 @@ then
 
 		exit 1
 	fi
-
 
         case "$OS_STACK_TYPE" in
 
@@ -1056,7 +956,6 @@ then
 
         esac
 
-
 	if [ -z $PTS_ACCESS ] || [ -z $SDE_ACCESS ] || [ -z $SPB_ACCESS ] #|| [ -z $CSD_ACCESS ]
 	then
 		echo
@@ -1069,7 +968,6 @@ then
 
 		exit 1
 	fi
-
 
 	echo
 	echo "The following Sandvine-compatible Instances was detected on your \"$OS_STACK_NAME\" Stack:"
@@ -1088,16 +986,12 @@ then
 	if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then echo TSE: $TSE_ACCESS; fi
 	if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then echo TCPA: $TCPA_ACCESS; fi
 
-
 	pushd ansible &>/dev/null
-
 
 	ANSIBLE_INVENTORY_FILE="openstack-hosts-$BUILD_RAND"
 
-
 	echo
 	echo "Creating Ansible Inventory: \"ansible/$ANSIBLE_INVENTORY_FILE\"."
-
 
 	ANSIBLE_INVENTORY_TOTAL=4
 
@@ -1106,9 +1000,7 @@ then
 	ANSIBLE_HOST_ENTRY_3="svsde-servers,$SDE_ACCESS,base_os=centos7"
 	ANSIBLE_HOST_ENTRY_4="svspb-servers,$SPB_ACCESS,base_os=centos6"
 
-
 	ansible_inventory_builder > $ANSIBLE_INVENTORY_FILE
-
 
 	if [ "$OPERATION" == "cloud-services" ]
 	then
@@ -1166,23 +1058,10 @@ then
 
 fi
 
-
-if [ -z "$RUNTIME_MODE" ]
-then
-
-	echo
-	echo "Warning! You must specify the --runtime-mode option!"
-	echo "Supported values: full-deployment or config-only"
-
-fi
-
-
 echo
 echo "Creating Ansible Playbook: \"ansible/$ANSIBLE_PLAYBOOK_FILE\"."
 
-
 pushd ansible &>/dev/null
-
 
 if [ "$CENTOS_NETWORK_SETUP" == "yes" ]
 then
@@ -1208,7 +1087,6 @@ then
 		ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
 	fi
 
-
 	ANSIBLE_PLAYBOOK_TOTAL=3
 
 	ANSIBLE_PLAYBOOK_ENTRY_1="svspb-servers,centos-network-setup"
@@ -1219,6 +1097,8 @@ then
 
 fi
 
+if [ -n "$RUNTIME_MODE" ]
+then
 
 case "$RUNTIME_MODE" in
 
@@ -1226,7 +1106,6 @@ case "$RUNTIME_MODE" in
 
 		echo
 		echo "Configuring Sandvine Platform with Ansible..."
-
 
 		if [ "$OS_STACK_TYPE" == "svnda" ]
 		then
@@ -1237,7 +1116,6 @@ case "$RUNTIME_MODE" in
 
 			ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
 		fi
-
 
 		if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]
 		then
@@ -1250,7 +1128,6 @@ case "$RUNTIME_MODE" in
 			ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
 		fi
 
-
 		if [ "$OPERATION" == "cloud-services" ] && [ -z "$CLOUD_SERVICES_MODE" ]
 		then
 
@@ -1261,16 +1138,13 @@ case "$RUNTIME_MODE" in
 
 		fi
 
-
 		if [ "$OPERATION" == "sandvine" ]; then CLOUD_SERVICES_MODE=null; fi
-
 
 		ANSIBLE_PLAYBOOK_TOTAL=3
 
 		ANSIBLE_PLAYBOOK_ENTRY_1="svspb-servers,sandvine-auto-config;setup_server=svspb;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE"
 		ANSIBLE_PLAYBOOK_ENTRY_2="svsde-servers,sandvine-auto-config;setup_server=svsde;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE"
 		ANSIBLE_PLAYBOOK_ENTRY_3="svpts-servers,sandvine-auto-config;setup_server=svpts;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE;license_server=$LICENSE_SERVER"
-
 
 		ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
 		;;
@@ -1279,7 +1153,6 @@ case "$RUNTIME_MODE" in
 
 		echo
 		echo "Deploying Sandvine's RPM packages with Ansible..."
-
 
 		case $OPERATION in
 
@@ -1319,6 +1192,7 @@ case "$RUNTIME_MODE" in
 
 esac
 
+fi
 
 if [ "$LABIFY" == "yes" ]
 then
@@ -1352,7 +1226,6 @@ then
 	echo -n "Type the SPB hostname: "
 	read SPB_HOSTNAME
 
-
 	PTS_ACCESS_TMP=$PTS_HOSTNAME.$DNS_DOMAIN
 	SDE_ACCESS_TMP=$SDE_HOSTNAME.$DNS_DOMAIN
 	SPB_ACCESS_TMP=$SPB_HOSTNAME.$DNS_DOMAIN
@@ -1361,13 +1234,10 @@ then
 	SDE_ACCESS=`echo $SDE_ACCESS_TMP | awk '{print tolower($0)}'`
 	SPB_ACCESS=`echo $SPB_ACCESS_TMP | awk '{print tolower($0)}'`
 
-
 	ANSIBLE_INVENTORY_FILE="tmp/lab-hosts-$BUILD_RAND"
-
 
 	echo
 	echo "Creating Ansible Inventory: \"ansible/$ANSIBLE_INVENTORY_FILE\"."
-
 
 	ANSIBLE_INVENTORY_TOTAL=5
 
@@ -1377,14 +1247,11 @@ then
 	ANSIBLE_HOST_ENTRY_4="svspb-servers,$SPB_ACCESS,base_os=centos6"
 	ANSIBLE_HOST_ENTRY_5="svcs-servers,$SDE_ACCESS,base_os=centos7"
 
-
 	ansible_inventory_builder > $ANSIBLE_INVENTORY_FILE
 
 fi
 
-
 popd &>/dev/null
-
 
 if [ "$DRY_RUN" == "yes" ]
 then
@@ -1403,18 +1270,37 @@ else
 
         echo
         echo "SVAuto is running Ansible:"
+
         echo
 	echo "pushd ansible"
 
 	echo
 	pushd ansible
 
+	if [ -z "$OS_PROJECT" ] || [ -z "$RUNTIME_MODE" ]
+	then
+
+		echo
+		echo "Creating both Ansible's Inventory and the Playbook..."
+
+
+		echo "$ANSIBLE_INVENTORY_FILE_IN_MEM" >> $ANSIBLE_INVENTORY_FILE
+
+		echo "$ANSIBLE_PLAYBOOK_FILE_IN_MEM" >> $ANSIBLE_PLAYBOOK_FILE
+
+		#echo "$ANSIBLE_EXTRA_VARS_FILE_IN_MEM" > $ANSIBLE_EXTRA_VARS_FILE
+
+	fi
+
 	echo
 	echo "ansible-playbook -i $ANSIBLE_INVENTORY_FILE $ANSIBLE_PLAYBOOK_FILE"
 
-
 	if ansible-playbook -i $ANSIBLE_INVENTORY_FILE $ANSIBLE_PLAYBOOK_FILE # -e \""$ANSIBLE_EXTRA_VARS $EXTRA_VARS"\"
 	then
+
+		echo
+		echo "Ansilble applied the playbook correctly... Success!"
+		echo
 
 		if [ ! -z $OS_STACK_NAME ] || [ "$LABIFY" == "yes" ]
 		then
@@ -1434,7 +1320,6 @@ else
 			if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then echo "ssh sandvine@$TSE_ACCESS # TSE"; fi
 			if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then echo "ssh sandvine@$TCPA_ACCESS # TCP Accelerator"; fi
 
-			echo
 		else
 
 			echo
