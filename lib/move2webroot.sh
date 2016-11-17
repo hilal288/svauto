@@ -31,7 +31,7 @@ move2webroot()
 	find packer/build* -name "*.ova" -exec mv {} $WEB_ROOT_STOCK \;
 
 
-        if [ "$HEAT_TEMPLATES" == "yes" ]
+        if [ "$HEAT_TEMPLATES" == "sandvine-dev" ]
         then
 
                 echo

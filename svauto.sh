@@ -739,7 +739,7 @@ fi
 if [ "$UPDATE_WEB_DIR_SUMS" == "yes" ]
 then
 
-	update_web_dir_sums
+	update_web_dir_sha256sums
 
 	exit 0
 

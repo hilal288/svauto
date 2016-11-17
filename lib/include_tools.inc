@@ -29,7 +29,7 @@ source lib/yum_repo_builder.sh
 
 source lib/mkwebrootsubdirs.sh
 
-source lib/update_web_dir_sums.sh
+source lib/update_web_dir_sha256sums.sh
 source lib/update_web_dir_symlink.sh
 
 source lib/libvirt_files.sh
