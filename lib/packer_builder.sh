@@ -140,6 +140,10 @@ packer_builder()
 	if [ "$PRODUCT" == "svspb" ]; then sed -i -e 's/"shutdown_command":.*/"shutdown_command": "",/g' $PACKER_FILE ; fi
 
 
+	# SVNDA needs a bigger image, lets do this only for it
+	if [ "$PRODUCT" == "svnda" ]; then sed -i -e 's/"disk_size":.*/"disk_size": "15360",/g' $PACKER_FILE ; fi
+
+
 	if [ "$OVF" == "yes" ]
 	then
 
