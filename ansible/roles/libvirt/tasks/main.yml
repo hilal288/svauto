@@ -12,81 +12,69 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#- debug: var=base_os
-
-#- debug: var=base_os_upgrade
-
+# Libvirt Networks
 - name: libvirt defining stack-1-control-1 network
-  virt_net: command=define name=stack-1-control-1 xml='{{ lookup("template", "network/control.xml.j2") }}'
-
-- name: libvirt starting stack-1-control-1 network
-  virt_net: state=active name=stack-1-control-1 autostart=yes
-
+  virt_net: name=stack-1-control-1
+            command=define
+            state=active
+            autostart=yes
+            xml='{{ lookup("template", "network/control.xml.j2") }}'
 
 - name: libvirt defining stack-1-service-1 network
-  virt_net: command=define name=stack-1-service-1 xml='{{ lookup("template", "network/service.xml.j2") }}'
-
-- name: libvirt starting stack-1-service-1 network
-  virt_net: state=active name=stack-1-service-1 autostart=yes
-
+  virt_net: name=stack-1-service-1
+            command=define
+            state=active
+            autostart=yes
+            xml='{{ lookup("template", "network/service.xml.j2") }}'
 
 - name: libvirt defining stack-1-subscriber-1 network
-  virt_net: command=define name=stack-1-subscriber-1 xml='{{ lookup("template", "network/subscriber.xml.j2") }}'
-
-- name: libvirt starting stack-1-subscriber-1 network
-  virt_net: state=active name=stack-1-subscriber-1 autostart=yes
-
+  virt_net: name=stack-1-subscriber-1
+            command=define
+            state=active
+            autostart=yes
+            xml='{{ lookup("template", "network/subscriber.xml.j2") }}'
 
 - name: libvirt defining stack-1-internet-1 network
-  virt_net: command=define name=stack-1-internet-1 xml='{{ lookup("template", "network/internet-nat.xml.j2") }}'
+  virt_net: name=stack-1-internet-1
+            command=define
+            state=active
+            autostart=yes
+            xml='{{ lookup("template", "network/internet-nat.xml.j2") }}'
 
-- name: libvirt starting stack-1-internet-1 network
-  virt_net: state=active name=stack-1-internet-1 autostart=yes
 
-
-- name: define stack-1-pts-1
+# Libvirt Virtual Machines
+- name: libvirt defining stack-1-pts-1
   virt: name=stack-1-pts-1
         command=define
         xml="{{ lookup('template', 'virtual-machines/stack-1-pts-1.xml.j2') }}"
 
-#- name: ubntu - start stack-1-pts-1
-#  virt: name=stack-1-pts-1 state=running
-
-
-- name: define stack-1-sde-1
+- name: libvirt defining stack-1-sde-1
   virt: name=stack-1-sde-1
         command=define
         xml="{{ lookup('template', 'virtual-machines/stack-1-sde-1.xml.j2') }}"
-
-#- name: ubntu - start stack-1-sde-1
-#  virt: name=stack-1-sde-1 state=running
-
 
 - name: define stack-1-spb-1
   virt: name=stack-1-spb-1
         command=define
         xml="{{ lookup('template', 'virtual-machines/stack-1-spb-1.xml.j2') }}"
 
-#- name: ubntu - start stack-1-sde-1
-#  virt: name=stack-1-sde-1 state=running
 
-
-- stat: path=/home/{{regular_system_user}}/svauto/downloads/svpts-7.40.0164-vpl-1-centos7-amd64-disk1.qcow2c
+- stat: path=/home/{{regular_system_user}}/svauto/downloads/svpts-{{ pts_version }}-vpl-1-centos7-amd64-disk1.qcow2c
   register: svpts_image_register
 
-- shell: qemu-img convert -p -f qcow2 -O qcow2 -o preallocation=metadata /home/{{regular_system_user}}/svauto/downloads/svpts-7.40.0164-vpl-1-centos7-amd64-disk1.qcow2c /var/lib/libvirt/images/stack-1-pts-1-disk1.qcow2
+- shell: qemu-img convert -p -f qcow2 -O qcow2 -o preallocation=metadata /home/{{regular_system_user}}/svauto/downloads/svpts-{{ pts_version }}-vpl-1-centos7-amd64-disk1.qcow2c /var/lib/libvirt/images/stack-1-pts-1-disk1.qcow2
   when: svpts_image_register.stat.exists == False
 
 
-- stat: path=/home/{{regular_system_user}}/svauto/downloads/svsde-7.50.0230-vpl-1-centos7-amd64-disk1.qcow2c
+- stat: path=/home/{{regular_system_user}}/svauto/downloads/svsde-{{ sde_version }}-vpl-1-centos7-amd64-disk1.qcow2c
   register: svsde_image_register
 
-- shell: qemu-img convert -p -f qcow2 -O qcow2 -o preallocation=metadata /home/{{regular_system_user}}/svauto/downloads/svsde-7.50.0230-vpl-1-centos7-amd64-disk1.qcow2c /var/lib/libvirt/images/stack-1-pts-1-disk1.qcow2
+- shell: qemu-img convert -p -f qcow2 -O qcow2 -o preallocation=metadata /home/{{regular_system_user}}/svauto/downloads/svsde-{{ sde_version }}-vpl-1-centos7-amd64-disk1.qcow2c /var/lib/libvirt/images/stack-1-pts-1-disk1.qcow2
   when: svsde_image_register.stat.exists == False
 
 
-- stat: path=/home/{{regular_system_user}}/svauto/downloads/svspb-6.65.0078-vpl-1-centos6-amd64-disk1.qcow2c
+- stat: path=/home/{{regular_system_user}}/svauto/downloads/svspb-{{ spb_version }}-vpl-1-centos6-amd64-disk1.qcow2c
   register: svspb_image_register
 
-- shell: qemu-img convert -p -f qcow2 -O qcow2 -o preallocation=metadata /home/{{regular_system_user}}/svauto/downloads/svspb-6.65.0078-vpl-1-centos6-amd64-disk1.qcow2c /var/lib/libvirt/images/stack-1-spb-1-disk1.qcow2
+- shell: qemu-img convert -p -f qcow2 -O qcow2 -o preallocation=metadata /home/{{regular_system_user}}/svauto/downloads/svspb-{{ spb_version }}-vpl-1-centos6-amd64-disk1.qcow2c /var/lib/libvirt/images/stack-1-spb-1-disk1.qcow2
   when: svspb_image_register.stat.exists == False
