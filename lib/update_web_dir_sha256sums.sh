@@ -20,10 +20,10 @@ update_web_dir_sha256sums()
 	echo
 	echo "Merging SHA256SUMS files together..."
 
-	cat $WEB_ROOT_CS/*.sha256 2>/dev/null		> $WEB_ROOT_CS/SHA256SUMS		; rm -f $WEB_ROOT_CS/*.sha256
-	cat $WEB_ROOT_CS_LAB/*.sha256 2>/dev/null	> $WEB_ROOT_CS_LAB/SHA256SUMS		; rm -f $WEB_ROOT_CS_LAB/*.sha256
-	cat $WEB_ROOT_CS_RELEASE/*.sha256 2>/dev/null	> $WEB_ROOT_CS_RELEASE/SHA256SUMS	; rm -f $WEB_ROOT_CS_RELEASE/*sha256
-	cat $WEB_ROOT_STOCK/*.sha256 2>/dev/null	> $WEB_ROOT_STOCK/SHA256SUMS		; rm -f $WEB_ROOT_STOCK/*.sha256
-	cat $WEB_ROOT_STOCK_LAB/*.sha256 2>/dev/null	> $WEB_ROOT_STOCK_LAB/SHA256SUMS	; rm -f $WEB_ROOT_STOCK_LAB/*.sha256
+	cat $WEB_ROOT_CS/*.sha256 2>/dev/null		>> $WEB_ROOT_CS/SHA256SUMS		; rm -f $WEB_ROOT_CS/*.sha256
+	cat $WEB_ROOT_CS_LAB/*.sha256 2>/dev/null	>> $WEB_ROOT_CS_LAB/SHA256SUMS		; rm -f $WEB_ROOT_CS_LAB/*.sha256
+	cat $WEB_ROOT_CS_RELEASE/*.sha256 2>/dev/null	>> $WEB_ROOT_CS_RELEASE/SHA256SUMS	; rm -f $WEB_ROOT_CS_RELEASE/*sha256
+	cat $WEB_ROOT_STOCK/*.sha256 2>/dev/null	>> $WEB_ROOT_STOCK/SHA256SUMS		; rm -f $WEB_ROOT_STOCK/*.sha256
+	cat $WEB_ROOT_STOCK_LAB/*.sha256 2>/dev/null	>> $WEB_ROOT_STOCK_LAB/SHA256SUMS	; rm -f $WEB_ROOT_STOCK_LAB/*.sha256
 
 }
