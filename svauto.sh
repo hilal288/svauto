@@ -1302,15 +1302,15 @@ else
 			if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then echo "ssh sandvine@$TSE_ACCESS # TSE"; fi
 			if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then echo "ssh sandvine@$TCPA_ACCESS # TCP Accelerator"; fi
 
-		else
-
-			echo
-			echo "Ansible Playbook failed to apply! ABORTING!!!"
-			echo
-
-			exit 1
-
 		fi
+
+	else
+
+		echo
+		echo "Ansible Playbook failed to apply! ABORTING!!!"
+		echo
+
+		exit 1
 
 	fi
 
