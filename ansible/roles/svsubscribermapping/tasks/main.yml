@@ -12,15 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: copy - Sandvine Subscriber Mapping repository
+- name: centos6 - copy Sandvine Subscriber Mapping repository
   template: src=Sandvine-SVSM.repo.j2
             dest=/etc/yum.repos.d/Sandvine-SVSM.repo
             owner=root
             group=root
             mode=0644
+  when: base_os == 'centos6'
 
 
-- name: yum installing Usage Management
+- name: centos6 - yum installing Usage Management
   yum: pkg={{item}} state=latest update_cache=yes
   with_items:
     - subscriber_mapping
+  when: base_os == 'centos6'
+
+
+- name: centos7 - yum installing Usage Management
+  yum: pkg={{item}} state=latest update_cache=yes
+  with_items:
+    - ftp://{{ sandvine_yum_host }}/images/Linux/CENTOS7-x64/RPM_COMMON/SUBSCRIBER_MAPPING/subscriber_mapping-{{ sm_version }}.el7.x86_64.rpm
+  when: base_os == 'centos7'

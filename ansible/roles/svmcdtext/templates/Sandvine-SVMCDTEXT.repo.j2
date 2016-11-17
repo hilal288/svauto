@@ -5,10 +5,10 @@
 [sandvine-svmcdtext]
 name=Sandvine - SVMCDTEXT
 {% if (release == 'dev' and base_os == 'centos6') %}
-baseurl=ftp://{{ sandvine_yum_host }}/images/Linux/CENTOS6-x64/MCDTEXT/-LNX-{{ spb_protocols_version }}
+baseurl=ftp://{{ sandvine_yum_host }}/images/Linux/RHEL6-x64/MCDTEXT/svmcdtext-LNX-{{ spb_protocols_version }}
 {% endif %}
 {% if (release == 'dev' and base_os == 'centos7') %}
-baseurl=ftp://{{ sandvine_yum_host }}/images/Linux/CENTOS7-x64/MCDTEXT/-LNX-{{ spb_protocols_version }}
+baseurl=ftp://{{ sandvine_yum_host }}/images/Linux/CENTOS7-x64/MCDTEXT/svmcdtext-LNX-{{ spb_protocols_version }}
 {% endif %}
 enabled=1
 protect=0
