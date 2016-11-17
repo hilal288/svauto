@@ -124,6 +124,13 @@ case $i in
 
 		ALL_ANSIBLE_EXTRA_VARS="${i#*=}"
 		ANSIBLE_EXTRA_VARS="$( echo $ALL_ANSIBLE_EXTRA_VARS | sed s/,/\ /g )"
+		shift
+		;;
+
+	--dump)
+
+		ANSIBLE_DUMP="yes"
+		shift
 		;;
 
 	--vagrant=*)
@@ -167,12 +174,6 @@ case $i in
 	#
 	# Packer Builder specific options - BEGIN
 	#
-
-	--packer-build=*)
-
-		PACKER_BUILD_WHAT="${i#*=}"
-		shift
-		;;
 
 	--packer-builder)
 
@@ -453,9 +454,15 @@ then
 
 	ANSIBLE_INVENTORY_FILE_IN_MEM=$(ansible_inventory_builder)
 
-#	echo
-#	echo "Ansible's Inventory:"
-#	echo "$ANSIBLE_INVENTORY_FILE_IN_MEM"
+	if [ "$ANSIBLE_DUMP" == yes ];
+	then
+
+		echo
+		echo "Ansible's Inventory in memory:"
+
+		echo "$ANSIBLE_INVENTORY_FILE_IN_MEM"
+
+	fi
 
 fi
 
@@ -468,9 +475,15 @@ then
 
 	ANSIBLE_PLAYBOOK_FILE_IN_MEM=$(ansible_playbook_builder)
 
-#	echo
-#	echo "Ansible's Top-Level Playbook:"
-#	echo "$ANSIBLE_PLAYBOOK_FILE_IN_MEM"
+	if [ "$ANSIBLE_DUMP" == "yes" ]
+	then
+
+		echo
+		echo "Ansible's Top-Level Playbook in memory:"
+
+		echo "$ANSIBLE_PLAYBOOK_FILE_IN_MEM"
+
+	fi
 
 fi
 
@@ -676,56 +689,6 @@ case $DOWNLOAD_IMAGES in
 		;;
 
 esac
-
-if [ ! -z "$PACKER_BUILD_WHAT" ]
-then
-
-	mkwebrootsubdirs
-
-
-	case "$PACKER_BUILD_WHAT" in
-
-		sandvine-dev)
-
-			packer_build_sandvine
-			;;
-
-		sandvine-dev-lab)
-
-			packer_build_sandvine_lab
-			;;
-
-		cs-dev)
-
-			packer_build_cs
-			;;
-
-		cs-dev-vmware)
-
-			packer_build_cs_vmware
-			;;
-
-		cs-dev-lab)
-
-			packer_build_cs_lab
-			;;
-
-		cs-prod)
-
-			packer_build_cs_release
-			;;
-
-		*)
-			echo "ERROR: <$i> is an unrecognized command." >&2
-
-			exit 1
-			;;
-
-	esac
-
-	exit 0
-
-fi
 
 #
 # Post-Image creation options

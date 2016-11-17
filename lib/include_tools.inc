@@ -4,17 +4,6 @@ source lib/cpu_check.sh
 source lib/hostname_check.sh
 
 
-# Packer build presets (TODO: move it to scripts/)
-
-source lib/packer_build_cs_release.sh
-source lib/packer_build_cs.sh
-source lib/packer_build_cs_vmware.sh
-source lib/packer_build_cs_lab.sh
-
-source lib/packer_build_sandvine.sh
-source lib/packer_build_sandvine_lab.sh
-
-
 # Builders
 
 source lib/ansible_inventory_builder.sh
