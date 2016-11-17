@@ -1246,6 +1246,25 @@ else
 		echo
 		echo "Creating both Ansible's Inventory and the Playbook..."
 
+		if [ "$ANSIBLE_DUMP" == yes ];
+		then
+
+			echo
+			echo "Ansible's Inventory in memory:"
+
+			echo "$ANSIBLE_INVENTORY_FILE_IN_MEM"
+
+		fi
+
+		if [ "$ANSIBLE_DUMP" == "yes" ]
+		then
+
+			echo
+			echo "Ansible's Top-Level Playbook in memory:"
+
+			echo "$ANSIBLE_PLAYBOOK_FILE_IN_MEM"
+
+		fi
 
 		echo "$ANSIBLE_INVENTORY_FILE_IN_MEM" >> $ANSIBLE_INVENTORY_FILE
 
