@@ -21,7 +21,7 @@
 
 
 - name: centos7 - copy eth1 config file
-  template: src=centos7/ifcfg-eth1j.2
+  template: src=centos7/ifcfg-eth1.j2
             dest=/etc/sysconfig/network-scripts/ifcfg-eth1
             owner=root
             group=root
