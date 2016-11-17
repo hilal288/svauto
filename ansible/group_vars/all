@@ -363,6 +363,33 @@ nova_api_db_name: "nova_api"
 nova_api_db_user: "novaAPIUser"
 nova_api_db_pass: "novaAPIPass"
 
+# Horizon_help_url
+# horizon_help_url: "https://help.me"
+
+# Nova ratios:
+# nova_cpu_allocation_ratio: "16.0"
+# nova_ram_allocation_ratio: "1.5"
+# nova_disk_allocation_ratio: "1.0"
+
+# Nova quotas
+# nova_quota_cores: "80"
+# nova_quota_instances: "30"
+# nova_quota_ram: "51200"
+
+# Neutron quotas:
+# neutron_quota_floatingip: "-1"
+# neutron_quota_security_group: "-1"
+# neutron_quota_security_group_rule: "-1"
+# neutron_quota_port: "-1"
+# neutron_quota_network: "-1"
+# neutron_quota_subnet: "-1"
+# neutron_quota_router: "-1"
+# neutron_quota_rbac_policy: "-1"
+
+# Data network mtu
+# Note: dnsmasq-neutron.conf should be changed accordingly
+# neutron_global_physnet_mtu: "1650"
+# ml2_path_mtu: "1650
 
 #
 # Optional OpenStack LDAP Definitions
