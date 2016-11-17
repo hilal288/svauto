@@ -430,11 +430,9 @@ packer_builder()
 				echo "Loading OpenStack credentials for "$OS_PROJECT" account..."
 				source ~/$OS_PROJECT-openrc.sh
 
-				GLANCE_NAME=`echo $PACKER_VM_NAME | sed 's/\-amd64//g'`
-
 				echo
 				echo "Importing QCoW2 Image into Glance (only works if the QCoW2 is being created)..."
-				glance image-create --file packer/$PACKER_OUTPUT_DIR/"$PACKER_VM_NAME"-disk1.qcow2c --name "$GLANCE_NAME-$BUILD_DATE" --visibility public --container-format bare --disk-format qcow2
+				glance image-create --file packer/$PACKER_OUTPUT_DIR/"$PACKER_VM_NAME"-disk1.qcow2c --name "$PACKER_VM_NAME" --visibility public --container-format bare --disk-format qcow2
 			fi
 
 		fi
