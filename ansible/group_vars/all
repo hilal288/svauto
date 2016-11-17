@@ -40,6 +40,9 @@ enable_apache_vhost: "no"
 # Vagrant run?
 vagrant_run: "no"
 
+# Is Packer build?
+is_packer: "no"
+
 # Deployment mode:
 deployment_mode: "no"
 

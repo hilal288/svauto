@@ -14,4 +14,4 @@
 
 - name: reload sandvine
   shell: svreload
-  when: deployment_mode != 'yes'
+  when: is_packer != 'yes'

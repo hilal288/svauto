@@ -49,4 +49,4 @@
 
 - name: reload-sandvine
   shell: cd /usr/local/sandvine/etc ; svreload
-  when: deployment_mode != 'yes'
+  when: is_packer != 'yes'
