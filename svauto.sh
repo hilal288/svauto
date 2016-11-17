@@ -695,11 +695,6 @@ then
 			packer_build_sandvine_lab
 			;;
 
-		sandvine-dev-experimental)
-
-			packer_build_sandvine_experimental
-			;;
-
 		cs-dev)
 
 			packer_build_cs

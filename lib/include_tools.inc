@@ -13,7 +13,6 @@ source lib/packer_build_cs_lab.sh
 
 source lib/packer_build_sandvine.sh
 source lib/packer_build_sandvine_lab.sh
-source lib/packer_build_sandvine_experimental.sh
 
 
 # Builders
