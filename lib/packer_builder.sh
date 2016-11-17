@@ -432,7 +432,8 @@ packer_builder()
 
 				echo
 				echo "Importing QCoW2 Image into Glance (only works if the QCoW2 is being created)..."
-				glance image-create --file packer/$PACKER_OUTPUT_DIR/"$PACKER_VM_NAME"-disk1.qcow2c --name "$PACKER_VM_NAME" --visibility public --container-format bare --disk-format qcow2
+
+				openstack image create --file packer/$PACKER_OUTPUT_DIR/"$PACKER_VM_NAME"-disk1.qcow2c --disk-format qcow2 --container-format bare --public "$PACKER_VM_NAME"
 			fi
 
 		fi
