@@ -15,22 +15,6 @@
 # limitations under the License.
 
 
-if ! source svauto.conf
-then
-	echo "File svauto.conf not found, aborting!"
-	echo "Run svauto.sh from your SVAuto sub directory."
-
-	exit 1
-fi
-
-
-if ! source lib/include_tools.inc
-then
-	echo "File lib/include_tools.inc not found, aborting!"
-	exit 1
-fi
-
-
 TODAY=$(date +"%Y%m%d")
 
 
@@ -45,6 +29,22 @@ else
 
         BUILD_DATE=`cat build-date.txt`
 
+fi
+
+
+if ! source svauto.conf
+then
+	echo "File svauto.conf not found, aborting!"
+	echo "Run svauto.sh from your SVAuto sub directory."
+
+	exit 1
+fi
+
+
+if ! source lib/include_tools.inc
+then
+	echo "File lib/include_tools.inc not found, aborting!"
+	exit 1
 fi
 
 

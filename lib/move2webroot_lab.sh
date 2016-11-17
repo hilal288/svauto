@@ -17,8 +17,6 @@
 move2webroot_lab()
 {
 
-	WEB_ROOT_STOCK_LAB="$WEB_ROOT_STOCK_LAB/$BUILD_DATE"
-
         echo
         echo "Moving all images created during this build, to the Web Root."
 

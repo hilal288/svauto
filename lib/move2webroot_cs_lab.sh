@@ -17,8 +17,6 @@
 move2webroot_cs_lab()
 {
 
-	WEB_ROOT_CS_LAB="$WEB_ROOT_CS_LAB/$BUILD_DATE"
-
 	echo
 	echo "Moving all images created during latest build, to the Web Root."
 

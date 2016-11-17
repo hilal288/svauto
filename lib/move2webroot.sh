@@ -17,8 +17,6 @@
 move2webroot()
 {
 
-	WEB_ROOT_STOCK="$WEB_ROOT_STOCK/$BUILD_DATE"
-
         echo
         echo "Moving all images created during this build, to the Web Root."
 

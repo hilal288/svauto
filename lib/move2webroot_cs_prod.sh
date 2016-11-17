@@ -17,8 +17,6 @@
 move2webroot_cs_prod()
 {
 
-	WEB_ROOT_CS_RELEASE="$WEB_ROOT_CS_RELEASE/$BUILD_DATE"
-
         echo
         echo "Moving all images created during this build, to the Web Root."
 
