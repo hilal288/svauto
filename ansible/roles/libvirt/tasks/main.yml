@@ -63,18 +63,18 @@
   register: svpts_image_register
 
 - shell: qemu-img convert -p -f qcow2 -O qcow2 -o preallocation=metadata /home/{{regular_system_user}}/svauto/downloads/svpts-{{ pts_version }}-vpl-1-centos7-amd64-disk1.qcow2c /var/lib/libvirt/images/stack-1-pts-1-disk1.qcow2
-  when: svpts_image_register.stat.exists == False
+  when: svpts_image_register.stat.exists == True
 
 
 - stat: path=/home/{{regular_system_user}}/svauto/downloads/svsde-{{ sde_version }}-vpl-1-centos7-amd64-disk1.qcow2c
   register: svsde_image_register
 
 - shell: qemu-img convert -p -f qcow2 -O qcow2 -o preallocation=metadata /home/{{regular_system_user}}/svauto/downloads/svsde-{{ sde_version }}-vpl-1-centos7-amd64-disk1.qcow2c /var/lib/libvirt/images/stack-1-pts-1-disk1.qcow2
-  when: svsde_image_register.stat.exists == False
+  when: svsde_image_register.stat.exists == True
 
 
 - stat: path=/home/{{regular_system_user}}/svauto/downloads/svspb-{{ spb_version }}-vpl-1-centos6-amd64-disk1.qcow2c
   register: svspb_image_register
 
 - shell: qemu-img convert -p -f qcow2 -O qcow2 -o preallocation=metadata /home/{{regular_system_user}}/svauto/downloads/svspb-{{ spb_version }}-vpl-1-centos6-amd64-disk1.qcow2c /var/lib/libvirt/images/stack-1-spb-1-disk1.qcow2
-  when: svspb_image_register.stat.exists == False
+  when: svspb_image_register.stat.exists == True
