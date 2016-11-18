@@ -222,18 +222,18 @@ createrepo $FULL_PATH
 
 if [ "$LATEST_OF_SERIE" == "yes" ]
 then
-	cd $REPOS_PATH
+	pushd $REPOS_PATH
 
 	[ -L "$PRODUCT-$SHORT_VERSION" ] && rm -f "$PRODUCT-$SHORT_VERSION"
 	ln -sf $SHORT_NAME $PRODUCT-$SHORT_VERSION
 
-	cd - &>/dev/null
+	popd
 fi
 
 
 if [ "$LATEST" == "yes" ]
 then
-	cd $REPOS_PATH
+	pushd $REPOS_PATH
 
 	[ -L "$PRODUCT-$SHORT_VERSION" ] && rm -f "$PRODUCT-$SHORT_VERSION"
 	ln -sf $SHORT_NAME $PRODUCT-$SHORT_VERSION
@@ -241,7 +241,7 @@ then
 	[ -L "$PRODUCT" ] && rm -f "$PRODUCT"
 	ln -sf $PRODUCT-$SHORT_VERSION $PRODUCT
 
-	cd - &>/dev/null
+	popd
 fi
 
 }

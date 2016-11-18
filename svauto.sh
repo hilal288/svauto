@@ -577,7 +577,7 @@ fi
 if [ "$CLEAN_ALL" == "yes" ]
 then
 
-	if pushd $SVAUTO_DIR &>/dev/null
+	if pushd $SVAUTO_DIR
 	then
 		echo
 		echo "Cleaning it up..."
@@ -842,7 +842,7 @@ then
 		echo
 		echo "Run this script with the following arguments:"
 		echo
-		echo "cd ~/svauto"
+		echo "pushd ~/svauto"
 		echo "./svauto.sh --os-project=demo --os-stack-name=sv-stack-1 --os-stack-type=stock --ansible-remote-user=sandvine"
 		echo
 		echo
@@ -1222,7 +1222,7 @@ then
         echo
         echo "NOTE: You can manually run Ansible by typing:"
         echo
-        echo "cd ansible"
+        echo "pushd ansible"
         echo "ansible-playbook -i $ANSIBLE_INVENTORY_FILE $ANSIBLE_PLAYBOOK_FILE"
         echo
 

@@ -114,7 +114,7 @@ Well done!
 
     git clone -b dev https://github.com/sandvine-eng/svauto.git
 
-    cd svauto
+    pushd svauto
 
     ./svauto.sh --operation-openstack
 
@@ -128,7 +128,7 @@ Well done!
 
     git clone -b dev https://github.com/sandvine-eng/svauto.git
 
-    cd svauto
+    pushd svauto
 
 Configure the file `group_vars/all` according to your remote computer.
 

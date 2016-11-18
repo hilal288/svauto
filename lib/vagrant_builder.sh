@@ -148,10 +148,12 @@ vagrant_builder()
 
 			else
 
-				cd vagrant/$VM_NAME
+				pushd vagrant/$VM_NAME
 
 				echo
 				vagrant up --provider=libvirt
+
+				popd
 
 			fi
 
@@ -159,23 +161,23 @@ vagrant_builder()
 
 		ssh)
 
-			cd vagrant/$VM_NAME
+			pushd vagrant/$VM_NAME
 			vagrant ssh
-
+			popd
 			;;
 
 		destroy)
 
-			cd vagrant/$VM_NAME
+			pushd vagrant/$VM_NAME
 			vagrant destroy
-
+			popd
 			;;
 
 		provision)
 
-			cd vagrant/$VM_NAME
+			pushd vagrant/$VM_NAME
 			vagrant provision
-
+			popd
 			;;
 
 	esac
