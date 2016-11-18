@@ -1120,9 +1120,9 @@ then
 	
 					ANSIBLE_PLAYBOOK_TOTAL=3
 	
-					ANSIBLE_PLAYBOOK_ENTRY_1="svpts-servers,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes,nginx,svpts;pts_version=$PTS_VERSION,svprotocols;pts_protocols_version=$PTS_PROTOCOLS_VERSION,sandvine-auto-config;setup_server=svpts;setup_mode=$OPERATION;deployment_mode=yes;license_server=$LICENSE_SERVER,post-cleanup,power-cycle"
-					ANSIBLE_PLAYBOOK_ENTRY_2="svsde-servers,bootstrap;base_os_upgrade=yes,nginx,svsde;sde_version=$SDE_VERSION,sandvine-auto-config;setup_server=svsde;setup_mode=$OPERATION;deployment_mode=yes,post-cleanup,power-cycle"
-					ANSIBLE_PLAYBOOK_ENTRY_3="svspb-servers,bootstrap;base_os_upgrade=yes,nginx,postgresql,svspb;spb_version=$SPB_VERSION;deployment_mode=yes,sandvine-auto-config;setup_server=svspb;setup_mode=$OPERATION;deployment_mode=yes,post-cleanup,power-cycle"
+					ANSIBLE_PLAYBOOK_ENTRY_1="svpts-servers,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes,nginx,svpts;pts_version=$PTS_VERSION,svprotocols;pts_protocols_version=$PTS_PROTOCOLS_VERSION,sandvine-auto-config;setup_server=svpts;setup_mode=$OPERATION;license_server=$LICENSE_SERVER,post-cleanup,power-cycle"
+					ANSIBLE_PLAYBOOK_ENTRY_2="svsde-servers,bootstrap;base_os_upgrade=yes,nginx,svsde;sde_version=$SDE_VERSION,sandvine-auto-config;setup_server=svsde;setup_mode=$OPERATION,post-cleanup,power-cycle"
+					ANSIBLE_PLAYBOOK_ENTRY_3="svspb-servers,bootstrap;base_os_upgrade=yes,nginx,postgresql,svspb;spb_version=$SPB_VERSION,sandvine-auto-config;setup_server=svspb;setup_mode=$OPERATION,post-cleanup,power-cycle"
 	
 					ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
 					;;
