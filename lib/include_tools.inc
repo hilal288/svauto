@@ -28,3 +28,4 @@ source lib/heat_templates_cs.sh
 
 source lib/move2webroot.sh
 source lib/move2webroot_cs.sh
+source lib/move2webroot_cs_lab.sh

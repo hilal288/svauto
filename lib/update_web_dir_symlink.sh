@@ -27,4 +27,11 @@ update_web_dir_symlink()
 	
 	popd &>/dev/null
 
+	pushd $WEB_ROOT_STOCK_MAIN &>/dev/null
+
+	rm -f current
+	ln -s $BUILD_DATE current
+
+	popd &>/dev/null
+
 }
