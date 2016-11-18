@@ -77,6 +77,18 @@ case $i in
 		shift
 		;;
 
+	--cpu-check)
+
+		cpu_check
+		shift
+		;;
+
+	--hostname-check)
+
+		hostname_check
+		shift
+		;;
+
 	# Options starting with --ansible-* are passed to Ansible itself,
 	# or being used by dynamic stuff.
 
@@ -387,9 +399,9 @@ case $i in
 		;;
 
 	# Options starting with --ubuntu-* are Ubuntu related
-        --ubuntu-network-detect-default-nic)
+        --ubuntu-detect-default-nic)
 
-	        UBUNTU_NETWORK_DETECT_DEFAULT_NIC="yes"
+	        UBUNTU_DETECT_DEFAULT_NIC="yes"
 		shift
 		;;
 
@@ -545,7 +557,7 @@ then
 	EXTRA_VARS="$EXTRA_VARS os_open_provider_nets_to_regular_users=yes "
 fi
 
-if [ "$UBUNTU_NETWORK_DETECT_DEFAULT_NIC" == "yes" ]
+if [ "$UBUNTU_DETECT_DEFAULT_NIC" == "yes" ]
 then
 
 	# Configuring the default interface
@@ -810,10 +822,6 @@ then
 
 fi
 
-# cpu_check
-
-# hostname_check
-
 if [ -n "$OS_PROJECT" ]
 then
 
@@ -1017,9 +1025,6 @@ then
 	popd &>/dev/null
 
 fi
-
-echo
-echo "Creating Ansible Playbook: \"ansible/$ANSIBLE_PLAYBOOK_FILE\"."
 
 pushd ansible &>/dev/null
 
@@ -1243,7 +1248,7 @@ else
 		echo
 		echo "Creating both Ansible's Inventory and the Playbook..."
 
-		if [ "$ANSIBLE_DUMP" == yes ];
+		if [ "$ANSIBLE_DUMP" == "yes" ];
 		then
 
 			echo
