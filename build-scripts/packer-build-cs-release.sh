@@ -42,8 +42,8 @@ sed -i -e 's/ftp_password:.*/ftp_password: '$FTP_PASS'/g' ansible/group_vars/all
 # SDE on CentOS 6 + Cloud Services SDE + Cloud Services Daemon (back / front)
 ./svauto.sh --packer-builder --release=prod --base-os=centos6 --product=cs-svsde --version=$SANDVINE_RELEASE --qcow2 --ova --vm-xml --sha256sum \
 	--ansible-remote-user="root" \
-	--ansible-inventory-builder="svbox,localhost,base_os=centos6,is_packer=yes,sandvine_yum_host=$SV_YUM_HOST" \
-	--ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes,grub-conf,base-os-auto-config,centos-network-setup,centos-firewall-setup,svsde;sde_version=$SDE_VERSION,svusagemanagement;um_version=$UM_VERSION,svsubscribermapping;sm_version=$SM_C7_VERSION,svcs-svsde,svcs,sandvine-auto-config;setup_server=svsde;setup_mode=cloud-services;setup_sub_option=default;pts_srvc_ip=192.168.192.150;sde_srvc_ip=192.168.192.140;spb_srvc_ip=192.168.192.130,vmware-tools,cleanrepo,post-cleanup-image" \
+	--ansible-inventory-builder="svbox,localhost,base_os=centos6,is_packer=yes,sandvine_yum_host=$SV_YUM_HOST,setup_mode=cloud-services,setup_sub_option=default,pts_srvc_ip=192.168.192.150,sde_srvc_ip=192.168.192.140,spb_srvc_ip=192.168.192.130" \
+	--ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes,grub-conf,base-os-auto-config,centos-network-setup,centos-firewall-setup,svsde;sde_version=$SDE_VERSION,svusagemanagement;um_version=$UM_VERSION,svsubscribermapping;sm_version=$SM_C7_VERSION,svcs-svsde,svcs,sandvine-auto-config;setup_server=svsde,sandvine-auto-config;setup_server=svcs,vmware-tools,cleanrepo,post-cleanup-image" \
 	--packer-max-tries=3 $DRY_RUN_OPT
 
 # SPB on CentOS 6 + Cloud Services customizations

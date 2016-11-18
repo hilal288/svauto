@@ -31,15 +31,15 @@ fi
 # SVSDE on CentOS 7 + Cloud Services SDE + Cloud Services Daemon (back / front)
 ./svauto.sh --packer-builder --base-os=centos7 --product=svsde --version=$SDE_VERSION --product-variant=cs-1 --qcow2 --vhd --vm-xml --sha256sum \
 	--ansible-remote-user="root" \
-	--ansible-inventory-builder="svbox,localhost,base_os=centos7,is_packer=yes,sandvine_yum_host=$SV_YUM_HOST,svauto_yum_host=$SVAUTO_YUM_HOST,release_code_name=$RELEASE_CODE_NAME" \
-	--ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes,grub-conf,udev-rules,base-os-auto-config,centos-network-setup;activate_eth1=no,centos-firewall-setup,nginx,svsde;sde_version=$SDE_VERSION,svusagemanagement;um_version=$UM_VERSION,svsubscribermapping;sm_version=$SM_C7_VERSION,svcs-svsde,svcs,sandvine-auto-config;setup_server=svsde;setup_mode=cloud-services;setup_sub_option=default;pts_srvc_ip=192.168.192.150;sde_srvc_ip=192.168.192.140;spb_srvc_ip=192.168.192.130,vmware-tools,post-cleanup-image" \
+	--ansible-inventory-builder="svbox,localhost,base_os=centos7,is_packer=yes,sandvine_yum_host=$SV_YUM_HOST,svauto_yum_host=$SVAUTO_YUM_HOST,release_code_name=$RELEASE_CODE_NAME,setup_mode=cloud-services,setup_sub_option=default,pts_srvc_ip=192.168.192.150,sde_srvc_ip=192.168.192.140,spb_srvc_ip=192.168.192.130" \
+	--ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes,grub-conf,udev-rules,base-os-auto-config,centos-network-setup;activate_eth1=no,centos-firewall-setup,nginx,svsde;sde_version=$SDE_VERSION,svusagemanagement;um_version=$UM_VERSION,svsubscribermapping;sm_version=$SM_C7_VERSION,svcs-svsde,svcs,sandvine-auto-config;setup_server=svsde,sandvine-auto-config;setup_server=svcs,vmware-tools,post-cleanup-image" \
 	--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 # SVSDE on CentOS 6 + Cloud Services SDE + Cloud Services Daemon (back / front)
 ./svauto.sh --packer-builder --base-os=centos6 --product=svsde --version=$SDE_VERSION --product-variant=cs-1 --qcow2 --vhd --vm-xml --sha256sum \
 	--ansible-remote-user="root" \
-	--ansible-inventory-builder="svbox,localhost,base_os=centos6,is_packer=yes,sandvine_yum_host=$SV_YUM_HOST,svauto_yum_host=$SVAUTO_YUM_HOST,release_code_name=$RELEASE_CODE_NAME" \
-	--ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes,grub-conf,base-os-auto-config,centos-network-setup;activate_eth1=no,centos-firewall-setup,nginx,svsde;sde_version=$SDE_VERSION,svusagemanagement;um_version=$UM_VERSION,svsubscribermapping;sm_version=$SM_C6_VERSION,svcs-svsde,svcs,sandvine-auto-config;setup_server=svsde;setup_mode=cloud-services;setup_sub_option=default;pts_srvc_ip=192.168.192.150;sde_srvc_ip=192.168.192.140;spb_srvc_ip=192.168.192.130,vmware-tools,post-cleanup-image" \
+	--ansible-inventory-builder="svbox,localhost,base_os=centos6,is_packer=yes,sandvine_yum_host=$SV_YUM_HOST,svauto_yum_host=$SVAUTO_YUM_HOST,release_code_name=$RELEASE_CODE_NAME,setup_mode=cloud-services,setup_sub_option=default,pts_srvc_ip=192.168.192.150,sde_srvc_ip=192.168.192.140,spb_srvc_ip=192.168.192.130" \
+	--ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes,grub-conf,base-os-auto-config,centos-network-setup;activate_eth1=no,centos-firewall-setup,nginx,svsde;sde_version=$SDE_VERSION,svusagemanagement;um_version=$UM_VERSION,svsubscribermapping;sm_version=$SM_C6_VERSION,svcs-svsde,svcs,sandvine-auto-config;setup_server=svsde,sandvine-auto-config;setup_server=svcs,vmware-tools,post-cleanup-image" \
 	--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 # SVSPB on CentOS 6 + Cloud Services
