@@ -146,6 +146,7 @@
     - chromium-browser
     - classicmenu-indicator
     - ubuntu-restricted-extras
+    - compizconfig-settings-manager
   when: ubuntu_install == 'desktop'
 
 
