@@ -71,14 +71,14 @@ case $i in
 		shift
 		;;
 
-	# Options starting with --ansible-* are passed to Ansible itself,
-	# or being used by dynamic stuff.
+        --cloud-services-mode=*)
 
-	--ansible-run-against=*)
-
-		/bin/true
+		CLOUD_SERVICES_MODE="${i#*=}"
 		shift
 		;;
+
+	# Options starting with --ansible-* are passed to Ansible itself,
+	# or being used by dynamic stuff.
 
         --ansible-remote-user=*)
 
@@ -212,12 +212,6 @@ case $i in
 		shift
 		;;
 
-        --cloud-services-mode=*)
-
-		CLOUD_SERVICES_MODE="${i#*=}"
-		shift
-		;;
-
 	--packer-max-tries=*)
 
 		MAX_TRIES="${i#*=}"
@@ -302,18 +296,6 @@ case $i in
                 shift
                 ;;
 
-        --os-release=*)
-
-	        OS_RELEASE="${i#*=}"
-		shift
-		;;
-
-        --os-bridge-mode=*)
-
-	        OS_BRIDGE_MODE="${i#*=}"
-		shift
-		;;
-
         --os-import-images)
 
 	        OS_IMPORT_IMAGES="yes"
@@ -350,9 +332,9 @@ case $i in
 		shift
 		;;
 
-	--update-web-dir-sums)
+	--update-web-dir-sha256sums)
 
-		UPDATE_WEB_DIR_SUMS="yes"
+		UPDATE_WEB_DIR_SHA256SUMS="yes"
 		shift
 		;;
 
@@ -374,6 +356,11 @@ case $i in
 		shift
 		;;
 
+	--make-public-web-dir)
+
+		MK_PUB_WEB_DIR="yes"
+		shift
+		;;
 
 	--libvirt-files=*)
 
@@ -690,11 +677,21 @@ case $DOWNLOAD_IMAGES in
 
 esac
 
+# Before doing Packer buils in series, we need to create the public webdir
+if [ "$MK_PUB_WEB_DIR" == "yes" ]
+then
+
+	mkwebrootsubdirs
+
+	exit 0
+
+fi
+
 #
 # Post-Image creation options
 #
 
-if [ "$UPDATE_WEB_DIR_SUMS" == "yes" ]
+if [ "$UPDATE_WEB_DIR_SHA256SUMS" == "yes" ]
 then
 
 	update_web_dir_sha256sums
@@ -846,7 +843,7 @@ then
 		echo "Run this script with the following arguments:"
 		echo
 		echo "cd ~/svauto"
-		echo "./svauto.sh --os-project=\"demo\" --os-stack-name=sv-stack-1 --os-stack-type=stock --ansible-remote-user=sandvine"
+		echo "./svauto.sh --os-project=demo --os-stack-name=sv-stack-1 --os-stack-type=stock --ansible-remote-user=sandvine"
 		echo
 		echo
 		echo "If you don't have a Sandvine compatible Stack up and running."

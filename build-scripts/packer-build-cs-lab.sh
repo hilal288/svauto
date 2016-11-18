@@ -48,8 +48,3 @@ fi
 	--ansible-inventory-builder="svbox,localhost,base_os=centos7,is_packer=yes,sandvine_yum_host=$SV_YUM_HOST,svauto_yum_host=$SVAUTO_YUM_HOST,release_code_name=$RELEASE_CODE_NAME" \
 	--ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes,grub-conf,setup-default-interface,nginx,svpts;pts_version=$PTS_VERSION,svusagemanagementpts;um_version=$UM_VERSION,svcs-svpts,sandvine-auto-config;setup_server=svpts;setup_mode=cloud-services;setup_sub_option=default;pts_srvc_ip=192.168.192.150;sde_srvc_ip=192.168.192.140;spb_srvc_ip=192.168.192.130,vmware-tools,labify;setup_mode=cloud-services,post-cleanup-image" \
 	--packer-max-tries=3 $DRY_RUN_OPT
-
-
-./svauto.sh --libvirt-files=cs-dev-lab
-
-./svauto.sh --move2webroot=cs-dev-lab

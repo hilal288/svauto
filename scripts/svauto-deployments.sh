@@ -25,12 +25,6 @@ case $i in
                 shift
                 ;;
 
-	--ansible-run-against=*)
-
-		/bin/true
-		shift
-		;;
-
 	--ansible-remote-user=*)
 
 		ANSIBLE_REMOTE_USER="${i#*=}"
