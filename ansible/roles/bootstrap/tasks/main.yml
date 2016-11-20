@@ -12,35 +12,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#- debug: var=base_os
-
-#- debug: var=base_os_upgrade
-
 # CentOS Bootstrap tasks
 - name: centos - include common book
   include: centos-common.yml
-  when: base_os == 'centos7' or base_os == 'centos6'
+  when: ansible_os_family == "RedHat"
 
 # Ubuntu Bootstrap tasks
 - name: ubuntu16 - include custom book
   include: ubuntu16.yml
-  when: base_os == 'ubuntu16'
+  when: ansible_os_family == "Debian" and ansible_distribution_major_version == "16"
 
 - name: ubuntu14 - include custom book
   include: ubuntu14.yml
-  when: base_os == 'ubuntu14'
+  when: ansible_os_family == "Debian" and ansible_distribution_major_version == "14"
 
 - name: ubuntu14 - include uca book
   include: ubuntu14-uca-{{os_release}}.yml
-  when: base_os == 'ubuntu14'
+  when: ansible_os_family == "Debian" and ansible_distribution_major_version == "14"
 
 - name: ubuntu16 - include uca book
   include: ubuntu16-uca-{{os_release}}.yml
-  when: base_os == 'ubuntu16' and os_release == 'newton'
+  when: (ansible_os_family == "Debian" and ansible_distribution_major_version == "16") and os_release == 'newton'
 
 - name: ubuntu - include common book
   include: ubuntu-common.yml
-  when: base_os == 'ubuntu16' or base_os == 'ubuntu14'
+  when: ansible_os_family == "Debian"
 
 
 # Common across distributions

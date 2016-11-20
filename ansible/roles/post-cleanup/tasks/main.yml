@@ -14,9 +14,9 @@
 
 - name: ubuntu - include config
   include: ubuntu.yml
-  when: base_os == 'ubuntu14' or base_os == 'ubuntu16'
+  when: ansible_os_family == "Debian"
 
 
 - name: centos - include config
   include: centos.yml
-  when: base_os == 'centos7' or base_os == 'centos6'
+  when: ansible_os_family == "RedHat"

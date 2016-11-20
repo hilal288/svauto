@@ -15,25 +15,25 @@
 # For CentOS 7
 - name: centos7 - rebooting in 1 minute...
   shell: /sbin/shutdown -r 1 --no-wall
-  when: base_os == 'centos7'
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
 
 
 # For CentOS 6:
 - name: centos6 - rebooting in 1 minute...
   shell: /sbin/shutdown -r 1 &
-  when: base_os == 'centos6'
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "6"
 
 
 - name: centos6 - force scdpd to stop, to make sure it will reboot
   shell: service scdpd stop
-  when: base_os == 'centos6'
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "6"
   ignore_errors: yes
 
 
 # For Ubuntu 16
 - name: ubuntu16 - rebooting in 1 minute...
   shell: /sbin/shutdown -r 1 --no-wall
-  when: base_os == 'ubuntu16'
+  when: ansible_os_family == "Debian" and ansible_distribution_major_version == "16"
 
 
-- pause: seconds=15
+- pause: seconds=5

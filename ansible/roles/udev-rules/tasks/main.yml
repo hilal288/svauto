@@ -14,4 +14,4 @@
 
 - name: centos7 - include custom book
   include: centos7.yml
-  when: base_os == 'centos7'
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"

@@ -13,4 +13,4 @@
 # limitations under the License.
 
 - include: ubuntu.yml
-  when: base_os == 'ubuntu16' or base_os == 'ubuntu14'
+  when: ansible_os_family == "Debian"

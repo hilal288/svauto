@@ -14,4 +14,4 @@
 
 - name: ubuntu - include config
   include: ubuntu-common.yml
-  when: base_os == 'ubuntu14' or base_os == 'ubuntu16'
+  when: ansible_os_family == "Debian"

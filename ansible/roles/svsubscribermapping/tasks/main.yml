@@ -18,18 +18,18 @@
             owner=root
             group=root
             mode=0644
-  when: base_os == 'centos6'
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "6"
 
 
 - name: centos6 - yum installing Usage Management
   yum: pkg={{item}} state=latest update_cache=yes
   with_items:
     - subscriber_mapping
-  when: base_os == 'centos6'
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "6"
 
 
 - name: centos7 - yum installing Usage Management
   yum: pkg={{item}} state=latest update_cache=yes
   with_items:
     - ftp://{{ sandvine_yum_host }}/images/Linux/CENTOS7-x64/RPM_COMMON/SUBSCRIBER_MAPPING/subscriber_mapping-{{ sm_version }}.el7.x86_64.rpm
-  when: base_os == 'centos7'
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"

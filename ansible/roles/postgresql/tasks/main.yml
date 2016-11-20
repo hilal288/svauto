@@ -17,12 +17,12 @@
 # CentOS 7:
 - name: centos7 - yum installing PostgreSQL 9.3 RPM Repository
   yum: pkg=http://download.postgresql.org/pub/repos/yum/9.3/redhat/rhel-7-x86_64/pgdg-redhat93-9.3-3.noarch.rpm state=present
-  when: base_os == 'centos7'
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
 
 # CentOS 6:
 - name: centos6 - yum Installing PostgreSQL 9.3 RPM Repository
   yum: pkg=http://download.postgresql.org/pub/repos/yum/9.3/redhat/rhel-6-x86_64/pgdg-redhat93-9.3-3.noarch.rpm state=present
-  when: base_os == 'centos6'
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "6"
 
 
 - name: centos - yum installing PostgreSQL
@@ -38,13 +38,13 @@
 #- name: centos6 - PostgreSQL initiating database
 #  shell: service postgresql-9.3 initdb
 #         creates=/var/lib/pgsql/data/postgresql.conf
-#  when: base_os == 'centos6'
+#  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "6"
 
 
 - name: centos7 - PostgreSQL initiating database
   shell: /usr/pgsql-9.3/bin/postgresql93-setup initdb
          creates=/var/lib/pgsql/data/postgresql.conf
-  when: base_os == 'centos7'
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
 
 
 - name: centos - service enabling PostgreSQL

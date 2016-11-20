@@ -530,11 +530,6 @@ fi
 # Operation System setup on playbook vars
 #
 
-if [ ! -z "$BASE_OS" ]
-then
-	EXTRA_VARS="base_os=$BASE_OS "
-fi
-
 #
 # Ubuntu Settings
 #
@@ -964,9 +959,9 @@ then
 	ANSIBLE_INVENTORY_TOTAL=4
 
 	ANSIBLE_HOST_ENTRY_1="all:vars,ansible_user=$ANSIBLE_REMOTE_USER,svauto_yum_host=$SVAUTO_YUM_HOST,release_code_name=$RELEASE_CODE_NAME,sandvine_yum_host=$SV_YUM_HOST"
-	ANSIBLE_HOST_ENTRY_2="svpts-servers,$PTS_ACCESS,base_os=centos7"
-	ANSIBLE_HOST_ENTRY_3="svsde-servers,$SDE_ACCESS,base_os=centos7"
-	ANSIBLE_HOST_ENTRY_4="svspb-servers,$SPB_ACCESS,base_os=centos6"
+	ANSIBLE_HOST_ENTRY_2="svpts-servers,$PTS_ACCESS"
+	ANSIBLE_HOST_ENTRY_3="svsde-servers,$SDE_ACCESS"
+	ANSIBLE_HOST_ENTRY_4="svspb-servers,$SPB_ACCESS"
 
 	ansible_inventory_builder > $ANSIBLE_INVENTORY_FILE
 
@@ -978,7 +973,7 @@ then
 
 			ANSIBLE_INVENTORY_TOTAL=1
 
-			ANSIBLE_HOST_ENTRY_1="svcs-servers,$SDE_ACCESS,base_os=centos7"
+			ANSIBLE_HOST_ENTRY_1="svcs-servers,$SDE_ACCESS"
 
 			ansible_inventory_builder >> $ANSIBLE_INVENTORY_FILE
 
@@ -989,7 +984,7 @@ then
 
 			ANSIBLE_INVENTORY_TOTAL=1
 
-			ANSIBLE_HOST_ENTRY_1="svcs-servers,$CSD_ACCESS,base_os=centos7"
+			ANSIBLE_HOST_ENTRY_1="svcs-servers,$CSD_ACCESS"
 
 			ansible_inventory_builder >> $ANSIBLE_INVENTORY_FILE
 
@@ -1002,7 +997,7 @@ then
 
 		ANSIBLE_INVENTORY_TOTAL=1
 
-		ANSIBLE_HOST_ENTRY_1="svnda-servers,$NDA_ACCESS,base_os=centos7"
+		ANSIBLE_HOST_ENTRY_1="svnda-servers,$NDA_ACCESS"
 
 		ansible_inventory_builder >> $ANSIBLE_INVENTORY_FILE
 
@@ -1013,8 +1008,8 @@ then
 
 		ANSIBLE_INVENTORY_TOTAL=2
 
-		ANSIBLE_HOST_ENTRY_1="svtse-servers,$TSE_ACCESS,base_os=centos7"
-		ANSIBLE_HOST_ENTRY_2="svtcpa-servers,$TCPA_ACCESS,base_os=centos7"
+		ANSIBLE_HOST_ENTRY_1="svtse-servers,$TSE_ACCESS"
+		ANSIBLE_HOST_ENTRY_2="svtcpa-servers,$TCPA_ACCESS"
 
 		ansible_inventory_builder >> $ANSIBLE_INVENTORY_FILE
 
@@ -1207,10 +1202,10 @@ then
 	ANSIBLE_INVENTORY_TOTAL=5
 
 	ANSIBLE_HOST_ENTRY_1="all:vars,ansible_user=$ANSIBLE_REMOTE_USER,svauto_yum_host=$SVAUTO_YUM_HOST,release_code_name=$RELEASE_CODE_NAME,sandvine_yum_host=$SV_YUM_HOST"
-	ANSIBLE_HOST_ENTRY_2="svpts-servers,$PTS_ACCESS,base_os=centos7"
-	ANSIBLE_HOST_ENTRY_3="svsde-servers,$SDE_ACCESS,base_os=centos7"
-	ANSIBLE_HOST_ENTRY_4="svspb-servers,$SPB_ACCESS,base_os=centos6"
-	ANSIBLE_HOST_ENTRY_5="svcs-servers,$SDE_ACCESS,base_os=centos7"
+	ANSIBLE_HOST_ENTRY_2="svpts-servers,$PTS_ACCESS"
+	ANSIBLE_HOST_ENTRY_3="svsde-servers,$SDE_ACCESS"
+	ANSIBLE_HOST_ENTRY_4="svspb-servers,$SPB_ACCESS"
+	ANSIBLE_HOST_ENTRY_5="svcs-servers,$SDE_ACCESS"
 
 	ansible_inventory_builder > $ANSIBLE_INVENTORY_FILE
 

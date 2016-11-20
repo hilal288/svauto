@@ -22,12 +22,6 @@
 
 regular_system_user: "sandvine"
 
-# Base O.S.:
-# Ubuntu: ubuntu14, ubuntu16
-# Debian: jessie, stretch
-# CentOS: centos6, centos7
-base_os: "centos6"
-
 # Upgrade Base OS:
 base_os_upgrade: "no"
 

@@ -109,8 +109,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ansible.sudo = true
     #ansible.verbose = true
     ansible.host_vars = {
-      "{{vm_name}}" => {"base_os" => "{{base_os}}",
-                  "activate_eth1" => "no"}
+      "{{vm_name}}" => {"activate_eth1" => "no"}
     }
   end
 

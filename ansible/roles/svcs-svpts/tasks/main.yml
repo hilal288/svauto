@@ -14,4 +14,4 @@
 
 - name: centos | include common book
   include: centos.yml
-  when: base_os == 'centos6' or base_os == 'centos7'
+  when: ansible_os_family == "RedHat"

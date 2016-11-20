@@ -20,14 +20,14 @@
 
 - name: ubuntu - include config
   include: ubuntu-common.yml
-  when: base_os == 'ubuntu14' or base_os == 'ubuntu16'
+  when: ansible_os_family == "Debian"
 
 
 - name: centos7 - include config
   include: centos7.yml
-  when: base_os == 'centos7'
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
 
 
 - name: centos6 - include config
   include: centos6.yml
-  when: base_os == 'centos6'
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "6"
