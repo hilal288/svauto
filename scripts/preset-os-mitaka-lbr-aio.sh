@@ -15,7 +15,7 @@
 # limitations under the License.
 
 UBUNTU_HOSTNAME="controller-1"
-DOMAIN="yourdomain.com"
+YOUR_DOMAIN="yourdomain.com"
 UBUNTU_PRIMARY_INTERFACE="em1"
 
 clear
