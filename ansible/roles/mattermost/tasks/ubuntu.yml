@@ -12,11 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: ubuntu - apt enabling ScudCloud PPA
-  apt_repository: repo='ppa:rael-gc/scudcloud'
-
-
-- name: ubuntu - apt installing ScudCloud
-  apt: pkg={{item}} state=latest
-  with_items:
-    - scudcloud
+- name: ubuntu - apt installing MatterMost
+  apt: deb=https://releases.mattermost.com/desktop/3.4.1/mattermost-desktop-3.4.1-linux-amd64.deb
