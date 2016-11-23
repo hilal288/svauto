@@ -7,19 +7,19 @@
 {% if sde_srvc_ip is defined %}
                 <InfluxDB log="false" verbose="false">root:root@udp({{ sde_srvc_ip }}:8086)/cs</InfluxDB>
 {% else %}
-                <InfluxDB log="false" verbose="false">root:root@udp({{ hostvars[groups['svsde-servers'][0]]['ansible_eth1']['ipv4']['address'] }}:8086)/cs</InfluxDB>
+                <InfluxDB log="false" verbose="false">root:root@udp({{ hostvars[groups['sde-servers'][0]]['ansible_eth1']['ipv4']['address'] }}:8086)/cs</InfluxDB>
 {% endif %}
 		<!-- Redis for web sessions and caching global attributes. -->
 {% if sde_srvc_ip is defined %}
 		<Redis>{{ sde_srvc_ip }}:6379</Redis>
 {% else %}
-		<Redis>{{ hostvars[groups['svsde-servers'][0]]['ansible_eth1']['ipv4']['address'] }}:6379</Redis>
+		<Redis>{{ hostvars[groups['sde-servers'][0]]['ansible_eth1']['ipv4']['address'] }}:6379</Redis>
 {% endif %}
 		<!-- SPB SOAP for querying historical data. -->
 {% if spb_srvc_ip is defined %}
 		<SPB>spbadmin:sandvine@{{ spb_srvc_ip }}:8081</SPB>
 {% else %}
-		<SPB>spbadmin:sandvine@{{ hostvars[groups['svspb-servers'][0]]['ansible_eth1']['ipv4']['address'] }}:8081</SPB>
+		<SPB>spbadmin:sandvine@{{ hostvars[groups['spb-servers'][0]]['ansible_eth1']['ipv4']['address'] }}:8081</SPB>
 {% endif %}
 		<!-- SPB data publishing interval. This value is represented in seconds.
 		     If SPB published interval is 1 min then here it should be 60 -->
@@ -29,7 +29,7 @@
 {% if sde_srvc_ip is defined %}
                 <RDBM>mysql://svadmin:sandvine@{{ sde_srvc_ip }}:3306/cs</RDBM>
 {% else %}
-                <RDBM>mysql://svadmin:sandvine@{{ hostvars[groups['svsde-servers'][0]]['ansible_eth1']['ipv4']['address'] }}:3306/cs</RDBM>
+                <RDBM>mysql://svadmin:sandvine@{{ hostvars[groups['sde-servers'][0]]['ansible_eth1']['ipv4']['address'] }}:3306/cs</RDBM>
 {% endif %}
 		<!-- InfluxDB data cleanup time. Supported time suffix w = week, d = day, h = hour, m = minute and s = second -->
 		<DataCleanupTime>62m</DataCleanupTime>
@@ -43,7 +43,7 @@
 {% if sde_srvc_ip is defined %}
                 <GlobalAttr>http://{{ sde_srvc_ip }}:8091</GlobalAttr>
 {% else %}
-                <GlobalAttr>http://{{ hostvars[groups['svsde-servers'][0]]['ansible_eth1']['ipv4']['address'] }}:8091</GlobalAttr>
+                <GlobalAttr>http://{{ hostvars[groups['sde-servers'][0]]['ansible_eth1']['ipv4']['address'] }}:8091</GlobalAttr>
 {% endif %}
                 <!-- Global attributes api version number -->
                 <GlobalAttrAPI>1</GlobalAttrAPI>
@@ -113,7 +113,7 @@
 {% if sde_srvc_ip is defined %}
 		<SDEAddr>http://{{ sde_srvc_ip }}:7504</SDEAddr>
 {% else %}
-		<SDEAddr>http://{{ hostvars[groups['svsde-servers'][0]]['ansible_eth1']['ipv4']['address'] }}:7504</SDEAddr>
+		<SDEAddr>http://{{ hostvars[groups['sde-servers'][0]]['ansible_eth1']['ipv4']['address'] }}:7504</SDEAddr>
 {% endif %}
 		<!-- Provide a list of home mobile country code -->
 		<HomeMCC>001</HomeMCC>

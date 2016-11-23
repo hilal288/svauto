@@ -92,6 +92,12 @@ case $i in
 	# Options starting with --ansible-* are passed to Ansible itself,
 	# or being used by dynamic stuff.
 
+	--dump)
+
+		ANSIBLE_DUMP="yes"
+		shift
+		;;
+
         --ansible-remote-user=*)
 
                 ANSIBLE_REMOTE_USER="${i#*=}"
@@ -136,12 +142,6 @@ case $i in
 
 		ALL_ANSIBLE_EXTRA_VARS="${i#*=}"
 		ANSIBLE_EXTRA_VARS="$( echo $ALL_ANSIBLE_EXTRA_VARS | sed s/,/\ /g )"
-		shift
-		;;
-
-	--dump)
-
-		ANSIBLE_DUMP="yes"
 		shift
 		;;
 
@@ -302,12 +302,6 @@ case $i in
 		shift
 		;;
 
-        --os-stack-type=*)
-
-                OS_STACK_TYPE="${i#*=}"
-                shift
-                ;;
-
         --os-import-images)
 
 	        OS_IMPORT_IMAGES="yes"
@@ -457,7 +451,7 @@ then
 	then
 
 		echo
-		echo "Ansible's Inventory in memory:"
+		echo "Dumping Inventory \"$ANSIBLE_INVENTORY_FILE\" from memory:"
 
 		echo "$ANSIBLE_INVENTORY_FILE_IN_MEM"
 
@@ -478,7 +472,7 @@ then
 	then
 
 		echo
-		echo "Ansible's Top-Level Playbook in memory:"
+		echo "Dumping Top-Level Playbook \"$ANSIBLE_PLAYBOOK_FILE\' from memory:"
 
 		echo "$ANSIBLE_PLAYBOOK_FILE_IN_MEM"
 
@@ -846,7 +840,7 @@ then
 		echo "Run this script with the following arguments:"
 		echo
 		echo "pushd ~/svauto"
-		echo "./svauto.sh --os-project=demo --os-stack-name=sv-stack-1 --os-stack-type=stock --ansible-remote-user=sandvine"
+		echo "./svauto.sh --os-project=demo --os-stack-name=sv-stack-1 --ansible-remote-user=sandvine"
 		echo
 		echo
 		echo "If you don't have a Sandvine compatible Stack up and running."
@@ -872,186 +866,53 @@ then
 		exit 1
 	fi
 
-        case "$OS_STACK_TYPE" in
+	ANSIBLE_HOSTS_NAMES=$(./ansible/inventory/05-openstack.py --list | jq -r '._meta.hostvars[].openstack.name')
+	ANSIBLE_HOSTS_IPS=$(./ansible/inventory/05-openstack.py --list | jq -r '._meta.hostvars[].ansible_ssh_host')
 
-                # TODO: Auto detected all instances automatically:
+	echo "$ANSIBLE_HOSTS_NAMES" > /tmp/svauto-ansible-tmp-names-$BUILD_DATE
+	echo "$ANSIBLE_HOSTS_IPS" > /tmp/svauto-ansible-tmp-ips-$BUILD_DATE
 
-                stock)
+	ANSIBLE_HOSTS_LIST=$(paste -d" " /tmp/svauto-ansible-tmp-names-$BUILD_DATE /tmp/svauto-ansible-tmp-ips-$BUILD_DATE)
 
-                        PTS_ACCESS=$(nova floating-ip-list 2>/dev/null | grep `nova list | grep $OS_STACK_NAME-pts-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        SDE_ACCESS=$(nova floating-ip-list 2>/dev/null | grep `nova list | grep $OS_STACK_NAME-sde-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        SPB_ACCESS=$(nova floating-ip-list 2>/dev/null | grep `nova list | grep $OS_STACK_NAME-spb-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        ;;
+	STACK_LIST_FILE="/tmp/stack-list-$BUILD_RAND.txt"
 
-                svcsd)
-
-                        PTS_ACCESS=$(nova floating-ip-list 2>/dev/null | grep `nova list | grep $OS_STACK_NAME-pts-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        SDE_ACCESS=$(nova floating-ip-list 2>/dev/null | grep `nova list | grep $OS_STACK_NAME-sde-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        SPB_ACCESS=$(nova floating-ip-list 2>/dev/null | grep `nova list | grep $OS_STACK_NAME-spb-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        CSD_ACCESS=$(nova floating-ip-list 2>/dev/null | grep `nova list | grep $OS_STACK_NAME-svcsd-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        ;;
-
-                svnda)
-
-                        PTS_ACCESS=$(nova floating-ip-list 2>/dev/null | grep `nova list | grep $OS_STACK_NAME-pts-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        SDE_ACCESS=$(nova floating-ip-list 2>/dev/null | grep `nova list | grep $OS_STACK_NAME-sde-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        SPB_ACCESS=$(nova floating-ip-list 2>/dev/null | grep `nova list | grep $OS_STACK_NAME-spb-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        NDA_ACCESS=$(nova floating-ip-list 2>/dev/null | grep `nova list | grep $OS_STACK_NAME-nda-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        ;;
-
-                svtse-demo-mycloud)
-
-                        PTS_ACCESS=$(nova floating-ip-list 2>/dev/null | grep `nova list | grep $OS_STACK_NAME-pts-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        SDE_ACCESS=$(nova floating-ip-list 2>/dev/null | grep `nova list | grep $OS_STACK_NAME-sde-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        SPB_ACCESS=$(nova floating-ip-list 2>/dev/null | grep `nova list | grep $OS_STACK_NAME-spb-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        TSE_ACCESS=$(nova floating-ip-list 2>/dev/null | grep `nova list | grep $OS_STACK_NAME-tse-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        TCPA_ACCESS=$(nova floating-ip-list 2>/dev/null | grep `nova list | grep $OS_STACK_NAME-tcpa-1 | awk $'{print $2}'` | awk $'{print $4}')
-                        ;;
-
-
-		*)
-
-			echo
-			echo "Usage: $0 --os-stack-type={stock|svcsd|svnda|svtse-demo-mycloud}"
-
-			exit 1
-			;;
-
-        esac
-
-	if [ -z $PTS_ACCESS ] || [ -z $SDE_ACCESS ] || [ -z $SPB_ACCESS ] #|| [ -z $CSD_ACCESS ]
-	then
-		echo
-		echo "Warning! No compatible Instances was detected on your \"$OS_STACK_NAME\" Stack!"
-		echo "Possible causes are:"
-		echo
-		echo " * Missing Floating IP for one or more Sandvine's Instances."
-		echo " * You're running a Stack that is not compatbile with Sandvine's rquirements."
-		echo
-
-		exit 1
-	fi
+	echo "$ANSIBLE_HOSTS_LIST" | grep "$OS_STACK_NAME" > "$STACK_LIST_FILE"
 
 	echo
 	echo "The following Sandvine-compatible Instances was detected on your \"$OS_STACK_NAME\" Stack:"
 	echo
-	echo Floating IPs of:
+	echo Hostnames and IP access:
 	echo
-	echo PTS: $PTS_ACCESS
-	echo SDE: $SDE_ACCESS
-	echo SPB: $SPB_ACCESS
-
-	if [ "$OPERATION" == "cloud-services" ] && [ "$OS_STACK_TYPE" == "stock" ]; then echo SVCSD: $SDE_ACCESS; fi
-	if [ "$OPERATION" == "cloud-services" ] && [ "$OS_STACK_TYPE" == "svcsd" ]; then echo SVCSD: $CSD_ACCESS; fi
-
-	if [ "$OS_STACK_TYPE" == "svnda" ]; then echo NDA: $NDA_ACCESS; fi
-
-	if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then echo TSE: $TSE_ACCESS; fi
-	if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then echo TCPA: $TCPA_ACCESS; fi
-
-	pushd ansible &>/dev/null
-
-	ANSIBLE_INVENTORY_FILE="openstack-hosts-$BUILD_RAND"
-
-	echo
-	echo "Creating Ansible Inventory: \"ansible/$ANSIBLE_INVENTORY_FILE\"."
-
-	ANSIBLE_INVENTORY_TOTAL=4
-
-	ANSIBLE_HOST_ENTRY_1="all:vars,ansible_user=$ANSIBLE_REMOTE_USER,svauto_yum_host=$SVAUTO_YUM_HOST,release_code_name=$RELEASE_CODE_NAME,sandvine_yum_host=$SV_YUM_HOST"
-	ANSIBLE_HOST_ENTRY_2="svpts-servers,$PTS_ACCESS"
-	ANSIBLE_HOST_ENTRY_3="svsde-servers,$SDE_ACCESS"
-	ANSIBLE_HOST_ENTRY_4="svspb-servers,$SPB_ACCESS"
-
-	ansible_inventory_builder > $ANSIBLE_INVENTORY_FILE
-
-	if [ "$OPERATION" == "cloud-services" ]
-	then
-
-		if [ "$OS_STACK_TYPE" == "stock" ]
-		then
-
-			ANSIBLE_INVENTORY_TOTAL=1
-
-			ANSIBLE_HOST_ENTRY_1="svcs-servers,$SDE_ACCESS"
-
-			ansible_inventory_builder >> $ANSIBLE_INVENTORY_FILE
-
-		fi
-
-		if [ "$OS_STACK_TYPE" == "svcsd" ]
-		then
-
-			ANSIBLE_INVENTORY_TOTAL=1
-
-			ANSIBLE_HOST_ENTRY_1="svcs-servers,$CSD_ACCESS"
-
-			ansible_inventory_builder >> $ANSIBLE_INVENTORY_FILE
-
-		fi
-
-	fi
-
-	if [ "$OS_STACK_TYPE" == "svnda" ]
-	then
-
-		ANSIBLE_INVENTORY_TOTAL=1
-
-		ANSIBLE_HOST_ENTRY_1="svnda-servers,$NDA_ACCESS"
-
-		ansible_inventory_builder >> $ANSIBLE_INVENTORY_FILE
-
-	fi
-
-	if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]
-	then
-
-		ANSIBLE_INVENTORY_TOTAL=2
-
-		ANSIBLE_HOST_ENTRY_1="svtse-servers,$TSE_ACCESS"
-		ANSIBLE_HOST_ENTRY_2="svtcpa-servers,$TCPA_ACCESS"
-
-		ansible_inventory_builder >> $ANSIBLE_INVENTORY_FILE
-
-		OPERATION="svtse-demo"
-
-	fi
-
-	popd &>/dev/null
+	cat "$STACK_LIST_FILE"
 
 fi
 
 pushd ansible &>/dev/null
 
+ANSIBLE_INVENTORY_FILE="${OS_STACK_NAME}-stack-hosts-${BUILD_RAND}"
+
+echo
+echo "Creating Ansible's Inventory: \"ansible/$ANSIBLE_INVENTORY_FILE\"."
+
+ANSIBLE_INVENTORY_TOTAL=1
+
+ANSIBLE_HOST_ENTRY_1="all:vars,ansible_user=$ANSIBLE_REMOTE_USER,svauto_yum_host=$SVAUTO_YUM_HOST,release_code_name=$RELEASE_CODE_NAME,sandvine_yum_host=$SV_YUM_HOST"
+
+ansible_inventory_builder > $ANSIBLE_INVENTORY_FILE
+
+TMP_FILE="/tmp/inventory-tmp-$BUILD_RAND.txt"
+
+ansible_inventory_builder_hybrid_os >> $ANSIBLE_INVENTORY_FILE
+
+echo
+echo "Creating Ansible's Top-Level Playbook : \"ansible/$ANSIBLE_PLAYBOOK_FILE\"."
+
 if [ "$CENTOS_NETWORK_SETUP" == "yes" ]
 then
 
-	if [ "$OS_STACK_TYPE" == "svnda" ]
-	then
+	ANSIBLE_PLAYBOOK_TOTAL=1
 
-		ANSIBLE_PLAYBOOK_TOTAL=1
-
-		ANSIBLE_PLAYBOOK_ENTRY_1="svnda-servers,centos-network-setup"
-
-		ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
-	fi
-
-
-	if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]
-	then
-		ANSIBLE_PLAYBOOK_TOTAL=2
-
-		ANSIBLE_PLAYBOOK_ENTRY_1="svtcpa-servers,centos-network-setup"
-		ANSIBLE_PLAYBOOK_ENTRY_2="svtse-servers,centos-network-setup"
-
-		ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
-	fi
-
-	ANSIBLE_PLAYBOOK_TOTAL=3
-
-	ANSIBLE_PLAYBOOK_ENTRY_1="svspb-servers,centos-network-setup"
-	ANSIBLE_PLAYBOOK_ENTRY_2="svsde-servers,centos-network-setup"
-	ANSIBLE_PLAYBOOK_ENTRY_3="svpts-servers,centos-network-setup;setup_server=svpts"
+	ANSIBLE_PLAYBOOK_ENTRY_1="all,centos-network-setup"
 
 	ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
 
@@ -1067,27 +928,6 @@ then
 			echo
 			echo "Configuring Sandvine Platform with Ansible..."
 	
-			if [ "$OS_STACK_TYPE" == "svnda" ]
-			then
-	
-				ANSIBLE_PLAYBOOK_TOTAL=1
-	
-				ANSIBLE_PLAYBOOK_ENTRY_1="svnda-servers,sandvine-auto-config;setup_server=svnda;setup_mode=$OPERATION"
-	
-				ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
-			fi
-	
-			if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]
-			then
-	
-				ANSIBLE_PLAYBOOK_TOTAL=2
-	
-				ANSIBLE_PLAYBOOK_ENTRY_1="svtcpa-servers,sandvine-auto-config;setup_server=svtcpa;setup_mode=$OPERATION"
-				ANSIBLE_PLAYBOOK_ENTRY_2="svtse-servers,sandvine-auto-config;setup_server=svtse;setup_mode=$OPERATION;license_server=$LICENSE_SERVER"
-	
-				ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
-			fi
-	
 			if [ "$OPERATION" == "cloud-services" ] && [ -z "$CLOUD_SERVICES_MODE" ]
 			then
 	
@@ -1102,9 +942,9 @@ then
 	
 			ANSIBLE_PLAYBOOK_TOTAL=3
 	
-			ANSIBLE_PLAYBOOK_ENTRY_1="svspb-servers,sandvine-auto-config;setup_server=svspb;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE"
-			ANSIBLE_PLAYBOOK_ENTRY_2="svsde-servers,sandvine-auto-config;setup_server=svsde;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE"
-			ANSIBLE_PLAYBOOK_ENTRY_3="svpts-servers,sandvine-auto-config;setup_server=svpts;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE;license_server=$LICENSE_SERVER"
+			ANSIBLE_PLAYBOOK_ENTRY_1="spb-servers,sandvine-auto-config;setup_server=svspb;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE"
+			ANSIBLE_PLAYBOOK_ENTRY_2="sde-servers,sandvine-auto-config;setup_server=svsde;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE"
+			ANSIBLE_PLAYBOOK_ENTRY_3="pts-servers,sandvine-auto-config;setup_server=svpts;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE;license_server=$LICENSE_SERVER"
 	
 			ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
 			;;
@@ -1120,9 +960,9 @@ then
 	
 					ANSIBLE_PLAYBOOK_TOTAL=3
 	
-					ANSIBLE_PLAYBOOK_ENTRY_1="svpts-servers,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes,nginx,svpts;pts_version=$PTS_VERSION,svprotocols;pts_protocols_version=$PTS_PROTOCOLS_VERSION,sandvine-auto-config;setup_server=svpts;setup_mode=$OPERATION;license_server=$LICENSE_SERVER,post-cleanup,power-cycle"
-					ANSIBLE_PLAYBOOK_ENTRY_2="svsde-servers,bootstrap;base_os_upgrade=yes,nginx,svsde;sde_version=$SDE_VERSION,sandvine-auto-config;setup_server=svsde;setup_mode=$OPERATION,post-cleanup,power-cycle"
-					ANSIBLE_PLAYBOOK_ENTRY_3="svspb-servers,bootstrap;base_os_upgrade=yes,nginx,postgresql,svspb;spb_version=$SPB_VERSION,sandvine-auto-config;setup_server=svspb;setup_mode=$OPERATION,post-cleanup,power-cycle"
+					ANSIBLE_PLAYBOOK_ENTRY_1="pts-servers,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes,nginx,svpts;pts_version=$PTS_VERSION,svprotocols;pts_protocols_version=$PTS_PROTOCOLS_VERSION,sandvine-auto-config;setup_server=svpts;setup_mode=$OPERATION;license_server=$LICENSE_SERVER,post-cleanup,power-cycle"
+					ANSIBLE_PLAYBOOK_ENTRY_2="sde-servers,bootstrap;base_os_upgrade=yes,nginx,svsde;sde_version=$SDE_VERSION,sandvine-auto-config;setup_server=svsde;setup_mode=$OPERATION,post-cleanup,power-cycle"
+					ANSIBLE_PLAYBOOK_ENTRY_3="spb-servers,bootstrap;base_os_upgrade=yes,nginx,postgresql,svspb;spb_version=$SPB_VERSION,sandvine-auto-config;setup_server=svspb;setup_mode=$OPERATION,post-cleanup,power-cycle"
 	
 					ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
 					;;
@@ -1131,9 +971,9 @@ then
 	
 					ANSIBLE_PLAYBOOK_TOTAL=3
 	
-					ANSIBLE_PLAYBOOK_ENTRY_1="svpts-servers,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes,nginx,svpts;pts_version=$PTS_VERSION,svprotocols;pts_protocols_version=$PTS_PROTOCOLS_VERSION,svusagemanagementpts;um_version=$UM_VERSION,svcs-svpts,sandvine-auto-config;setup_server=svpts;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE;license_server=$LICENSE_SERVER,post-cleanup,power-cycle"
-					ANSIBLE_PLAYBOOK_ENTRY_2="svsde-servers,bootstrap;base_os_upgrade=yes,nginx,svsde;sde_version=$SDE_VERSION,svusagemanagement;um_version=$UM_VERSION,svsubscribermapping;sm_version=$SM_C7_VERSION,svcs-svsde,svcs,sandvine-auto-config;setup_server=svsde;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE,post-cleanup,power-cycle"
-					ANSIBLE_PLAYBOOK_ENTRY_3="svspb-servers,bootstrap;base_os_upgrade=yes,nginx,postgresql,svspb;spb_version=$SPB_VERSION,svmcdtext;spb_protocols_version=$SPB_PROTOCOLS_VERSION,svreports;nds_version=$NDS_VERSION,svcs-svspb,sandvine-auto-config;setup_server=svspb;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE,post-cleanup,power-cycle"
+					ANSIBLE_PLAYBOOK_ENTRY_1="pts-servers,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes,nginx,svpts;pts_version=$PTS_VERSION,svprotocols;pts_protocols_version=$PTS_PROTOCOLS_VERSION,svusagemanagementpts;um_version=$UM_VERSION,svcs-svpts,sandvine-auto-config;setup_server=svpts;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE;license_server=$LICENSE_SERVER,post-cleanup,power-cycle"
+					ANSIBLE_PLAYBOOK_ENTRY_2="sde-servers,bootstrap;base_os_upgrade=yes,nginx,svsde;sde_version=$SDE_VERSION,svusagemanagement;um_version=$UM_VERSION,svsubscribermapping;sm_version=$SM_C7_VERSION,svcs-svsde,svcs,sandvine-auto-config;setup_server=svsde;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE,sandvine-auto-config;setup_server=svcs;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE,post-cleanup,power-cycle"
+					ANSIBLE_PLAYBOOK_ENTRY_3="spb-servers,bootstrap;base_os_upgrade=yes,nginx,postgresql,svspb;spb_version=$SPB_VERSION,svmcdtext;spb_protocols_version=$SPB_PROTOCOLS_VERSION,svreports;nds_version=$NDS_VERSION,svcs-svspb,sandvine-auto-config;setup_server=svspb;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE,post-cleanup,power-cycle"
 	
 					ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
 					;;
@@ -1202,10 +1042,10 @@ then
 	ANSIBLE_INVENTORY_TOTAL=5
 
 	ANSIBLE_HOST_ENTRY_1="all:vars,ansible_user=$ANSIBLE_REMOTE_USER,svauto_yum_host=$SVAUTO_YUM_HOST,release_code_name=$RELEASE_CODE_NAME,sandvine_yum_host=$SV_YUM_HOST"
-	ANSIBLE_HOST_ENTRY_2="svpts-servers,$PTS_ACCESS"
-	ANSIBLE_HOST_ENTRY_3="svsde-servers,$SDE_ACCESS"
-	ANSIBLE_HOST_ENTRY_4="svspb-servers,$SPB_ACCESS"
-	ANSIBLE_HOST_ENTRY_5="svcs-servers,$SDE_ACCESS"
+	ANSIBLE_HOST_ENTRY_2="pts-servers,$PTS_ACCESS"
+	ANSIBLE_HOST_ENTRY_3="sde-servers,$SDE_ACCESS"
+	ANSIBLE_HOST_ENTRY_4="spb-servers,$SPB_ACCESS"
+	ANSIBLE_HOST_ENTRY_5="svcsd-servers,$SDE_ACCESS"
 
 	ansible_inventory_builder > $ANSIBLE_INVENTORY_FILE
 
@@ -1237,31 +1077,34 @@ else
 	echo
 	pushd ansible
 
+	echo
+	echo "Creating both Ansible's Inventory and the Playbook..."
+
+	if [ "$ANSIBLE_DUMP" == "yes" ];
+	then
+
+		echo
+		echo "Dumping Inventory \"$ANSIBLE_INVENTORY_FILE\" file:"
+
+		cat "$ANSIBLE_INVENTORY_FILE"
+
+	fi
+
+	if [ "$ANSIBLE_DUMP" == "yes" ]
+	then
+
+		echo
+		echo "Dumping Top-Level Playbook \"$ANSIBLE_PLAYBOOK_FILE\' file:"
+
+		cat "$ANSIBLE_PLAYBOOK_FILE"
+
+	fi
+
 	if [ -z "$OS_PROJECT" ] || [ -z "$RUNTIME_MODE" ]
 	then
 
 		echo
-		echo "Creating both Ansible's Inventory and the Playbook..."
-
-		if [ "$ANSIBLE_DUMP" == "yes" ];
-		then
-
-			echo
-			echo "Ansible's Inventory in memory:"
-
-			echo "$ANSIBLE_INVENTORY_FILE_IN_MEM"
-
-		fi
-
-		if [ "$ANSIBLE_DUMP" == "yes" ]
-		then
-
-			echo
-			echo "Ansible's Top-Level Playbook in memory:"
-
-			echo "$ANSIBLE_PLAYBOOK_FILE_IN_MEM"
-
-		fi
+		echo "Warning! Missing parameters, using what it is available at the moment..."
 
 		echo "$ANSIBLE_INVENTORY_FILE_IN_MEM" >> $ANSIBLE_INVENTORY_FILE
 
@@ -1286,18 +1129,25 @@ else
 
 			echo "Your brand new Sandvine's Stack is reachable through SSH:"
 
+			INSTANCES_CONDENSED_LIST=$(cat $TMP_FILE | sort | uniq)
+
 			echo
-			echo "ssh sandvine@$PTS_ACCESS # PTS"
-			echo "ssh sandvine@$SDE_ACCESS # SDE"
-			echo "ssh sandvine@$SPB_ACCESS # SPB"
 
-			if [ "$OPERATION" == "cloud-services" ] && [ "$OS_STACK_TYPE" == "stock" ]; then echo "ssh sandvine@$SDE_ACCESS # SVCS"; fi
-			if [ "$OPERATION" == "cloud-services" ] && [ "$OS_STACK_TYPE" == "svcsd" ]; then echo "ssh sandvine@$CSD_ACCESS # SVCS"; fi
+			for G in `echo $INSTANCES_CONDENSED_LIST`
+			do
 
-			if [ "$OS_STACK_TYPE" == "svnda" ]; then echo "ssh sandvine@$NDA_ACCESS # NDA"; fi
+				while read line
+				do
 
-			if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then echo "ssh sandvine@$TSE_ACCESS # TSE"; fi
-			if [ "$OS_STACK_TYPE" == "svtse-demo-mycloud" ]; then echo "ssh sandvine@$TCPA_ACCESS # TCP Accelerator"; fi
+					G_IP=$(echo "$line" | grep "$G" | cut -d \  -f 2)
+
+					if [ ! -z "$G_IP" ]; then echo "ssh $ANSIBLE_REMOTE_USER@$G_IP # $G" ; fi
+
+				done < $STACK_LIST_FILE
+
+				echo
+
+			done
 
 		fi
 
@@ -1311,6 +1161,7 @@ else
 
 	fi
 
+	echo
 	popd
 
 fi
