@@ -73,6 +73,7 @@
     - nmap
     - lshw
     - perf
+    - mawk
     - unzip
     - iotop
     - iftop
