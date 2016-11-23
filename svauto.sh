@@ -885,24 +885,28 @@ then
 	echo
 	cat "$STACK_LIST_FILE"
 
+	pushd ansible &>/dev/null
+
+	ANSIBLE_INVENTORY_FILE="${OS_STACK_NAME}-stack-hosts-${BUILD_RAND}"
+
+	echo
+	echo "Creating Ansible's Inventory: \"ansible/$ANSIBLE_INVENTORY_FILE\"."
+
+	ANSIBLE_INVENTORY_TOTAL=1
+
+	ANSIBLE_HOST_ENTRY_1="all:vars,ansible_user=$ANSIBLE_REMOTE_USER,svauto_yum_host=$SVAUTO_YUM_HOST,release_code_name=$RELEASE_CODE_NAME,sandvine_yum_host=$SV_YUM_HOST"
+
+	ansible_inventory_builder > $ANSIBLE_INVENTORY_FILE
+
+	TMP_FILE="/tmp/inventory-tmp-$BUILD_RAND.txt"
+
+	ansible_inventory_builder_hybrid_os >> $ANSIBLE_INVENTORY_FILE
+
+	popd &>/dev/null
+
 fi
 
 pushd ansible &>/dev/null
-
-ANSIBLE_INVENTORY_FILE="${OS_STACK_NAME}-stack-hosts-${BUILD_RAND}"
-
-echo
-echo "Creating Ansible's Inventory: \"ansible/$ANSIBLE_INVENTORY_FILE\"."
-
-ANSIBLE_INVENTORY_TOTAL=1
-
-ANSIBLE_HOST_ENTRY_1="all:vars,ansible_user=$ANSIBLE_REMOTE_USER,svauto_yum_host=$SVAUTO_YUM_HOST,release_code_name=$RELEASE_CODE_NAME,sandvine_yum_host=$SV_YUM_HOST"
-
-ansible_inventory_builder > $ANSIBLE_INVENTORY_FILE
-
-TMP_FILE="/tmp/inventory-tmp-$BUILD_RAND.txt"
-
-ansible_inventory_builder_hybrid_os >> $ANSIBLE_INVENTORY_FILE
 
 echo
 echo "Creating Ansible's Top-Level Playbook : \"ansible/$ANSIBLE_PLAYBOOK_FILE\"."
