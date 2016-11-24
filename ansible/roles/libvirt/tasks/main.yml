@@ -19,7 +19,9 @@
             xml={{ lookup("template", "network/control.xml.j2") }}
 
 - name: libvirt starting stack-1-control-1 network
-  virt_net: state=active name=stack-1-control-1 autostart=yes
+  shell: virsh net-start stack-1-control-1 ; virsh net-autostart stack-1-control-1
+  ignore_errors: yes
+#  virt_net: state=active name=stack-1-control-1 autostart=yes
 
 
 - name: libvirt defining stack-1-service-1 network
@@ -28,7 +30,9 @@
             xml={{ lookup("template", "network/service.xml.j2") }}
 
 - name: libvirt starting stack-1-service-1 network
-  virt_net: state=active name=stack-1-service-1 autostart=yes
+  shell: virsh net-start stack-1-service-1 ; virsh net-autostart stack-1-service-1
+  ignore_errors: yes
+#  virt_net: state=active name=stack-1-service-1 autostart=yes
 
 
 - name: libvirt defining stack-1-subscriber-1 network
@@ -37,7 +41,9 @@
             xml={{ lookup("template", "network/subscriber.xml.j2") }}
 
 - name: libvirt starting stack-1-subscriber-1 network
-  virt_net: state=active name=stack-1-subscriber-1 autostart=yes
+  shell: virsh net-start stack-1-subscriber-1 ; virsh net-autostart stack-1-subscriber-1
+  ignore_errors: yes
+#  virt_net: state=active name=stack-1-subscriber-1 autostart=yes
 
 
 - name: libvirt defining stack-1-internet-1 network
@@ -46,7 +52,9 @@
             xml={{ lookup("template", "network/internet-nat.xml.j2") }}
 
 - name: libvirt starting stack-1-internet-1 network
-  virt_net: state=active name=stack-1-internet-1 autostart=yes
+  shell: virsh net-start stack-1-internet-1 ; virsh net-autostart stack-1-internet-1
+  ignore_errors: yes
+#  virt_net: state=active name=stack-1-internet-1 autostart=yes
 
 
 # Libvirt Virtual Machines
