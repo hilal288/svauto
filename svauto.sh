@@ -218,12 +218,6 @@ case $i in
 		shift
 		;;
 
-        --os-project=*)
-
-		OS_PROJECT="${i#*=}"
-		shift
-		;;
-
 	--packer-max-tries=*)
 
 		MAX_TRIES="${i#*=}"
