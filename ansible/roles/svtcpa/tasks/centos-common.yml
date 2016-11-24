@@ -23,8 +23,7 @@
 - name: centos - yum installing the SVTCPA
   yum: pkg={{item}} state=latest update_cache=yes
   with_items:
-    - dpdk
-    - sv-tcp-accelerator
+    - svaccelerator
 
 
 # The following task belongs to centos7.yml:
