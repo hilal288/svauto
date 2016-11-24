@@ -13,8 +13,9 @@
 # limitations under the License.
 
 
-#- name: ubuntu - module nf_conntrack blacklisted
-#  lineinfile: dest=/etc/modprobe.d/blacklist.conf line="blacklist nf_conntrack"
+- name: ubuntu - module nf_conntrack blacklisted
+  lineinfile: dest=/etc/modprobe.d/blacklist.conf line="blacklist nf_conntrack"
+  when: os_neutron_lbr_enabled == 'yes'
 
 
 # Activating br_netfilter module for bringing /proc/sys/net/bridge back.
