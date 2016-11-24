@@ -368,12 +368,6 @@ case $i in
 		shift
 		;;
 
-	--installation-helper=*)
-
-		INSTALLATION_HELPER="${i#*=}"
-		shift
-		;;
-
         --release=*)
 
                 RELEASE="${i#*=}"
@@ -392,7 +386,6 @@ case $i in
 	        UBUNTU_DETECT_DEFAULT_NIC="yes"
 		shift
 		;;
-
 
         --download-images=*)
 
@@ -751,24 +744,6 @@ then
 
 		cs-dev)
 			heat_templates_cs
-			;;
-	esac
-
-	exit 0
-
-fi
-
-if [ ! -z "$INSTALLATION_HELPER" ]
-then
-
-	case "$INSTALLATION_HELPER" in
-
-		sandvine-dev)
-			installation_helper
-			;;
-
-		cs-dev)
-			installation_helper_cs
 			;;
 	esac
 
