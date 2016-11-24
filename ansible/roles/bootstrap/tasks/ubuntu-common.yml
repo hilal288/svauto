@@ -90,6 +90,7 @@
     - traceroute
     - sysfsutils
     - nbd-client
+    - python-pip
     - btrfs-tools
     - ecryptfs-utils
     - python-minimal
