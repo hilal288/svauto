@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 if ! source svauto.conf
 then
 
@@ -24,7 +23,6 @@ then
 	exit 1
 
 fi
-
 
 #
 # STABLE
@@ -38,12 +36,11 @@ fi
 	--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 # Linux SVPTS on CentOS 6 with Linux 3.18 from Xen 4.6 official repo
-./svauto.sh --packer-builder --base-os=centos6 --release=dev --product=svpts --version=$PTS_VERSION --product-variant=vpl-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+./svauto.sh --packer-builder --base-os=centos6 --release=dev --product=svpts --version="7.40.0164" --product-variant=vpl-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
 	--ansible-remote-user="root" \
 	--ansible-inventory-builder="svbox,localhost,is_packer=yes,sandvine_yum_host=$SV_YUM_HOST" \
-	--ansible-playbook-builder="svbox,centos-xen,cloud-init,bootstrap;base_os_upgrade=yes,grub-conf,nginx,svpts;pts_version=$PTS_VERSION,svprotocols;pts_protocols_version=$PTS_PROTOCOLS_VERSION,vmware-tools,post-cleanup-image" \
+	--ansible-playbook-builder="svbox,centos-xen,cloud-init,bootstrap;base_os_upgrade=yes,grub-conf,nginx,svpts;pts_version=7.40.0164,svprotocols;pts_protocols_version=$PTS_PROTOCOLS_VERSION,vmware-tools,post-cleanup-image" \
 	--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
-
 
 # Linux SVSDE on CentOS 6
 ./svauto.sh --packer-builder --base-os=centos6 --release=dev --product=svsde --version=$SDE_VERSION --product-variant=vpl-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
@@ -52,7 +49,6 @@ fi
 	--ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes,grub-conf,nginx,svsde;sde_version=$SDE_VERSION;sandvine_yum_host=$SV_YUM_HOST,vmware-tools,post-cleanup-image" \
 	--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
-
 # Linux SVSDE on CentOS 7
 ./svauto.sh --packer-builder --base-os=centos7 --release=dev --product=svsde --version=$SDE_VERSION --product-variant=vpl-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
 	--ansible-remote-user="root" \
@@ -60,14 +56,12 @@ fi
 	--ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes,grub-conf,udev-rules,nginx,svsde;sde_version=$SDE_VERSION;sandvine_yum_host=$SV_YUM_HOST,vmware-tools,post-cleanup-image" \
 	--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
-
 # Linux SVSPB on CentOS 6
 ./svauto.sh --packer-builder --base-os=centos6 --release=dev --product=svspb --version=$SPB_VERSION --product-variant=vpl-1 --qcow2 --ova --vhd --vm-xml --sha256sum --ansible-remote-user=root \
 	--ansible-remote-user="root" \
 	--ansible-inventory-builder="svbox,localhost,is_packer=yes" \
 	--ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes,grub-conf,nginx,postgresql,svspb;spb_version=$SPB_VERSION;sandvine_yum_host=$SV_YUM_HOST,vmware-tools,post-cleanup-image;setup_server=svspb,power-cycle" \
 	--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
-
 
 #
 # Experimental Builds 
