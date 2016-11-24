@@ -80,3 +80,10 @@ fi
 	--ansible-inventory-builder="svbox,localhost,is_packer=yes" \
 	--ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes,grub-conf,udev-rules,nginx,postgresql,svnda;svnda_version=$NDA_VERSION;sandvine_yum_host=$SV_YUM_HOST,vmware-tools,post-cleanup-image" \
 	--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
+
+# SVTCP Accelerator on CentOS 7
+./svauto.sh --packer-builder --base-os=centos7 --release=dev --product=svtcpa --version=$TCPA_VERSION --product-variant=vpl-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+	--ansible-remote-user="root" \
+	--ansible-inventory-builder="svbox,localhost,is_packer=yes" \
+	--ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes,grub-conf,udev-rules,nginx,svtcpa;svtcpa_version=$TCPA_VERSION;sandvine_yum_host=$SV_YUM_HOST,vmware-tools,post-cleanup-image" \
+	--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
