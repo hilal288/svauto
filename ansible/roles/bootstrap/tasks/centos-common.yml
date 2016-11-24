@@ -101,7 +101,9 @@
     - yum-utils
     - bind-utils
     - traceroute
+    - python-pip
     - conntrack-tools
+    - python-virtualenv
     - libhugetlbfs-utils
 
 

@@ -91,6 +91,7 @@
     - sysfsutils
     - nbd-client
     - python-pip
+    - virtualenv
     - btrfs-tools
     - ecryptfs-utils
     - python-minimal
