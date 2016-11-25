@@ -13,6 +13,8 @@
 
 # Sandvine plus Cloud Services
 ./build-scripts/packer-build-cs.sh
+./svauto.sh --move2webroot=cs-dev
+
 ./build-scripts/packer-build-cs-vmware.sh 
 ./svauto.sh --move2webroot=cs-dev
 
