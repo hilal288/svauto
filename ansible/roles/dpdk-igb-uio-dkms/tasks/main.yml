@@ -23,8 +23,9 @@
 
 
 - name: centos - git cloning igb_uio source + dkms
-  git: repo=https://git.sandvine.com/dpdk/igb_uio-dkms.git dest=/tmp/igb_uio-dkms
+  git: repo=https://git.sandvine.com/dpdk/igb_uio-dkms.git dest=/root/igb_uio-dkms
 
 
 - name: centos - shell building igb_uio module via dkms
-  shell: cd /tmp/igb_uio-dkms ; make -f Makefile.dkms install
+  shell: cd /root/igb_uio-dkms ; make -f Makefile.dkms install
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
