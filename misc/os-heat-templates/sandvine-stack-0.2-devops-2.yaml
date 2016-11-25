@@ -13,7 +13,7 @@ description: >
   * Build Server and Development Environment
 
 
-  We have 5 Instances:
+  We have 6 Instances:
 
 
   * PTS - CentOS 7
@@ -26,7 +26,9 @@ description: >
 
   * Traffic Generator - Ubuntu 16.04
 
-  * DevOps - CentOS 7
+  * DevOps 1 - CentOS 7
+
+  * DevOps 2 - CentOS 6
 
 
   We want to wire them as:
@@ -97,11 +99,17 @@ parameters:
     description: "Regular Server as a Traffic Generator"
     default: "{{tg_image}}"
 
-  devops_image:
+  devops_1_image:
     type: string
     label: "DevOps Instance"
     description: "Build Server and Development Environment"
-    default: "{{devops_image}}"
+    default: "{{devops_1_image}}"
+
+  devops_2_image:
+    type: string
+    label: "DevOps Instance"
+    description: "Build Server and Development Environment"
+    default: "{{devops_2_image}}"
 
 resources:
   rtr:
@@ -191,6 +199,19 @@ resources:
         - protocol: tcp
           port_range_min: 443
           port_range_max: 443
+
+  devops_srvc_sec:
+    type: OS::Neutron::SecurityGroup
+    properties:
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-devops-srvc-rules' } }
+      rules:
+        - protocol: icmp
+        - protocol: tcp
+          port_range_min: 1
+          port_range_max: 65535
+        - protocol: udp
+          port_range_min: 1
+          port_range_max: 65535
 
   sde_ctrl_sec:
     type: OS::Neutron::SecurityGroup
@@ -384,10 +405,18 @@ resources:
       security_groups:
         - { get_resource: pts_ctrl_sec }
 
-  devops_ctrl_port:
+  devops_1_ctrl_port:
     type: OS::Neutron::Port
     properties:
-      name: { list_join: ["-", [{ get_param: "OS::stack_name" } , "devops-ctrl-port"]]}
+      name: { list_join: ["-", [{ get_param: "OS::stack_name" } , "devops-1-ctrl-port"]]}
+      network: { get_resource: ctrl_net }
+      security_groups:
+        - { get_resource: devops_ctrl_sec }
+
+  devops_2_ctrl_port:
+    type: OS::Neutron::Port
+    properties:
+      name: { list_join: ["-", [{ get_param: "OS::stack_name" } , "devops-2-ctrl-port"]]}
       network: { get_resource: ctrl_net }
       security_groups:
         - { get_resource: devops_ctrl_sec }
@@ -410,10 +439,16 @@ resources:
       name: { list_join: ["-", [{ get_param: "OS::stack_name" } , "svcsd-port"]]}
       network: { get_resource: service_net }
 
-  devops_srvc_port:
+  devops_1_srvc_port:
     type: OS::Neutron::Port
     properties:
-      name: { list_join: ["-", [{ get_param: "OS::stack_name" } , "devops-srvc-port"]]}
+      name: { list_join: ["-", [{ get_param: "OS::stack_name" } , "devops-1-srvc-port"]]}
+      network: { get_resource: service_net }
+
+  devops_2_srvc_port:
+    type: OS::Neutron::Port
+    properties:
+      name: { list_join: ["-", [{ get_param: "OS::stack_name" } , "devops-2-srvc-port"]]}
       network: { get_resource: service_net }
 
   pts_srvc_port:
@@ -493,7 +528,13 @@ resources:
     type: OS::Neutron::FloatingIP
     properties:
       floating_network_id: { get_param: public_network }
-      port_id: { get_resource: devops_ctrl_port }
+      port_id: { get_resource: devops_1_ctrl_port }
+
+  floating_ip_7:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_network }
+      port_id: { get_resource: devops_2_ctrl_port }
 
   pts_1:
     type: OS::Nova::Server
@@ -618,11 +659,33 @@ resources:
     properties:
       name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-devops-1' } }
       key_name: { get_param: 'ssh_key' }
-      image: { get_param: 'devops_image' }
+      image: { get_param: 'devops_1_image' }
       flavor: "m1.medium"
       networks:
-        - port: { get_resource: devops_ctrl_port }
-        - port: { get_resource: devops_srvc_port }
+        - port: { get_resource: devops_1_ctrl_port }
+        - port: { get_resource: devops_2_srvc_port }
+      user_data_format: RAW
+      user_data: |
+        #cloud-config
+        system_info:
+          default_user:
+            name: "sandvine"
+        chpasswd:
+          list: |
+            root:sandvine
+            sandvine:sandvine
+          expire: False
+
+  devops_2:
+    type: OS::Nova::Server
+    properties:
+      name: { str_replace: { params: { $stack_name: { get_param: 'OS::stack_name' } }, template: '$stack_name-devops-2' } }
+      key_name: { get_param: 'ssh_key' }
+      image: { get_param: 'devops_2_image' }
+      flavor: "m1.small"
+      networks:
+        - port: { get_resource: devops_2_ctrl_port }
+        - port: { get_resource: devops_2_srvc_port }
       user_data_format: RAW
       user_data: |
         #cloud-config
