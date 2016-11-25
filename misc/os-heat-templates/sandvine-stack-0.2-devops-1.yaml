@@ -29,24 +29,24 @@ description: >
 
   We want to wire them as:
 
-  --------|ctrl_subnet|------------- Control Network (with Internet access via router_i0)
-   |        |        |        |                                |
-  ---      ---      ---      ---                               |
-  | |      | |      | |      | |                               |
-  | |      | |      | |      | |    -------------------        |
-  | |      | |      | |      | |----|data_real_subnet1|        |
-  |D|      |S|      |S|      |S|    -------------------        |
-  |E|      |V|      |V|      |V|            |                  |
-  |V|      |S|      |S|      |P|        -----------            |
-  |O|      |P|      |D|      |T|        |Ubuntu TG|-------------
-  |P|      |B|      |E|      |S|        -----------
-  |S|      | |      | |      | |            |
-  | |      | |      | |      | |    ------------------
-  | |      | |      | |      | |----|data_int_subnet1|
-  | |      | |      | |      | |    ------------------
-  ---      ---      ---      - -
-   |        |        |        |
-   -----|service_subnet|-------  <-- Service Network (not routed - no gateway)
+    -------|ctrl_subnet|----------- Control Network (with Internet access via router_i0)
+    |        |        |        |                                |
+   ---      ---      ---      ---                               |
+   | |      | |      | |      | |                               |
+   | |      | |      | |      | |    -------------------        |
+   | |      | |      | |      | |----|data_real_subnet1|        |
+   |D|      |S|      |S|      |S|    -------------------        |
+   |E|      |V|      |V|      |V|            |                  |
+   |V|      |S|      |S|      |P|        -----------            |
+   |O|      |P|      |D|      |T|        |Ubuntu TG|-------------
+   |P|      |B|      |E|      |S|        -----------
+   |S|      | |      | |      | |            |
+   | |      | |      | |      | |    ------------------
+   | |      | |      | |      | |----|data_int_subnet1|
+   | |      | |      | |      | |    ------------------
+   ---      ---      ---      - -
+    |        |        |        |
+    -----|service_subnet|---------- Service Network (not routed - no gateway)
 
 parameters:
   ssh_key:
