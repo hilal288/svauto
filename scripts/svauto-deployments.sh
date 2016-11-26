@@ -68,21 +68,18 @@ case $BASE_OS in
 	ubuntu*)
 
 		echo
-		echo "Running: \"sudo apt install git ansible\""
+		echo "Running: \"sudo apt install git\""
 
-		sudo apt -y install software-properties-common &>/dev/null
-		sudo add-apt-repository -y ppa:ansible/ansible &>/dev/null
-		sudo apt update &>/dev/null
-		sudo apt -y install git ansible &>/dev/null
+		sudo apt -y install git &>/dev/null
 
 		;;
 
 	centos*)
 
 		echo
-		echo "Running: \"sudo yum install git ansible\""
+		echo "Running: \"sudo yum install git\""
 
-		sudo yum --enablerepo=epel-testing -y install git ansible libselinux-python &>/dev/null
+		sudo yum -y install git &>/dev/null
 		;;
 
 	*)

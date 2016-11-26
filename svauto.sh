@@ -877,11 +877,11 @@ fi
 
 pushd ansible &>/dev/null
 
-echo
-echo "Creating Ansible's Top-Level Playbook : \"ansible/$ANSIBLE_PLAYBOOK_FILE\"."
-
 if [ "$CENTOS_NETWORK_SETUP" == "yes" ]
 then
+
+	echo
+	echo "CentOS Network Setup requested."
 
 	ANSIBLE_PLAYBOOK_TOTAL=1
 
@@ -893,6 +893,9 @@ fi
 
 if [ -n "$RUNTIME_MODE" ]
 then
+
+	echo
+	echo "Creating Ansible's Top-Level Playbook : \"ansible/$ANSIBLE_PLAYBOOK_FILE\"."
 
 	case "$RUNTIME_MODE" in
 	
@@ -1026,115 +1029,4 @@ fi
 
 popd &>/dev/null
 
-if [ "$DRY_RUN" == "yes" ]
-then
-
-	echo
-	echo "Not running Ansible on dry run..."
-
-        echo
-        echo "NOTE: You can manually run Ansible by typing:"
-        echo
-        echo "pushd ansible"
-        echo "ansible-playbook -i $ANSIBLE_INVENTORY_FILE $ANSIBLE_PLAYBOOK_FILE"
-        echo
-
-else
-
-        echo
-        echo "SVAuto is running Ansible:"
-
-        echo
-	echo "pushd ansible"
-
-	echo
-	pushd ansible
-
-	echo
-	echo "Creating both Ansible's Inventory and the Playbook..."
-
-	if [ "$ANSIBLE_DUMP" == "yes" ];
-	then
-
-		echo
-		echo "Dumping Inventory \"$ANSIBLE_INVENTORY_FILE\" file:"
-
-		cat "$ANSIBLE_INVENTORY_FILE"
-
-	fi
-
-	if [ "$ANSIBLE_DUMP" == "yes" ]
-	then
-
-		echo
-		echo "Dumping Top-Level Playbook \"$ANSIBLE_PLAYBOOK_FILE\' file:"
-
-		cat "$ANSIBLE_PLAYBOOK_FILE"
-
-	fi
-
-	if [ -z "$OS_PROJECT" ] || [ -z "$RUNTIME_MODE" ]
-	then
-
-		echo
-		echo "Warning! Missing parameters, using what it is available at the moment..."
-
-		echo "$ANSIBLE_INVENTORY_FILE_IN_MEM" >> $ANSIBLE_INVENTORY_FILE
-
-		echo "$ANSIBLE_PLAYBOOK_FILE_IN_MEM" >> $ANSIBLE_PLAYBOOK_FILE
-
-		#echo "$ANSIBLE_EXTRA_VARS_FILE_IN_MEM" > $ANSIBLE_EXTRA_VARS_FILE
-
-	fi
-
-	echo
-	echo "ansible-playbook -i $ANSIBLE_INVENTORY_FILE $ANSIBLE_PLAYBOOK_FILE"
-
-	if ansible-playbook -i $ANSIBLE_INVENTORY_FILE $ANSIBLE_PLAYBOOK_FILE # -e \""$ANSIBLE_EXTRA_VARS $EXTRA_VARS"\"
-	then
-
-		echo
-		echo "Ansilble applied the playbook correctly... Success!"
-		echo
-
-		if [ ! -z $OS_STACK_NAME ] || [ "$LABIFY" == "yes" ]
-		then
-
-			echo "Your brand new Sandvine's Stack is reachable through SSH:"
-
-			INSTANCES_CONDENSED_LIST=$(cat $TMP_FILE | sort | uniq)
-
-			echo
-
-			for G in `echo $INSTANCES_CONDENSED_LIST`
-			do
-
-				while read line
-				do
-
-					G_IP=$(echo "$line" | grep "$G" | cut -d \  -f 2)
-
-					if [ ! -z "$G_IP" ]; then echo "ssh $ANSIBLE_REMOTE_USER@$G_IP # $G" ; fi
-
-				done < $STACK_LIST_FILE
-
-				echo
-
-			done
-
-		fi
-
-	else
-
-		echo
-		echo "Ansible Playbook failed to apply! ABORTING!!!"
-		echo
-
-		exit 1
-
-	fi
-
-	echo
-	popd
-
-fi
+ansible_runner
