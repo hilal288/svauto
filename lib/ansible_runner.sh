@@ -44,6 +44,7 @@ ansible_runner()
 					echo
 					echo "Running: \"sudo apt install ansible\""
 
+					sudo apt update &>/dev/null
 					sudo apt -y install software-properties-common &>/dev/null
 					sudo add-apt-repository -y ppa:ansible/ansible &>/dev/null
 					sudo apt update &>/dev/null
