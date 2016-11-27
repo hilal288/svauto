@@ -16,21 +16,32 @@
   yum: pkg={{item}} state=latest update_cache=yes
   with_items:
     - firewalld
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "6"
+
+- name: ubuntu16 - apt installing firewalld
+  apt: name={{item}} state=latest update_cache=yes
+  with_items:
+    - firewalld
+  when: ansible_os_family == "Debian" and ansible_distribution_major_version == "16"
 
 
-- name: centos7 - service firewalld enabled
+- name: service firewalld enabled
   service: name=firewalld state=started enabled=yes
 
 
-- name: centos7 - firewall rules
+- name: generic firewall rules
   firewalld: port={{item}} permanent=true state=enabled
   with_items:
     - 22/tcp
-
 - firewalld: zone=trusted interface=eth1 permanent=true state=enabled
 
+- name: firewall rules for "svspb"
+  firewalld: port={{item}} permanent=true state=enabled
+  with_items:
+    - 8443/tcp
+  when: setup_server == 'svspb'
 
-- name: centos7 - firewall rules for "svcs"
+- name: firewall rules for "svcs"
   firewalld: port={{item}} permanent=true state=enabled
   with_items:
     - 8080/tcp
