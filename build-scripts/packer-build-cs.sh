@@ -76,10 +76,10 @@ fi
 #
 
 # SVPTS on CentOS 6 + Cloud Services - Linux 3.18 from Xen 4.6 official repo, DPDK 16.04, don't requires igb_uio
-./svauto.sh --packer-builder --base-os=centos6 --product=svpts --version=$PTS_VERSION --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+./svauto.sh --packer-builder --base-os=centos6 --product=svpts --version="7.40.0164" --product-variant=cs-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
 	--ansible-remote-user="root" \
 	--ansible-inventory-builder="svbox,localhost,is_packer=yes,sandvine_yum_host=$SV_YUM_HOST,svauto_yum_host=$SVAUTO_YUM_HOST,release_code_name=$RELEASE_CODE_NAME" \
-	--ansible-playbook-builder="svbox,centos-xen,cloud-init,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes,grub-conf,dpdk-igb-uio-dkms,base-os-auto-config,centos-network-setup;activate_eth1=no,firewalld,nginx,svpts;pts_version=$PTS_VERSION,svprotocols;pts_protocols_version=$PTS_PROTOCOLS_VERSION,svusagemanagementpts;um_version=$UM_VERSION,svcs-svpts,sandvine-auto-config;setup_server=svpts;setup_mode=cloud-services;setup_sub_option=default;pts_srvc_ip=192.168.192.150;sde_srvc_ip=192.168.192.140;spb_srvc_ip=192.168.192.130,vmware-tools,post-cleanup-image" \
+	--ansible-playbook-builder="svbox,centos-xen,cloud-init,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes,grub-conf,dpdk-igb-uio-dkms,base-os-auto-config,centos-network-setup;activate_eth1=no,firewalld,nginx,svpts;pts_version=7.40.0164,svprotocols;pts_protocols_version=$PTS_PROTOCOLS_VERSION,svusagemanagementpts;um_version=$UM_VERSION,svcs-svpts,sandvine-auto-config;setup_server=svpts;setup_mode=cloud-services;setup_sub_option=default;pts_srvc_ip=192.168.192.150;sde_srvc_ip=192.168.192.140;spb_srvc_ip=192.168.192.130,vmware-tools,post-cleanup-image" \
 	--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 
