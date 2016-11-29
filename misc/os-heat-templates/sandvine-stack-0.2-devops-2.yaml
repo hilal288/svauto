@@ -651,7 +651,7 @@ resources:
         runcmd:
         - ifdown ens4
         - ifdown ens5
-        - 'su -c "\curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/svauto-deployments.sh | bash -s -- --base-os=ubuntu16 --ansible-remote-user=root --ansible-inventory-builder=all,localhost,ansible_connection=local,openstack_release=newton,ubuntu_install=server --ansible-playbook-builder=localhost,bootstrap\;base_os_upgrade=yes,grub-conf,ubuntu-network-setup\;ubuntu_primary_interface=ens3,post-cleanup" sandvine'
+        - 'su -c "\curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/svauto-deployments.sh | bash -s -- --base-os=ubuntu16 --ansible-remote-user=root --ansible-inventory-builder=all,localhost,ansible_connection=local,openstack_release=newton,ubuntu_install=server --ansible-playbook-builder=localhost,bootstrap\;base_os_upgrade=yes,grub-conf,ubuntu-network-setup\;ubuntu_primary_interface=ens3\;ubuntu_primary_interface_via_ifupdown=yes,post-cleanup" sandvine'
         - rm -f /etc/network/interfaces.d/50-cloud-init.cfg
 
   devops_1:
