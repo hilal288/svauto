@@ -16,7 +16,7 @@
   yum: pkg={{item}} state=latest update_cache=yes
   with_items:
     - firewalld
-  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "6"
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
 
 - name: ubuntu16 - apt installing firewalld
   apt: name={{item}} state=latest update_cache=yes
