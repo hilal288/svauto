@@ -1,6 +1,10 @@
 TYPE="Ethernet"
 NM_CONTROLLED="no"
+{% if centos_eth1_onboot == 'yes' %}
 ONBOOT="yes"
+{% else %}
+ONBOOT="no"
+{% endif %}
 NAME="eth1"
 DEVICE="eth1"
 BOOTPROTO="{{ eth1_bootproto }}"

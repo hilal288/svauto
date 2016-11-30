@@ -52,6 +52,8 @@ centos_eth0_mask: "null"
 centos_eth1_ip: "null"
 centos_eth1_mask: "null"
 
+centos_eth1_onboot: "yes"
+
 # openvswitch: Open vSwitch with DPDK?
 openvswitch_mode: "null"
 

@@ -29,3 +29,4 @@
 # End
 ./svauto.sh --update-web-dir-sha256sums
 ./svauto.sh --update-web-dir-symlink
+./svauto.sh --clean-all

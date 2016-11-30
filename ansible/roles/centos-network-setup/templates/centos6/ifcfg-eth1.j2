@@ -6,7 +6,11 @@ NETMASK={{ centos_eth1_mask }}
 {% endif %}
 IPV6INIT="yes"
 NM_CONTROLLED="no"
+{% if centos_eth1_onboot == 'yes' %}
 ONBOOT="yes"
+{% else %}
+ONBOOT="no"
+{% endif %}
 TYPE="Ethernet"
 PEERDNS="no"
 PERSISTENT_DHCLIENT="1"
