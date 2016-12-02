@@ -83,13 +83,11 @@
     <interface type='vhostuser'>
       <source type='unix' path='/var/run/openvswitch/stack-1-pts-1-subscribers-1' mode='client'/>
       <model type='virtio'/>
-      <driver name='vhost' queues='4'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x05' function='0x0'/>
     </interface>
     <interface type='vhostuser'>
       <source type='unix' path='/var/run/openvswitch/stack-1-pts-1-internet-1' mode='client'/>
       <model type='virtio'/>
-      <driver name='vhost' queues='4'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x06' function='0x0'/>
     </interface>
     <serial type='pty'>

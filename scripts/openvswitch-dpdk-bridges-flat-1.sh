@@ -21,12 +21,12 @@ ip link set dev flat-br-1 up
 
 
 # Enable multi-queue on host side, 4 queues
-ovs-vsctl set interface dpdk0 options:n_rxq=4
-ovs-vsctl set interface dpdk1 options:n_rxq=4
+ovs-vsctl set interface dpdk0 options:n_rxq=2
+ovs-vsctl set interface dpdk1 options:n_rxq=2
 
 
 # Give mode CPU Cores to ovs-vswitchd PMD threads
-# ovs-vsctl set Open_vSwitch . other_config:pmd-cpu-mask=FF
+ovs-vsctl set Open_vSwitch . other_config:pmd-cpu-mask=FFFFF
 
 
 # Ninja OpenFlow rules
