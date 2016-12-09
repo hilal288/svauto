@@ -29,6 +29,10 @@
   service: name=firewalld state=started enabled=yes
 
 
+- pause:
+    seconds: 1
+
+
 - name: generic firewall rules
   firewalld: port={{item}} permanent=true state=enabled
   with_items:
