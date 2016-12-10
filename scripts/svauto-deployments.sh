@@ -68,9 +68,9 @@ case $BASE_OS in
 	ubuntu*)
 
 		echo
-		echo "Running: \"sudo apt install git\""
+		echo "Running: \"sudo apt install git python-minimal\""
 
-		sudo apt -y install git &>/dev/null
+		sudo apt -y install git python-minimal &>/dev/null
 
 		;;
 
