@@ -1,0 +1,47 @@
+# Copyright 2016, Sandvine Incorporated
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# TODO: Rewrite this role, make it dynamic.
+
+# PTS
+- stat: path=/home/{{ regular_system_user }}/svauto/downloads/svpts-{{ pts_version }}-vpl-1-centos7-amd64-disk1.qcow2c
+  register: svpts_source_image_register
+
+- stat: path=/var/lib/libvirt/images/stack-1-pts-1-disk1.qcow2
+  register: svpts_destiny_image_register
+
+- shell: qemu-img convert -p -f qcow2 -O qcow2 -o preallocation=metadata /home/{{ regular_system_user }}/svauto/downloads/svpts-{{ pts_version }}-vpl-1-centos7-amd64-disk1.qcow2c /var/lib/libvirt/images/stack-1-pts-1-disk1.qcow2
+  when: svpts_source_image_register.stat.exists == True and svpts_destiny_image_register.stat.exists == False
+
+
+# SDE
+- stat: path=/home/{{ regular_system_user }}/svauto/downloads/svsde-{{ sde_version }}-vpl-1-centos7-amd64-disk1.qcow2c
+  register: svsde_source_image_register
+
+- stat: path=/var/lib/libvirt/images/stack-1-sde-1-disk1.qcow2
+  register: svsde_destiny_image_register
+
+- shell: qemu-img convert -p -f qcow2 -O qcow2 -o preallocation=metadata /home/{{ regular_system_user }}/svauto/downloads/svsde-{{ sde_version }}-vpl-1-centos7-amd64-disk1.qcow2c /var/lib/libvirt/images/stack-1-sde-1-disk1.qcow2
+  when: svsde_source_image_register.stat.exists == True and svsde_destiny_image_register.stat.exists == False
+
+
+# SPB
+- stat: path=/home/{{ regular_system_user }}/svauto/downloads/svspb-{{ spb_version }}-vpl-1-centos6-amd64-disk1.qcow2c
+  register: svspb_source_image_register
+
+- stat: path=/var/lib/libvirt/images/stack-1-spb-1-disk1.qcow2
+  register: svspb_destiny_image_register
+
+- shell: qemu-img convert -p -f qcow2 -O qcow2 -o preallocation=metadata /home/{{ regular_system_user }}/svauto/downloads/svspb-{{ spb_version }}-vpl-1-centos6-amd64-disk1.qcow2c /var/lib/libvirt/images/stack-1-spb-1-disk1.qcow2
+  when: svspb_source_image_register.stat.exists == True and svspb_destiny_image_register.stat.exists == False

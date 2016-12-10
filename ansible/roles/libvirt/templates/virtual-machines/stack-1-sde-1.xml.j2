@@ -36,6 +36,7 @@
     </disk>
     <disk type='file' device='cdrom'>
       <driver name='qemu' type='raw'/>
+      <source file='/var/lib/libvirt/images/stack-1-sde-1-config-drive.iso'/>
       <target dev='hda' bus='ide'/>
       <readonly/>
       <address type='drive' controller='0' bus='0' target='0' unit='0'/>
@@ -62,15 +63,18 @@
     <controller type='virtio-serial' index='0'>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x08' function='0x0'/>
     </controller>
-    <interface type='network'>
-      <source network='stack-1-control-1'/>
+    <interface type='bridge'>
+      <source bridge='dummybr2'/>
+      <mac address='{{ stack_1_sde_1_ctrl_mac }}'/>
       <model type='virtio'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x03' function='0x0'/>
+      <virtualport type='openvswitch'/>
     </interface>
-    <interface type='network'>
-      <source network='stack-1-service-1'/>
+    <interface type='bridge'>
+      <source bridge='dummybr3'/>
       <model type='virtio'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x04' function='0x0'/>
+      <virtualport type='openvswitch'/>
     </interface>
     <serial type='pty'>
       <target port='0'/>
