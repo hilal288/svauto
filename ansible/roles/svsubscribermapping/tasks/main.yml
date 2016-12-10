@@ -29,7 +29,7 @@
 
 
 - name: centos7 - yum installing Usage Management
-  yum: pkg={{item}} state=latest update_cache=yes
+  yum: pkg={{item}} state=installed update_cache=yes
   with_items:
     - ftp://{{ sandvine_yum_host }}/images/Linux/CENTOS7-x64/RPM_COMMON/SUBSCRIBER_MAPPING/subscriber_mapping-{{ sm_version }}.el7.x86_64.rpm
   when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
