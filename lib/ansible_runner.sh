@@ -110,7 +110,7 @@ ansible_runner()
 
 			# TODO: Review the need for this block:
 			echo
-			echo "Warning! Not running against an OpenStack, auto-building Ansible's files from memory..."
+			echo "Warning! Not running against OpenStack, auto-building Ansible's files from memory..."
 
 			echo "$ANSIBLE_INVENTORY_FILE_IN_MEM" >> $ANSIBLE_INVENTORY_FILE
 
