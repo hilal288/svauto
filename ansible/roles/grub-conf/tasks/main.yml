@@ -15,7 +15,6 @@
 - name: ubuntu - how many CPUs supports 1G HugePages
   shell: cat /proc/cpuinfo | grep pdpe1gb | wc -l
   register: processor_count_1g_hugepages
-  tags: processor_count_1g_hugepages
 
 
 - name: ubuntu - include config
