@@ -1,0 +1,13 @@
+#
+# Sandvine-SVNBI.repo
+#
+
+[sandvine-svnbi]
+name=Sandvine - SVNBI
+{% if (release == 'dev' and ansible_os_family == "RedHat") %}
+baseurl=ftp://{{ sandvine_yum_host }}/images/Linux/NBI_BASE_PTS/svnbi_base_pts-LNX-{{ svnbi_version }}
+{% endif %}
+enabled=1
+protect=0
+gpgcheck=0
+sslverify=0
