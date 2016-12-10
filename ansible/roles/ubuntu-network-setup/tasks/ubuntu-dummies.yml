@@ -14,7 +14,7 @@
 
 - name: ubuntu - config dummy module options
   lineinfile: dest=/etc/modprobe.d/dummy.conf
-              line="options dummy numdummies=10"
+              line="options dummy numdummies=12"
               create=yes
 
 - name: ubuntu - config dummy module
@@ -61,26 +61,88 @@
         group=root
         mode=0644
 
+- name: ubuntu - copy dummy6 config file
+  copy: src=ubuntu-common/interface_dummy6
+        dest=/etc/network/interfaces.d/dummy6.cfg
+        owner=root
+        group=root
+        mode=0644
 
-- name: ubuntu - starting up dummy0
-  shell: 'ifup dummy0'
+- name: ubuntu - copy dummy7 config file
+  copy: src=ubuntu-common/interface_dummy7
+        dest=/etc/network/interfaces.d/dummy7.cfg
+        owner=root
+        group=root
+        mode=0644
+
+- name: ubuntu - copy dummy8 config file
+  copy: src=ubuntu-common/interface_dummy8
+        dest=/etc/network/interfaces.d/dummy8.cfg
+        owner=root
+        group=root
+        mode=0644
+
+- name: ubuntu - copy dummy9 config file
+  copy: src=ubuntu-common/interface_dummy9
+        dest=/etc/network/interfaces.d/dummy9.cfg
+        owner=root
+        group=root
+        mode=0644
+
+- name: ubuntu - copy dummy10 config file
+  copy: src=ubuntu-common/interface_dummy10
+        dest=/etc/network/interfaces.d/dummy10.cfg
+        owner=root
+        group=root
+        mode=0644
+
+- name: ubuntu - copy dummy11 config file
+  copy: src=ubuntu-common/interface_dummy11
+        dest=/etc/network/interfaces.d/dummy11.cfg
+        owner=root
+        group=root
+        mode=0644
+
+
+- name: ubuntu - restarting up dummy0
+  shell: 'ifdown dummy0 ; ifup dummy0'
   when: os_neutron_lbr_enabled == 'yes'
   ignore_errors: yes
 
-- name: ubuntu - starting up dummy1
-  shell: 'ifup dummy1'
+- name: ubuntu - restarting up dummy1
+  shell: 'ifdown dummy1 ; ifup dummy1'
   ignore_errors: yes
 
-- name: ubuntu - starting up dummy2
-  shell: 'ifup dummy1'
+- name: ubuntu - restarting up dummy2
+  shell: 'ifdown dummy2 ; ifup dummy1'
   ignore_errors: yes
 
-- name: ubuntu - starting up dummy4
-  shell: 'ifup dummy4'
+- name: ubuntu - restarting up dummy4
+  shell: 'ifdown dummy3 ; ifup dummy4'
   ignore_errors: yes
 
-- name: ubuntu - starting up dummy5
-  shell: 'ifup dummy5'
+- name: ubuntu - restarting up dummy5
+  shell: 'ifdown dummy5 ; ifup dummy5'
+  ignore_errors: yes
+
+- name: ubuntu - restarting up dummy6
+  shell: 'ifdown dummy6 ; ifup dummy6'
+  ignore_errors: yes
+
+- name: ubuntu - restarting up dummy7
+  shell: 'ifdown dummy7 ; ifup dummy7'
+  ignore_errors: yes
+
+- name: ubuntu - restarting up dummy8
+  shell: 'ifdown dummy8 ; ifup dummy8'
+  ignore_errors: yes
+
+- name: ubuntu - restarting up dummy9
+  shell: 'ifdown dummy9 ; ifup dummy9'
+  ignore_errors: yes
+
+- name: ubuntu - restarting up dummy10
+  shell: 'ifdown dummy10 ; ifup dummy10'
   ignore_errors: yes
 
 

@@ -56,16 +56,3 @@
 - name: ubuntu - include dummy NICs setup
   include: ubuntu-dummies.yml
   when: ubuntu_setup_dummy_nics == 'yes'
-
-
-# Including Neutron Bridges.
-- name: ubuntu - include Neutron dummy OVS bridges
-  include: neutron-bridges.yml
-  when: os_neutron_ovs_enabled == 'yes'
-
-
-# Because OpenStack's br-ex is by default, of top of dummy0, we need to activate
-# an iptables rule on each boot, after Nova.
-- name: ubuntu - include iptables setup via rc.local
-  include: ubuntu-iptables-via-rc-local.yml
-  when: ubuntu_setup_iptables_rc_local == 'yes'
