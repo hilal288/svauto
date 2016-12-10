@@ -12,6 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: reload sandvine
-  shell: svreload
-  when: is_packer != 'yes'
+- name: ubuntu - include config
+  include: ubuntu-common.yml
+  when: ansible_os_family == "Debian"

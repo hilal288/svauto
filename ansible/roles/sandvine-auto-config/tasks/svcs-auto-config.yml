@@ -19,7 +19,6 @@
             group=root
             mode=0644
             backup=yes
-  notify: restart-cloudservices
 
 
 - name: svcs - configuring Cloud Services JS
@@ -29,7 +28,6 @@
             group=root
             mode=0644
             backup=yes
-  notify: restart-cloudservices
 
 
 - name: svcs - configuring Redis
@@ -48,3 +46,19 @@
             group=influxdb
             mode=0644
             backup=yes
+
+
+# Handlers:
+
+- name: wipe-out-data-restart-influxdb
+  shell: if [ -d /opt/influxdb/shared/data ]; then rm -rf /opt/influxdb/shared/data ; sync ; /etc/init.d/influxdb restart ; fi
+  when: is_packer != 'yes'
+
+
+- pause:
+    seconds: 3
+
+
+- name: restart-cloudservices
+  service: name=csd state=restarted enabled=yes
+  when: is_packer != 'yes'

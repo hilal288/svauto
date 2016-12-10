@@ -13,26 +13,31 @@
 # limitations under the License.
 
 - name: ubuntu - apt installing Apache
-  apt: name={{item}} state=latest
+  apt: name={{ item }} state=latest
   with_items:
     - apache2
     - libapache2-mod-wsgi
+    - libapache2-mod-fcgid
 
 
 - name: ubuntu - Apache Modules
-  apache2_module: state=present name={{item}}
+  apache2_module: state=present name={{ item }}
   with_items:
     - ssl
+    - env
     - wsgi
+    - alias
     - rewrite
     - headers
+    - fcgid
     - proxy
     - proxy_http
+    - auth_digest
 
 
 - name: ubuntu - Apache HTTP Virtual Host
   template: src=mydomain-template.com.conf
-            dest=/etc/apache2/sites-available/{{os_public_addr}}.conf
+            dest=/etc/apache2/sites-available/{{ public_addr }}.conf
             owner=root
             group=root
             mode=0644
@@ -42,7 +47,7 @@
 
 - name: ubuntu - Apache HTTPS Virtual Host
   template: src=mydomain-template.com-ssl.conf
-            dest=/etc/apache2/sites-available/{{os_public_addr}}-ssl.conf
+            dest=/etc/apache2/sites-available/{{ public_addr }}-ssl.conf
             owner=root
             group=root
             mode=0644
@@ -51,8 +56,8 @@
 
 
 - name: ubuntu - Apache activating Virtual Host
-  file: src=/etc/apache2/sites-available/{{os_public_addr}}.conf
-        dest=/etc/apache2/sites-enabled/{{os_public_addr}}.conf
+  file: src=/etc/apache2/sites-available/{{ public_addr }}.conf
+        dest=/etc/apache2/sites-enabled/{{ public_addr }}.conf
         owner=root
         group=root
         state=link
@@ -60,12 +65,31 @@
 
 
 - name: ubuntu - Apache activating SSL Virtual Host
-  file: src=/etc/apache2/sites-available/{{os_public_addr}}-ssl.conf
-        dest=/etc/apache2/sites-enabled/{{os_public_addr}}-ssl.conf
+  file: src=/etc/apache2/sites-available/{{ public_addr }}-ssl.conf
+        dest=/etc/apache2/sites-enabled/{{ public_addr }}-ssl.conf
         owner=root
         group=root
         state=link
   when: enable_apache_vhost == 'yes'
+
+
+- name: ubuntu - Apache HTTP Reverse Proxy
+  template: src=mydomain-template.com-reverse-proxy.conf
+            dest=/etc/apache2/sites-available/{{ public_addr }}.conf
+            owner=root
+            group=root
+            mode=0644
+  when: apache_reverse_proxy == 'yes'
+  notify: reload-apache2
+
+
+- name: ubuntu - Apache activating Reverse Proxy
+  file: src=/etc/apache2/sites-available/{{ public_addr }}.conf
+        dest=/etc/apache2/sites-enabled/{{ public_addr }}.conf
+        owner=root
+        group=root
+        state=link
+  when: apache_reverse_proxy == 'yes'
 
 
 - meta: flush_handlers

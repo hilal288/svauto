@@ -12,6 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: restart-cloudservices
-  service: name=csd state=started enabled=yes
-  when: is_packer != 'yes'
+- name: Downloading requested images...
+  include: "{{ download_group }}-images.yml"

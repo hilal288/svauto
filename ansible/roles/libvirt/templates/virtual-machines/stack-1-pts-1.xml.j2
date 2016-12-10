@@ -1,14 +1,16 @@
 <domain type='kvm'>
   <name>stack-1-pts-1</name>
-  <memory unit='KiB'>4194304</memory>
-  <currentMemory unit='KiB'>4194304</currentMemory>
+  <memory unit='KiB'>8388608</memory>
+  <currentMemory unit='KiB'>8388608</currentMemory>
+{% if openvswitch_mode == 'dpdk' %}
   <memoryBacking>
     <hugepages/>
   </memoryBacking>
-  <vcpu placement='static'>4</vcpu>
   <numatune>
     <memory mode='strict' nodeset='0'/>
   </numatune>
+{% endif %}
+  <vcpu placement='static'>4</vcpu>
   <os>
     <type arch='x86_64'>hvm</type>
     <boot dev='hd'/>
@@ -17,10 +19,16 @@
     <acpi/>
     <apic/>
   </features>
-  <cpu mode='host-passthrough'>
+  <cpu mode='host-model'>
+    <model fallback='allow'/>
+{% if openvswitch_mode == 'dpdk' %}
     <numa>
-      <cell id='0' cpus='0-3' memory='4194304' unit='KiB' memAccess='shared'/>
+      <cell id='0' cpus='0-3' memory='8388608' unit='KiB' memAccess='shared'/>
     </numa>
+{% endif %}
+{% if openvswitch_mode == 'regular' %}
+    <model fallback='allow'/>
+{% endif %}
   </cpu>
   <clock offset='utc'>
     <timer name='rtc' tickpolicy='catchup'/>
@@ -44,6 +52,7 @@
     </disk>
     <disk type='file' device='cdrom'>
       <driver name='qemu' type='raw'/>
+      <source file='/var/lib/libvirt/images/stack-1-pts-1-config-drive.iso'/>
       <target dev='hda' bus='ide'/>
       <readonly/>
       <address type='drive' controller='0' bus='0' target='0' unit='0'/>
@@ -70,26 +79,51 @@
     <controller type='virtio-serial' index='0'>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x08' function='0x0'/>
     </controller>
-    <interface type='network'>
-      <source network='stack-1-control-1'/>
+    <interface type='bridge'>
+      <source bridge='dummybr2'/>
+      <mac address='{{ stack_1_pts_1_ctrl_mac }}'/>
       <model type='virtio'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x03' function='0x0'/>
+      <virtualport type='openvswitch'/>
     </interface>
-    <interface type='network'>
-      <source network='stack-1-service-1'/>
+    <interface type='bridge'>
+      <source bridge='dummybr3'/>
       <model type='virtio'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x04' function='0x0'/>
+      <virtualport type='openvswitch'/>
     </interface>
+{% if openvswitch_mode == 'regular' %}
+    <interface type='bridge'>
+      <source bridge='dummybr4'/>
+      <model type='virtio'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x05' function='0x0'/>
+      <virtualport type='openvswitch'/>
+    </interface>
+    <interface type='bridge'>
+      <source bridge='dummybr5'/>
+      <model type='virtio'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x06' function='0x0'/>
+      <virtualport type='openvswitch'/>
+    </interface>
+{% endif %}
+{% if openvswitch_mode == 'dpdk' %}
     <interface type='vhostuser'>
       <source type='unix' path='/var/run/openvswitch/stack-1-pts-1-subscribers-1' mode='client'/>
       <model type='virtio'/>
+{% if (enable_multiqueue == 'yes' and number_of_queues >= 1) %}
+      <driver name='vhost' queues='{{ number_of_queues }}'/>
+{% endif %}
       <address type='pci' domain='0x0000' bus='0x00' slot='0x05' function='0x0'/>
     </interface>
     <interface type='vhostuser'>
       <source type='unix' path='/var/run/openvswitch/stack-1-pts-1-internet-1' mode='client'/>
       <model type='virtio'/>
+{% if (enable_multiqueue == 'yes' and number_of_queues >= 1) %}
+      <driver name='vhost' queues='{{ number_of_queues }}'/>
+{% endif %}
       <address type='pci' domain='0x0000' bus='0x00' slot='0x06' function='0x0'/>
     </interface>
+{% endif %}
     <serial type='pty'>
       <target port='0'/>
     </serial>

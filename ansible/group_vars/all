@@ -20,7 +20,17 @@
 # Global Definitions
 #
 
+# Main DNS Nameservers, used in many places:
+dns_1: "8.8.4.4"
+dns_2: "8.8.8.8"
+dns_3: "4.4.2.2"
+
+# System user, usualy, your local Desktop user, or a remote "cloud" user.
 regular_system_user: "sandvine"
+
+image_group: "null"
+
+download_group: "null"
 
 # Upgrade Base OS:
 base_os_upgrade: "no"
@@ -56,6 +66,12 @@ centos_eth1_onboot: "yes"
 
 # openvswitch: Open vSwitch with DPDK?
 openvswitch_mode: "null"
+
+openvswitch_net_mode: "flat"
+
+openvswitch_openflow_rules: "no"
+
+openvswitch_stack_1_bridges: "no"
 
 # udev-rules: NIC Interface ordering via PCI ID
 eth0_pci_id: "0000:00:03.0"
@@ -194,6 +210,13 @@ mdmQM:
 
 
 #
+# Local VM Macs
+#
+stack_1_pts_1_ctrl_mac: "52:54:00:03:65:f1"
+stack_1_sde_1_ctrl_mac: "52:54:00:3d:63:4a"
+stack_1_spb_1_ctrl_mac: "52:54:00:5c:80:25"
+
+#
 # PTS PCI Setup (also DPDK - fastpath)
 #
 
@@ -213,6 +236,8 @@ ubuntu_install: "server"
 
 ubuntu_primary_interface: "eth0"
 
+ubuntu_enable_ip_masquerade: "no"
+
 ubuntu_primary_interface_via_ifupdown: "no"
 
 ubuntu_network_mode: "dhcp"
@@ -224,8 +249,6 @@ ubuntu_name_server_1: "null"
 ubuntu_name_server_2: "null"
 
 ubuntu_setup_dummy_nics: "no"
-
-ubuntu_setup_iptables_rc_local: "no"
 
 
 #
@@ -253,6 +276,9 @@ dpdk_driver_3: "vfio-pci"
 dpdk_id_4: "0000:09:00.1"
 dpdk_driver_4: "vfio-pci"
 
+
+enable_multiqueue: 'no'
+number_of_queues: '0'
 
 #
 # OpenStack Definitions
@@ -282,12 +308,12 @@ os_data: "dummy1"
 
 os_cinder: "dummy2"
 
+os_neutron_external_bridge: "br-ex"
+
 os_neutron_lbr_enabled: "no"
 os_neutron_ovs_enabled: "no"
 os_neutron_ovs_dpdk_enabled: "no"
 os_neutron_sriov_enabled: "no"
-
-os_neutron_external_bridge: "br-ex"
 
 os_provider_net_1_label: "provider-net-1"
 os_provider_net_1_lbr_interface: "dummy6"
@@ -418,3 +444,13 @@ ldap_user_name_attribute: ""
 ldap_keystone_domain: "company.com"
 ldap_horizon_default_domain: "no"
 ldap_keystone_domain_description: "Company Domain"
+
+
+#
+# Metadata CD-ROM Generator
+#
+
+random_seed: "null"
+ssh_pub_key: "{{ lookup('file', '/home/' + regular_system_user + '/.ssh/id_rsa.pub') }}"
+vm_hostname: "null"
+vm_fqdn: "{{ vm_hostname }}.sandvine.rocks"

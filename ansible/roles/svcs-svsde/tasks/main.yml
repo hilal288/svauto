@@ -18,7 +18,6 @@
 
 
 - name: Installing Cloud Serivces for SDE plus required packages
-  yum: pkg={{item}} state=latest
+  yum: pkg={{item}} state=latest update_cache=yes
   with_items:
     - svcloud-services-sde
-  notify: reload sandvine

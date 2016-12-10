@@ -12,16 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#- name: ubuntu - iptables rule for OpenStack AIO demo box - not persistent!   :-@
-#  iptables: table=nat chain=POSTROUTING out_interface="{{os_mgmt}}" jump=MASQUERADE comment="Masquerade rule for OpenStack demo box"
+- name: ubuntu - include OVS Bridges for Neutron
+  include: ovs_bridges_neutron.yml
+  when: os_neutron_ovs_enabled == 'yes'
 
-- name: ubuntu - iptables for OpenStack AIO - persistent across reboots via /etc/rc.local
-  template: src=ubuntu-common/rc.local.j2
-            dest=/etc/rc.local
-            owner=root
-            group=root
-            mode=0755
-            backup=yes
 
-- name: ubuntu - running /etc/rc.local
-  shell: /etc/rc.local
+- name: ubuntu - include OVS Bridges for regular KVM
+  include: ovs_bridges_regular_kvm.yml
+  when: openvswitch_stack_1_bridges == 'yes'
+
+
+- name: ubuntu - include OVS Bridges with DPDK for regular KVM
+  include: ovs_bridges_dpdk.yml
+  when: openvswitch_stack_1_bridges == 'yes' and openvswitch_mode == 'dpdk'

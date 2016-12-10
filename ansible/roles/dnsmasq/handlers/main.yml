@@ -12,6 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: reload sandvine
-  shell: svreload
-  when: is_packer != 'yes'
+- name: restart-dnsmasq
+  service: name=dnsmasq state=restarted enabled=yes
