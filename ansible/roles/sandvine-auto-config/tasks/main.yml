@@ -12,39 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Sandvine Auto Configuration book for SVPTS
-  include: svpts-auto-config.yml
-  when: setup_server == 'svpts'
-
-
-- name: Sandvine Auto Configuration book for SVSDE
-  include: svsde-auto-config.yml
-  when: setup_server == 'svsde'
-
-
-- name: Sandvine Auto Configuration book for SVSPB
-  include: svspb-auto-config.yml
-  when: setup_server == 'svspb'
-
-
-- name: Sandvine Auto Configuration book for SVCS
-  include: svcs-auto-config.yml
-  when: setup_server == 'svcs'
-
-
-- name: Sandvine Auto Configuration book for SVNDA
-  include: svnda-auto-config.yml
-  when: setup_server == 'svnda'
-
-
-- name: Sandvine Auto Configuration book for SVTSE
-  include: svtse-auto-config.yml
-  when: setup_server == 'svtse'
-
-
-- name: Sandvine Auto Configuration book for SVTCPA
-  include: svtcpa-auto-config.yml
-  when: setup_server == 'svtcpa'
+- name: Sandvine Auto Configuration book
+  include: "{{ setup_server }}-auto-config.yml"
 
 
 - name: reload-sandvine
