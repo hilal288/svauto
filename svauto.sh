@@ -145,6 +145,12 @@ case $i in
 		shift
 		;;
 
+	--ansible-manual-inventory)
+
+		ANSIBLE_MANUAL_INVENTORY="yes"
+		shift
+		;;
+
 	--vagrant=*)
 
 		VAGRANT_MODE="${i#*=}"
@@ -320,12 +326,6 @@ case $i in
 		shift
 		;;
 
-	--labify)
-
-		LABIFY="yes"
-		shift
-		;;
-
 	--move2webroot=*)
 
 		MOVE2WEBROOT_BUILD="${i#*=}"
@@ -384,18 +384,6 @@ case $i in
         --ubuntu-detect-default-nic)
 
 	        UBUNTU_DETECT_DEFAULT_NIC="yes"
-		shift
-		;;
-
-        --download-images=*)
-
-	        DOWNLOAD_IMAGES="${i#*=}"
-		shift
-		;;
-
-	--libvirt-install-images)
-
-		LIBVIRT_INSTALL_IMAGES="yes"
 		shift
 		;;
 
@@ -583,87 +571,6 @@ then
 	fi
 
 fi
-
-case $DOWNLOAD_IMAGES in
-
-	iso-for-kvm)
-
-		echo
-		echo "Download ISO images into Libvirt subdir:"
-
-		sudo mkdir /var/lib/libvirt/ISO -p
-
-		pushd /var/lib/libvirt/ISO
-
-		sudo wget -c $UBUNTU1604_64_ISO
-		sudo wget -c $UBUNTU1404_64_ISO
-		sudo wget -c $CENTOS7_64_ISO
-		sudo wget -c $CENTOS6_64_ISO
-
-		popd
-
-		exit 0
-
-		;;
-
-	sandvine)
-
-		echo
-		echo "Enter your Sandvine's FTP (ftp.support.sandvine.com) account details:"
-		echo
-
-		echo -n "Username: "
-#		read FTP_USER
-
-		echo -n "Password: "
-#		read -s FTP_PASS
-
-		echo
-
-		pushd downloads
-
-#		wget -c --user=$FTP_USER --password=$FTP_PASS $PTS_IMG_URL
-#		wget -c --user=$FTP_USER --password=$FTP_PASS $SDE_IMG_URL
-#		wget -c --user=$FTP_USER --password=$FTP_PASS $SPB_IMG_URL
-
-		wget -c $PTS_IMG_URL
-		wget -c $SDE_IMG_URL
-		wget -c $SPB_IMG_URL
-
-		popd
-
-		exit 0
-
-		;;
-
-	cloud-services)
-
-		echo
-		echo "TODO!"
-
-		;;
-
-	generic)
-
-		echo
-
-		pushd downloads
-
-		wget -c $UBUNTU1604_64_CLOUD_IMG_URL
-		wget -c $UBUNTU1404_64_CLOUD_IMG_URL
-		wget -c $UBUNTU1204_64_CLOUD_IMG_URL
-		wget -c $DEBIAN8_64_CLOUD_IMG_URL
-		wget -c $CENTOS7_64_CLOUD_IMG_URL
-		wget -c $CENTOS6_64_CLOUD_IMG_URL
-		wget -c $CIRROS03_64_CLOUD_IMG_URL
-
-		popd
-
-		exit0
-
-		;;
-
-esac
 
 # Before doing Packer buils in series, we need to create the public webdir
 if [ "$MK_PUB_WEB_DIR" == "yes" ]
@@ -899,85 +806,105 @@ then
 
 	case "$RUNTIME_MODE" in
 	
-		config-only)
-	
+		sandvine-auto-config)
+
 			echo
 			echo "Configuring Sandvine Platform with Ansible..."
-	
+
 			if [ "$OPERATION" == "cloud-services" ] && [ -z "$CLOUD_SERVICES_MODE" ]
 			then
-	
+
 				echo
 				echo "For operation=cloud-services, you have to also, specify --cloud-services-mode=default|mdm"
-	
+
 				exit 1
-	
+
 			fi
-	
-			if [ "$OPERATION" == "sandvine" ]; then CLOUD_SERVICES_MODE=null; fi
-	
-			ANSIBLE_PLAYBOOK_TOTAL=3
-	
-			ANSIBLE_PLAYBOOK_ENTRY_1="spb-servers,sandvine-auto-config;setup_server=svspb;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE"
-			ANSIBLE_PLAYBOOK_ENTRY_2="sde-servers,sandvine-auto-config;setup_server=svsde;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE"
-			ANSIBLE_PLAYBOOK_ENTRY_3="pts-servers,sandvine-auto-config;setup_server=svpts;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE;license_server=$LICENSE_SERVER"
-	
-			ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
+
+			case "$OPERATION" in
+
+				sandvine)
+
+					CLOUD_SERVICES_MODE=null
+
+					ANSIBLE_PLAYBOOK_TOTAL=3
+
+					ANSIBLE_PLAYBOOK_ENTRY_1="spb-servers,sandvine-auto-config;setup_server=svspb;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE"
+					ANSIBLE_PLAYBOOK_ENTRY_2="sde-servers,sandvine-auto-config;setup_server=svsde;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE"
+					ANSIBLE_PLAYBOOK_ENTRY_3="pts-servers,sandvine-auto-config;setup_server=svpts;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE;license_server=$LICENSE_SERVER"
+
+					ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
+					;;
+
+				cloud-services)
+
+					ANSIBLE_PLAYBOOK_TOTAL=4
+
+					ANSIBLE_PLAYBOOK_ENTRY_1="spb-servers,sandvine-auto-config;setup_server=svspb;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE"
+					ANSIBLE_PLAYBOOK_ENTRY_2="sde-servers,sandvine-auto-config;setup_server=svsde;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE"
+					ANSIBLE_PLAYBOOK_ENTRY_3="svcs-servers,sandvine-auto-config;setup_server=svcs;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE"
+					ANSIBLE_PLAYBOOK_ENTRY_4="pts-servers,sandvine-auto-config;setup_server=svpts;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE;license_server=$LICENSE_SERVER"
+
+					ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
+					;;
+
+			esac
+
 			;;
-	
-		full-deployment)
-	
+
+		deployment)
+
 			echo
 			echo "Deploying Sandvine's RPM packages with Ansible..."
-	
+
 			case $OPERATION in
-	
+
 				sandvine)
-	
+
 					ANSIBLE_PLAYBOOK_TOTAL=3
-	
-					ANSIBLE_PLAYBOOK_ENTRY_1="pts-servers,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes,nginx,svpts;pts_version=$PTS_VERSION,svprotocols;pts_protocols_version=$PTS_PROTOCOLS_VERSION,sandvine-auto-config;setup_server=svpts;setup_mode=$OPERATION;license_server=$LICENSE_SERVER,post-cleanup,power-cycle"
-					ANSIBLE_PLAYBOOK_ENTRY_2="sde-servers,bootstrap;base_os_upgrade=yes,nginx,svsde;sde_version=$SDE_VERSION,sandvine-auto-config;setup_server=svsde;setup_mode=$OPERATION,post-cleanup,power-cycle"
-					ANSIBLE_PLAYBOOK_ENTRY_3="spb-servers,bootstrap;base_os_upgrade=yes,nginx,postgresql,svspb;spb_version=$SPB_VERSION,sandvine-auto-config;setup_server=svspb;setup_mode=$OPERATION,post-cleanup,power-cycle"
-	
+
+					ANSIBLE_PLAYBOOK_ENTRY_1="pts-servers,bootstrap;base_os_upgrade=yes,nginx,svpts;pts_version=$PTS_VERSION,svprotocols;pts_protocols_version=$PTS_PROTOCOLS_VERSION,post-cleanup,power-cycle"
+					ANSIBLE_PLAYBOOK_ENTRY_2="sde-servers,bootstrap;base_os_upgrade=yes,nginx,svsde;sde_version=$SDE_VERSION,post-cleanup,power-cycle"
+					ANSIBLE_PLAYBOOK_ENTRY_3="spb-servers,bootstrap;base_os_upgrade=yes,nginx,postgresql,svspb;spb_version=$SPB_VERSION,post-cleanup,power-cycle"
+
 					ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
 					;;
-	
+
 				cloud-services)
-	
+
 					ANSIBLE_PLAYBOOK_TOTAL=3
-	
-					ANSIBLE_PLAYBOOK_ENTRY_1="pts-servers,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes,nginx,svpts;pts_version=$PTS_VERSION,svprotocols;pts_protocols_version=$PTS_PROTOCOLS_VERSION,svusagemanagementpts;um_version=$UM_VERSION,svcs-svpts,sandvine-auto-config;setup_server=svpts;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE;license_server=$LICENSE_SERVER,post-cleanup,power-cycle"
-					ANSIBLE_PLAYBOOK_ENTRY_2="sde-servers,bootstrap;base_os_upgrade=yes,nginx,svsde;sde_version=$SDE_VERSION,svusagemanagement;um_version=$UM_VERSION,svsubscribermapping;sm_version=$SM_C7_VERSION,svcs-svsde,svcs,sandvine-auto-config;setup_server=svsde;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE,sandvine-auto-config;setup_server=svcs;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE,post-cleanup,power-cycle"
-					ANSIBLE_PLAYBOOK_ENTRY_3="spb-servers,bootstrap;base_os_upgrade=yes,nginx,postgresql,svspb;spb_version=$SPB_VERSION,svmcdtext;spb_protocols_version=$SPB_PROTOCOLS_VERSION,svreports;nds_version=$NDS_VERSION,svcs-svspb,sandvine-auto-config;setup_server=svspb;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE,post-cleanup,power-cycle"
-	
+
+					ANSIBLE_PLAYBOOK_ENTRY_1="pts-servers,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes,nginx,svpts;pts_version=$PTS_VERSION,svprotocols;pts_protocols_version=$PTS_PROTOCOLS_VERSION,svusagemanagementpts;um_version=$UM_VERSION,svcs-svpts,post-cleanup,power-cycle"
+					ANSIBLE_PLAYBOOK_ENTRY_2="sde-servers,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes,nginx,svsde;sde_version=$SDE_VERSION,svusagemanagement;um_version=$UM_VERSION,svsubscribermapping;sm_version=$SM_C7_VERSION,svcs-svsde,svcs,post-cleanup,power-cycle"
+					ANSIBLE_PLAYBOOK_ENTRY_3="spb-servers,bootstrap;base_os_upgrade=yes;sandvine_main_yum_repo=yes,nginx,postgresql,svspb;spb_version=$SPB_VERSION,svmcdtext;spb_protocols_version=$SPB_PROTOCOLS_VERSION,svreports;nds_version=$NDS_VERSION,svcs-svspb,post-cleanup,power-cycle"
+
 					ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
 					;;
-	
+
 			esac
 			;;
-	
+
 		*)
-	
+
 			echo
 			echo "Warning! Runtime mode not supported!"
-			echo "Usage: $0 --runtime-mode={full-deployemnt|config-only}"
-	
+			echo "Usage: $0 --runtime-mode={deployemnt|sandvine-auto-config}"
+
 			exit 1
 			;;
-	
+
 	esac
 
 fi
 
-if [ "$LABIFY" == "yes" ]
+if [ "$ANSIBLE_MANUAL_INVENTORY" == "yes" ]
 then
 
 	if [ -z "$RUNTIME_MODE" ]
 	then
 
 		echo
-		echo "Warning! Labify require --runtime-mode=something, aborting!"
+		echo "Warning! Manual Inventory mode requires --runtime-mode={full-deployemnt|config-only}, aborting!"
 		echo
 
 		exit 1
@@ -985,32 +912,34 @@ then
 	fi
 
 	echo
-	echo "Labifying the playbook, so it can work against lab's Instances..."
+	echo "Creating an Ansible Inventory manually, so it can work against remote hosts"
+	echo "that doesn't have APIs as a source for a dynamic inventory."
 
 	echo
-	echo "You'll need to copy and paste each hostname here, after running profilemgr..."
+	echo "You'll need to type the hostname or IP address of each remote server"
 
 	echo
-	echo -n "Type the PTS hostname: "
+	echo "NOTE: To use hostnames or FQDNs, you must be able to reach the hosts by name."
+
+	echo
+	echo -n "Type the PTS #1 hostname or IP: "
 	read PTS_HOSTNAME
 
 	echo
-	echo -n "Type the SDE hostname: "
+	echo -n "Type the SDE #1 hostname or IP: "
 	read SDE_HOSTNAME
 
 	echo
-	echo -n "Type the SPB hostname: "
+	echo -n "Type the SPB #1 hostname or IP: "
 	read SPB_HOSTNAME
 
-	PTS_ACCESS_TMP=$PTS_HOSTNAME.$DNS_DOMAIN
-	SDE_ACCESS_TMP=$SDE_HOSTNAME.$DNS_DOMAIN
-	SPB_ACCESS_TMP=$SPB_HOSTNAME.$DNS_DOMAIN
+	PTS_ACCESS=`echo $PTS_HOSTNAME | awk '{print tolower($0)}'`
+	SDE_ACCESS=`echo $SDE_HOSTNAME | awk '{print tolower($0)}'`
+	SPB_ACCESS=`echo $SPB_HOSTNAME | awk '{print tolower($0)}'`
 
-	PTS_ACCESS=`echo $PTS_ACCESS_TMP | awk '{print tolower($0)}'`
-	SDE_ACCESS=`echo $SDE_ACCESS_TMP | awk '{print tolower($0)}'`
-	SPB_ACCESS=`echo $SPB_ACCESS_TMP | awk '{print tolower($0)}'`
+	ANSIBLE_INVENTORY_FILE="manual-hosts-$BUILD_RAND"
 
-	ANSIBLE_INVENTORY_FILE="tmp/lab-hosts-$BUILD_RAND"
+	pushd ansible &>/dev/null
 
 	echo
 	echo "Creating Ansible Inventory: \"ansible/$ANSIBLE_INVENTORY_FILE\"."
@@ -1021,9 +950,11 @@ then
 	ANSIBLE_HOST_ENTRY_2="pts-servers,$PTS_ACCESS"
 	ANSIBLE_HOST_ENTRY_3="sde-servers,$SDE_ACCESS"
 	ANSIBLE_HOST_ENTRY_4="spb-servers,$SPB_ACCESS"
-	ANSIBLE_HOST_ENTRY_5="svcsd-servers,$SDE_ACCESS"
+	ANSIBLE_HOST_ENTRY_5="svcs-servers,$SDE_ACCESS"
 
 	ansible_inventory_builder > $ANSIBLE_INVENTORY_FILE
+
+	popd &>/dev/null
 
 fi
 
