@@ -246,25 +246,33 @@ packer_builder()
 
 				if [ $TRIES -ge 2 ] && [ -d "$packer/$PACKER_OUTPUT_DIR" ]
 				then
-					echo
-					echo "Removing remainings of previous failed build...
-"
-					rm -rf packer/$PACKER_OUTPUT_DIR
+
+					if [ -d packer/$PACKER_OUTPUT_DIR ]; then
+
+						echo
+						echo "Removing remainings of previous failed build..."
+
+						rm -rf packer/$PACKER_OUTPUT_DIR
+
+					fi
+
 				fi
 
 
 				if packer build packer/$PACKER_FILES/$PACKER_VM_NAME-packer.yaml
 				then
+
 					echo
 					echo "Packer build okay, proceeding..."
 
 					break
 
 				else
-					echo
-					echo "Packer build failed! Trying it again (\"$TRIES\" of \"$MAX_TRIES\")..."
 
 					((TRIES++))
+
+					echo
+					echo "Packer build failed! Trying it again (\"$TRIES\" of \"$MAX_TRIES\")..."
 
 				fi
 

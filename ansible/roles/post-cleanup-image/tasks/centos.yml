@@ -24,4 +24,4 @@
 
 - name: centos - clean up InfluxDB
   shell: if [ -d /opt/influxdb/shared/data ]; then /etc/init.d/influxdb stop ; rm -f /opt/influxdb/shared/influxdb.pid ; rm -rf /opt/influxdb/shared/data ; fi
-  when: setup_server == 'svcs'
+  when: setup_server == 'svcs' or setup_server == 'svsde'
