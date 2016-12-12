@@ -236,7 +236,7 @@ packer_builder()
 
 			TRIES=1
 
-			while [ $TRIES -lt $MAX_TRIES ]
+			while [ $TRIES -le $MAX_TRIES ]
 			do
 
 				echo
@@ -269,10 +269,13 @@ packer_builder()
 
 				else
 
+					echo
+					echo "Packer build \"$TRIES\" failed!"
+
 					((TRIES++))
 
 					echo
-					echo "Packer build failed! Trying it again (\"$TRIES\" of \"$MAX_TRIES\")..."
+					echo "Trying it again (\"$TRIES\" of \"$MAX_TRIES\")..."
 
 				fi
 
