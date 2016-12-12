@@ -842,7 +842,7 @@ then
 
 					ANSIBLE_PLAYBOOK_ENTRY_1="spb-servers,sandvine-auto-config;setup_server=svspb;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE"
 					ANSIBLE_PLAYBOOK_ENTRY_2="sde-servers,sandvine-auto-config;setup_server=svsde;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE"
-					ANSIBLE_PLAYBOOK_ENTRY_3="svcs-servers,sandvine-auto-config;setup_server=svcs;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE"
+					ANSIBLE_PLAYBOOK_ENTRY_3="sde-servers,sandvine-auto-config;setup_server=svcs;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE"
 					ANSIBLE_PLAYBOOK_ENTRY_4="pts-servers,sandvine-auto-config;setup_server=svpts;setup_mode=$OPERATION;setup_sub_option=$CLOUD_SERVICES_MODE;license_server=$LICENSE_SERVER"
 
 					ansible_playbook_builder >> $ANSIBLE_PLAYBOOK_FILE
