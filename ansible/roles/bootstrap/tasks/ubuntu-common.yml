@@ -93,6 +93,7 @@
     - python-pip
     - virtualenv
     - btrfs-tools
+    - genisoimage
     - ecryptfs-utils
     - python-minimal
     - python-libvirt
