@@ -43,6 +43,11 @@
      - virtlogd
 
 
+- name: ubuntu - virsh wiping out default network
+  shell: virsh net-destroy default ; virsh undefine default
+  ignore_errors: yes
+
+
 - name: ubuntu - group add regular system user to Libvirt/KVM groups
   user: name={{ regular_system_user }} groups=libvirtd,kvm append=yes
 
