@@ -17,20 +17,34 @@
 
 
 # Libvirt Virtual Machines
-- name: libvirt defining stack-1-pts-1
+- name: libvirt - defining stack-1-pts-1
   virt: name=stack-1-pts-1
         command=define
         xml={{ lookup('template', 'virtual-machines/stack-1-pts-1.xml.j2') }}
 
-- name: libvirt defining stack-1-sde-1
+- name: libvirt - autostarting stack-1-pts-1
+  virt: name=stack-1-pts-1
+        command=autostart
+
+
+- name: libvirt - defining stack-1-sde-1
   virt: name=stack-1-sde-1
         command=define
         xml={{ lookup('template', 'virtual-machines/stack-1-sde-1.xml.j2') }}
 
-- name: libvirt defining stack-1-spb-1
+- name: libvirt - autostarting stack-1-sde-1
+  virt: name=stack-1-sde-1
+        command=autostart
+
+
+- name: libvirt - defining stack-1-spb-1
   virt: name=stack-1-spb-1
         command=define
         xml={{ lookup('template', 'virtual-machines/stack-1-spb-1.xml.j2') }}
+
+- name: libvirt - autostarting stack-1-spb-1
+  virt: name=stack-1-spb-1
+        command=autostart
 
 
 - name: installing QCoW2 Images on Libvirt directory
