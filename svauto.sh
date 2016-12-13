@@ -944,13 +944,12 @@ then
 	echo
 	echo "Creating Ansible Inventory: \"ansible/$ANSIBLE_INVENTORY_FILE\"."
 
-	ANSIBLE_INVENTORY_TOTAL=5
+	ANSIBLE_INVENTORY_TOTAL=4
 
 	ANSIBLE_HOST_ENTRY_1="all:vars,ansible_user=$ANSIBLE_REMOTE_USER,svauto_yum_host=$SVAUTO_YUM_HOST,release_code_name=$RELEASE_CODE_NAME,sandvine_yum_host=$SV_YUM_HOST"
 	ANSIBLE_HOST_ENTRY_2="pts-servers,$PTS_ACCESS"
 	ANSIBLE_HOST_ENTRY_3="sde-servers,$SDE_ACCESS"
 	ANSIBLE_HOST_ENTRY_4="spb-servers,$SPB_ACCESS"
-	ANSIBLE_HOST_ENTRY_5="svcs-servers,$SDE_ACCESS"
 
 	ansible_inventory_builder > $ANSIBLE_INVENTORY_FILE
 
