@@ -12,20 +12,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+- stat: path=/home/{{ regular_system_user }}/svauto/downloads/svpts-{{ pts_version }}-cs-1-centos7-amd64-disk1.qcow2c
+  register: svpts_downloaded_image_register
+
 - name: downloading svpts-7.40.0182-cs-1-centos7-amd64-disk1.qcow2c
   get_url:
     url: ftp://tpc-e9-07.phaedrus.sandvine.com/images/platform/cloud-services/yukon/current/svpts-{{ pts_version }}-cs-1-centos7-amd64-disk1.qcow2c
     dest: /home/{{ regular_system_user }}/svauto/downloads/svpts-{{ pts_version }}-cs-1-centos7-amd64-disk1.qcow2c
     mode: 0640
+  when: svpts_downloaded_image_register.stat.exists == True
+
+
+- stat: path=/home/{{ regular_system_user }}/svauto/downloads/svsde-{{ sde_version }}-cs-1-centos7-amd64-disk1.qcow2c
+  register: svsde_downloaded_image_register
 
 - name: downloading svsde-7.50.0230-cs-1-centos7-amd64-disk1.qcow2c
   get_url:
     url: ftp://tpc-e9-07.phaedrus.sandvine.com/images/platform/cloud-services/yukon/current/svsde-{{ sde_version }}-cs-1-centos7-amd64-disk1.qcow2c
     dest: /home/{{ regular_system_user }}/svauto/downloads/svsde-{{ sde_version }}-cs-1-centos7-amd64-disk1.qcow2c
     mode: 0640
+  when: svsde_downloaded_image_register.stat.exists == True
+
+
+- stat: path=/home/{{ regular_system_user }}/svauto/downloads/svspb-{{ spb_version }}-cs-1-centos6-amd64-disk1.qcow2c
+  register: svspb_downloaded_image_register
 
 - name: downloading svspb-6.65.0078-cs-1-centos6-amd64-disk1.qcow2c
   get_url:
     url: ftp://tpc-e9-07.phaedrus.sandvine.com/images/platform/cloud-services/yukon/current/svspb-{{ spb_version }}-cs-1-centos6-amd64-disk1.qcow2c
     dest: /home/{{ regular_system_user }}/svauto/downloads/svspb-{{ spb_version }}-cs-1-centos6-amd64-disk1.qcow2c
     mode: 0640
+  when: svspb_downloaded_image_register.stat.exists == True
