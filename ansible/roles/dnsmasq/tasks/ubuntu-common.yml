@@ -27,6 +27,15 @@
   notify: restart-dnsmasq
 
 
+- name: ubuntu - copy DNSMasq systemd service
+  copy: src=dnsmasq.service
+        dest=/lib/systemd/system/dnsmasq.service
+        owner=root
+        group=root
+        mode=0644
+  notify: systemd-daemon-reload
+
+
 - name: ubuntu - copy DNSMasq config file
   template: src=dnsmasq.conf.j2
             dest=/etc/dnsmasq.conf
