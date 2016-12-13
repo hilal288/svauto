@@ -73,6 +73,9 @@ openvswitch_openflow_rules: "no"
 
 openvswitch_stack_1_bridges: "no"
 
+# CPU Mask values: F=2, FF=4, FFF=6, FFFF=8
+ovs_dpdk_cpu_cores: "FFFF"
+
 # udev-rules: NIC Interface ordering via PCI ID
 eth0_pci_id: "0000:00:03.0"
 eth1_pci_id: "0000:00:04.0"

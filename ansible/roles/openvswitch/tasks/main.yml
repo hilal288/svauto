@@ -64,9 +64,8 @@
   when: openvswitch_mode == 'dpdk' and processor_count_1g_hugepages >= 1
 
 
-# CPU Mask values: F=2, FF=4, FFF=6, FFFF=8
 - name: ubuntu - configuring the number of CPU Cores to OpenvSwitch DPDK
-  shell: ovs-vsctl set Open_vSwitch . other_config:pmd-cpu-mask=FFFF
+  shell: ovs-vsctl set Open_vSwitch . other_config:pmd-cpu-mask={{ ovs_dpdk_cpu_cores }}
   when: openvswitch_mode == 'dpdk'
 
 
