@@ -3,7 +3,7 @@
 DEFAULT_NIC="eno1"
 
 DNS_1="8.8.4.4"
-DNS_1="8.8.8.8"
+DNS_2="8.8.8.8"
 
 LINUX_USER="sandvine"
 
