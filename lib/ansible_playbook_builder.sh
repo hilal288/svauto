@@ -21,6 +21,14 @@ ansible_playbook_builder()
 
 	ENTRY_COUNTER=1
 
+	if [ "$GET_FACTS" == "yes" ]
+	then
+
+	        echo ""
+	        echo "- hosts: all"
+	        echo "  tasks: [ ]"
+
+	fi
 
 	while [ $ENTRY_COUNTER -le $ANSIBLE_PLAYBOOK_TOTAL ]
 	do
@@ -67,7 +75,6 @@ ansible_playbook_builder()
 				PARAMS_TOTAL=$[$SUB_ITEM -1]
 
 				COUNTER_2=2
-
 
 				eval echo -n "\ \ - { role: \$ROLE_NAME_$ENTRY_COUNTER,\ "
 
