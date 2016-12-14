@@ -8,7 +8,7 @@ name=Sandvine - SVSPB
 baseurl=ftp://{{ sandvine_yum_host }}/images/Linux/CENTOS6-x64/SPB/svspb-LNX-{{ spb_version }}
 {% endif %}
 {% if (release == 'dev' and ansible_os_family == "RedHat" and ansible_distribution_major_version == "7") %}
-baseurl=ftp://{{ sandvine_yum_host }}/images/Linux/RHEL7-x64/SVSPB/svspb-LNX-{{ spb_version }}
+baseurl=ftp://{{ sandvine_yum_host }}/images/Linux/RHEL7-x64/SPB/svspb-LNX-{{ spb_version }}
 {% endif %}
 enabled=1
 protect=0

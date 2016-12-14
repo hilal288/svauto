@@ -12,9 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- include: centos6.yml
-  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "6"
-
-
-- include: centos-common.yml
-  when: ansible_os_family == "RedHat"
+- name: centos - creating the serviceChannel subdir
+  file: path=/usr/local/sandvine/run/serviceChannel
+        state=directory
+        mode=0755
+        recurse=yes

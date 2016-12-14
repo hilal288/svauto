@@ -57,7 +57,7 @@ fi
 	--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
 
 # Linux SVSPB on CentOS 6
-./svauto.sh --packer-builder --base-os=centos6 --release=dev --product=svspb --version=$SPB_VERSION --product-variant=vpl-1 --qcow2 --ova --vhd --vm-xml --sha256sum --ansible-remote-user=root \
+./svauto.sh --packer-builder --base-os=centos6 --release=dev --product=svspb --version=$SPB_VERSION --product-variant=vpl-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
 	--ansible-remote-user="root" \
 	--ansible-inventory-builder="svbox,localhost,is_packer=yes" \
 	--ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes,grub-conf,centos-network-setup;activate_eth1=no;centos_eth1_onboot=no,nginx,postgresql,svspb;spb_version=$SPB_VERSION;sandvine_yum_host=$SV_YUM_HOST,vmware-tools,post-cleanup-image;setup_server=svspb,power-cycle" \
@@ -86,4 +86,11 @@ fi
 	--ansible-remote-user="root" \
 	--ansible-inventory-builder="svbox,localhost,is_packer=yes" \
 	--ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes,grub-conf,centos-network-setup;activate_eth1=no;centos_eth1_onboot=no,udev-rules,dpdk-igb-uio-dkms,nginx,svtcpa;svtcpa_version=$TCPA_VERSION;sandvine_yum_host=$SV_YUM_HOST,vmware-tools,post-cleanup-image" \
+	--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
+
+# Linux SVSPB on CentOS 7
+./svauto.sh --packer-builder --base-os=centos7 --release=dev --product=svspb --version=7.00.0072 --product-variant=vpl-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+	--ansible-remote-user="root" \
+	--ansible-inventory-builder="svbox,localhost,is_packer=yes" \
+	--ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes,grub-conf,centos-network-setup;activate_eth1=no;centos_eth1_onboot=no,nginx,postgresql,svspb;spb_version=7.00.0072;sandvine_yum_host=$SV_YUM_HOST,vmware-tools,post-cleanup-image" \
 	--packer-max-tries=3 --packer-to-openstack --os-project=svauto $DRY_RUN_OPT
