@@ -21,14 +21,9 @@ ansible_playbook_builder()
 
 	ENTRY_COUNTER=1
 
-	if [ "$GET_FACTS" == "yes" ]
-	then
-
-	        echo ""
-	        echo "- hosts: all"
-	        echo "  tasks: [ ]"
-
-	fi
+        echo ""
+        echo "- hosts: all"
+        echo "  tasks: [ ]"
 
 	while [ $ENTRY_COUNTER -le $ANSIBLE_PLAYBOOK_TOTAL ]
 	do

@@ -151,11 +151,6 @@ case $i in
 		shift
 		;;
 
-	--get-facts)
-		GET_FACTS="yes"
-		shift
-		;;
-
 	--vagrant=*)
 
 		VAGRANT_MODE="${i#*=}"
