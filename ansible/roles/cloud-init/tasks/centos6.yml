@@ -29,8 +29,8 @@
 
 
 - name: centos6 - copy Cloud Init config file
-  copy: src=10_timeouts.cfg
-        dest=/etc/cloud/cloud.cfg.d/10_timeouts.cfg
+  copy: src=centos6/cloud.cfg
+        dest=/etc/cloud/cloud.cfg
         owner=root
         group=root
         mode=0644

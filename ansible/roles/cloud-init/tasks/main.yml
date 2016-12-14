@@ -25,3 +25,8 @@
 - name: centos6 - include config
   include: centos6.yml
   when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "6"
+
+
+- name: centos - include common config
+  include: centos-common.yml
+  when: ansible_os_family == "RedHat"

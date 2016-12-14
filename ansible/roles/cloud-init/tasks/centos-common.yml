@@ -12,17 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: centos7 - yum installing Cloud Init
-  yum: pkg={{item}} state=latest
-  with_items:
-    - cloud-init
-    - cloud-utils-growpart
-
-
-- name: centos7 - copy Cloud Init config file
-  copy: src=centos7/cloud.cfg
-        dest=/etc/cloud/cloud.cfg
+- name: centos - copy Cloud Init "timeouts" config file
+  copy: src=centos-common/10_timeouts.cfg
+        dest=/etc/cloud/cloud.cfg.d/10_timeouts.cfg
         owner=root
         group=root
         mode=0644
-        backup=yes
+
+
+- name: centos - copy Cloud Init "manage_etc_hosts" config file
+  copy: src=centos-common/15_manage_etc_hosts.cfg
+        dest=/etc/cloud/cloud.cfg.d/15_manage_etc_hosts.cfg
+        owner=root
+        group=root
+        mode=0644
