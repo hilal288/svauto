@@ -24,10 +24,10 @@
     dest: /home/{{ regular_system_user }}/svauto/downloads/ubuntu-14.04.5-server-amd64.iso
     mode: 0640
 
-- name: downloading CentOS-7-x86_64-Minimal-1511.iso
+- name: downloading CentOS-7-x86_64-Minimal-1611.iso
   get_url:
-    url: http://mirror.its.sfu.ca/mirror/CentOS/7.2.1511/isos/x86_64/CentOS-7-x86_64-Minimal-1511.iso
-    dest: /home/{{ regular_system_user }}/svauto/downloads/CentOS-7-x86_64-Minimal-1511.iso
+    url: http://mirror.its.sfu.ca/mirror/CentOS/7.3.1611/isos/x86_64/CentOS-7-x86_64-Minimal-1611.iso
+    dest: /home/{{ regular_system_user }}/svauto/downloads/CentOS-7-x86_64-Minimal-1611.iso
     mode: 0640
 
 - name: downloading CentOS-6.8-x86_64-minimal.iso
