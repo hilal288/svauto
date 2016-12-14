@@ -51,7 +51,7 @@
 # Handlers:
 
 - name: wipe-out-data-restart-influxdb
-  shell: if [ -d /opt/influxdb/shared/data ]; then rm -rf /opt/influxdb/shared/data ; sync ; /etc/init.d/influxdb restart ; fi
+  shell: if [ -d /opt/influxdb/shared/data ]; then /etc/init.d/influxdb stop ; sync ; rm -rf /opt/influxdb/shared/data ; /etc/init.d/influxdb restart ; fi
   when: is_packer != 'yes'
 
 
