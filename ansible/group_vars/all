@@ -448,13 +448,3 @@ ldap_user_name_attribute: ""
 ldap_keystone_domain: "company.com"
 ldap_horizon_default_domain: "no"
 ldap_keystone_domain_description: "Company Domain"
-
-
-#
-# Metadata CD-ROM Generator
-#
-
-random_seed: "null"
-ssh_pub_key: "{{ lookup('file', '/home/' + regular_system_user + '/.ssh/id_rsa.pub') }}"
-vm_hostname: "null"
-vm_fqdn: "{{ vm_hostname }}.sandvine.rocks"
