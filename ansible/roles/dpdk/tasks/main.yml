@@ -45,12 +45,7 @@
 
 
 - name: ubuntu - service dpdk enabled and started
-  systemd:
-    name: dpdk
-    state: started
-    daemon_reload: yes
-    enabled: yes
-    masked: no
+  shell: systemctl enable dpdk ; systemctl start dpdk
 
 
 # Not working:
