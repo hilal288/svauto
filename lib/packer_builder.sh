@@ -434,6 +434,15 @@ packer_builder()
 		if [ "$PACKER_TO_OS" == "yes" ]
 		then
 
+			if [ "$QCOW2" != "yes" ]; then
+
+				echo
+				echo "Aborting! Uploading images stright into OpenStack Glance, requires qcow2 images."
+
+				exit 1
+
+			fi
+
 			if [ ! -f ~/$OS_PROJECT-openrc.sh ]
 			then
 				echo
