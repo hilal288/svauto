@@ -41,6 +41,8 @@ release: dev
 # Enable the Apache Virtual Host
 enable_apache_vhost: "no"
 
+apache_reverse_proxy: "no"
+
 # Vagrant run?
 vagrant_run: "no"
 
