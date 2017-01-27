@@ -79,7 +79,7 @@
 - stat: path=/home/{{regular_system_user}}/svauto/downloads/ubuntu-14.04-server-cloudimg-amd64-disk1.img
   register: ubuntu14_image_register
 
-- name: uploading 
+- name: uploading "ubuntu-14.04-amd64"
   environment: "{{admin_openrc_env}}"
   os_image:
     name: ubuntu-14.04.1-amd64
@@ -95,7 +95,7 @@
 - stat: path=/home/{{regular_system_user}}/svauto/downloads/ubuntu-12.04-server-cloudimg-amd64-disk1.img
   register: ubuntu12_image_register
 
-- name: uploading 
+- name: uploading "ubuntu-12.04.1-amd64"
   environment: "{{admin_openrc_env}}"
   os_image:
     name: ubuntu-12.04.1-amd64
@@ -108,17 +108,17 @@
   when: ubuntu12_image_register.stat.exists == True
 
 
-- stat: path=/home/{{regular_system_user}}/svauto/downloads/debian-8.6.1-openstack-amd64.qcow2
+- stat: path=/home/{{regular_system_user}}/svauto/downloads/debian-8.7.0-openstack-amd64.qcow2
   register: debian8_image_register
 
-- name: uploading 
+- name: uploading "debian-8.7.0-amd64"
   environment: "{{admin_openrc_env}}"
   os_image:
-    name: 
+    name: debian-8.7.0-amd64
     container_format: bare 
     disk_format: qcow2
     state: present
-    filename: /home/{{regular_system_user}}/svauto/downloads/debian-8.6.1-openstack-amd64.qcow2
+    filename: /home/{{regular_system_user}}/svauto/downloads/debian-8.7.0-openstack-amd64.qcow2
     properties:
       cpu_arch: x86_64
   when: debian8_image_register.stat.exists == True
@@ -127,7 +127,7 @@
 - stat: path=/home/{{regular_system_user}}/svauto/downloads/CentOS-7-x86_64-GenericCloud.qcow2c
   register: centos7_image_register
 
-- name: uploading 
+- name: uploading "centos-7-amd64"
   environment: "{{admin_openrc_env}}"
   os_image:
     name: centos-7-amd64
@@ -143,7 +143,7 @@
 - stat: path=/home/{{regular_system_user}}/svauto/downloads/CentOS-6-x86_64-GenericCloud.qcow2c
   register: centos6_image_register
 
-- name: uploading 
+- name: uploading "centos-6-amd64"
   environment: "{{admin_openrc_env}}"
   os_image:
     name: centos-6-amd64
@@ -159,7 +159,7 @@
 - stat: path=/home/{{regular_system_user}}/svauto/downloads/cirros-0.3.4-x86_64-disk.img
   register: cirros_image_register
 
-- name: uploading 
+- name: uploading "cirros-0.3.4-amd64"
   environment: "{{admin_openrc_env}}"
   os_image:
     name: cirros-0.3.4-amd64
