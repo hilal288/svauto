@@ -17,6 +17,94 @@
 ansible_runner()
 {
 
+	if ! which ansible-playbook >/dev/null
+	then
+
+		OS_DETECTION=$(lib/os_detection.py | tr A-Z a-z)
+
+		case $OS_DETECTION in
+
+			ubuntu*)
+
+				echo
+				echo "Running: \"sudo apt install ansible\""
+
+				sudo apt update &>/dev/null
+				sudo apt -y install software-properties-common &>/dev/null
+				sudo add-apt-repository -y ppa:ansible/ansible &>/dev/null
+				sudo apt update &>/dev/null
+				sudo apt -y install ansible &>/dev/null
+
+				;;
+
+			centos*)
+
+				echo
+				echo "Running: \"sudo yum install ansible\""
+
+				sudo yum --enablerepo=epel-testing -y install ansible libselinux-python &>/dev/null
+				;;
+
+			*)
+
+		        echo
+			echo "O.S. not detected, cound not install Ansible for you!"
+
+			exit 1
+
+			;;
+
+		esac
+
+	fi
+
+        echo
+        echo "SVAuto is running Ansible:"
+
+        echo
+	echo "pushd ansible"
+
+	echo
+	pushd ansible
+
+	echo
+	echo "Creating both Ansible's Inventory and the Playbook..."
+
+	if [ "$ANSIBLE_DUMP" == "yes" ];
+	then
+
+		echo
+		echo "Dumping Inventory \"$ANSIBLE_INVENTORY_FILE\" file:"
+
+		cat "$ANSIBLE_INVENTORY_FILE"
+
+	fi
+
+	if [ "$ANSIBLE_DUMP" == "yes" ]
+	then
+
+		echo
+		echo "Dumping Top-Level Playbook \"$ANSIBLE_PLAYBOOK_FILE\' file:"
+
+		cat "$ANSIBLE_PLAYBOOK_FILE"
+
+	fi
+
+	# TODO: Review the need for this block:
+	if [ -z "$OS_PROJECT" ] || [ -z "$RUNTIME_MODE" ]
+	then
+
+		echo
+		echo "Warning! Not running against OpenStack, auto-building Ansible's files from memory..."
+
+		echo "$ANSIBLE_INVENTORY_FILE_IN_MEM" >> $ANSIBLE_INVENTORY_FILE
+
+		echo "$ANSIBLE_PLAYBOOK_FILE_IN_MEM" >> $ANSIBLE_PLAYBOOK_FILE
+
+		#echo "$ANSIBLE_EXTRA_VARS_FILE_IN_MEM" > $ANSIBLE_EXTRA_VARS_FILE
+
+	fi
+
 	if [ "$DRY_RUN" == "yes" ]
 	then
 
@@ -31,94 +119,6 @@ ansible_runner()
 	        echo
 
 	else
-
-		if ! which ansible-playbook >/dev/null
-		then
-
-			OS_DETECTION=$(lib/os_detection.py | tr A-Z a-z)
-
-			case $OS_DETECTION in
-
-				ubuntu*)
-
-					echo
-					echo "Running: \"sudo apt install ansible\""
-
-					sudo apt update &>/dev/null
-					sudo apt -y install software-properties-common &>/dev/null
-					sudo add-apt-repository -y ppa:ansible/ansible &>/dev/null
-					sudo apt update &>/dev/null
-					sudo apt -y install ansible &>/dev/null
-
-					;;
-
-				centos*)
-
-					echo
-					echo "Running: \"sudo yum install ansible\""
-
-					sudo yum --enablerepo=epel-testing -y install ansible libselinux-python &>/dev/null
-					;;
-
-				*)
-
-			        echo
-				echo "O.S. not detected, cound not install Ansible for you!"
-
-				exit 1
-
-				;;
-
-			esac
-
-		fi
-
-	        echo
-	        echo "SVAuto is running Ansible:"
-
-	        echo
-		echo "pushd ansible"
-
-		echo
-		pushd ansible
-
-		echo
-		echo "Creating both Ansible's Inventory and the Playbook..."
-
-		if [ "$ANSIBLE_DUMP" == "yes" ];
-		then
-
-			echo
-			echo "Dumping Inventory \"$ANSIBLE_INVENTORY_FILE\" file:"
-
-			cat "$ANSIBLE_INVENTORY_FILE"
-
-		fi
-
-		if [ "$ANSIBLE_DUMP" == "yes" ]
-		then
-
-			echo
-			echo "Dumping Top-Level Playbook \"$ANSIBLE_PLAYBOOK_FILE\' file:"
-
-			cat "$ANSIBLE_PLAYBOOK_FILE"
-
-		fi
-
-		if [ -z "$OS_PROJECT" ] || [ -z "$RUNTIME_MODE" ]
-		then
-
-			# TODO: Review the need for this block:
-			echo
-			echo "Warning! Not running against OpenStack, auto-building Ansible's files from memory..."
-
-			echo "$ANSIBLE_INVENTORY_FILE_IN_MEM" >> $ANSIBLE_INVENTORY_FILE
-
-			echo "$ANSIBLE_PLAYBOOK_FILE_IN_MEM" >> $ANSIBLE_PLAYBOOK_FILE
-
-			#echo "$ANSIBLE_EXTRA_VARS_FILE_IN_MEM" > $ANSIBLE_EXTRA_VARS_FILE
-
-		fi
 
 		echo
 		echo "ansible-playbook -i $ANSIBLE_INVENTORY_FILE $ANSIBLE_PLAYBOOK_FILE"
@@ -167,9 +167,9 @@ ansible_runner()
 
 		fi
 
-		echo
-		popd
-
 	fi
+
+	popd
+	echo
 
 }
