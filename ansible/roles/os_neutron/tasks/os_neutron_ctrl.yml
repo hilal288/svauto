@@ -25,12 +25,12 @@
 
 - name: Installing Neutron Server
   apt: name=neutron-server state=latest
-  notify: restart-neutron
+  notify: restart-neutron-server
 
 
 - name: Removing non-used sqlite database
   file: path=/var/lib/neutron/neutron.sqlite state=absent
-  notify: restart-neutron
+  notify: restart-neutron-server
 
 
 - name: Updating neutron.conf
@@ -42,7 +42,7 @@
             backup=yes
   when: item.os_project == 'neutron'
   with_items: '{{mysql_databases}}'
-  notify: restart-neutron
+  notify: restart-neutron-server
 
 
 - name: Updating ml2_conf.ini
@@ -52,7 +52,7 @@
             group=neutron
             mode=0640
             backup=yes
-  notify: restart-neutron
+  notify: restart-neutron-server
 
 
 - name: Updating Neutron's Policy
@@ -63,13 +63,13 @@
         mode=0644
         backup=yes
   when: os_open_provider_nets_to_regular_users == 'yes'
-  notify: restart-neutron
+  notify: restart-neutron-server
 
 - name: Removing custom Neutron's Policy if condition is "no"
   file: path=/etc/neutron/policy.d/open-provider-nets-to-regular-users.json
         state=absent
   when: os_open_provider_nets_to_regular_users == 'no'
-  notify: restart-neutron
+  notify: restart-neutron-server
 
 
 - name: Populating Neutron Database

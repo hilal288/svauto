@@ -49,7 +49,6 @@
             backup=yes
   when: item.os_project == "neutron"
   with_items: '{{mysql_databases}}'
-  notify: restart-neutron
 
 
 - name: Updating linuxbridge_agent.ini
@@ -81,7 +80,7 @@
             group=neutron
             mode=0644
             backup=yes
-  notify: restart-neutron
+  notify: restart-neutron-agents
 
 
 - name: Updating dnsmasq-neutron.conf
@@ -91,7 +90,7 @@
         group=neutron
         mode=0644
         backup=yes
-  notify: restart-neutron
+  notify: restart-neutron-agents
 
 
 - name: Updating l3_agent.ini
@@ -101,7 +100,7 @@
             group=neutron
             mode=0644
             backup=yes
-  notify: restart-neutron
+  notify: restart-neutron-agents
 
 
 - name: Updating metadata_agent.ini
@@ -111,7 +110,7 @@
             group=neutron
             mode=0644
             backup=yes
-  notify: restart-neutron
+  notify: restart-neutron-agents
 
 
 - name: Updating fwaas_driver.ini
@@ -121,7 +120,7 @@
             group=neutron
             mode=0644
             backup=yes
-  notify: restart-neutron
+  notify: restart-neutron-agents
 
 
 - name: Write custom sysctl.conf
