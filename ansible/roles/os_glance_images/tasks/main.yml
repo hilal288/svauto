@@ -19,6 +19,7 @@
   environment: "{{admin_openrc_env}}"
   os_image:
     name: svpts-7.40.0164-vpl-1-centos7-amd64
+    is_public: yes
     container_format: bare
     disk_format: qcow2
     state: present
@@ -35,6 +36,7 @@
   environment: "{{admin_openrc_env}}"
   os_image:
     name: svsde-7.50.0230-vpl-1-centos7-amd64
+    is_public: yes
     container_format: bare
     disk_format: qcow2
     state: present
@@ -51,6 +53,7 @@
   environment: "{{admin_openrc_env}}"
   os_image:
     name: svspb-6.65.0078-vpl-1-centos6-amd64
+    is_public: yes
     container_format: bare 
     disk_format: qcow2
     state: present
@@ -67,6 +70,7 @@
   environment: "{{admin_openrc_env}}"
   os_image:
     name: ubuntu-16.04.1-amd64
+    is_public: yes
     container_format: bare 
     disk_format: qcow2
     state: present
@@ -83,6 +87,7 @@
   environment: "{{admin_openrc_env}}"
   os_image:
     name: ubuntu-14.04.1-amd64
+    is_public: yes
     container_format: bare 
     disk_format: qcow2
     state: present
@@ -99,6 +104,7 @@
   environment: "{{admin_openrc_env}}"
   os_image:
     name: ubuntu-12.04.1-amd64
+    is_public: yes
     container_format: bare 
     disk_format: qcow2
     state: present
@@ -115,6 +121,7 @@
   environment: "{{admin_openrc_env}}"
   os_image:
     name: debian-8.7.0-amd64
+    is_public: yes
     container_format: bare 
     disk_format: qcow2
     state: present
@@ -131,6 +138,7 @@
   environment: "{{admin_openrc_env}}"
   os_image:
     name: centos-7-amd64
+    is_public: yes
     container_format: bare 
     disk_format: qcow2
     state: present
@@ -147,6 +155,7 @@
   environment: "{{admin_openrc_env}}"
   os_image:
     name: centos-6-amd64
+    is_public: yes
     container_format: bare 
     disk_format: qcow2
     state: present
@@ -163,6 +172,7 @@
   environment: "{{admin_openrc_env}}"
   os_image:
     name: cirros-0.3.4-amd64
+    is_public: yes
     container_format: bare 
     disk_format: qcow2
     state: present
