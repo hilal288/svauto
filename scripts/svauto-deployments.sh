@@ -101,7 +101,7 @@ then
         echo
 
         cd ~
-        git clone -b dev https://git.sandvine.com/eng/svauto
+        git clone -b dev https://github.com/tmartinx/svauto
 else
         echo
         echo "Apparently, you already have SVAuto, enjoy it!"
