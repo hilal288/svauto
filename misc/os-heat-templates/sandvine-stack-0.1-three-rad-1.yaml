@@ -381,7 +381,7 @@ resources:
             sandvine:sandvine
           expire: False
         runcmd:
-        - 'su -c "\curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/install-svauto.sh | bash -s" sandvine'
+        - 'su -c "\curl -s https://raw.githubusercontent.com/tmartinx/svauto/dev/scripts/install-svauto.sh | bash -s" sandvine'
 
   spb_1:
     type: OS::Nova::Server
@@ -429,6 +429,6 @@ resources:
             sandvine:sandvine
           expire: False
         runcmd:
-        - 'su -c "\curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/install-svauto.sh | bash -s" sandvine'
+        - 'su -c "\curl -s https://raw.githubusercontent.com/tmartinx/svauto/dev/scripts/install-svauto.sh | bash -s" sandvine'
 
 outputs:
