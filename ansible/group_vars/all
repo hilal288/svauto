@@ -20,31 +20,11 @@
 # Global Definitions
 #
 
-# Main DNS Nameservers, used in many places:
-dns_1: "8.8.4.4"
-dns_2: "8.8.8.8"
-dns_3: "4.4.2.2"
-
 # System user, usualy, your local Desktop user, or a remote "cloud" user.
 regular_system_user: "sandvine"
 
-image_group: "null"
-
-download_group: "null"
-
-# Upgrade Base OS:
-base_os_upgrade: "no"
-
 # Release ver: ca, dev, prod
 release: dev
-
-# Enable the Apache Virtual Host
-enable_apache_vhost: "no"
-
-apache_reverse_proxy: "no"
-
-# Vagrant run?
-vagrant_run: "no"
 
 # Is Packer build?
 is_packer: "no"
@@ -52,38 +32,8 @@ is_packer: "no"
 # Deployment mode:
 deployment_mode: "no"
 
-# grub: Use old Linux interface name "ethX" on CentOS:
-centos_old_ifnames: "yes"
-
-eth0_bootproto: "dhcp"
-eth1_bootproto: "dhcp"
-
-centos_eth0_ip: "null"
-centos_eth0_mask: "null"
-
-centos_eth1_ip: "null"
-centos_eth1_mask: "null"
-
-centos_eth1_onboot: "yes"
-
 # openvswitch: Open vSwitch with DPDK?
 openvswitch_mode: "null"
-
-openvswitch_net_mode: "flat"
-
-openvswitch_openflow_rules: "no"
-
-openvswitch_stack_1_bridges: "no"
-
-# CPU Mask values: F=2, FF=4, FFF=6, FFFF=8
-ovs_dpdk_cpu_cores: "FFFF"
-
-# udev-rules: NIC Interface ordering via PCI ID
-eth0_pci_id: "0000:00:03.0"
-eth1_pci_id: "0000:00:04.0"
-
-# bootstrap: Enable Sandvine's Main Yum Repository:
-sandvine_main_yum_repo: "no"
 
 
 #
@@ -94,38 +44,11 @@ sandvine_main_yum_repo: "no"
 ftp_username: customer.sandvine.com
 ftp_password: lerolero
 
-# Yum or APT Reposiory servers:
-svauto_yum_host: "null"
+# Yum Reposiory host server address:
 sandvine_yum_host: "null"
-
-# Sandvine's Release Code Name:
-release_code_name: "yukon"
-release_code_number: "17.02"
-
-# Sandvine Cluster Name:
-cluster_name: "sandvine"
-
-# Goes to PTS subnets.txt
-int_subnet: "10.192.0.0/16"
-ext_subnet: "0.0.0.0/0"
-
-# PTS LinkData
-classifier_linkdata: "DEFAULT"
-
-# Cloud Services MySQL initial setup
-cs_db: "cs"
-cs_db_host: "%"
-cs_db_user: "svadmin"
-cs_db_pass: "sandvine"
 
 # Is Linux Container (LXD / Docker):
 is_container: "no"
-
-# Activate eth1:
-activate_eth1: "yes"
-
-# Install SVNDA AddOns
-svnda_install_addons: 'no'
 
 # Products and versions
 pts_version: "null"
@@ -146,74 +69,11 @@ svnbi_version: "null"
 
 
 #
-# The Sandvine Auto Config section
+# Global Sandvine options
 #
 
 # Server to configure (supported: svpts, svsde, svspb, svcs):
 setup_server: "null"
-
-# Setup Mode (supported: sandvine, cloud-services):
-setup_mode: "null"
-
-# Setup Sub Options (supported: default, mdm)
-setup_sub_option: "null"
-
-# The PTS License Server
-license_server: "licenser-server.placeholder.com"
-
-# Cloud Services default options
-google_api_key: "none"
-
-
-#
-# Cloud Services Mobile Data Management options
-#
-
-default_group: "Basic"
-
-mobile_up_rate: "1000Kbps"
-mobile_down_rate: "1000Kbps"
-
-flow_is_application: "\"dns\", \"icmp\", \"snmp\", \"ssh\", \"bootp\", \"radius\""
-
-rec_gen_time_interval: "30seconds"
-
-mdmQMGroup:
-    - { name: "NoQuota", default: "NoQuota1" }
-    - { name: "Basic", default: "Basic1" }
-
-mdmQM:
-  - wheel:
-    name: "Internet"
-    sharedQuota: "100GB"
-    reportThreshold: "25%,50%,75%,100%"
-    rollover: "1"
-    plan:
-    - { name: "NoQuota1", limit: "1B", event_thresholds: ["100"]}
-    - { name: "Basic1", limit: "1GB", event_thresholds: ["25", "50", "75", "100"]}
-    - { name: "Basic2", limit: "2GB", event_thresholds: ["25", "50", "75", "100"]}
-    - { name: "Basic3", limit: "3GB", event_thresholds: ["25", "50", "75", "100"]}
-  - wheel:
-    name: "Intranet"
-    sharedQuota: "1000GB"
-    reportThreshold: "25%,50%,75%,100%"
-    rollover: "1"
-    plan:
-    - { name: "NoQuota1", limit: "1B", event_thresholds: ["100"]}
-    - { name: "Basic1", limit: "10GB", event_thresholds: ["25", "50", "75", "100"]}
-    - { name: "Basic2", limit: "20GB", event_thresholds: ["25", "50", "75", "100"]}
-    - { name: "Basic3", limit: "30GB", event_thresholds: ["25", "50", "75", "100"]}
-  - wheel:
-    name: "Roaming"
-    sharedQuota: "10GB"
-    reportThreshold: "25%,50%,75%,100%"
-    rollover: "1"
-    plan:
-    - { name: "NoQuota1", limit: "1B", event_thresholds: ["100"]}
-    - { name: "Basic1", limit: "100MB", event_thresholds: ["25", "50", "75", "100"]}
-    - { name: "Basic2", limit: "200MB", event_thresholds: ["25", "50", "75", "100"]}
-    - { name: "Basic3", limit: "300MB", event_thresholds: ["25", "50", "75", "100"]}
-
 
 #
 # Local VM Macs
@@ -222,129 +82,32 @@ stack_1_pts_1_ctrl_mac: "52:54:00:03:65:f1"
 stack_1_sde_1_ctrl_mac: "52:54:00:3d:63:4a"
 stack_1_spb_1_ctrl_mac: "52:54:00:5c:80:25"
 
-#
-# PTS PCI Setup (also DPDK - fastpath)
-#
-
-pts_set_port_control_1_1: "0000:00:03.0"
-pts_set_port_service_1_2: "0000:00:04.0"
-
-pts_set_port_fastpath_1_3: "0000:00:05.0"
-pts_set_port_fastpath_1_4: "0000:00:06.0"
-pts_set_port_fastpath_1_5: "0000:00:07.0"
-
-
-#
-# Ubuntu Definitions
-#
-
-ubuntu_install: "server"
-
-ubuntu_primary_interface: "eth0"
-
-ubuntu_enable_ip_masquerade: "no"
-
-ubuntu_primary_interface_via_ifupdown: "no"
-
-ubuntu_network_mode: "dhcp"
-
-ubuntu_static_ip_mask: "192.168.1.2/24"
-ubuntu_static_ip_gateway: "192.168.1.1"
-
-ubuntu_name_server_1: "null"
-ubuntu_name_server_2: "null"
-
-ubuntu_setup_dummy_nics: "no"
-
-
-#
-# Ubuntu's DPDK Setup
-#
-
-enable_hugepages: "no"
-
-grub_nr_1g_pages: "0"
-
-dpdk_nr_1g_pages: "0"
-dpdk_nr_2m_pages: "512"
-
-dpdk_bus: "pci"
-
-dpdk_id_1: "0000:06:00.0"
-dpdk_driver_1: "uio_pci_generic"
-
-dpdk_id_2: "0000:06:00.1"
-dpdk_driver_2: "uio_pci_generic"
-
-dpdk_id_3: "0000:09:00.0"
-dpdk_driver_3: "vfio-pci"
-
-dpdk_id_4: "0000:09:00.1"
-dpdk_driver_4: "vfio-pci"
-
-
-enable_multiqueue: 'no'
-number_of_queues: '0'
 
 #
 # OpenStack Definitions
 #
 
-os_aio: "no"
-
-os_release: "mitaka"
+os_release: "newton"
 
 os_dns_domain: "yourdomain.com"
 
 os_public_addr: "controller-1.yourdomain.com"
 os_admin_addr: "controller-1.yourdomain.com"
 
-os_nova_ctrl: "no"
-os_nova_cmpt: "no"
-
-os_neutron_ctrl: "no"
-os_neutron_net: "no"
-os_neutron_cmpt: "no"
-
 os_mgmt: "eth0"
-os_srvc: "eth0"
+os_srvc: "eth1"
 
-os_external: "dummy0"
-os_data: "dummy1"
-
+# Reserved:
 os_cinder: "dummy2"
-
-os_neutron_external_bridge: "br-ex"
 
 os_neutron_lbr_enabled: "no"
 os_neutron_ovs_enabled: "no"
+
+# Reserved:
 os_neutron_ovs_dpdk_enabled: "no"
 os_neutron_sriov_enabled: "no"
 
-os_provider_net_1_label: "provider-net-1"
-os_provider_net_1_lbr_interface: "dummy6"
-os_provider_net_1_ovs_interface: "dummy4"
-os_provider_net_1_ovs_bridge_interface: "dummybr0"
-
-os_provider_net_2_label: "provider-net-2"
-os_provider_net_2_lbr_interface: "dummy7"
-os_provider_net_2_ovs_interface: "dummy5"
-os_provider_net_2_ovs_bridge_interface: "dummybr1"
-
-os_open_provider_nets_to_regular_users: "no"
-
-linuxnet_interface_driver: "nova.network.linux_net.LinuxBridgeInterfaceDriver"
-neutron_interface_driver: "neutron.agent.linux.interface.BridgeInterfaceDriver"
-
-# Neutron's External Network (Floating IPs comes from here):
-ext_net_subnet: "172.31.254.128/25"
-ext_net_gateway: "172.31.254.129"
-ext_net_start: "172.31.254.130"
-ext_net_end: "172.31.254.254"
-
 region: "ca-east-1"
-
-admin_token: "ADMIN_TOKEN"
 
 admin_password: "admin_pass"
 service_password: "service_pass"
@@ -354,11 +117,6 @@ rabbit_userid: "openstack"
 rabbit_password: "RABBIT_PASS"
 
 metadata_secret: "UltraMeta13"
-
-openstack_env:
-  OS_TOKEN: "{{admin_token}}"
-  OS_URL: "http://{{os_admin_addr}}:35357/v3"
-  OS_IDENTITY_API_VERSION: "3"
 
 demo_openrc_env:
   OS_PROJECT_DOMAIN_NAME: "default"
@@ -393,60 +151,3 @@ mysql_databases:
 nova_api_db_name: "nova_api"
 nova_api_db_user: "novaAPIUser"
 nova_api_db_pass: "novaAPIPass"
-
-# Horizon_help_url
-# horizon_help_url: "https://help.me"
-
-# Nova ratios:
-# nova_cpu_allocation_ratio: "16.0"
-# nova_ram_allocation_ratio: "1.5"
-# nova_disk_allocation_ratio: "1.0"
-
-# Nova quotas
-# nova_quota_cores: "80"
-# nova_quota_instances: "30"
-# nova_quota_ram: "51200"
-
-# Neutron quotas:
-# neutron_quota_floatingip: "-1"
-# neutron_quota_security_group: "-1"
-# neutron_quota_security_group_rule: "-1"
-# neutron_quota_port: "-1"
-# neutron_quota_network: "-1"
-# neutron_quota_subnet: "-1"
-# neutron_quota_router: "-1"
-# neutron_quota_rbac_policy: "-1"
-
-# Data network mtu
-# Note: dnsmasq-neutron.conf should be changed accordingly
-# neutron_global_physnet_mtu: "1650"
-# ml2_path_mtu: "1650
-
-#
-# Optional OpenStack LDAP Definitions
-#
-
-# http://docs.openstack.org/admin-guide/keystone_integrate_identity_backend_ldap.html
-
-# Note: Assuming that every user should have their own project space you will
-#       need to create a project and user/project mappings for EVERY user.
-#       In the following example we have decided that every user will have
-#       a project with the same name as the user name mapped to them
-#      
-#       EG: User "jdoe".  
-#           openstack project create -domain company.com jdoe
-#           openstack role add --project jdoe --user jdoe --user-domain company.com user
-
-ldap_enabled: "no"
-ldap_url: "ldap://<ldap ip 1>,ldap://<ldap ip 2>"
-ldap_user: ""
-ldap_password: ""
-ldap_suffix: "dc=company,dc=com"
-ldap_query_scope: "sub"
-ldap_user_tree_dn: ""
-ldap_user_objectclass: ""
-ldap_user_name_attribute: ""
-# Note this is just a name and does not HAVE to match any ldap domain
-ldap_keystone_domain: "company.com"
-ldap_horizon_default_domain: "no"
-ldap_keystone_domain_description: "Company Domain"
