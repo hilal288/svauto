@@ -1,0 +1,100 @@
+# Copyright 2016, Sandvine Incorporated
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+# Sandvine Cluster Name:
+cluster_name: "sandvine"
+
+# Setup Mode (supported: sandvine, cloud-services):
+setup_mode: "null"
+
+# Setup Sub Options (supported: default, mdm)
+setup_sub_option: "null"
+
+# The PTS License Server
+license_server: "licenser-server.placeholder.com"
+
+# Cloud Services default options
+google_api_key: "none"
+
+# Goes to PTS subnets.txt
+int_subnet: "10.192.0.0/16"
+ext_subnet: "0.0.0.0/0"
+
+# PTS LinkData
+classifier_linkdata: "DEFAULT"
+
+
+#
+# PTS PCI Setup (also DPDK - fastpath)
+#
+
+pts_set_port_control_1_1: "0000:00:03.0"
+pts_set_port_service_1_2: "0000:00:04.0"
+
+pts_set_port_fastpath_1_3: "0000:00:05.0"
+pts_set_port_fastpath_1_4: "0000:00:06.0"
+pts_set_port_fastpath_1_5: "0000:00:07.0"
+
+
+#
+# Cloud Services Mobile Data Management options
+#
+
+default_group: "Basic"
+
+mobile_up_rate: "1000Kbps"
+mobile_down_rate: "1000Kbps"
+
+flow_is_application: "\"dns\", \"icmp\", \"snmp\", \"ssh\", \"bootp\", \"radius\""
+
+rec_gen_time_interval: "30seconds"
+
+mdmQMGroup:
+    - { name: "NoQuota", default: "NoQuota1" }
+    - { name: "Basic", default: "Basic1" }
+
+mdmQM:
+  - wheel:
+    name: "Internet"
+    sharedQuota: "100GB"
+    reportThreshold: "25%,50%,75%,100%"
+    rollover: "1"
+    plan:
+    - { name: "NoQuota1", limit: "1B", event_thresholds: ["100"]}
+    - { name: "Basic1", limit: "1GB", event_thresholds: ["25", "50", "75", "100"]}
+    - { name: "Basic2", limit: "2GB", event_thresholds: ["25", "50", "75", "100"]}
+    - { name: "Basic3", limit: "3GB", event_thresholds: ["25", "50", "75", "100"]}
+  - wheel:
+    name: "Intranet"
+    sharedQuota: "1000GB"
+    reportThreshold: "25%,50%,75%,100%"
+    rollover: "1"
+    plan:
+    - { name: "NoQuota1", limit: "1B", event_thresholds: ["100"]}
+    - { name: "Basic1", limit: "10GB", event_thresholds: ["25", "50", "75", "100"]}
+    - { name: "Basic2", limit: "20GB", event_thresholds: ["25", "50", "75", "100"]}
+    - { name: "Basic3", limit: "30GB", event_thresholds: ["25", "50", "75", "100"]}
+  - wheel:
+    name: "Roaming"
+    sharedQuota: "10GB"
+    reportThreshold: "25%,50%,75%,100%"
+    rollover: "1"
+    plan:
+    - { name: "NoQuota1", limit: "1B", event_thresholds: ["100"]}
+    - { name: "Basic1", limit: "100MB", event_thresholds: ["25", "50", "75", "100"]}
+    - { name: "Basic2", limit: "200MB", event_thresholds: ["25", "50", "75", "100"]}
+    - { name: "Basic3", limit: "300MB", event_thresholds: ["25", "50", "75", "100"]}
+
+
