@@ -54,6 +54,13 @@
     mode: 0640
   ignore_errors: yes
 
+- name: downloading Fedora-Cloud-Base-25-1.3.x86_64.qcow2
+  get_url:
+    url: https://download.fedoraproject.org/pub/fedora/linux/releases/25/CloudImages/x86_64/images/Fedora-Cloud-Base-25-1.3.x86_64.qcow2
+    dest: /home/{{ regular_system_user }}/svauto/downloads/Fedora-Cloud-Base-25-1.3.x86_64.qcow2
+    mode: 0640
+  ignore_errors: yes
+
 - name: downloading cirros-0.3.4-x86_64-disk.img
   get_url:
     url: http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img
