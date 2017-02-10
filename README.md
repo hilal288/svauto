@@ -36,35 +36,35 @@ It contains Ansible Playbooks for Automated deployments of:
 
 Download SVAuto into your home directory (Designed for Ubuntu LTS):
 
-    bash <(curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/install-svauto.sh)
+    bash <(curl -s https://raw.githubusercontent.com/tmartinx/svauto/dev/scripts/install-svauto.sh)
 
 ## Bootstrapping boxes with "curl pipe bash"
 
 Bootstrap Ubuntu 16.04 Server, configure Grub and clean it up, while upgrading it:
 
-    curl -L https://raw.githubusercontent.com/sandvine-eng/svauto/dev/svauto.sh | bash -s -- --svauto-deployments --base-os=ubuntu16 --ansible-roles=bootstrap,grub-conf,post-cleanup --ansible-extra-vars="base_os_upgrade=yes,ubuntu_install=server"
+    curl -L https://raw.githubusercontent.com/tmartinx/svauto/dev/svauto.sh | bash -s -- --svauto-deployments --base-os=ubuntu16 --ansible-roles=bootstrap,grub-conf,post-cleanup --ansible-extra-vars="base_os_upgrade=yes,ubuntu_install=server"
 
 or:
 
-    bash <(curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/bootstrap-xenial-server.sh) 
+    bash <(curl -s https://raw.githubusercontent.com/tmartinx/svauto/dev/bootstrap-xenial-server.sh) 
 
-    curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/bootstrap-xenial-server.sh | bash
+    curl -s https://raw.githubusercontent.com/tmartinx/svauto/dev/bootstrap-xenial-server.sh | bash
 
 Bootstrap Ubuntu 16.04 Desktop, while upgrading and installing Google Chrome:
 
-    curl -L https://raw.githubusercontent.com/sandvine-eng/svauto/dev/svauto.sh | bash -s -- --svauto-deployments --base-os=ubuntu16 --ansible-roles=bootstrap,grub-conf,hyper_kvm,google-chrome,scudcloud,sublime,ccollab-client --extra-vars="base_os_upgrade=yes"
+    curl -L https://raw.githubusercontent.com/tmartinx/svauto/dev/svauto.sh | bash -s -- --svauto-deployments --base-os=ubuntu16 --ansible-roles=bootstrap,grub-conf,hyper_kvm,google-chrome,scudcloud,sublime,ccollab-client --extra-vars="base_os_upgrade=yes"
 
 Bootstrap Ubuntu 16.04 Desktop, while configuring Grub, upgrading it and installing Google Chrome:
 
-    curl -L https://raw.githubusercontent.com/sandvine-eng/svauto/dev/svauto.sh | bash -s -- --svauto-deployments --base-os=ubuntu16 --ansible-roles=bootstrap,grub-conf,google-chrome --extra-vars="base_os_upgrade=yes"
+    curl -L https://raw.githubusercontent.com/tmartinx/svauto/dev/svauto.sh | bash -s -- --svauto-deployments --base-os=ubuntu16 --ansible-roles=bootstrap,grub-conf,google-chrome --extra-vars="base_os_upgrade=yes"
 
 Bootstrap CentOS 6, while configuring Grub
 
-    curl -L https://raw.githubusercontent.com/sandvine-eng/svauto/dev/svauto.sh | bash -s -- --svauto-deployments --base-os=centos6 --ansible-roles=bootstrap,grub-conf --extra-vars="base_os_upgrade=yes"
+    curl -L https://raw.githubusercontent.com/tmartinx/svauto/dev/svauto.sh | bash -s -- --svauto-deployments --base-os=centos6 --ansible-roles=bootstrap,grub-conf --extra-vars="base_os_upgrade=yes"
 
 Bootstrap CentOS 7, while configuring Grub
 
-    curl -L https://raw.githubusercontent.com/sandvine-eng/svauto/dev/svauto.sh | bash -s -- --svauto-deployments --base-os=centos7 --ansible-roles=bootstrap,grub-conf --extra-vars="base_os_upgrade=yes"
+    curl -L https://raw.githubusercontent.com/tmartinx/svauto/dev/svauto.sh | bash -s -- --svauto-deployments --base-os=centos7 --ansible-roles=bootstrap,grub-conf --extra-vars="base_os_upgrade=yes"
 
 ## Installing SVAuto dependencies
 
@@ -76,25 +76,25 @@ Big URL
 
 Server:
 
-    curl -L https://raw.githubusercontent.com/sandvine-eng/svauto/dev/svauto.sh | bash -s -- --svauto-deployments --base-os=ubuntu16 --ansible-roles=bootstrap,grub-conf,apache2,hyper_kvm,hyper_lxd,hyper_virtualbox,docker,vagrant,amazon_ec2_tools,redhat_tools_ubuntu,os_clients,packer,vsftpd,post-cleanup --ansible-extra-vars="ubuntu_install=server"
+    curl -L https://raw.githubusercontent.com/tmartinx/svauto/dev/svauto.sh | bash -s -- --svauto-deployments --base-os=ubuntu16 --ansible-roles=bootstrap,grub-conf,apache2,hyper_kvm,hyper_lxd,hyper_virtualbox,docker,vagrant,amazon_ec2_tools,redhat_tools_ubuntu,os_clients,packer,vsftpd,post-cleanup --ansible-extra-vars="ubuntu_install=server"
 
 Desktop:
 
-    curl -L https://raw.githubusercontent.com/sandvine-eng/svauto/dev/svauto.sh | bash -s -- --svauto-deployments --base-os=ubuntu16 --ansible-roles=bootstrap,grub-conf,apache2,hyper_kvm,hyper_lxd,hyper_virtualbox,docker,vagrant,amazon_ec2_tools,redhat_tools_ubuntu,os_clients,packer,vsftpd,post-cleanup --ansible-extra-vars="ubuntu_install=desktop"
+    curl -L https://raw.githubusercontent.com/tmartinx/svauto/dev/svauto.sh | bash -s -- --svauto-deployments --base-os=ubuntu16 --ansible-roles=bootstrap,grub-conf,apache2,hyper_kvm,hyper_lxd,hyper_virtualbox,docker,vagrant,amazon_ec2_tools,redhat_tools_ubuntu,os_clients,packer,vsftpd,post-cleanup --ansible-extra-vars="ubuntu_install=desktop"
 
 Short URL
 
 Server:
 
-    bash <(curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/bootstrap-svauto-server.sh)
+    bash <(curl -s https://raw.githubusercontent.com/tmartinx/svauto/dev/scripts/bootstrap-svauto-server.sh)
 
-    curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/bootstrap-svauto-server.sh | bash
+    curl -s https://raw.githubusercontent.com/tmartinx/svauto/dev/scripts/bootstrap-svauto-server.sh | bash
 
 Desktop:
 
-    bash <(curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/bootstrap-svauto-desktop.sh)
+    bash <(curl -s https://raw.githubusercontent.com/tmartinx/svauto/dev/scripts/bootstrap-svauto-desktop.sh)
 
-    curl -s https://raw.githubusercontent.com/sandvine-eng/svauto/dev/scripts/bootstrap-svauto-desktop.sh | bash
+    curl -s https://raw.githubusercontent.com/tmartinx/svauto/dev/scripts/bootstrap-svauto-desktop.sh | bash
 
 ## SVAuto script usage example
 
