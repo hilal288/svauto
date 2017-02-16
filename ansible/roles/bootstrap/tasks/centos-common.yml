@@ -102,6 +102,7 @@
     - bind-utils
     - traceroute
     - python-pip
+    - bridge-utils
     - conntrack-tools
     - python-virtualenv
     - libhugetlbfs-utils
