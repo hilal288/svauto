@@ -4,13 +4,13 @@
     {
       "type": "qemu",
       "iso_urls": [
-        "/var/lib/libvirt/ISO/ubuntu-16.04-server-amd64.iso",
-        "http://mirror.csclub.uwaterloo.ca/ubuntu-releases/16.04/ubuntu-16.04-server-amd64.iso"
+        "/var/lib/libvirt/ISO/ubuntu-16.04.2-server-amd64.iso",
+        "http://mirror.csclub.uwaterloo.ca/ubuntu-releases/16.04.2/ubuntu-16.04.2-server-amd64.iso"
       ],
-      "iso_checksum": "23e97cd5d4145d4105fbf29878534049",
+      "iso_checksum": "2bce60d18248df9980612619ff0b34e6",
       "iso_checksum_type": "md5",
       "output_directory": "packer/ubuntu16-tmpl",
-      "vm_name": "xenial-server-amd64.raw",
+      "vm_name": "ubuntu-16.04.2-server-amd64.raw",
       "ssh_wait_timeout": "30s",
       "shutdown_command": "echo 'sandvine' | sudo -S -E shutdown -P now",
       "qemuargs": [
