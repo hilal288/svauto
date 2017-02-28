@@ -32,11 +32,11 @@ packer_builder()
 			;;
 
 		centos6)
-			OS_LABEL="centos6"
+			OS_LABEL="el6"
 			;;
 
 		centos7)
-			OS_LABEL="centos7"
+			OS_LABEL="el7"
 			;;
 
 	        *)
