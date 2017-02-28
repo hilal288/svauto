@@ -12,13 +12,13 @@
       "output_directory": "packer/ubuntu14-tmpl",
       "vm_name": "ubuntu-14.04.5-server-amd64.raw",
       "ssh_wait_timeout": "30s",
-      "shutdown_command": "echo 'sandvine' | sudo -S -E shutdown -P now",
+      "shutdown_command": "sudo -S -E shutdown -P now",
       "qemuargs": [
         ["-m","2048M"]
       ],
       "disk_size": 7168,
       "format": "raw",
-      "headless": false,
+      "headless": "true",
       "accelerator": "kvm",
       "http_directory": "packer/http",
       "http_port_min": 10082,
@@ -36,25 +36,13 @@
         "<esc><wait>",
         "<esc><wait>",
         "<enter><wait>",
-        "/install/vmlinuz<wait>",
-        " auto<wait>",
-        " console-setup/ask_detect=false<wait>",
-        " console-setup/layoutcode=us<wait>",
-        " console-setup/modelcode=pc105<wait>",
-        " debian-installer=en_US<wait>",
-        " fb=false<wait>",
-        " initrd=/install/initrd.gz<wait>",
-        " kbd-chooser/method=us<wait>",
-        " keyboard-configuration/layout=USA<wait>",
-        " keyboard-configuration/variant=USA<wait>",
-        " locale=en_US<wait>",
-        " netcfg/get_hostname=ubuntu14<wait>",
-        " netcfg/get_domain=sandvine.rocks<wait>",
-        " noapic<wait>",
-        " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ubuntu14-preseed.cfg<wait>",
-        " -- <wait>",
-        "<enter><wait>"
-       ]
+        "/install/vmlinuz ",
+        "initrd=/install/initrd.gz ",
+        "auto-install/enable=true ",
+        "debconf/priority=critical ",
+        "preseed/url=http://{{.HTTPIP}}:{{.HTTPPort}}/ubuntu14-preseed.cfg ",
+        "<enter>"
+      ]
     }
   ]
 }
