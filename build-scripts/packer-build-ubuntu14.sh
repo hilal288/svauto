@@ -1,4 +1,6 @@
-# Copyright 2016, Sandvine Incorporated
+#! /bin/bash
+
+# Copyright 2016, Sandvine Incorporated.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,20 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: ubuntu16 - copy Ubuntu Xenial default sources.list
-  copy: src=ubuntu16/sources.list.j2
-        dest=/etc/apt/sources.list
-        owner=root
-        group=root
-        mode=0644
-
-
-- name: ubuntu16 - apt installing basic tools
-  apt: name={{item}} state=latest update_cache=yes
-  with_items:
-    - nftables
-    - virtualenv
-
-
-- name: ubuntu16 - apt removing ubuntu-fan (it is broken)
-  apt: name=ubuntu-fan state=absent purge=yes
+# Ubuntu 14.04 Packer Build with Ansible
+./svauto.sh --packer-builder --base-os=ubuntu14 --release=dev --product=ubuntu --version=14.04.5 --product-variant=sv-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+	--ansible-remote-user="root" \
+	--ansible-inventory-builder="svbox,localhost,ubuntu_install=server,os_release=mitaka" \
+	--ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes,grub-conf,post-cleanup-image" \
+	--packer-max-tries=3 # --dry-run

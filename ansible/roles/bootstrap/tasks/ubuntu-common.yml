@@ -91,7 +91,6 @@
     - sysfsutils
     - nbd-client
     - python-pip
-    - virtualenv
     - btrfs-tools
     - genisoimage
     - ecryptfs-utils

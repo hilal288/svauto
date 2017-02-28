@@ -26,6 +26,12 @@
     - linux-generic-lts-xenial
 
 
+- name: ubuntu14 - apt installing basic tools
+  apt: name={{item}} state=latest update_cache=yes
+  with_items:
+    - python-virtualenv
+
+
 - name: ubuntu14 - copy ttyS0 upstart job
   copy: src=ubuntu14/ttyS0.conf.j2
         dest=/etc/init/ttyS0.conf

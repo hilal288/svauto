@@ -14,8 +14,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Updating
-echo 'sandvine' | sudo -S -E apt update
+#
+# Installing Ansible 2
+#
 
-# Install Ansible
-echo 'sandvine' | sudo -S -E apt install -y ansible
+sudo apt-get update
+
+sudo apt-get install -y software-properties-common
+
+sudo add-apt-repository -y ppa:ansible/ansible
+
+sudo apt-get update
+
+sudo apt-get install -y ansible
+
+sudo apt-get clean

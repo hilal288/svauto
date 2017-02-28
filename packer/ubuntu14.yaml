@@ -7,12 +7,12 @@
         "/var/lib/libvirt/ISO/ubuntu-14.04.5-server-amd64.iso",
         "http://mirror.csclub.uwaterloo.ca/ubuntu-releases/14.04.5/ubuntu-14.04.5-server-amd64.iso"
       ],
-      "iso_checksum": "dd54dc8cfc2a655053d19813c2f9aa9f",
-      "iso_checksum_type": "md5",
+      "iso_checksum": "dde07d37647a1d2d9247e33f14e91acb10445a97578384896b4e1d985f754cc1",
+      "iso_checksum_type": "sha256",
       "output_directory": "packer/ubuntu14-tmpl",
       "vm_name": "ubuntu-14.04.5-server-amd64.raw",
       "ssh_wait_timeout": "30s",
-      "shutdown_command": "sudo -S -E shutdown -P now",
+      "shutdown_command": "sudo shutdown -P now",
       "qemuargs": [
         ["-m","2048M"]
       ],

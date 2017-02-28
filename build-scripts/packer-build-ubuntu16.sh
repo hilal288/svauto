@@ -1,6 +1,6 @@
-#!/bin/bash -eux
+#! /bin/bash
 
-# Copyright 2016, Sandvine Incorporated
+# Copyright 2016, Sandvine Incorporated.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,14 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Ansible will need sudo without password
-echo 'sandvine' | sudo -S -E sed -i -e 's/^%sudo.*/%sudo ALL=NOPASSWD:ALL/' /etc/sudoers
-
-# Updating
-echo 'sandvine' | sudo -S -E apt-get update
-
-# Install Ansible 2.0
-echo 'sandvine' | sudo -S -E apt-get install -y software-properties-common
-echo 'sandvine' | sudo -S -E add-apt-repository -y ppa:ansible/ansible
-echo 'sandvine' | sudo -S -E apt-get update
-echo 'sandvine' | sudo -S -E apt-get install -y ansible
+# Ubuntu 16.04 Packer Build with Ansible
+./svauto.sh --packer-builder --base-os=ubuntu16 --release=dev --product=ubuntu --version=16.04.2 --product-variant=sv-1 --qcow2 --ova --vhd --vm-xml --sha256sum \
+	--ansible-remote-user="root" \
+	--ansible-inventory-builder="svbox,localhost,ubuntu_install=server,os_release=ocata" \
+	--ansible-playbook-builder="svbox,cloud-init,bootstrap;base_os_upgrade=yes,grub-conf,post-cleanup-image" \
+	--packer-max-tries=3 # --dry-run
