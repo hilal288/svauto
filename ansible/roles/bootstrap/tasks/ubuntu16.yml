@@ -27,5 +27,18 @@
     - virtualenv
 
 
+- name: ubuntu16 - apt installing Ubuntu 16.04 HWE - Linux
+  apt: name={{item}} state=installed update_cache=yes
+  with_items:
+    - linux-generic-hwe-16.04
+
+
+- name: ubuntu16 - apt installing Ubuntu 16.04 HWE - XOrg
+  apt: name={{item}} state=latest update_cache=yes
+  with_items:
+    - xserver-xorg-hwe-16.04
+  when: ubuntu_install == 'desktop'
+
+
 - name: ubuntu16 - apt removing ubuntu-fan (it is broken)
   apt: name=ubuntu-fan state=absent purge=yes
