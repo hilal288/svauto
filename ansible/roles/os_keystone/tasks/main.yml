@@ -23,7 +23,7 @@
 
 - name: Stopping and disabling Keystone (it runs under Apache)
   service: name=keystone state=stopped enabled=no
-  when: os_release != 'newton'
+  when: os_release == 'mitaka'
 
 
 - name: Removing non-used sqlite database
@@ -50,18 +50,18 @@
 - name: Initialize Fernet keys
   shell: keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone
 
-- name: Initialize Fernet credential (Newton)
+- name: Initialize Fernet credential (Newton or Ocata)
   shell: keystone-manage credential_setup --keystone-user keystone --keystone-group keystone
   when: os_release == 'newton'
 
 
-- name: Bootstrapping Identity Service (Newton)
+- name: Bootstrapping Identity Service (Newton or Ocata)
   shell: keystone-manage bootstrap --bootstrap-password "{{admin_password}}" --bootstrap-admin-url http://{{os_admin_addr}}:35357/v3/ --bootstrap-internal-url http://{{os_admin_addr}}:35357/v3/ --bootstrap-public-url http://{{os_public_addr}}:5000/v3/ --bootstrap-region-id "{{region}}"
-  when: os_release == 'newton'
+  when: os_release == 'newton' or os_release == 'ocata'
 
 
 - include: apache-keystone-files.yml
-  when: os_release == 'mitaka'
+  when: os_release == 'mitaka' or os_release == 'newton'
 
 
 - meta: flush_handlers
