@@ -20,3 +20,9 @@ openvswitch_stack_1_bridges: "no"
 os_external: "dummy0"
 
 os_neutron_external_bridge: "br-ex"
+
+os_provider_net_1_ovs_bridge_interface: "dummybr0"
+os_provider_net_1_ovs_interface: "dummy4"
+
+os_provider_net_2_ovs_bridge_interface: "dummybr1"
+os_provider_net_2_ovs_interface: "dummy5"
