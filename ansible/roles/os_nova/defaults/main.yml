@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# TODO: Remove the following lines, in favor of "mysql_databases / os_project" logic:
+nova_api_db_name: "nova_api"
+nova_api_db_user: "novaAPIUser"
+nova_api_db_pass: "novaAPIPass"
 
 os_nova_ctrl: "no"
 os_nova_cmpt: "no"
