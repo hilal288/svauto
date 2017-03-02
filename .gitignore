@@ -5,6 +5,7 @@
 *.vmdk
 *.retry
 *.log
+.vagrant
 build-date.txt
 packer/build*
 packer/ubuntu*-tmpl
@@ -18,4 +19,5 @@ ansible/*-hosts-*
 ansible/*-extra-vars-*
 ansible/facts_storage/*
 ansible/vagrant-run-*
-.vagrant
+downloads/*.iso
+downloads/*.qcow2*
