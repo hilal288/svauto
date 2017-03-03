@@ -55,4 +55,8 @@
   notify: reload-apache2
 
 
+- name: Fixing Gnocchi directory permissions
+  file: dest=/var/lib/gnocchi owner=gnocchi group=gnocchi recurse=yes
+
+
 - meta: flush_handlers
