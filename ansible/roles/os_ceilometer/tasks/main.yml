@@ -15,6 +15,10 @@
 # Reference:
 # https://docs.openstack.org/project-install-guide/telemetry/ocata/install-base-ubuntu.html
 
+- include: openstack-ceilometer-init.yml
+  when: deployment_mode == 'yes'
+
+
 - name: Installing Ceilometer
   apt: name={{item}} state=latest
   with_items:
