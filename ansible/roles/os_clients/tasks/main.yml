@@ -35,6 +35,7 @@
     - python-monascaclient
     - python-mistralclient
     - python-neutronclient
+    - python-gnocchiclient
     - python-barbicanclient
     - python-keystoneclient
     - python-openstackclient
