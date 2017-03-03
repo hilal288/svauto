@@ -39,7 +39,7 @@
 
 
 - name: Populating Gnocchi Database
-  shell: gnocchi-upgrade
+  shell: gnocchi-upgrade --create-legacy-resource-types
 
 
 - name: Apache HTTP Virtual Host for Gnocchi API
