@@ -135,18 +135,3 @@ admin_openrc_env:
   OS_PASSWORD: "admin_pass"
   OS_AUTH_URL: "http://{{ os_admin_addr }}:35357/v3"
   OS_IDENTITY_API_VERSION: "3"
-
-mysql_databases:
-  - { os_project: "keystone", db_name: "keystone", db_host: "%", db_user: "keystoneUser", db_pass: "keystonePass" }
-  - { os_project: "glance", db_name: "glance", db_host: "%", db_user: "glanceUser", db_pass: "glancePass" }
-  - { os_project: "nova", db_name: "nova", db_host: "%", db_user: "novaUser", db_pass: "novaPass" }
-  - { os_project: "nova_api", db_name: "nova_api", db_host: "%", db_user: "novaAPIUser", db_pass: "novaAPIPass" }
-  - { os_project: "nova_cell0", db_name: "nova", db_host: "%", db_user: "novaUser", db_pass: "novaPass" }
-  - { os_project: "neutron", db_name: "neutron", db_host: "%", db_user: "neutronUser", db_pass: "neutronPass" }
-  - { os_project: "cinder", db_name: "cinder", db_host: "%", db_user: "cinderUser", db_pass: "cinderPass" }
-  - { os_project: "heat", db_name: "heat", db_host: "%", db_user: "heatUser", db_pass: "heatPass" }
-  - { os_project: "gnocchi", db_name: "gnocchi", db_host: "%", db_user: "gnocchiUser", db_pass: "gnocchiPass" }
-  - { os_project: "aodh", db_name: "aodh", db_host: "%", db_user: "aodhUser", db_pass: "aodhPass" }
-  - { os_project: "senlin", db_name: "senlin", db_host: "%", db_user: "senlinUser", db_pass: "senlinPass" }
-  - { os_project: "trove", db_name: "trove", db_host: "%", db_user: "troveUser", db_pass: "trovePass" }
-  - { os_project: "manila", db_name: "manila", db_host: "%", db_user: "manilaUser", db_pass: "manilaPass" }

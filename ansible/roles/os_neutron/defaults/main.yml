@@ -13,6 +13,9 @@
 # limitations under the License.
 
 
+mysql_databases:
+  - { os_project: "neutron", db_name: "neutron", db_host: "%", db_user: "neutronUser", db_pass: "neutronPass" }
+
 os_aio: "no"
 
 os_neutron_ctrl: "no"

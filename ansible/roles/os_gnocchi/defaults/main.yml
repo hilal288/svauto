@@ -1,0 +1,3 @@
+
+mysql_databases:
+  - { os_project: "gnocchi", db_name: "gnocchi", db_host: "%", db_user: "gnocchiUser", db_pass: "gnocchiPass" }

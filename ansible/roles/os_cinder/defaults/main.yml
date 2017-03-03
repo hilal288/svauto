@@ -1,0 +1,3 @@
+
+mysql_databases:
+  - { os_project: "cinder", db_name: "cinder", db_host: "%", db_user: "cinderUser", db_pass: "cinderPass" }

@@ -12,6 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+- name: Creating OpenStack MySQL databases
+  mysql_db: name={{item.db_name}} state=present
+  with_items: '{{mysql_databases}}'
+
+
+- name: Creating OpenStack MySQL users
+  mysql_user:
+    host="{{item.db_host}}"
+    name="{{item.db_user}}"
+    password="{{item.db_pass}}"
+    priv="{{item.db_name}}.*:ALL,GRANT"
+    state=present
+  with_items: '{{mysql_databases}}'
+
+
 - include: openstack-aodh-init.yml
   when: deployment_mode == 'yes'
 

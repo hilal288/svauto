@@ -13,6 +13,9 @@
 # limitations under the License.
 
 
+mysql_databases:
+  - { os_project: "keystone", db_name: "keystone", db_host: "%", db_user: "keystoneUser", db_pass: "keystonePass" }
+
 admin_token: "ADMIN_TOKEN"
 
 openstack_env:

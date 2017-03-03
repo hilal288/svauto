@@ -1,0 +1,3 @@
+
+mysql_databases:
+  - { os_project: "glance", db_name: "glance", db_host: "%", db_user: "glanceUser", db_pass: "glancePass" }
