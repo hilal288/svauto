@@ -12,35 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- include: openstack-aodh-init.yml
-  when: deployment_mode == 'yes'
-
-
-- name: Installing Aodh API
-  apt: name=aodh-api state=latest
-  notify: reload-apache2
-
-- name: Installing Aodh
-  apt: name={{item}} state=latest
+- name: restart-aodh
+  service: name={{item}} state=restarted enabled=yes
   with_items:
-    - aodh-api
     - aodh-evaluator
-    - aodh-expirer
-    - aodh-listener
     - aodh-notifier
-  notify: restart-aodh
+    - aodh-listener
 
 
-- name: Updating aodh.conf
-  template: src={{ os_release }}/aodh.conf
-        dest=/etc/aodh/aodh.conf
-        owner=aodh
-        group=aodh
-        mode=0640
-        backup=yes
-  when: item.os_project == "aodh"
-  with_items: '{{mysql_databases}}'
-  notify: restart-aodh
-
-
-- meta: flush_handlers
+- name: reload-apache2
+  service: name=apache2 state=reloaded
