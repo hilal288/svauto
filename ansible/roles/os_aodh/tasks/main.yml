@@ -58,4 +58,8 @@
   notify: restart-aodh
 
 
+- name: Populating AODH Database
+  shell: su -s /bin/sh -c "aodh-dbsync" aodh
+
+
 - meta: flush_handlers
