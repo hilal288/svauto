@@ -124,7 +124,7 @@ demo_openrc_env:
   OS_PROJECT_NAME: "demo"
   OS_USERNAME: "demo"
   OS_PASSWORD: "demo_pass"
-  OS_AUTH_URL: "http://{{os_public_addr}}:5000/v3"
+  OS_AUTH_URL: "http://{{ os_public_addr }}:5000/v3"
   OS_IDENTITY_API_VERSION: "3"
 
 admin_openrc_env:
@@ -133,7 +133,7 @@ admin_openrc_env:
   OS_PROJECT_NAME: "admin"
   OS_USERNAME: "admin"
   OS_PASSWORD: "admin_pass"
-  OS_AUTH_URL: "http://{{os_admin_addr}}:35357/v3"
+  OS_AUTH_URL: "http://{{ os_admin_addr }}:35357/v3"
   OS_IDENTITY_API_VERSION: "3"
 
 mysql_databases:
@@ -141,13 +141,10 @@ mysql_databases:
   - { os_project: "glance", db_name: "glance", db_host: "%", db_user: "glanceUser", db_pass: "glancePass" }
   - { os_project: "nova", db_name: "nova", db_host: "%", db_user: "novaUser", db_pass: "novaPass" }
   - { os_project: "nova_api", db_name: "nova_api", db_host: "%", db_user: "novaAPIUser", db_pass: "novaAPIPass" }
+  - { os_project: "nova_cell0", db_name: "nova", db_host: "%", db_user: "novaUser", db_pass: "novaPass" }
   - { os_project: "neutron", db_name: "neutron", db_host: "%", db_user: "neutronUser", db_pass: "neutronPass" }
   - { os_project: "cinder", db_name: "cinder", db_host: "%", db_user: "cinderUser", db_pass: "cinderPass" }
   - { os_project: "heat", db_name: "heat", db_host: "%", db_user: "heatUser", db_pass: "heatPass" }
+  - { os_project: "gnocchi", db_name: "gnocchi", db_host: "%", db_user: "gnocchiUser", db_pass: "gnocchiPass" }
   - { os_project: "trove", db_name: "trove", db_host: "%", db_user: "troveUser", db_pass: "trovePass" }
   - { os_project: "manila", db_name: "manila", db_host: "%", db_user: "manilaUser", db_pass: "manilaPass" }
-
-# TODO: Remove the following lines, in favor of "mysql_databases / os_project logic":
-nova_api_db_name: "nova_api"
-nova_api_db_user: "novaAPIUser"
-nova_api_db_pass: "novaAPIPass"
