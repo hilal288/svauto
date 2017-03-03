@@ -16,8 +16,11 @@
   apt: name={{item}} state=latest
   with_items:
     - python-ryu
+    - python-yaql
+    - python-heat
     - python-shade
     - python-croniter
+    - python-aodhclient
     - python-novaclient
     - python-heatclient
     - python-zaqarclient
@@ -29,6 +32,7 @@
     - python-glanceclient
     - python-cinderclient
     - python-magnumclient
+    - python-monascaclient
     - python-mistralclient
     - python-neutronclient
     - python-barbicanclient
