@@ -146,5 +146,7 @@ mysql_databases:
   - { os_project: "cinder", db_name: "cinder", db_host: "%", db_user: "cinderUser", db_pass: "cinderPass" }
   - { os_project: "heat", db_name: "heat", db_host: "%", db_user: "heatUser", db_pass: "heatPass" }
   - { os_project: "gnocchi", db_name: "gnocchi", db_host: "%", db_user: "gnocchiUser", db_pass: "gnocchiPass" }
+  - { os_project: "aodh", db_name: "aodh", db_host: "%", db_user: "aodhUser", db_pass: "aodhPass" }
+  - { os_project: "senlin", db_name: "senlin", db_host: "%", db_user: "senlinUser", db_pass: "senlinPass" }
   - { os_project: "trove", db_name: "trove", db_host: "%", db_user: "troveUser", db_pass: "trovePass" }
   - { os_project: "manila", db_name: "manila", db_host: "%", db_user: "manilaUser", db_pass: "manilaPass" }
