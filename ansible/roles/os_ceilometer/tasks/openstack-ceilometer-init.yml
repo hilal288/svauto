@@ -15,7 +15,7 @@
 # Reference:
 # https://docs.openstack.org/project-install-guide/telemetry/ocata/install-base-ubuntu.html
 
-- name: Creating OpenStack Telemetric Service
+- name: Creating OpenStack Telemetry Service
   environment: "{{ admin_openrc_env }}"
   command: "{{ item }}"
   with_items:
@@ -23,7 +23,7 @@
 
 
 # Ceilometer Endpoint is DEPRECATED!
-#- name: Creating OpenStack Telemetric Endpoint
+#- name: Creating OpenStack Telemetry Endpoint
 #  environment: "{{ admin_openrc_env }}"
 #  command: "{{ item }}"
 #  with_items:
@@ -32,7 +32,7 @@
 #  - openstack endpoint create --region "{{ region }}" metering admin http://{{ os_admin_addr }}:8777
 
 
-- name: Creating OpenStack Telemetric User and Role
+- name: Creating OpenStack Telemetry User and Role
   environment: "{{ admin_openrc_env }}"
   command: "{{ item }}"
   with_items:

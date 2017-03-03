@@ -31,8 +31,6 @@
         group=ceilometer
         mode=0640
         backup=yes
-  when: item.os_project == "ceilometer"
-  with_items: '{{mysql_databases}}'
   notify: restart-ceilometer
 
 
