@@ -51,4 +51,8 @@
   tags: horizon
 
 
+- name: Fixing Horizon secret_key permissions
+  file: dest=/var/lib/openstack-dashboard/secret_key owner=www-data group=www-data
+
+
 - meta: flush_handlers
