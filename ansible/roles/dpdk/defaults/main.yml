@@ -25,10 +25,10 @@ dpdk_nr_2m_pages: "512"
 dpdk_bus: "pci"
 
 dpdk_id_1: "0000:06:00.0"
-dpdk_driver_1: "uio_pci_generic"
+dpdk_driver_1: "igb_uio"
 
 dpdk_id_2: "0000:06:00.1"
-dpdk_driver_2: "uio_pci_generic"
+dpdk_driver_2: "igb_uio"
 
 dpdk_id_3: "0000:09:00.0"
 dpdk_driver_3: "vfio-pci"
