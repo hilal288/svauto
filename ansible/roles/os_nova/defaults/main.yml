@@ -14,10 +14,11 @@
 
 mysql_databases:
   - { os_project: "nova", db_name: "nova", db_host: "%", db_user: "novaUser", db_pass: "novaPass" }
+  - { os_project: "nova_cells", db_name: "nova_cell0", db_host: "%", db_user: "novaUser", db_pass: "novaPass" }
   - { os_project: "nova_api", db_name: "nova_api", db_host: "%", db_user: "novaAPIUser", db_pass: "novaAPIPass" }
-  - { os_project: "nova_cell0", db_name: "nova", db_host: "%", db_user: "novaUser", db_pass: "novaPass" }
 
-# TODO: Remove the following lines, in favor of "mysql_databases / os_project" logic:
+# TODO:
+# Remove the nova_api* lines, in favor of "mysql_databases / os_project" logic.
 nova_api_db_name: "nova_api"
 nova_api_db_user: "novaAPIUser"
 nova_api_db_pass: "novaAPIPass"

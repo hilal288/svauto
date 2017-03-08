@@ -14,6 +14,7 @@
 
 # References:
 # http://docs.openstack.org/mitaka/install-guide-ubuntu/nova-controller-install.html
+# http://docs.openstack.org/newton/install-guide-ubuntu/nova-controller-install.html
 # https://docs.openstack.org/ocata/install-guide-ubuntu/nova-controller-install.html
 
 
@@ -21,13 +22,13 @@
   mysql_db: name={{item.db_name}} state=present
   with_items: '{{mysql_databases}}'
 
-
 - name: Creating OpenStack MySQL users
   mysql_user:
     host="{{item.db_host}}"
     name="{{item.db_user}}"
     password="{{item.db_pass}}"
     priv="{{item.db_name}}.*:ALL,GRANT"
+    append_privs=true
     state=present
   with_items: '{{mysql_databases}}'
 
@@ -48,16 +49,17 @@
   notify: restart-nova
 
 
-- name: Removing non-used sqlite database
-  file: path=/var/lib/nova/nova.sqlite state=absent
-  notify: restart-nova
-
-
 - name: Installing Nova Placement API (Ocata)
   apt: name={{item}} state=latest
   with_items:
     - nova-placement-api
+  notify: reload-apache2
   when: os_release == 'ocata'
+
+
+- name: Removing non-used sqlite database
+  file: path=/var/lib/nova/nova.sqlite state=absent
+  notify: restart-nova
 
 
 - name: Updating nova.conf
@@ -75,16 +77,18 @@
 - name: Populating Nova Database
   shell: su -s /bin/sh -c "nova-manage db sync" nova
 
-
 - name: Populating Nova API Database
   shell: su -s /bin/sh -c "nova-manage api_db sync" nova
 
 
-- name: Mapping cell_v2 Nova Database (Ocata)
+- name: Mapping cell_v2 Nova Database (Nova Cells case)
   shell: su -s /bin/sh -c "nova-manage cell_v2 map_cell0" nova
   when: os_release == 'ocata'
 
-
-- name: Creating Nova Cell (Ocata)
+- name: Creating Nova Cell (Nova Cells case)
   shell: su -s /bin/sh -c "nova-manage cell_v2 create_cell" nova
   when: os_release == 'ocata' and deployment_mode == 'yes'
+
+- name: Populating Nova Database (Nova Cells case)
+  shell: su -s /bin/sh -c "nova-manage db sync" nova
+  when: os_release == 'ocata'

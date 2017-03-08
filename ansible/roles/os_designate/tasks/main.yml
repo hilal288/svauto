@@ -12,10 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Reference:
+# https://docs.openstack.org/project-install-guide/dns/ocata/install-ubuntu.html
+
 - name: Creating OpenStack MySQL databases
   mysql_db: name={{item.db_name}} state=present
   with_items: '{{mysql_databases}}'
-
 
 - name: Creating OpenStack MySQL users
   mysql_user:
@@ -23,43 +25,52 @@
     name="{{item.db_user}}"
     password="{{item.db_pass}}"
     priv="{{item.db_name}}.*:ALL,GRANT"
+    append_privs=true
     state=present
   with_items: '{{mysql_databases}}'
 
 
-- include: openstack-aodh-init.yml
+- include: openstack-designate-init.yml
   when: deployment_mode == 'yes'
 
 
-- name: Installing Aodh API
-  apt: name=aodh-api state=latest
-  notify: reload-apache2
-
-- name: Installing Aodh
+- name: Installing Designate
   apt: name={{item}} state=latest
   with_items:
-    - aodh-api
-    - aodh-evaluator
-    - aodh-expirer
-    - aodh-listener
-    - aodh-notifier
-  notify: restart-aodh
+    - designate
+  notify: restart-designate
 
 
-- name: Updating aodh.conf
-  template: src={{ os_release }}/aodh.conf
-        dest=/etc/aodh/aodh.conf
-        owner=aodh
-        group=aodh
+- name: Updating designate.conf
+  template: src={{ os_release }}/designate.conf.j2
+        dest=/etc/designate/designate.conf
+        owner=designate
+        group=designate
         mode=0640
         backup=yes
-  when: item.os_project == "aodh"
+  when: item.os_project == "designate"
   with_items: '{{mysql_databases}}'
-  notify: restart-aodh
+  notify: restart-designate
 
 
-- name: Populating AODH Database
-  shell: su -s /bin/sh -c "aodh-dbsync" aodh
+- name: Populating Designate Database
+  shell: su -s /bin/sh -c "designate-manage database sync" designate
+
+
+- name: Updating pools.yaml
+  template: src={{ os_release }}/pools.yaml.j2
+        dest=/etc/designate/pools.yaml
+        owner=designate
+        group=designate
+        mode=0640
+        backup=yes
+  when: item.os_project == "designate"
+  with_items: '{{mysql_databases}}'
+  notify: restart-designate
+
+
+- name: Updating Designate Pools Database
+  shell: sudo su -s /bin/sh -c "designate-manage pool update" designate
 
 
 - meta: flush_handlers

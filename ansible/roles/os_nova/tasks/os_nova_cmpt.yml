@@ -15,6 +15,7 @@
 # References:
 # http://docs.openstack.org/mitaka/install-guide-ubuntu/nova-compute-install.html
 # http://docs.openstack.org/newton/install-guide-ubuntu/nova-compute-install.html
+# https://docs.openstack.org/ocata/install-guide-ubuntu/nova-compute-install.html
 
 - name: Installing Nova Compute KVM
   apt: name={{item}} state=latest

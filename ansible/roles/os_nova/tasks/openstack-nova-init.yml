@@ -18,51 +18,28 @@
 # https://docs.openstack.org/ocata/install-guide-ubuntu/nova-controller-install.html
 
 - name: Creating OpenStack Nova Service
-  environment: "{{admin_openrc_env}}"
-  command: "{{item}}"
+  environment: "{{ admin_openrc_env }}"
+  command: "{{ item }}"
   with_items:
    - openstack service create --name nova --description "OpenStack Compute" compute
 
 
-- name: Creating OpenStack Nova Placement API Service (Ocata)
-  environment: "{{admin_openrc_env}}"
-  command: "{{item}}"
-  with_items:
-   - openstack service create --name placement --description "OpenStack Placement" placement
-  when: os_release == 'ocata'
-
-
 - name: Creating OpenStack Nova Endpoint
-  environment: "{{admin_openrc_env}}"
-  command: "{{item}}"
+  environment: "{{ admin_openrc_env }}"
+  command: "{{ item }}"
   with_items:
-   - openstack endpoint create --region "{{region}}" compute public http://{{os_public_addr}}:8774/v2.1/%\(tenant_id\)s
-   - openstack endpoint create --region "{{region}}" compute internal http://{{os_admin_addr}}:8774/v2.1/%\(tenant_id\)s
-   - openstack endpoint create --region "{{region}}" compute admin http://{{os_admin_addr}}:8774/v2.1/%\(tenant_id\)s
-
-
-- name: Creating OpenStack Nova Placement API Endpoint (Ocata)
-  environment: "{{admin_openrc_env}}"
-  command: "{{item}}"
-  with_items:
-   - openstack endpoint create --region "{{region}}" placement public http://{{os_public_addr}}:8778
-   - openstack endpoint create --region "{{region}}" placement internal http://{{os_public_addr}}:8778
-   - openstack endpoint create --region "{{region}}" placement admin http://{{os_public_addr}}:8778
-  when: os_release == 'ocata'
+   - openstack endpoint create --region "{{ region }}" compute public http://{{ os_public_addr }}:8774/v2.1/%\(tenant_id\)s
+   - openstack endpoint create --region "{{ region }}" compute internal http://{{ os_admin_addr }}:8774/v2.1/%\(tenant_id\)s
+   - openstack endpoint create --region "{{ region }}" compute admin http://{{ os_admin_addr }}:8774/v2.1/%\(tenant_id\)s
 
 
 - name: Creating OpenStack Nova User and Role
-  environment: "{{admin_openrc_env}}"
-  command: "{{item}}"
+  environment: "{{ admin_openrc_env }}"
+  command: "{{ item }}"
   with_items:
-   - openstack user create --domain default --password "{{service_password}}" --email nova@{{os_dns_domain}} nova
+   - openstack user create --domain default --password "{{ service_password }}" --email nova@{{ os_dns_domain }} nova
    - openstack role add --project service --user nova --user-domain default admin
 
 
-- name: Creating OpenStack Nova Placement API User and Role (Ocata)
-  environment: "{{admin_openrc_env}}"
-  command: "{{item}}"
-  with_items:
-   - openstack user create --domain default --password "{{service_password}}" --email placement@{{os_dns_domain}} placement
-   - openstack role add --project service --user placement --user-domain default admin
-  when: os_release == 'ocata'
+- include: openstack-nova-placement-init.yml
+  when: deployment_mode == 'yes' and os_release == 'ocata'

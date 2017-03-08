@@ -12,14 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: ubuntu - Including Cinder Controller Tasks
-  include: os_cinder_ctrl.yml
-  when: os_cinder_ctrl == 'yes'
-
-
-- name: ubuntu - Including Cinder Volume Tasks
-  include: os_cinder_vol.yml
-  when: os_cinder_vol == 'yes'
-
-
-- meta: flush_handlers
+mysql_databases:
+  - { os_project: "designate", db_name: "designate", db_host: "%", db_user: "designateUser", db_pass: "designatePass" }

@@ -27,3 +27,7 @@
     - nova-scheduler
     - nova-spiceproxy
     - nova-consoleauth
+
+
+- name: reload-apache2
+  service: name=apache2 state=reloaded
