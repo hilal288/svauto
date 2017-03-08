@@ -2,7 +2,7 @@
 # The number of 2M hugepages to reserve on system boot
 #
 # Default is 0
-# To e.g. let it reserve 64x 2M Hugepages set:
+# To e.g. let it reserve 128M via 64x 2M Hugepages set:
 {% if dpdk_nr_2m_pages >= 1 %}
 NR_2M_PAGES={{dpdk_nr_2m_pages}}
 {% else %}
@@ -13,12 +13,18 @@ NR_2M_PAGES={{dpdk_nr_2m_pages}}
 # The number of 1G hugepages to reserve on system boot
 #
 # Default is 0
-# To e.g. let it reserve 2x 1G Hugepages set:
+# To e.g. let it reserve 2G via 2x 1G Hugepages set:
 {% if (enable_hugepages == 'yes' and processor_count_1g_hugepages >= 1) %}
 NR_1G_PAGES={{dpdk_nr_1g_pages}}
 {% else %}
 #NR_1G_PAGES=
 {% endif %}
+
+# The number of 16M hugepages to reserve, supported e.g. on ppc64el
+#
+# Default is 0
+# To e.g. let it reserve 512M via 32x 16M Hugepages set:
+# NR_16M_PAGES=32
 
 #
 # Dropping slab and pagecache can help to successfully allocate hugepages,
