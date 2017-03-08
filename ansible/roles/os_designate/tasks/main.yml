@@ -38,6 +38,9 @@
   apt: name={{item}} state=latest
   with_items:
     - designate
+    - designate-worker
+    - designate-producer
+    - designate-mdns
   notify: restart-designate
 
 

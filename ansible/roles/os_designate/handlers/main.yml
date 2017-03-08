@@ -17,3 +17,6 @@
   with_items:
     - designate-central
     - designate-api
+    - designate-worker
+    - designate-producer
+    - designate-mdns
