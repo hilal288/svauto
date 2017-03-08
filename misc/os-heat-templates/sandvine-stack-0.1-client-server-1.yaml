@@ -510,7 +510,7 @@ resources:
         runcmd:
         - ifdown ens4
         - ifconfig ens4 down
-        - 'su -c "\curl -s https://raw.githubusercontent.com/tmartinx/svauto/dev/scripts/svauto-deployments.sh | bash -s -- --base-os=ubuntu16 --ansible-remote-user=root --ansible-inventory-builder=all,localhost,ansible_connection=local,openstack_release=newton,ubuntu_install=server --ansible-playbook-builder=localhost,bootstrap\;base_os_upgrade=yes,grub-conf,post-cleanup" sandvine'
+        - 'su -c "\curl -s https://raw.githubusercontent.com/tmartinx/svauto/dev/scripts/svauto-deployments.sh | bash -s -- --base-os=ubuntu16 --ansible-remote-user=root --ansible-inventory-builder=all,localhost,ansible_connection=local,openstack_release=ocata,ubuntu_install=server --ansible-playbook-builder=localhost,bootstrap\;base_os_upgrade=yes,grub-conf,post-cleanup" sandvine'
 
   tg_server:
     type: OS::Nova::Server
@@ -536,6 +536,6 @@ resources:
         runcmd:
         - ifdown ens4
         - ifconfig ens4 down
-        - 'su -c "\curl -s https://raw.githubusercontent.com/tmartinx/svauto/dev/scripts/svauto-deployments.sh | bash -s -- --base-os=ubuntu16 --ansible-remote-user=root --ansible-inventory-builder=all,localhost,ansible_connection=local,openstack_release=newton,ubuntu_install=server --ansible-playbook-builder=localhost,bootstrap\;base_os_upgrade=yes,grub-conf,post-cleanup" sandvine'
+        - 'su -c "\curl -s https://raw.githubusercontent.com/tmartinx/svauto/dev/scripts/svauto-deployments.sh | bash -s -- --base-os=ubuntu16 --ansible-remote-user=root --ansible-inventory-builder=all,localhost,ansible_connection=local,openstack_release=ocata,ubuntu_install=server --ansible-playbook-builder=localhost,bootstrap\;base_os_upgrade=yes,grub-conf,post-cleanup" sandvine'
 
 outputs:
