@@ -77,21 +77,18 @@
 - name: Populating Nova Database
   shell: su -s /bin/sh -c "nova-manage db sync" nova
 
-
 - name: Populating Nova API Database
   shell: su -s /bin/sh -c "nova-manage api_db sync" nova
 
 
-- name: Mapping cell_v2 Nova Database (Ocata)
+- name: Mapping cell_v2 Nova Database (Nova Cells case)
   shell: su -s /bin/sh -c "nova-manage cell_v2 map_cell0" nova
   when: os_release == 'ocata'
 
-
-- name: Creating Nova Cell (Ocata)
+- name: Creating Nova Cell (Nova Cells case)
   shell: su -s /bin/sh -c "nova-manage cell_v2 create_cell" nova
   when: os_release == 'ocata' and deployment_mode == 'yes'
 
-
-#- name: Populating Nova Database (nova_cell0 case)
-#  shell: su -s /bin/sh -c "nova-manage db sync" nova
-#  when: os_release == 'ocata'
+- name: Populating Nova Database (Nova Cells case)
+  shell: su -s /bin/sh -c "nova-manage db sync" nova
+  when: os_release == 'ocata'
