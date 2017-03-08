@@ -17,3 +17,6 @@
   with_items:
     - cinder-api
     - cinder-scheduler
+
+- name: restart-cinder-volumes
+  service: name=cinder-volumes state=restarted enabled=yes

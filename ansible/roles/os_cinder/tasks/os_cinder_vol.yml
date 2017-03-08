@@ -31,7 +31,7 @@
             backup=yes
   when: item.os_project == "cinder"
   with_items: '{{ mysql_databases }}'
-  notify: restart-cinder
+  notify: restart-cinder-volumes
 
 
 - meta: flush_handlers
