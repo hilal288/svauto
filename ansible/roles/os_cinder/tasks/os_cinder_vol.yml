@@ -12,14 +12,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: ubuntu - Including Cinder Controller Tasks
-  include: os_cinder_ctrl.yml
-  when: os_cinder_ctrl == 'yes'
+# Reference:
+# https://docs.openstack.org/ocata/install-guide-ubuntu/cinder-storage-install.html
 
 
-- name: ubuntu - Including Cinder Volume Tasks
-  include: os_cinder_vol.yml
-  when: os_cinder_vol == 'yes'
+- name: Installing Cinder Volume
+  apt: name={{ item }} state=latest
+  with_items:
+    - cinder-volume
+
+
+- name: Updating cinder.conf
+  template: src={{ os_release }}/cinder.conf
+            dest=/etc/cinder/cinder.conf
+            owner=cinder
+            group=cinder
+            mode=0640
+            backup=yes
+  when: item.os_project == "cinder"
+  with_items: '{{ mysql_databases }}'
+  notify: restart-cinder
 
 
 - meta: flush_handlers
