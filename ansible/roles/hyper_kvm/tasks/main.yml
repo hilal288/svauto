@@ -50,6 +50,12 @@
 
 - name: ubuntu - group add regular system user to Libvirt/KVM groups
   user: name={{ regular_system_user }} groups=libvirtd,kvm append=yes
+  when: os_release == 'mitaka' or os_release == 'newton'
+
+
+- name: ubuntu - group add regular system user to Libvirt/KVM groups (Ocata)
+  user: name={{ regular_system_user }} groups=libvirt,kvm append=yes
+  when: os_release == 'ocata'
 
 
 # Review:
