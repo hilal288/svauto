@@ -21,7 +21,24 @@ ifdown dummy1
 rm /etc/network/interfaces.d/br-ex.cfg
 rm /etc/network/interfaces.d/dummy*
 
-apt-get purge mysql-common rabbitmq-server memcached keystone "glance-*" "nova-*" "neutron-*" "cinder-*" "heat-*" "openstack-*" "manila-*" "openvswitch-*" "gnocchi-*" "ceilometer-*" "aodh-*" "senlin-*" -y
+apt-get purge -y \
+	mysql-common \
+	rabbitmq-server \
+	memcached \
+	keystone \
+	"glance-*" \
+	"nova-*" \
+	"neutron-*" \
+	"cinder-*" \
+	"heat-*" \
+	"openstack-*" \
+	"manila-*" \
+	"openvswitch-*" \
+	"gnocchi-*" \
+	"ceilometer-*" \
+	"aodh-*" \
+	"senlin-*" \
+	"designate-*"
 
 apt-get autoremove -y
 
