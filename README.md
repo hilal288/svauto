@@ -81,12 +81,12 @@ To make sure that your Packer installation is good and that you can actually run
 
 SVAuto comes with bare-minimum Packer Templates, also very minimal Kickstart and Preseed files.
 
-- Building an Ubuntu 16.04 RAW Image with just Packer:
+Building an Ubuntu 16.04 RAW Image with just Packer:
 
     cd ~/svauto
     packer build packer/ubuntu16.yaml
 
-- Building a CentOS 7 RAW Image with just Packer:
+Building a CentOS 7 RAW Image with just Packer:
 
     cd ~/svauto
     packer build packer/centos7.yaml
@@ -101,12 +101,12 @@ For example: packer/ubuntu16.yaml is the base for packer/ubuntu16-template.yaml,
 
 SVAuto basically glues together Packer and Ansible, under temporaries subdirectories (packer/build-something), it then goes there and runs "packer build" for you.
 
-- Building an Ubuntu 16.04 QCoW (compressed) with Packer and Ansible:
+Building an Ubuntu 16.04 QCoW (compressed) with Packer and Ansible:
 
     cd ~/svauto
     ./build-scripts/packer-build-ubuntu16.sh
 
-- Building a CentOS 7 QCoW (compressed) with Packer and Ansible:
+Building a CentOS 7 QCoW (compressed) with Packer and Ansible:
 
     cd ~/svauto
     ./build-scripts/packer-build-centos7.sh
@@ -146,39 +146,39 @@ Now that we know how to build very basic CentOS and Ubuntu Images, let's extend 
 
 #### Sandvine Basic Product Images
 
-- PTS on CentOS 7:
+PTS on CentOS 7:
 
     ./build-scripts/packer-build-centos7-svpts.sh
 
-- PTS on CentOS 6:
+PTS on CentOS 6:
 
     ./build-scripts/packer-build-centos6-svpts.sh
 
-- SDE on CentOS 7:
+SDE on CentOS 7:
 
     ./build-scripts/packer-build-centos7-svsde.sh
 
-- SDE on CentOS 6
+SDE on CentOS 6
 
     ./build-scripts/packer-build-centos6-svsde.sh
 
-- SPB on CentOS 6:
+SPB on CentOS 6:
 
     ./build-scripts/packer-build-centos6-svspb.sh
 
-- NDA on CentOS 7:
+NDA on CentOS 7:
 
     ./build-scripts/packer-build-centos7-svnda.sh
 
-- SPB on CentOS 7:
+SPB on CentOS 7:
 
     ./build-scripts/packer-build-centos7-svspb.sh
 
-- TCP Accelerator on CentOS 7:
+TCP Accelerator on CentOS 7:
 
     ./build-scripts/packer-build-centos7-svtcpa.sh
 
-- TSE on CentOS 7:
+TSE on CentOS 7:
 
     ./build-scripts/packer-build-centos7-svtse.sh
 
