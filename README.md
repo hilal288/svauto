@@ -75,18 +75,18 @@ After this, you'll be able to use Packer to build O.S. Images with Ansible!
 
 *NOTE: You can edit those small scripts and add "--dry-run" to svauto.sh line, this way, it doesn't run Ansible against your localhost, it only outputs Ansible's Inventory and Playbook files. Then, you can run "cd ~/svauto/ansible ; ansible-playbook -i ansible-hosts-XXXX ansible-playbook-XXXX.yml" later, if you want.*
 
-#### Packer, baby steps
+#### Packer, Baby Steps
 
 To make sure that your Packer installation is good and that you can actually run it and have a RAW Image in the end of the process, lets go baby steps first.
 
 SVAuto comes with bare-minimum Packer Templates, also very minimal Kickstart and Preseed files.
 
-Building an Ubuntu 16.04 RAW Image with just Packer:
+- Building an Ubuntu 16.04 RAW Image with just Packer:
 
     cd ~/svauto
     packer build packer/ubuntu16.yaml
 
-Building a CentOS 7 RAW Image with just Packer:
+- Building a CentOS 7 RAW Image with just Packer:
 
     cd ~/svauto
     packer build packer/centos7.yaml
@@ -101,12 +101,12 @@ For example: packer/ubuntu16.yaml is the base for packer/ubuntu16-template.yaml,
 
 SVAuto basically glues together Packer and Ansible, under temporaries subdirectories (packer/build-something), it then goes there and runs "packer build" for you.
 
-Building an Ubuntu 16.04 QCoW (compressed) with Packer and Ansible:
+- Building an Ubuntu 16.04 QCoW (compressed) with Packer and Ansible:
 
     cd ~/svauto
     ./build-scripts/packer-build-ubuntu16.sh
 
-Building a CentOS 7 QCoW (compressed) with Packer and Ansible:
+- Building a CentOS 7 QCoW (compressed) with Packer and Ansible:
 
     cd ~/svauto
     ./build-scripts/packer-build-centos7.sh
@@ -115,51 +115,76 @@ Building a CentOS 7 QCoW (compressed) with Packer and Ansible:
 
 *NOTE: You can edit those small scripts and add "--dry-run" to svauto.sh line, this way, it doesn't run Packer, it only outputs the Packer template and the related Ansible's files for that Packer build. Then, you can run "cd ~/svauto ; packer build packer/build-something-XXXX-packer-files/something-packer.yaml" later, if you want.*
 
+#### SVAuto Local Config File
+
+The local config file is "~/.svauto.conf", it overrides part of "~/svauto/svauto.conf" variables.
+
+If might have the following contents (example):
+
+    SVAUTO_DIR=/home/ubuntu/svauto
+    DOCUMENT_ROOT="public_dir"
+    DNS_DOMAIN="sub.yourdomain.com"
+    SV_YUM_HOST="ftp.$DNS_DOMAIN"
+    LICENSE_SERVER="10.1.1.1"
+    SVAUTO_YUM_HOST="tcp-x-y.$DNS_DOMAIN"
+
+*NOTES:*
+
+*You'll need the correct values to build Sandvine O.S. Images.*
+
+*Future versions will support building images directly from the Internet, using customer's credentials.*
+
 ### Building Sandvine Product's Images
 
 Now that we know how to build very basic CentOS and Ubuntu Images, let's extend this idea, by using more Ansible's Roles, to install more things on the O.S. Images.
 
-*NOTE: Go to ~/svauto subdirectory to run the next commands.*
+*NOTES:*
 
-PTS on CentOS 7:
+*Go to ~/svauto subdirectory to run the next commands.*
+
+*The following procedures requires Corp / VPN access, future versions will support building images from the Internet.*
+
+#### Sandvine Basic Product Images
+
+- PTS on CentOS 7:
 
     ./build-scripts/packer-build-centos7-svpts.sh
 
-PTS on CentOS 6:
+- PTS on CentOS 6:
 
     ./build-scripts/packer-build-centos6-svpts.sh
 
-SDE on CentOS 7:
+- SDE on CentOS 7:
 
     ./build-scripts/packer-build-centos7-svsde.sh
 
-SDE on CentOS 6
+- SDE on CentOS 6
 
     ./build-scripts/packer-build-centos6-svsde.sh
 
-SPB on CentOS 6:
+- SPB on CentOS 6:
 
     ./build-scripts/packer-build-centos6-svspb.sh
 
-NDA on CentOS 7:
+- NDA on CentOS 7:
 
     ./build-scripts/packer-build-centos7-svnda.sh
 
-SPB on CentOS 7:
+- SPB on CentOS 7:
 
     ./build-scripts/packer-build-centos7-svspb.sh
 
-TCP Accelerator on CentOS 7:
+- TCP Accelerator on CentOS 7:
 
     ./build-scripts/packer-build-centos7-svtcpa.sh
 
-TSE on CentOS 7:
+- TSE on CentOS 7:
 
     ./build-scripts/packer-build-centos7-svtse.sh
 
 ### Cleaning it up
 
-To remove the remporary files, run:
+To remove the temporary files, run:
 
     cd ~/svauto
     ./svauto.sh --clean-all
