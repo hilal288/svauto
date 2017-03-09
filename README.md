@@ -73,7 +73,7 @@ Ubuntu Server
 
 After this, you'll be able to use Packer to build O.S. Images with Ansible!
 
-NOTE: You can edit those small scripts and add "--dry-run" to svauto.sh line, this way, it doesn't run Ansible against your localhost, it only outputs Ansible's Inventory and Playbook files. Then, you can run "cd ansible/ ; ansible-playbook -i ansible-hosts-XXXX ansible-playbook-XXXX.yml" later, if you want.
+*NOTE: You can edit those small scripts and add "--dry-run" to svauto.sh line, this way, it doesn't run Ansible against your localhost, it only outputs Ansible's Inventory and Playbook files. Then, you can run "cd ~/svauto/ansible ; ansible-playbook -i ansible-hosts-XXXX ansible-playbook-XXXX.yml" later, if you want.*
 
 #### Packer, baby steps
 
@@ -93,7 +93,7 @@ Building a CentOS 7 RAW Image with just Packer:
 
 NOTE 1: The resulting images are created under packer/ubuntu16-tmpl or packer/centos7-tmpl or ...
 
-### Packer and Ansible
+#### Packer and Ansible
 
 Those small Packer Templates tested on previous baby steps, are the base for the rest of "SVAuto Image Factory".
 
@@ -111,4 +111,4 @@ Building a CentOS 7 QCoW (compressed) with Packer and Ansible:
     cd ~/svauto
     ./build-scripts/packer-build-centos7.sh
 
-NOTE: You can edit those small scripts and add "--dry-run" to svauto.sh line, this way, it doesn't run Packer, it only outputs the Packer template and the related Ansible's files for that Packer build. Then, you can run "packer build packer/build-something-XXXX-packer-files/something-packer.yaml" later, if you want.
+NOTE: You can edit those small scripts and add "--dry-run" to svauto.sh line, this way, it doesn't run Packer, it only outputs the Packer template and the related Ansible's files for that Packer build. Then, you can run "cd ~/svauto ; packer build packer/build-something-XXXX-packer-files/something-packer.yaml" later, if you want.
