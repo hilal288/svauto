@@ -28,11 +28,11 @@ It contains Ansible Playbooks for Automated deployments of:
 * Sandvine Platform RPM Packages
 * OpenStack on Ubuntu LTS
 
-*NOTES:
+*NOTES:*
 
-For using Ansible against remore locations, make sure you can ssh to your instances using key authentication.
+*For using Ansible against remore locations, make sure you can ssh to your instances using key authentication.*
 
-SVAuto was designed for Ubuntu Xenial 16.04 (latest LTS), Server or Desktop. However, many Ansible roles works on CentOS as well.*
+*SVAuto was designed for Ubuntu Xenial 16.04 (latest LTS), Server or Desktop. However, many Ansible roles works on CentOS as well.*
 
 ## Downloading
 
@@ -91,7 +91,7 @@ Building a CentOS 7 RAW Image with just Packer:
     cd ~/svauto
     packer build packer/centos7.yaml
 
-NOTE 1: The resulting images are created under packer/ubuntu16-tmpl or packer/centos7-tmpl or ...
+NOTE: The resulting images are created under packer/ubuntu16-tmpl or packer/centos7-tmpl or ...
 
 #### Packer and Ansible
 
@@ -99,7 +99,7 @@ Those small Packer Templates tested on previous baby steps, are the base for the
 
 For example: packer/ubuntu16.yaml is the base for packer/ubuntu16-template.yaml, where the "template.yaml" is used by "svauto.sh".
 
-SVAuto basically glues together Packer and Ansible, under temporaries subdirectories (packer/build-something), goes there and runs "packer build" for you.
+SVAuto basically glues together Packer and Ansible, under temporaries subdirectories (packer/build-something), it then goes there and runs "packer build" for you.
 
 Building an Ubuntu 16.04 QCoW (compressed) with Packer and Ansible:
 
@@ -111,4 +111,55 @@ Building a CentOS 7 QCoW (compressed) with Packer and Ansible:
     cd ~/svauto
     ./build-scripts/packer-build-centos7.sh
 
-NOTE: You can edit those small scripts and add "--dry-run" to svauto.sh line, this way, it doesn't run Packer, it only outputs the Packer template and the related Ansible's files for that Packer build. Then, you can run "cd ~/svauto ; packer build packer/build-something-XXXX-packer-files/something-packer.yaml" later, if you want.
+*NOTE: those O.S. Images have Cloud Init support and its file system grows automatically in a Cloud Environment!*
+
+*NOTE: You can edit those small scripts and add "--dry-run" to svauto.sh line, this way, it doesn't run Packer, it only outputs the Packer template and the related Ansible's files for that Packer build. Then, you can run "cd ~/svauto ; packer build packer/build-something-XXXX-packer-files/something-packer.yaml" later, if you want.*
+
+### Building Sandvine Product's Images
+
+Now that we know how to build very basic CentOS and Ubuntu Images, let's extend this idea, by using more Ansible's Roles, to install more things on the O.S. Images.
+
+*NOTE: Go to ~/svauto subdirectory to run the next commands.*
+
+PTS on CentOS 7:
+
+    ./build-scripts/packer-build-centos7-svpts.sh
+
+PTS on CentOS 6:
+
+    ./build-scripts/packer-build-centos6-svpts.sh
+
+SDE on CentOS 7:
+
+    ./build-scripts/packer-build-centos7-svsde.sh
+
+SDE on CentOS 6
+
+    ./build-scripts/packer-build-centos6-svsde.sh
+
+SPB on CentOS 6:
+
+    ./build-scripts/packer-build-centos6-svspb.sh
+
+NDA on CentOS 7:
+
+    ./build-scripts/packer-build-centos7-svnda.sh
+
+SPB on CentOS 7:
+
+    ./build-scripts/packer-build-centos7-svspb.sh
+
+TCP Accelerator on CentOS 7:
+
+    ./build-scripts/packer-build-centos7-svtcpa.sh
+
+TSE on CentOS 7:
+
+    ./build-scripts/packer-build-centos7-svtse.sh
+
+### Cleaning it up
+
+To remove the remporary files, run:
+
+    cd ~/svauto
+    ./svauto.sh --clean-all
