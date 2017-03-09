@@ -1,9 +1,11 @@
 
 # SVAuto - The Sandvine Automation
 
-SVAuto is a Open Source Automation Tool, it glues together a series of different tools for building immutable servers images (QCoWs, OVAs, VHDs) and for Infrastructure Automation (Servers or Desktops).
+SVAuto is an Open Source Automation Tool, it glues together a different set of tools for building immutable servers images (QCoWs, OVAs, VHDs) and for Infrastructure Automation (Servers or Desktops).
 
-With SVAuto, you can create QCoWs, VMDKs, OVAs, and much more, with Vagrant or Packer, both with Ansible! When with Packer, it uses ISO Images as a base. Vagrant uses regular CentOS / Ubuntu boxes that are located on Atlassian host.
+With SVAuto, you can create QCoWs, VMDKs, OVAs, and etc, with Packer and Ansible! It uses the official ISO Images as a base.
+
+There is also, a preliminary support for Vagrant and Ansible, that uses regular CentOS / Ubuntu boxes hosted on Atlassian.
 
 Also, you can deploy Sandvine's RPM Packages on top of any supported CentOS 6 or 7, be it bare-metal, Cloud-based images, regular KVM, VMWare, Xen, Hyper-V, Vagrant and etc.
 
