@@ -18,3 +18,8 @@
 
 - name: ubuntu16 - apt Installing Cloud Archive Keyring
   apt: name=ubuntu-cloud-keyring state=latest update_cache=yes
+
+
+- name: ubuntu16 - apt enabling Sandvine's Cloud Archive Ocata
+  apt_repository:
+    repo: 'ppa:sandvine/cloud-archive-ocata'

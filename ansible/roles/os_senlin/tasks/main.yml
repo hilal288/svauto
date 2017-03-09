@@ -39,6 +39,7 @@
   with_items:
     - senlin-api
     - senlin-engine
+    - python-senlin-dashboard
   notify: restart-senlin
 
 
@@ -56,6 +57,20 @@
 
 - name: Populating Senlin Database
   shell: su -s /bin/sh -c "senlin-manage db_sync" senlin
+
+
+- name: Activating Senlin Dashboard on Horizon
+  file: src=/usr/lib/python2.7/dist-packages/senlin_dashboard/enabled/_50_senlin.py
+        dest=/usr/share/openstack-dashboard/openstack_dashboard/local/enabled/_50_senlin.py
+        owner=root
+        group=root
+        state=link
+  notify: restart-apache2
+
+
+- name: Running manage.py collectstatic and compress to update Horizon
+  shell: cd /usr/share/openstack-dashboard ; python manage.py collectstatic --noinput ; python manage.py compress
+  notify: restart-apache2
 
 
 - meta: flush_handlers
