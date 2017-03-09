@@ -19,7 +19,18 @@
 ./svauto.sh --move2webroot=cs-prod
 
 # Sandvine Production-Ready Images (but not released)
-./build-scripts/packer-build-sandvine.sh
+./build-scripts/packer-build-centos7-svpts.sh
+./build-scripts/packer-build-centos7-svsde.sh
+./build-scripts/packer-build-centos7-svtse.sh
+./build-scripts/packer-build-centos7-svnda.sh
+./build-scripts/packer-build-centos7-svtcpa.sh
+
+./build-scripts/packer-build-centos7-svspb.sh
+
+./build-scripts/packer-build-centos6-svpts.sh
+./build-scripts/packer-build-centos6-svsde.sh
+./build-scripts/packer-build-centos6-svspb.sh
+
 ./svauto.sh --move2webroot=sandvine-dev
 
 # For testing
