@@ -3,9 +3,9 @@
 
 SVAuto is a Open Source Automation Tool, it glues together a series of different tools for building immutable servers images (QCoWs, OVAs, VHDs) and for Infrastructure Automation (Servers or Desktops).
 
-With SVAuto, you can create QCoWs, VMDKs, OVAs, and much more, with Vagrant or Packer, both with Ansible! When it Packer, it uses ISO Images as a base. Vagrant uses regular CentOS / Ubuntu boxes that are located on Atlassian host.
+With SVAuto, you can create QCoWs, VMDKs, OVAs, and much more, with Vagrant or Packer, both with Ansible! When with Packer, it uses ISO Images as a base. Vagrant uses regular CentOS / Ubuntu boxes that are located on Atlassian host.
 
-Also, you can deploy Sandvine's RPM Packages on top of any supported CentOS 6 or 7, be it bare-metal, Cloud-based images, regular KVM, VMWare, Xen, Hyper-V and etc.
+Also, you can deploy Sandvine's RPM Packages on top of any supported CentOS 6 or 7, be it bare-metal, Cloud-based images, regular KVM, VMWare, Xen, Hyper-V, Vagrant and etc.
 
 Looking forward to add support for Linux Containers (LXD and Docker).
 
@@ -28,9 +28,11 @@ It contains Ansible Playbooks for Automated deployments of:
 * Sandvine Platform RPM Packages
 * OpenStack on Ubuntu LTS
 
-*NOTE: For using Ansible against remore locations, make sure you can ssh to your instances using key authentication.*
+*NOTES:
 
-*SVAuto was designed for Ubuntu Xenial 16.04 (latest LTS), Server or Desktop. However, many Ansible roles works on CentOS as well.*
+For using Ansible against remore locations, make sure you can ssh to your instances using key authentication.
+
+SVAuto was designed for Ubuntu Xenial 16.04 (latest LTS), Server or Desktop. However, many Ansible roles works on CentOS as well.*
 
 ## Downloading
 
@@ -71,6 +73,8 @@ Ubuntu Server
 
 After this, you'll be able to use Packer to build O.S. Images with Ansible!
 
+NOTE: You can edit those small scripts and add "--dry-run" to svauto.sh line, this way, it doesn't run Ansible against your localhost, it only outputs Ansible's Inventory and Playbook files. Then, you can run "cd ansible/ ; ansible-playbook -i ansible-hosts-XXXX ansible-playbook-XXXX.yml" later, if you want.
+
 #### Packer, baby steps
 
 To make sure that your Packer installation is good and that you can actually run it and have a RAW Image in the end of the process, lets go baby steps first.
@@ -106,3 +110,5 @@ Building a CentOS 7 QCoW (compressed) with Packer and Ansible:
 
     cd ~/svauto
     ./build-scripts/packer-build-centos7.sh
+
+NOTE: You can edit those small scripts and add "--dry-run" to svauto.sh line, this way, it doesn't run Packer, it only outputs the Packer template and the related Ansible's files for that Packer build. Then, you can run "packer build packer/build-something-XXXX-packer-files/something-packer.yaml" later, if you want.
