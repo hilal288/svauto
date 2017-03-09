@@ -14,9 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-UBUNTU_HOSTNAME="dell-desk-1"
-YOUR_DOMAIN="sandvine.com"
-UBUNTU_PRIMARY_INTERFACE="enp0s25"
+UBUNTU_USERNAME="ubuntu"
+UBUNTU_HOSTNAME="controller-1"
+YOUR_DOMAIN="yourdomain.com"
+UBUNTU_PRIMARY_INTERFACE="eth0"
 
 clear
 
@@ -35,7 +36,7 @@ echo
 # os_external=dumm0
 # os_data=dumm1
 
-./svauto.sh --cpu-check --hostname-check --dry-run \
+./svauto.sh --cpu-check --hostname-check \
 	--ansible-remote-user="root" \
-	--ansible-inventory-builder="os_aio,localhost,ansible_connection=local,regular_system_user=ubuntu,os_release=ocata,ubuntu_primary_interface=$UBUNTU_PRIMARY_INTERFACE,os_dns_domain=$YOUR_DOMAIN,os_public_addr=$UBUNTU_HOSTNAME.$YOUR_DOMAIN,os_admin_addr=$UBUNTU_HOSTNAME.$YOUR_DOMAIN,deployment_mode=yes,os_mgmt=$UBUNTU_PRIMARY_INTERFACE" \
+	--ansible-inventory-builder="os_aio,localhost,ansible_connection=local,regular_system_user=$UBUNTU_USERNAME,os_release=ocata,ubuntu_primary_interface=$UBUNTU_PRIMARY_INTERFACE,os_dns_domain=$YOUR_DOMAIN,os_public_addr=$UBUNTU_HOSTNAME.$YOUR_DOMAIN,os_admin_addr=$UBUNTU_HOSTNAME.$YOUR_DOMAIN,deployment_mode=yes,os_mgmt=$UBUNTU_PRIMARY_INTERFACE" \
 	--ansible-playbook-builder="localhost,bootstrap;base_os_upgrade=yes,grub-conf,openvswitch;openvswitch_mode=regular,openvswitch_bridges;os_neutron_ovs_enabled=yes,ubuntu-network-setup;ubuntu_primary_interface_via_ifupdown=yes;ubuntu_setup_dummy_nics=yes,os_clients,ssh_keypair,os_mysql,os_rabbitmq,os_memcached,apache2,os_keystone,os_glance,hyper_kvm,os_nova;os_nova_ctrl=yes;os_nova_cmpt=yes,os_keypair,os_nova_flavors,os_neutron;os_aio=yes;os_neutron_ctrl=yes;os_neutron_net=yes;os_neutron_ovs_enabled=yes;neutron_interface_driver=openvswitch;os_external=dummy0;os_data=dummy1,os_ext_net,os_horizon,os_heat,os_senlin,os_gnocchi,os_ceilometer,os_aodh,download-images;download_group=generic,os_glance_images,post-cleanup"
