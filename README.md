@@ -1,9 +1,9 @@
 
 # SVAuto - The Sandvine Automation
 
-SVAuto is a set of Open Source tools, that brings together, a series of external tools for building immutable servers images and for Data Center Automation.
+SVAuto is a Open Source Automation Tool, it glues together a series of different tools for building immutable servers images (QCoWs, OVAs, VHDs) and for Infrastructure Automation (Servers or Desktops).
 
-With SVAuto, you can create QCoWs, VMDKs, OVAs, and much more, with Vagrant or Packer, both with Ansible! Using only official Linux distribution ISO files as a base.
+With SVAuto, you can create QCoWs, VMDKs, OVAs, and much more, with Vagrant or Packer, both with Ansible! When it Packer, it uses ISO Images as a base. Vagrant uses regular CentOS / Ubuntu boxes that are located on Atlassian host.
 
 Also, you can deploy Sandvine's RPM Packages on top of any supported CentOS 6 or 7, be it bare-metal, Cloud-based images, regular KVM, VMWare, Xen, Hyper-V and etc.
 
@@ -12,9 +12,9 @@ Looking forward to add support for Linux Containers (LXD and Docker).
 It uses the following Open Source projects:
 
 * Ubuntu Xenial 16.04
-* Ansible 2.1
-* Packer 0.10.1
-* QEmu 2.5
+* Ansible 2.2
+* Packer 0.12.3
+* QEmu 2.8
 * VirtualBox 5.0
 * Vagrant 1.8
 * Docker 1.10
@@ -36,120 +36,73 @@ It contains Ansible Playbooks for Automated deployments of:
 
 Download SVAuto into your home directory (Designed for Ubuntu LTS):
 
-    bash <(curl -s https://raw.githubusercontent.com/tmartinx/svauto/dev/scripts/install-svauto.sh)
+    cd ~
+    git clone https://github.com/tmartinx/svauto
 
-## Bootstrapping boxes with "curl pipe bash"
+## Bootstrapping local systems with the "Preset Scripts"
 
-Bootstrap Ubuntu 16.04 Server, configure Grub and clean it up, while upgrading it:
+Bootstrap Ubuntu 16.04 Desktop, it upgrades and installs many useful applications, like Google Chrome, Code Collab, Atom, Skype, MatterMost, TeamViewer and etc...
 
-    curl -L https://raw.githubusercontent.com/tmartinx/svauto/dev/svauto.sh | bash -s -- --svauto-deployments --base-os=ubuntu16 --ansible-roles=bootstrap,grub-conf,post-cleanup --ansible-extra-vars="base_os_upgrade=yes,ubuntu_install=server"
+    cd ~/svauto
+    ./scripts/preset-xenial-desktop.sh
 
-or:
+Bootstrap Ubuntu 16.04 Server, it upgrades and install a few applications for Servers.
 
-    bash <(curl -s https://raw.githubusercontent.com/tmartinx/svauto/dev/bootstrap-xenial-server.sh) 
+    cd ~/svauto
+    ./scripts/preset-xenial-server.sh
 
-    curl -s https://raw.githubusercontent.com/tmartinx/svauto/dev/bootstrap-xenial-server.sh | bash
+## Creating O.S. Images: QCoW, OVAs, VHD, etc 
 
-Bootstrap Ubuntu 16.04 Desktop, while upgrading and installing Google Chrome:
+### Bootstrapping your Ubuntu (Desktop or Server) for SVAuto
 
-    curl -L https://raw.githubusercontent.com/tmartinx/svauto/dev/svauto.sh | bash -s -- --svauto-deployments --base-os=ubuntu16 --ansible-roles=bootstrap,grub-conf,hyper_kvm,google-chrome,scudcloud,sublime,ccollab-client --extra-vars="base_os_upgrade=yes"
+To build QCoWs/OVA images with Packer and Ansible, you have to "Bootstrap Ubuntu For SVAuto", so you can take advantage of all SVAuto's features.
 
-Bootstrap Ubuntu 16.04 Desktop, while configuring Grub, upgrading it and installing Google Chrome:
+NOTE: The following procedure download a few ISO images from the Internet, and store it under Libvirt's directory.
 
-    curl -L https://raw.githubusercontent.com/tmartinx/svauto/dev/svauto.sh | bash -s -- --svauto-deployments --base-os=ubuntu16 --ansible-roles=bootstrap,grub-conf,google-chrome --extra-vars="base_os_upgrade=yes"
+Ubuntu Desktop
 
-Bootstrap CentOS 6, while configuring Grub
+    cd ~/svauto
+    ./scripts/preset-svauto-desktop.sh
 
-    curl -L https://raw.githubusercontent.com/tmartinx/svauto/dev/svauto.sh | bash -s -- --svauto-deployments --base-os=centos6 --ansible-roles=bootstrap,grub-conf --extra-vars="base_os_upgrade=yes"
+Ubuntu Server
 
-Bootstrap CentOS 7, while configuring Grub
+    cd ~/svauto
+    ./scripts/preset-svauto-server.sh
 
-    curl -L https://raw.githubusercontent.com/tmartinx/svauto/dev/svauto.sh | bash -s -- --svauto-deployments --base-os=centos7 --ansible-roles=bootstrap,grub-conf --extra-vars="base_os_upgrade=yes"
+After this, you'll be able to use Packer to build O.S. Images with Ansible!
 
-## Installing SVAuto dependencies
+#### Packer, baby steps
 
-You'll need to install the dependencies to enable all SVAuto's functionalities.
+To make sure that your Packer installation is good and that you can actually run it and have a RAW Image in the end of the process, lets go baby steps first.
 
-To install everything, run on your Ubuntu 16.04 Server or Desktop, the following command:
+SVAuto comes with bare-minimum Packer Templates, also very minimal Kickstart and Preseed files.
 
-Big URL
+Building an Ubuntu 16.04 RAW Image with just Packer:
 
-Server:
+    cd ~/svauto
+    packer build packer/ubuntu16.yaml
 
-    curl -L https://raw.githubusercontent.com/tmartinx/svauto/dev/svauto.sh | bash -s -- --svauto-deployments --base-os=ubuntu16 --ansible-roles=bootstrap,grub-conf,apache2,hyper_kvm,hyper_lxd,hyper_virtualbox,docker,vagrant,amazon_ec2_tools,redhat_tools_ubuntu,os_clients,packer,vsftpd,post-cleanup --ansible-extra-vars="ubuntu_install=server"
+Building a CentOS 7 RAW Image with just Packer:
 
-Desktop:
+    cd ~/svauto
+    packer build packer/centos7.yaml
 
-    curl -L https://raw.githubusercontent.com/tmartinx/svauto/dev/svauto.sh | bash -s -- --svauto-deployments --base-os=ubuntu16 --ansible-roles=bootstrap,grub-conf,apache2,hyper_kvm,hyper_lxd,hyper_virtualbox,docker,vagrant,amazon_ec2_tools,redhat_tools_ubuntu,os_clients,packer,vsftpd,post-cleanup --ansible-extra-vars="ubuntu_install=desktop"
+NOTE 1: The resulting images are created under packer/ubuntu16-tmpl or packer/centos7-tmpl or ...
 
-Short URL
+### Packer and Ansible
 
-Server:
+Those small Packer Templates tested on previous baby steps, are the base for the rest of "SVAuto Image Factory".
 
-    bash <(curl -s https://raw.githubusercontent.com/tmartinx/svauto/dev/scripts/bootstrap-svauto-server.sh)
+For example: packer/ubuntu16.yaml is the base for packer/ubuntu16-template.yaml, where the "template.yaml" is used by "svauto.sh".
 
-    curl -s https://raw.githubusercontent.com/tmartinx/svauto/dev/scripts/bootstrap-svauto-server.sh | bash
+SVAuto basically glues together Packer and Ansible, under temporaries subdirectories (packer/build-something), goes there and runs "packer build" for you.
 
-Desktop:
+Building an Ubuntu 16.04 QCoW (compressed) with Packer and Ansible:
 
-    bash <(curl -s https://raw.githubusercontent.com/tmartinx/svauto/dev/scripts/bootstrap-svauto-desktop.sh)
+    cd ~/svauto
+    ./build-scripts/packer-build-ubuntu16.sh
 
-    curl -s https://raw.githubusercontent.com/tmartinx/svauto/dev/scripts/bootstrap-svauto-desktop.sh | bash
+Building a CentOS 7 QCoW (compressed) with Packer and Ansible:
 
-## SVAuto script usage example
-
-Resource to build Sandvine's Cloud Services 16.02 Official Images (production quality version).
-
-    # To build Cloud Services 16.02
-    ./svauto.sh --packer-build-cs --release
-
-*NOTE: To build it, you'll need a Sandvine's customer account for ftp.support.sandvine.com.*
-
-This is a resource used to build Sandvine Official Images (development build).
-
-    # To build Sandvine Stock images
-    ./svauto.sh --packer-build-sandvine
-
-    # To build Sandvine's Images with Cloud Services
-    ./svauto.sh --packer-build-cs
-
-*NOTE: Cloud Services builds depends on a very specific Yum Repository structure. Available on the Internet for Sandvine's customers with an account to access ftp.support.sandvine.com. However, to build development images, you have two options, be a Sandvine employee or mirror the ftp.support.sandvine.com in your own small FTP Server.
-
-    # To clean it up
-    ./svauto.sh --clean-all
-
-## Building images with SVAuto, function "Image Factory"
-
-Resource to build a clean Ubuntu or CentOS images, without Ansible roles, just Packer and upstream ISO media.
-
-    # Ubuntu Trusty 14.04 - Blank server
-    ./svauto.sh --image-factory --release=dev --base-os=ubuntu14 --product=ubuntu --version=14.04 --product-variant=r1 --qcow2 --vm-xml --sha256sum
-
-    # Ubuntu Xenial 16.04 - Blank server
-    ./svauto.sh --image-factory --release=dev --base-os=ubuntu16 --product=ubuntu --version=16.04 --product-variant=r1 --qcow2 --vm-xml --sha256sum
-
-    # CentOS 6 - Blank server - Old Linux 2.6
-    ./svauto.sh --image-factory --release=dev --base-os=centos6 --product=centos --version=6 --product-variant=sv-1 --qcow2 --vm-xml --sha256sum
-
-    # CentOS 7 - Blank server - Old Linux 3.10
-    ./svauto.sh --image-factory --release=dev --base-os=centos7 --product=centos --version=7.1 --product-variant=sv-1 --qcow2 --vm-xml --sha256sum
-
-Resource to build a clean Ubuntu or CentOS images, with Packer and Ansible, plus upstream ISO media.
-
-    # Ubuntu Trusty 14.04 - Blank server - Bootstrapped
-    ./svauto.sh --image-factory --release=dev --base-os=ubuntu14 --product=ubuntu --version=14.04 --product-variant=r1 --qcow2 --vm-xml --sha256sum --ansible-roles=bootstrap,cloud-init,grub-conf,post-cleanup
-
-    # Ubuntu Xenial 16.04 - Blank server - Bootstrapped
-    ./svauto.sh --image-factory --release=dev --base-os=ubuntu16 --product=ubuntu --version=16.04 --product-variant=r1 --qcow2 --vm-xml --sha256sum --ansible-roles=bootstrap,cloud-init,grub-conf,post-cleanup
-
-    # CentOS 6 - Blank server - Old Linux 2.6 - Bootstrapped
-    ./svauto.sh --image-factory --release=dev --base-os=centos6 --product=centos --version=6 --product-variant=sv-1 --qcow2 --vm-xml --sha256sum --ansible-roles=bootstrap,cloud-init,grub-conf,post-cleanup
-
-    # CentOS 6 - Blank server - Linux 3.18 from Xen 4.4 CentOS Repo - Much better KVM / Xen support - Bootstrapped
-    ./svauto.sh --image-factory --release=dev --base-os=centos6 --product=centos --version=6 --product-variant=sv-1 --qcow2 --vm-xml --sha256sum --ansible-roles=centos-xen,bootstrap,grub-conf,cloud-init,grub-conf,post-cleanup
- 
-    # CentOS 7 - Blank server - Old Linux 3.10 - Bootstrapped
-    ./svauto.sh --image-factory --release=dev --base-os=centos7 --product=centos --version=7.1 --product-variant=sv-1 --qcow2 --vm-xml --sha256sum --ansible-roles=bootstrap,grub-conf,cloud-init,post-cleanup
-
-    # CentOS 7 - Blank server - Linux 3.18 from Xen 4.6 CentOS Repo - Much better KVM / Xen support - Bootstrapped
-    ./svauto.sh --image-factory --release=dev --base-os=centos7 --product=centos --version=7.1 --product-variant=sv-1 --qcow2 --vm-xml --sha256sum --ansible-roles=centos-xen,bootstrap,grub-conf,cloud-init,post-cleanup
+    cd ~/svauto
+    ./build-scripts/packer-build-centos7.sh
