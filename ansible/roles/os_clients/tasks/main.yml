@@ -32,7 +32,6 @@
     - python-glanceclient
     - python-cinderclient
     - python-magnumclient
-    - python-monascaclient
     - python-mistralclient
     - python-neutronclient
     - python-gnocchiclient
@@ -40,3 +39,9 @@
     - python-keystoneclient
     - python-openstackclient
     - python-ceilometerclient
+
+- name: ubuntu - apt installing OpenStack clients and few tools (Ocata only)
+  apt: name={{item}} state=latest
+  with_items:
+    - python-monascaclient
+  when: os_release == 'ocata'
