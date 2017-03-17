@@ -22,6 +22,8 @@ os_neutron_ctrl: "no"
 os_neutron_net: "no"
 os_neutron_cmpt: "no"
 
+firewall_driver: "null"
+
 os_external: "dummy0"
 os_data: "dummy1"
 
