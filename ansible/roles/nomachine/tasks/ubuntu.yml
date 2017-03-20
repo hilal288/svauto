@@ -13,4 +13,4 @@
 # limitations under the License.
 
 - name: ubuntu - apt installing NoMachine (Remote Desktop via SSH)
-  apt: deb=http://download.nomachine.com/download/5.1/Linux/nomachine_5.1.62_1_amd64.deb
+  apt: deb=http://download.nomachine.com/download/5.2/Linux/nomachine_5.2.11_1_amd64.deb
