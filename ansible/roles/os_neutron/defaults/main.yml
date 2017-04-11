@@ -18,11 +18,20 @@ mysql_databases:
 
 os_aio: "no"
 
+os_neutron_lbr_enabled: "no"
+os_neutron_ovs_enabled: "no"
+os_neutron_ovn_enabled: "no"
+
+os_neutron_ovs_dpdk_enabled: "no"
+os_neutron_sriov_enabled: "no"
+
 os_neutron_ctrl: "no"
 os_neutron_net: "no"
 os_neutron_cmpt: "no"
 
 firewall_driver: "null"
+
+metadata_secret: "UltraMeta13"
 
 os_external: "dummy0"
 os_data: "dummy1"
@@ -56,4 +65,4 @@ neutron_interface_driver: "linuxbridge"
 # Data network mtu
 # Note: dnsmasq-neutron.conf should be changed accordingly
 # neutron_global_physnet_mtu: "1650"
-# ml2_path_mtu: "1650
+# ml2_path_mtu: "1650"

@@ -120,7 +120,7 @@
             group=neutron
             mode=0644
             backup=yes
-  notify: restart-neutron-agents
+  notify: restart-neutron-server
 
 
 - name: Write custom sysctl.conf

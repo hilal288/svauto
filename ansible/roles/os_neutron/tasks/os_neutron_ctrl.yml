@@ -90,5 +90,24 @@
   notify: restart-neutron-server
 
 
+- name: Installing Neutron OVN Controller
+  apt: name={{item}} state=latest
+  with_items:
+    - ovn-central
+    - python-networking-ovn
+  when: os_neutron_ovn_enabled == 'yes'
+
+
+#- name: Updating ml2_conf.ovn.ini
+#  template: src={{os_release}}/ml2/ml2_conf.ovn.ini.j2
+#            dest=/etc/neutron/plugins/ml2/ml2_conf.ovn.ini
+#            owner=root
+#            group=neutron
+#            mode=0640
+#            backup=yes
+#  notify: restart-neutron-server
+#  when: os_neutron_ovn_enabled == 'yes'
+
+
 - name: Populating Neutron Database
   shell: su -s /bin/sh -c "neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head" neutron
