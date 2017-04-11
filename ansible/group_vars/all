@@ -87,25 +87,19 @@ stack_1_spb_1_ctrl_mac: "52:54:00:5c:80:25"
 # OpenStack Definitions
 #
 
-os_release: "newton"
+os_release: "ocata"
 
 os_dns_domain: "yourdomain.com"
 
 os_public_addr: "controller-1.yourdomain.com"
 os_admin_addr: "controller-1.yourdomain.com"
 
+# Network Segments
 os_mgmt: "eth0"
 os_srvc: "eth1"
-
-# Reserved:
-os_cinder: "dummy2"
-
-os_neutron_lbr_enabled: "no"
-os_neutron_ovs_enabled: "no"
-
-# Reserved:
-os_neutron_ovs_dpdk_enabled: "no"
-os_neutron_sriov_enabled: "no"
+os_external: "eth2"
+os_data: "eth3"
+os_cinder: "eth4"
 
 region: "ca-east-1"
 
@@ -115,8 +109,6 @@ demo_password: "demo_pass"
 
 rabbit_userid: "openstack"
 rabbit_password: "RABBIT_PASS"
-
-metadata_secret: "UltraMeta13"
 
 demo_openrc_env:
   OS_PROJECT_DOMAIN_NAME: "default"
