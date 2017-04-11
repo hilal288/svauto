@@ -61,19 +61,19 @@ parameters:
     type: string
     label: "NFV L2 Bridge Image (default 'nfv')"
     description: "NFV Image"
-    default: "ubuntu-16.04.1-amd64"
+    default: "ubuntu-16.04-amd64"
 
   engine_image:
     type: string
     label: "Engine Image (default 'engine')"
     description: "Engine Image"
-    default: "ubuntu-16.04.1-amd64"
+    default: "ubuntu-16.04-amd64"
 
   database_image:
     type: string
     label: "Database Image (default 'database')"
     description: "Database Image"
-    default: "ubuntu-16.04.1-amd64"
+    default: "ubuntu-16.04-amd64"
 
 resources:
   rtr:

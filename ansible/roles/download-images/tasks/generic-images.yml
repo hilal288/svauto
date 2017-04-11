@@ -33,10 +33,10 @@
     mode: 0640
   ignore_errors: yes
 
-- name: downloading debian-8.7.0-openstack-amd64.qcow2
+- name: downloading debian-8.7.3-20170323-openstack-amd64.qcow2
   get_url:
-    url: http://cdimage.debian.org/cdimage/openstack/current/debian-8.7.0-openstack-amd64.qcow2
-    dest: /home/{{ regular_system_user }}/svauto/downloads/debian-8.6.1-openstack-amd64.qcow2
+    url: http://cdimage.debian.org/cdimage/openstack/current/debian-8.7.3-20170323-openstack-amd64.qcow2
+    dest: /home/{{ regular_system_user }}/svauto/downloads/debian-8.7.3-20170323-openstack-amd64.qcow2
     mode: 0640
   ignore_errors: yes
 
