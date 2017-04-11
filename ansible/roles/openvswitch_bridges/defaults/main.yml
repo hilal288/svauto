@@ -17,6 +17,8 @@ openvswitch_net_mode: "flat"
 openvswitch_openflow_rules: "no"
 openvswitch_stack_1_bridges: "no"
 
+os_neutron_ovs_enabled: "no"
+
 os_external: "dummy0"
 
 os_neutron_external_bridge: "br-ex"
