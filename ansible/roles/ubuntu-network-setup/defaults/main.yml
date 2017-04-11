@@ -28,3 +28,5 @@ ubuntu_name_server_1: "null"
 ubuntu_name_server_2: "null"
 
 ubuntu_setup_dummy_nics: "no"
+
+os_neutron_lbr_enabled: "no"
