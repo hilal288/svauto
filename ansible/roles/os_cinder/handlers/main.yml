@@ -15,7 +15,7 @@
 - name: restart-cinder
   service: name={{item}} state=restarted enabled=yes
   with_items:
-    - cinder-api
+    - apache2
     - cinder-scheduler
 
 - name: restart-cinder-volumes
