@@ -16,28 +16,28 @@
 # http://docs.openstack.org/mitaka/install-guide-ubuntu/cinder-controller-install.html
 
 - name: Creating OpenStack Cinder Services
-  environment: "{{admin_openrc_env}}"
-  command: "{{item}}"
+  environment: "{{ admin_openrc_env }}"
+  command: "{{ item }}"
   with_items:
   - openstack service create --name cinder --description "OpenStack Block Storage" volume
   - openstack service create --name cinderv2 --description "OpenStack Block Storage" volumev2
 
 
 - name: Creating OpenStack Cinder Endpoint
-  environment: "{{admin_openrc_env}}"
-  command: "{{item}}"
+  environment: "{{ admin_openrc_env }}"
+  command: "{{ item }}"
   with_items:
-  - openstack endpoint create --region "{{region}}" volume public http://{{os_public_addr}}:8776/v1/%\(tenant_id\)s
-  - openstack endpoint create --region "{{region}}" volume internal http://{{os_admin_addr}}:8776/v1/%\(tenant_id\)s
-  - openstack endpoint create --region "{{region}}" volume admin http://{{os_admin_addr}}:8776/v1/%\(tenant_id\)s
-  - openstack endpoint create --region "{{region}}" volumev2 public http://{{os_public_addr}}:8776/v2/%\(tenant_id\)s
-  - openstack endpoint create --region "{{region}}" volumev2 internal http://{{os_admin_addr}}:8776/v2/%\(tenant_id\)s
-  - openstack endpoint create --region "{{region}}" volumev2 admin http://{{os_admin_addr}}:8776/v2/%\(tenant_id\)s
+  - openstack endpoint create --region "{{ region }}" volume public "{{ endpoint_public_uri }}{{ cinder_endpoint_public }}:8776/v1/%\(tenant_id\)s"
+  - openstack endpoint create --region "{{ region }}" volume internal "{{ endpoint_admin_uri }}{{ cinder_endpoint_internal }}:8776/v1/%\(tenant_id\)s"
+  - openstack endpoint create --region "{{ region }}" volume admin "{{ endpoint_admin_uri }}{{ cinder_endpoint_internal }}:8776/v1/%\(tenant_id\)s"
+  - openstack endpoint create --region "{{ region }}" volumev2 public "{{ endpoint_public_uri }}{{ cinder_endpoint_public }}:8776/v2/%\(tenant_id\)s"
+  - openstack endpoint create --region "{{ region }}" volumev2 internal "{{ endpoint_admin_uri }}{{ cinder_endpoint_internal }}:8776/v2/%\(tenant_id\)s"
+  - openstack endpoint create --region "{{ region }}" volumev2 admin "{{ endpoint_admin_uri }}{{ cinder_endpoint_internal }}:8776/v2/%\(tenant_id\)s"
 
 
 - name: Creating OpenStack Cinder User and Role
-  environment: "{{admin_openrc_env}}"
-  command: "{{item}}"
+  environment: "{{ admin_openrc_env }}"
+  command: "{{ item }}"
   with_items:
-  - openstack user create --domain default --password "{{service_password}}" --email cinder@{{os_dns_domain}} cinder
+  - openstack user create --domain default --password "{{ service_password }}" --email "cinder@{{ os_dns_domain }}" cinder
   - openstack role add --project service --user cinder --user-domain default admin
