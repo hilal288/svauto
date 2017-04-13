@@ -16,18 +16,18 @@
 # https://docs.openstack.org/developer/senlin/install.html
 
 - name: Creating OpenStack MySQL databases
-  mysql_db: name={{item.db_name}} state=present
-  with_items: '{{mysql_databases}}'
+  mysql_db: name={{ item.db_name }} state=present
+  with_items: '{{ mysql_databases }}'
 
 
 - name: Creating OpenStack MySQL users
   mysql_user:
-    host="{{item.db_host}}"
-    name="{{item.db_user}}"
-    password="{{item.db_pass}}"
-    priv="{{item.db_name}}.*:ALL,GRANT"
+    host="{{ item.db_host }}"
+    name="{{ item.db_user }}"
+    password="{{ item.db_pass }}"
+    priv="{{ item.db_name }}.*:ALL,GRANT"
     state=present
-  with_items: '{{mysql_databases}}'
+  with_items: '{{ mysql_databases }}'
 
 
 - include: openstack-senlin-init.yml
@@ -35,7 +35,7 @@
 
 
 - name: Installing Senlin
-  apt: name={{item}} state=latest
+  apt: name={{ item }} state=latest
   with_items:
     - senlin-api
     - senlin-engine
@@ -51,7 +51,7 @@
         mode=0640
         backup=yes
   when: item.os_project == "senlin"
-  with_items: '{{mysql_databases}}'
+  with_items: '{{ mysql_databases }}'
   notify: restart-senlin
 
 
