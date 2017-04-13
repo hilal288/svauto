@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # Reference:
-# ?
+# https://docs.openstack.org/ocata/install-guide-ubuntu/nova-controller-install.html
 
 - name: Creating OpenStack Nova Placement API Service
   environment: "{{ admin_openrc_env }}"
@@ -26,14 +26,14 @@
   environment: "{{ admin_openrc_env }}"
   command: "{{ item }}"
   with_items:
-   - openstack endpoint create --region "{{ region }}" placement public http://{{ os_public_addr }}:8778
-   - openstack endpoint create --region "{{ region }}" placement internal http://{{ os_public_addr }}:8778
-   - openstack endpoint create --region "{{ region }}" placement admin http://{{ os_public_addr }}:8778
+   - openstack endpoint create --region "{{ region }}" placement public "{{ endpoint_public_uri }}{{ placement_endpoint_public }}:8778"
+   - openstack endpoint create --region "{{ region }}" placement internal "{{ endpoint_admin_uri }}{{ placement_endpoint_internal }}:8778"
+   - openstack endpoint create --region "{{ region }}" placement admin "{{ endpoint_admin_uri }}{{ placement_endpoint_internal }}:8778"
 
 
 - name: Creating OpenStack Nova Placement API User and Role
   environment: "{{ admin_openrc_env }}"
   command: "{{ item }}"
   with_items:
-   - openstack user create --domain default --password "{{ service_password }}" --email placement@{{ os_dns_domain }} placement
+   - openstack user create --domain default --password "{{ service_password }}" --email "placement@{{ os_dns_domain }}" placement
    - openstack role add --project service --user placement --user-domain default admin
