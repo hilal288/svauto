@@ -127,3 +127,57 @@ admin_openrc_env:
   OS_PASSWORD: "admin_pass"
   OS_AUTH_URL: "http://{{ os_admin_addr }}:35357/v3"
   OS_IDENTITY_API_VERSION: "3"
+
+
+# Endpoint Definitions
+
+endpoint_public_uri: "http://"
+endpoint_internal_uri: "http://"
+
+identity_endpoint_public: "keystone.{{ region }}.{{ os_dns_domain }}"
+identity_endpoint_internal: "keystone.internal.{{ region }}.{{ os_dns_domain }}"
+
+image_endpoint_public: "glance.{{ region }}.{{ os_dns_domain }}"
+image_endpoint_internal: "glance.internal.{{ region }}.{{ os_dns_domain }}"
+
+console_public_uri: "http://"
+console_public_addr: "console.{{ region }}.{{ os_dns_domain }}"
+
+compute_endpoint_public: "compute.{{ region }}.{{ os_dns_domain }}"
+compute_endpoint_internal: "compute.internal.{{ region }}.{{ os_dns_domain }}"
+
+compute_placement_endpoint_public: "compute.{{ region }}.{{ os_dns_domain }}"
+compute_placement_endpoint_internal: "compute.internal.{{ region }}.{{ os_dns_domain }}"
+
+network_endpoint_public: "network.{{ region }}.{{ os_dns_domain }}"
+network_endpoint_internal: "network.internal.{{ region }}.{{ os_dns_domain }}"
+
+orchestration_endpoint_public: "orchestration.{{ region }}.{{ os_dns_domain }}"
+orchestration_endpoint_internal: "orchestration.internal.{{ region }}.{{ os_dns_domain }}"
+
+cloudformation_endpoint_public: "cloudformation.{{ region }}.{{ os_dns_domain }}"
+cloudformation_endpoint_internal: "cloudformation.internal.{{ region }}.{{ os_dns_domain }}"
+
+dns_endpoint_public: "dns.{{ region }}.{{ os_dns_domain }}"
+dns_endpoint_internal: "dns.internal.{{ region }}.{{ os_dns_domain }}"
+
+volume_endpoint_public: "volume.{{ region }}.{{ os_dns_domain }}"
+volume_endpoint_internal: "volume.internal.{{ region }}.{{ os_dns_domain }}"
+
+volumev2_endpoint_public: "volumev2.{{ region }}.{{ os_dns_domain }}"
+volumev2_endpoint_internal: "volumev2.internal.{{ region }}.{{ os_dns_domain }}"
+
+clustering_endpoint_public: "clustering.{{ region }}.{{ os_dns_domain }}"
+clustering_endpoint_internal: "clustering.internal.{{ region }}.{{ os_dns_domain }}"
+
+alarming_endpoint_public: "alarming.{{ region }}.{{ os_dns_domain }}"
+alarming_endpoint_internal: "alarming.internal.{{ region }}.{{ os_dns_domain }}"
+
+share_endpoint_public: "share.{{ region }}.{{ os_dns_domain }}"
+share_endpoint_internal: "share.internal.{{ region }}.{{ os_dns_domain }}"
+
+sharev2_endpoint_public: "sharev2.{{ region }}.{{ os_dns_domain }}"
+sharev2_endpoint_internal: "sharev2.internal.{{ region }}.{{ os_dns_domain }}"
+
+object_store_endpoint_public: "object-store.{{ region }}.{{ os_dns_domain }}"
+object_store_endpoint_internal: "object-store.internal.{{ region }}.{{ os_dns_domain }}"
