@@ -173,6 +173,9 @@ clustering_endpoint_internal: "clustering.internal.{{ region }}.{{ os_dns_domain
 alarming_endpoint_public: "alarming.{{ region }}.{{ os_dns_domain }}"
 alarming_endpoint_internal: "alarming.internal.{{ region }}.{{ os_dns_domain }}"
 
+metric_endpoint_public: "metric.{{ region }}.{{ os_dns_domain }}"
+metric_endpoint_internal: "metric.internal.{{ region }}.{{ os_dns_domain }}"
+
 share_endpoint_public: "share.{{ region }}.{{ os_dns_domain }}"
 share_endpoint_internal: "share.internal.{{ region }}.{{ os_dns_domain }}"
 

@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # Reference:
-# ???
+# http://gnocchi.xyz/install.html
 
 - name: Creating OpenStack Metric Service
   environment: "{{ admin_openrc_env }}"
@@ -26,14 +26,14 @@
   environment: "{{ admin_openrc_env }}"
   command: "{{ item }}"
   with_items:
-  - openstack endpoint create --region "{{ region }}" metric public http://{{ os_public_addr }}:8041
-  - openstack endpoint create --region "{{ region }}" metric internal http://{{ os_admin_addr }}:8041
-  - openstack endpoint create --region "{{ region }}" metric admin http://{{ os_admin_addr }}:8041
+  - openstack endpoint create --region "{{ region }}" metric public "{{ endpoint_public_uri }}{{ metric_endpoint_public }}:8041"
+  - openstack endpoint create --region "{{ region }}" metric internal "{{ endpoint_admin_uri }}{{ metric_endpoint_internal }}:8041"
+  - openstack endpoint create --region "{{ region }}" metric admin "{{ endpoint_admin_uri }}{{ metric_endpoint_internal }}:8041"
 
 
 - name: Creating OpenStack Metric User and Role
   environment: "{{ admin_openrc_env }}"
   command: "{{ item }}"
   with_items:
-  - openstack user create --domain default --password "{{ service_password }}" --email gnocchi@{{ os_dns_domain }} gnocchi
+  - openstack user create --domain default --password "{{ service_password }}" --email "gnocchi@{{ os_dns_domain }}" gnocchi
   - openstack role add --project service --user gnocchi --user-domain default admin
