@@ -16,18 +16,18 @@
 # https://docs.openstack.org/project-install-guide/dns/ocata/install-ubuntu.html
 
 - name: Creating OpenStack MySQL databases
-  mysql_db: name={{item.db_name}} state=present
-  with_items: '{{mysql_databases}}'
+  mysql_db: name={{ item.db_name }} state=present
+  with_items: '{{ mysql_databases }}'
 
 - name: Creating OpenStack MySQL users
   mysql_user:
-    host="{{item.db_host}}"
-    name="{{item.db_user}}"
-    password="{{item.db_pass}}"
-    priv="{{item.db_name}}.*:ALL,GRANT"
+    host="{{ item.db_host }}"
+    name="{{ item.db_user }}"
+    password="{{ item.db_pass }}"
+    priv="{{ item.db_name }}.*:ALL,GRANT"
     append_privs=true
     state=present
-  with_items: '{{mysql_databases}}'
+  with_items: '{{ mysql_databases }}'
 
 
 - include: openstack-designate-init.yml
@@ -35,7 +35,7 @@
 
 
 - name: Installing Designate
-  apt: name={{item}} state=latest
+  apt: name={{ item }} state=latest
   with_items:
     - designate
     - designate-worker
@@ -52,7 +52,7 @@
         mode=0640
         backup=yes
   when: item.os_project == "designate"
-  with_items: '{{mysql_databases}}'
+  with_items: '{{ mysql_databases }}'
   notify: restart-designate
 
 
@@ -68,7 +68,7 @@
         mode=0640
         backup=yes
   when: item.os_project == "designate"
-  with_items: '{{mysql_databases}}'
+  with_items: '{{ mysql_databases }}'
   notify: restart-designate
 
 

@@ -26,14 +26,14 @@
   environment: "{{ admin_openrc_env }}"
   command: "{{ item }}"
   with_items:
-  - openstack endpoint create --region "{{ region }}" dns public http://{{ os_public_addr }}:9001
-  - openstack endpoint create --region "{{ region }}" dns internal http://{{ os_admin_addr }}:9001
-  - openstack endpoint create --region "{{ region }}" dns admin http://{{ os_admin_addr }}:9001
+  - openstack endpoint create --region "{{ region }}" dns public "{{ endpoint_public_uri }}{{ dns_endpoint_public }}:9001"
+  - openstack endpoint create --region "{{ region }}" dns internal "{{ endpoint_admin_uri }}{{ dns_endpoint_internal }}:9001"
+  - openstack endpoint create --region "{{ region }}" dns admin "{{ endpoint_admin_uri }}{{ dns_endpoint_internal }}:9001"
         
 
 - name: Creating OpenStack Designate User and Role
   environment: "{{ admin_openrc_env }}"
   command: "{{ item }}"
   with_items:
-  - openstack user create --domain default --password "{{ service_password }}" --email designate@{{ os_dns_domain }} designate
+  - openstack user create --domain default --password "{{ service_password }}" --email "designate@{{ os_dns_domain }}" designate
   - openstack role add --project service --user designate --user-domain default admin
