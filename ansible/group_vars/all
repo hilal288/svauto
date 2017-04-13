@@ -146,8 +146,8 @@ console_public_addr: "console.{{ region }}.{{ os_dns_domain }}"
 compute_endpoint_public: "compute.{{ region }}.{{ os_dns_domain }}"
 compute_endpoint_internal: "compute.internal.{{ region }}.{{ os_dns_domain }}"
 
-compute_placement_endpoint_public: "compute.{{ region }}.{{ os_dns_domain }}"
-compute_placement_endpoint_internal: "compute.internal.{{ region }}.{{ os_dns_domain }}"
+placement_endpoint_public: "placement.{{ region }}.{{ os_dns_domain }}"
+placement_endpoint_internal: "placement.internal.{{ region }}.{{ os_dns_domain }}"
 
 network_endpoint_public: "network.{{ region }}.{{ os_dns_domain }}"
 network_endpoint_internal: "network.internal.{{ region }}.{{ os_dns_domain }}"
