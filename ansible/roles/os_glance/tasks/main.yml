@@ -18,18 +18,18 @@
 # https://docs.openstack.org/ocata/install-guide-ubuntu/glance-install.html
 
 - name: Creating OpenStack MySQL databases
-  mysql_db: name={{item.db_name}} state=present
-  with_items: '{{mysql_databases}}'
+  mysql_db: name={{ item.db_name }} state=present
+  with_items: '{{ mysql_databases }}'
 
 
 - name: Creating OpenStack MySQL users
   mysql_user:
-    host="{{item.db_host}}"
-    name="{{item.db_user}}"
-    password="{{item.db_pass}}"
-    priv="{{item.db_name}}.*:ALL,GRANT"
+    host="{{ item.db_host }}"
+    name="{{ item.db_user }}"
+    password="{{ item.db_pass }}"
+    priv="{{ item.db_name }}.*:ALL,GRANT"
     state=present
-  with_items: '{{mysql_databases}}'
+  with_items: '{{ mysql_databases }}'
 
 
 - include: openstack-glance-init.yml
@@ -37,7 +37,7 @@
 
 
 - name: Installing Glance Server
-  apt: name={{item}} state=latest
+  apt: name={{ item }} state=latest
   with_items:
     - glance
   notify: restart-glance
@@ -49,26 +49,26 @@
 
 
 - name: Updating glance-api.conf
-  template: src={{os_release}}/glance-api.conf
+  template: src={{ os_release }}/glance-api.conf
         dest=/etc/glance/glance-api.conf
         owner=glance
         group=glance
         mode=0644
         backup=yes
   when: item.os_project == "glance"
-  with_items: '{{mysql_databases}}'
+  with_items: '{{ mysql_databases }}'
   notify: restart-glance
 
 
 - name: Updating glance-registry.conf
-  template: src={{os_release}}/glance-registry.conf
+  template: src={{ os_release }}/glance-registry.conf
         dest=/etc/glance/glance-registry.conf
         owner=glance
         group=glance
         mode=0644
         backup=yes
   when: item.os_project == "glance"
-  with_items: '{{mysql_databases}}'
+  with_items: '{{ mysql_databases }}'
   notify: restart-glance
 
 
