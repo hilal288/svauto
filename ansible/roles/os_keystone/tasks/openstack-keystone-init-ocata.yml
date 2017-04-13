@@ -16,11 +16,17 @@
 # https://docs.openstack.org/ocata/install-guide-ubuntu/keystone-users.html
 
 - name: Creating OpenStack basic Domain, Projects, Users and Roles
-  environment: "{{openstack_env}}"
-  command: "{{item}}"
+  environment: "{{ openstack_env }}"
+  command: "{{ item }}"
   with_items:
   - openstack project create --domain default --description "Service Project" service
   - openstack project create --domain default --description "Demo Project" demo
-  - openstack user create --domain default --password "{{demo_password}}" --email demo@{{os_dns_domain}} demo
+  - openstack user create --domain default --password "{{ demo_password }}" --email "demo@{{ os_dns_domain }}" demo
   - openstack role create user
   - openstack role add --project demo --user demo --user-domain default user
+
+
+- name: Creating ldap keystone domain
+  environment: "{{ openstack_env }}"
+  command: openstack domain create --description "{{ ldap_keystone_domain_description }}" --enable "{{ ldap_keystone_domain }}"
+  when: ldap_enabled is defined and ldap_enabled == 'yes'

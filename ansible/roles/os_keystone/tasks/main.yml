@@ -16,22 +16,22 @@
 # http://docs.openstack.org/mitaka/install-guide-ubuntu/keystone-install.html
 
 - name: Creating OpenStack MySQL databases
-  mysql_db: name={{item.db_name}} state=present
-  with_items: '{{mysql_databases}}'
+  mysql_db: name={{ item.db_name }} state=present
+  with_items: '{{ mysql_databases }}'
 
 
 - name: Creating OpenStack MySQL users
   mysql_user:
-    host="{{item.db_host}}"
-    name="{{item.db_user}}"
-    password="{{item.db_pass}}"
-    priv="{{item.db_name}}.*:ALL,GRANT"
+    host="{{ item.db_host }}"
+    name="{{ item.db_user }}"
+    password="{{ item.db_pass }}"
+    priv="{{ item.db_name }}.*:ALL,GRANT"
     state=present
-  with_items: '{{mysql_databases}}'
+  with_items: '{{ mysql_databases }}'
 
 
 - name: Installing Keystone Server
-  apt: name={{item}} state=latest
+  apt: name={{ item }} state=latest
   with_items:
     - keystone
 
@@ -46,14 +46,14 @@
 
 
 - name: Updating keystone.conf
-  template: src={{os_release}}/keystone.conf
+  template: src={{ os_release }}/keystone.conf
             dest=/etc/keystone/keystone.conf
             owner=root
             group=root
             mode=0644
             backup=yes
   when: item.os_project == "keystone"
-  with_items: '{{mysql_databases}}'
+  with_items: '{{ mysql_databases }}'
   notify: reload-apache2
   tags: keystone_conf
 
@@ -71,7 +71,7 @@
 
 
 - name: Bootstrapping Identity Service (Newton or Ocata)
-  shell: keystone-manage bootstrap --bootstrap-password "{{admin_password}}" --bootstrap-admin-url http://{{os_admin_addr}}:35357/v3/ --bootstrap-internal-url http://{{os_admin_addr}}:35357/v3/ --bootstrap-public-url http://{{os_public_addr}}:5000/v3/ --bootstrap-region-id "{{region}}"
+  shell: keystone-manage bootstrap --bootstrap-password "{{ admin_password }}" --bootstrap-admin-url "{{ endpoint_admin_uri }}{{ identity_endpoint_internal }}:35357/v3/" --bootstrap-internal-url "{{ endpoint_admin_uri }}{{ identity_endpoint_internal }}:35357/v3/" --bootstrap-public-url "{{ endpoint_public_uri }}{{ identity_endpoint_public }}:5000/v3/" --bootstrap-region-id "{{ region }}"
   when: os_release == 'newton' or os_release == 'ocata'
 
 
@@ -83,12 +83,12 @@
 
 
 - name: Including Keystone Init 
-  include: openstack-keystone-init-{{os_release}}.yml
+  include: openstack-keystone-init-{{ os_release }}.yml
   when: deployment_mode == 'yes'
 
 
 - name: Updating keystone-paste.ini
-  copy: src={{os_release}}/keystone-paste.ini
+  copy: src={{ os_release }}/keystone-paste.ini
         dest=/etc/keystone/keystone-paste.ini
         owner=root
         group=root
