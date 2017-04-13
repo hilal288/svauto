@@ -18,24 +18,24 @@
 # https://docs.openstack.org/ocata/install-guide-ubuntu/neutron-controller-install.html
 
 - name: Creating OpenStack Neutron Service
-  environment: "{{admin_openrc_env}}"
-  command: "{{item}}"
+  environment: "{{ admin_openrc_env }}"
+  command: "{{ item }}"
   with_items:
   - openstack service create --name neutron --description "OpenStack Networking" network
 
 
 - name: Creating OpenStack Neutron Endpoint
-  environment: "{{admin_openrc_env}}"
-  command: "{{item}}"
+  environment: "{{ admin_openrc_env }}"
+  command: "{{ item }}"
   with_items:
-  - openstack endpoint create --region "{{region}}" network public http://{{os_public_addr}}:9696
-  - openstack endpoint create --region "{{region}}" network internal http://{{os_admin_addr}}:9696
-  - openstack endpoint create --region "{{region}}" network admin http://{{os_admin_addr}}:9696
+  - openstack endpoint create --region "{{ region }}" network public "{{ endpoint_public_uri }}{{ network_endpoint_public }}:9696"
+  - openstack endpoint create --region "{{ region }}" network internal "{{ endpoint_admin_uri }}{{ network_endpoint_internal }}:9696"
+  - openstack endpoint create --region "{{ region }}" network admin "{{ endpoint_admin_uri }}{{ network_endpoint_internal }}:9696"
 
 
 - name: Creating OpenStack Neutron User and Role
-  environment: "{{admin_openrc_env}}"
-  command: "{{item}}"
+  environment: "{{ admin_openrc_env }}"
+  command: "{{ item }}"
   with_items:
-  - openstack user create --domain default --password "{{service_password}}" --email neutron@{{os_dns_domain}} neutron
+  - openstack user create --domain default --password "{{ service_password }}" --email "neutron@{{ os_dns_domain }}" neutron
   - openstack role add --project service --user neutron --user-domain default admin
