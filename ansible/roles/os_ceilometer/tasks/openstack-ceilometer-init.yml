@@ -22,7 +22,7 @@
   - openstack service create --name ceilometer --description "OpenStack Telemetry Service" metering
 
 
-# Ceilometer Endpoint is DEPRECATED!
+# Ceilometer Endpoint is DEPRECATED! Use Gnocchi instead.
 #- name: Creating OpenStack Telemetry Endpoint
 #  environment: "{{ admin_openrc_env }}"
 #  command: "{{ item }}"
@@ -36,5 +36,5 @@
   environment: "{{ admin_openrc_env }}"
   command: "{{ item }}"
   with_items:
-  - openstack user create --domain default --password "{{ service_password }}" --email ceilometer@{{ os_dns_domain }} ceilometer
+  - openstack user create --domain default --password "{{ service_password }}" --email "ceilometer@{{ os_dns_domain }}" ceilometer
   - openstack role add --project service --user ceilometer --user-domain default admin
