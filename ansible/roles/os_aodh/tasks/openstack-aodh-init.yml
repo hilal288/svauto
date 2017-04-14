@@ -26,14 +26,14 @@
   environment: "{{ admin_openrc_env }}"
   command: "{{ item }}"
   with_items:
-  - openstack endpoint create --region "{{ region }}" alarming public http://{{ os_public_addr }}:8042
-  - openstack endpoint create --region "{{ region }}" alarming internal http://{{ os_admin_addr }}:8042
-  - openstack endpoint create --region "{{ region }}" alarming admin http://{{ os_admin_addr }}:8042
+  - openstack endpoint create --region "{{ region }}" alarming public "{{ endpoint_public_uri }}{{ alarming_endpoint_public }}:8042"
+  - openstack endpoint create --region "{{ region }}" alarming internal "{{ endpoint_admin_uri }}{{ alarming_endpoint_internal }}:8042"
+  - openstack endpoint create --region "{{ region }}" alarming admin "{{ endpoint_admin_uri }}{{ alarming_endpoint_internal }}:8042"
 
 
 - name: Creating OpenStack Telemetry User and Role
   environment: "{{ admin_openrc_env }}"
   command: "{{ item }}"
   with_items:
-  - openstack user create --domain default --password "{{ service_password }}" --email aodh@{{ os_dns_domain }} aodh
+  - openstack user create --domain default --password "{{ service_password }}" --email "aodh@{{ os_dns_domain }}" aodh
   - openstack role add --project service --user aodh --user-domain default admin
