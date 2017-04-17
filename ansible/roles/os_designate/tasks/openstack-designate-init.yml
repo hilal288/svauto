@@ -27,8 +27,8 @@
   command: "{{ item }}"
   with_items:
   - openstack endpoint create --region "{{ region }}" dns public "{{ endpoint_public_uri }}{{ dns_endpoint_public }}:9001"
-  - openstack endpoint create --region "{{ region }}" dns internal "{{ endpoint_admin_uri }}{{ dns_endpoint_internal }}:9001"
-  - openstack endpoint create --region "{{ region }}" dns admin "{{ endpoint_admin_uri }}{{ dns_endpoint_internal }}:9001"
+  - openstack endpoint create --region "{{ region }}" dns internal "{{ endpoint_internal_uri }}{{ dns_endpoint_internal }}:9001"
+  - openstack endpoint create --region "{{ region }}" dns admin "{{ endpoint_internal_uri }}{{ dns_endpoint_internal }}:9001"
         
 
 - name: Creating OpenStack Designate User and Role

@@ -27,8 +27,8 @@
   command: "{{ item }}"
   with_items:
    - openstack endpoint create --region "{{ region }}" placement public "{{ endpoint_public_uri }}{{ placement_endpoint_public }}:8778"
-   - openstack endpoint create --region "{{ region }}" placement internal "{{ endpoint_admin_uri }}{{ placement_endpoint_internal }}:8778"
-   - openstack endpoint create --region "{{ region }}" placement admin "{{ endpoint_admin_uri }}{{ placement_endpoint_internal }}:8778"
+   - openstack endpoint create --region "{{ region }}" placement internal "{{ endpoint_internal_uri }}{{ placement_endpoint_internal }}:8778"
+   - openstack endpoint create --region "{{ region }}" placement admin "{{ endpoint_internal_uri }}{{ placement_endpoint_internal }}:8778"
 
 
 - name: Creating OpenStack Nova Placement API User and Role

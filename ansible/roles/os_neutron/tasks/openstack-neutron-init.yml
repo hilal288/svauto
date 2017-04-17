@@ -29,8 +29,8 @@
   command: "{{ item }}"
   with_items:
   - openstack endpoint create --region "{{ region }}" network public "{{ endpoint_public_uri }}{{ network_endpoint_public }}:9696"
-  - openstack endpoint create --region "{{ region }}" network internal "{{ endpoint_admin_uri }}{{ network_endpoint_internal }}:9696"
-  - openstack endpoint create --region "{{ region }}" network admin "{{ endpoint_admin_uri }}{{ network_endpoint_internal }}:9696"
+  - openstack endpoint create --region "{{ region }}" network internal "{{ endpoint_internal_uri }}{{ network_endpoint_internal }}:9696"
+  - openstack endpoint create --region "{{ region }}" network admin "{{ endpoint_internal_uri }}{{ network_endpoint_internal }}:9696"
 
 
 - name: Creating OpenStack Neutron User and Role

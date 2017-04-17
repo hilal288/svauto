@@ -27,8 +27,8 @@
   command: "{{ item }}"
   with_items:
   - openstack endpoint create --region "{{ region }}" alarming public "{{ endpoint_public_uri }}{{ alarming_endpoint_public }}:8042"
-  - openstack endpoint create --region "{{ region }}" alarming internal "{{ endpoint_admin_uri }}{{ alarming_endpoint_internal }}:8042"
-  - openstack endpoint create --region "{{ region }}" alarming admin "{{ endpoint_admin_uri }}{{ alarming_endpoint_internal }}:8042"
+  - openstack endpoint create --region "{{ region }}" alarming internal "{{ endpoint_internal_uri }}{{ alarming_endpoint_internal }}:8042"
+  - openstack endpoint create --region "{{ region }}" alarming admin "{{ endpoint_internal_uri }}{{ alarming_endpoint_internal }}:8042"
 
 
 - name: Creating OpenStack Telemetry User and Role

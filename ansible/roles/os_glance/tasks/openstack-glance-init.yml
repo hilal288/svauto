@@ -28,8 +28,8 @@
   command: "{{ item }}"
   with_items:
   - openstack endpoint create --region "{{ region }}" image public "{{ endpoint_public_uri }}{{ image_endpoint_public }}:9292"
-  - openstack endpoint create --region "{{ region }}" image internal "{{ endpoint_admin_uri }}{{ image_endpoint_internal }}:9292"
-  - openstack endpoint create --region "{{ region }}" image admin "{{ endpoint_admin_uri }}{{ image_endpoint_internal }}:9292"
+  - openstack endpoint create --region "{{ region }}" image internal "{{ endpoint_internal_uri }}{{ image_endpoint_internal }}:9292"
+  - openstack endpoint create --region "{{ region }}" image admin "{{ endpoint_internal_uri }}{{ image_endpoint_internal }}:9292"
 
 
 - name: Creating OpenStack Glance User and Role

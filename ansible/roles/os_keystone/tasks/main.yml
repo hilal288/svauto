@@ -71,7 +71,7 @@
 
 
 - name: Bootstrapping Identity Service (Newton or Ocata)
-  shell: keystone-manage bootstrap --bootstrap-password "{{ admin_password }}" --bootstrap-admin-url "{{ endpoint_admin_uri }}{{ identity_endpoint_internal }}:35357/v3/" --bootstrap-internal-url "{{ endpoint_admin_uri }}{{ identity_endpoint_internal }}:35357/v3/" --bootstrap-public-url "{{ endpoint_public_uri }}{{ identity_endpoint_public }}:5000/v3/" --bootstrap-region-id "{{ region }}"
+  shell: keystone-manage bootstrap --bootstrap-password "{{ admin_password }}" --bootstrap-admin-url "{{ endpoint_internal_uri }}{{ identity_endpoint_internal }}:35357/v3/" --bootstrap-internal-url "{{ endpoint_internal_uri }}{{ identity_endpoint_internal }}:35357/v3/" --bootstrap-public-url "{{ endpoint_public_uri }}{{ identity_endpoint_public }}:5000/v3/" --bootstrap-region-id "{{ region }}"
   when: os_release == 'newton' or os_release == 'ocata'
 
 

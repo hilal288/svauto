@@ -27,8 +27,8 @@
   command: "{{ item }}"
   with_items:
   - openstack endpoint create --region "{{ region }}" metric public "{{ endpoint_public_uri }}{{ metric_endpoint_public }}:8041"
-  - openstack endpoint create --region "{{ region }}" metric internal "{{ endpoint_admin_uri }}{{ metric_endpoint_internal }}:8041"
-  - openstack endpoint create --region "{{ region }}" metric admin "{{ endpoint_admin_uri }}{{ metric_endpoint_internal }}:8041"
+  - openstack endpoint create --region "{{ region }}" metric internal "{{ endpoint_internal_uri }}{{ metric_endpoint_internal }}:8041"
+  - openstack endpoint create --region "{{ region }}" metric admin "{{ endpoint_internal_uri }}{{ metric_endpoint_internal }}:8041"
 
 
 - name: Creating OpenStack Metric User and Role

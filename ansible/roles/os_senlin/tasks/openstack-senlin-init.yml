@@ -27,8 +27,8 @@
   command: "{{ item }}"
   with_items:
   - openstack endpoint create --region "{{ region }}" senlin public "{{ endpoint_public_uri }}{{ clustering_endpoint_public }}:8779"
-  - openstack endpoint create --region "{{ region }}" senlin internal "{{ endpoint_admin_uri }}{{ clustering_endpoint_internal }}:8779"
-  - openstack endpoint create --region "{{ region }}" senlin admin "{{ endpoint_admin_uri }}{{ clustering_endpoint_internal }}:8779"
+  - openstack endpoint create --region "{{ region }}" senlin internal "{{ endpoint_internal_uri }}{{ clustering_endpoint_internal }}:8779"
+  - openstack endpoint create --region "{{ region }}" senlin admin "{{ endpoint_internal_uri }}{{ clustering_endpoint_internal }}:8779"
 
 
 - name: Creating OpenStack Clustering User and Role
