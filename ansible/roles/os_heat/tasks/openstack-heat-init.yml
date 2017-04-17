@@ -28,11 +28,11 @@
   environment: "{{ admin_openrc_env }}"
   command: "{{ item }}"
   with_items:
-  - openstack endpoint create --region "{{ region }}" orchestration public "{{ endpoint_public_uri }}{{ orchestration_endpoint_public }}:8004/v1/%\(tenant_id\)s"
-  - openstack endpoint create --region "{{ region }}" orchestration internal "{{ endpoint_internal_uri }}{{ orchestration_endpoint_internal }}:8004/v1/%\(tenant_id\)s"
-  - openstack endpoint create --region "{{ region }}" orchestration admin "{{ endpoint_internal_uri }}{{ orchestration_endpoint_internal }}:8004/v1/%\(tenant_id\)s"
+  - openstack endpoint create --region "{{ region }}" orchestration public "{{ endpoint_public_uri }}{{ orchestration_endpoint_public }}:8004/v1/%(tenant_id)s"
+  - openstack endpoint create --region "{{ region }}" orchestration internal "{{ endpoint_internal_uri }}{{ orchestration_endpoint_internal }}:8004/v1/%(tenant_id)s"
+  - openstack endpoint create --region "{{ region }}" orchestration admin "{{ endpoint_internal_uri }}{{ orchestration_endpoint_internal }}:8004/v1/%(tenant_id)s"
   - openstack endpoint create --region "{{ region }}" cloudformation public "{{ endpoint_public_uri }}{{ cloudformation_endpoint_public }}:8000/v1"
-  - openstack endpoint create --region "{{ region }}" cloudformation internal "{{ endpoint_internal_uri }}{{ cloudformation_endpoint_internal }}:8000/v"1
+  - openstack endpoint create --region "{{ region }}" cloudformation internal "{{ endpoint_internal_uri }}{{ cloudformation_endpoint_internal }}:8000/v1"
   - openstack endpoint create --region "{{ region }}" cloudformation admin "{{ endpoint_internal_uri }}{{ cloudformation_endpoint_internal }}:8000/v1"
 
 
