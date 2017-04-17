@@ -27,12 +27,12 @@
   environment: "{{ admin_openrc_env }}"
   command: "{{ item }}"
   with_items:
-  - openstack endpoint create --region "{{ region }}" volume public "{{ endpoint_public_uri }}{{ cinder_endpoint_public }}:8776/v1/%\(tenant_id\)s"
-  - openstack endpoint create --region "{{ region }}" volume internal "{{ endpoint_internal_uri }}{{ cinder_endpoint_internal }}:8776/v1/%\(tenant_id\)s"
-  - openstack endpoint create --region "{{ region }}" volume admin "{{ endpoint_internal_uri }}{{ cinder_endpoint_internal }}:8776/v1/%\(tenant_id\)s"
-  - openstack endpoint create --region "{{ region }}" volumev2 public "{{ endpoint_public_uri }}{{ cinder_endpoint_public }}:8776/v2/%\(tenant_id\)s"
-  - openstack endpoint create --region "{{ region }}" volumev2 internal "{{ endpoint_internal_uri }}{{ cinder_endpoint_internal }}:8776/v2/%\(tenant_id\)s"
-  - openstack endpoint create --region "{{ region }}" volumev2 admin "{{ endpoint_internal_uri }}{{ cinder_endpoint_internal }}:8776/v2/%\(tenant_id\)s"
+  - openstack endpoint create --region "{{ region }}" volume public "{{ endpoint_public_uri }}{{ volume_endpoint_public }}:8776/v1/%(tenant_id)s"
+  - openstack endpoint create --region "{{ region }}" volume internal "{{ endpoint_internal_uri }}{{ volume_endpoint_internal }}:8776/v1/%(tenant_id)s"
+  - openstack endpoint create --region "{{ region }}" volume admin "{{ endpoint_internal_uri }}{{ volume_endpoint_internal }}:8776/v1/%(tenant_id)s"
+  - openstack endpoint create --region "{{ region }}" volumev2 public "{{ endpoint_public_uri }}{{ volumev2_endpoint_public }}:8776/v2/%(tenant_id)s"
+  - openstack endpoint create --region "{{ region }}" volumev2 internal "{{ endpoint_internal_uri }}{{ volumev2_endpoint_internal }}:8776/v2/%(tenant_id)s"
+  - openstack endpoint create --region "{{ region }}" volumev2 admin "{{ endpoint_internal_uri }}{{ volumev2_endpoint_internal }}:8776/v2/%(tenant_id)s"
 
 
 - name: Creating OpenStack Cinder User and Role
