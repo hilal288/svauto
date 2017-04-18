@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- pause: seconds=5
-
 - name: Creating Neutron External Network
   environment: "{{admin_openrc_env}}"
   os_network:
@@ -22,6 +20,7 @@
     external: true
     provider_physical_network: external
     provider_network_type: flat
+    shared: true
 
 
 - name: Creating Neutron External Subnet
