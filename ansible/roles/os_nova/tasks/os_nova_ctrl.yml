@@ -37,7 +37,11 @@
   when: deployment_mode == 'yes'
 
 
-- name: Installing Nova
+- include: openstack-nova-placement-init.yml
+  when: os_release == 'ocata' and deployment_mode == 'yes'
+
+
+- name: Installing Nova Services
   apt: name={{item}} state=latest
   with_items:
     - nova-api
