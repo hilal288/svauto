@@ -110,6 +110,7 @@ demo_password: "demo_pass"
 rabbit_userid: "openstack"
 rabbit_password: "RABBIT_PASS"
 
+# Credentials used during deployment phase
 demo_openrc_env:
   OS_PROJECT_DOMAIN_NAME: "default"
   OS_USER_DOMAIN_NAME: "default"
@@ -128,17 +129,15 @@ admin_openrc_env:
   OS_AUTH_URL: "{{ endpoint_internal_uri }}{{ identity_endpoint_internal }}:35357/v3"
   OS_IDENTITY_API_VERSION: "3"
 
-
 # Endpoint Definitions
-
 endpoint_public_uri: "http://"
 endpoint_internal_uri: "http://"
 
 identity_endpoint_public: "keystone.{{ region }}.{{ os_dns_domain }}"
 identity_endpoint_internal: "keystone.internal.{{ region }}.{{ os_dns_domain }}"
 
-image_endpoint_public: "glance.{{ region }}.{{ os_dns_domain }}"
-image_endpoint_internal: "glance.internal.{{ region }}.{{ os_dns_domain }}"
+image_endpoint_public: "image.{{ region }}.{{ os_dns_domain }}"
+image_endpoint_internal: "image.internal.{{ region }}.{{ os_dns_domain }}"
 
 console_public_uri: "http://"
 console_public_addr: "console.{{ region }}.{{ os_dns_domain }}"
