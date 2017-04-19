@@ -15,7 +15,7 @@ It uses the following Open Source projects:
 
 * Ubuntu Xenial 16.04
 * Ansible 2.2
-* Packer 0.12.3
+* Packer 1.0.0
 * QEmu 2.8
 * VirtualBox 5.0
 * Vagrant 1.8
