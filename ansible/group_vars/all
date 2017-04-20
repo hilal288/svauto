@@ -94,14 +94,18 @@ os_dns_domain: "yourdomain.com"
 os_public_addr: "controller-1.yourdomain.com"
 os_admin_addr: "controller-1.yourdomain.com"
 
+# Region Name
+region: "ca-east-1"
+
+# Horizon FQDN
+os_horizon_fqdn: "dashboard.{{ region }}.{{ os_dns_domain }}"
+
 # Network Segments
 os_mgmt: "eth0"
 os_srvc: "eth1"
 os_external: "eth2"
 os_data: "eth3"
 os_cinder: "eth4"
-
-region: "ca-east-1"
 
 admin_password: "admin_pass"
 service_password: "service_pass"
