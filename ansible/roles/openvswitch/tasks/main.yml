@@ -46,6 +46,18 @@
   when: openvswitch_mode == 'dpdk'
 
 
+- name: ubuntu - apt installing Open vSwitch OVN Central
+  apt: name=ovn-central state=latest
+  notify: restart-openvswitch
+  when: ovn_central == 'yes'
+
+
+- name: ubuntu - apt installing Open vSwitch OVN Host
+  apt: name=ovn-host state=latest
+  notify: restart-openvswitch
+  when: ovn_host == 'yes'
+
+
 - meta: flush_handlers
 
 

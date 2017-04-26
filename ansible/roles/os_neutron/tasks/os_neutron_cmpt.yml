@@ -69,11 +69,3 @@
         backup=yes
   when: os_neutron_lbr_enabled == 'yes'
   notify: reload-sysctl
-
-
-- name: Installing Neutron OVN Host
-  apt: name={{item}} state=latest
-  with_items:
-    - ovn-host
-    - python-networking-ovn
-  when: os_neutron_ovn_enabled == 'yes'

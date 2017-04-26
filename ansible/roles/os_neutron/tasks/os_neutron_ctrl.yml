@@ -93,7 +93,6 @@
 - name: Installing Neutron OVN Controller
   apt: name={{ item }} state=latest
   with_items:
-    - ovn-central
     - python-networking-ovn
   when: os_neutron_ovn_enabled == 'yes'
 
