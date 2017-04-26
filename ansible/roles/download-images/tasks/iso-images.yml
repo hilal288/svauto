@@ -15,23 +15,23 @@
 - name: downloading ubuntu-16.04.2-server-amd64.iso
   get_url:
     url: http://mirror.csclub.uwaterloo.ca/ubuntu-releases/16.04.2/ubuntu-16.04.2-server-amd64.iso
-    dest: /home/{{ regular_system_user }}/svauto/downloads/ubuntu-16.04.2-server-amd64.iso
+    dest: /home/{{ regular_system_user }}/Downloads/ubuntu-16.04.2-server-amd64.iso
     mode: 0640
 
 - name: downloading ubuntu-14.04.5-server-amd64.iso
   get_url:
     url: http://mirror.csclub.uwaterloo.ca/ubuntu-releases/14.04.5/ubuntu-14.04.5-server-amd64.iso
-    dest: /home/{{ regular_system_user }}/svauto/downloads/ubuntu-14.04.5-server-amd64.iso
+    dest: /home/{{ regular_system_user }}/Downloads/ubuntu-14.04.5-server-amd64.iso
     mode: 0640
 
 - name: downloading CentOS-7-x86_64-Minimal-1611.iso
   get_url:
     url: http://mirror.its.sfu.ca/mirror/CentOS/7.3.1611/isos/x86_64/CentOS-7-x86_64-Minimal-1611.iso
-    dest: /home/{{ regular_system_user }}/svauto/downloads/CentOS-7-x86_64-Minimal-1611.iso
+    dest: /home/{{ regular_system_user }}/Downloads/CentOS-7-x86_64-Minimal-1611.iso
     mode: 0640
 
-- name: downloading CentOS-6.8-x86_64-minimal.iso
+- name: downloading CentOS-6.9-x86_64-minimal.iso
   get_url:
-    url: http://mirror.its.sfu.ca/mirror/CentOS/6.8/isos/x86_64/CentOS-6.8-x86_64-minimal.iso
-    dest: /home/{{ regular_system_user }}/svauto/downloads/CentOS-6.8-x86_64-minimal.iso
+    url: http://mirror.its.sfu.ca/mirror/CentOS/6.9/isos/x86_64/CentOS-6.9-x86_64-minimal.iso
+    dest: /home/{{ regular_system_user }}/Downloads/CentOS-6.9-x86_64-minimal.iso
     mode: 0640

@@ -12,5 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+- name: Creating ~/Downloads subdirectory
+  file: path=/home/{{ regular_system_user }}/Downloads owner={{ regular_system_user }} state=directory
+
+
 - name: Downloading requested images...
   include: "{{ download_group }}-images.yml"
