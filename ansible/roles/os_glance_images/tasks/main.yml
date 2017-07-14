@@ -12,52 +12,52 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- stat: path=/home/{{regular_system_user}}/Downloads/svpts-7.40.0164-vpl-1-centos7-amd64-disk1.qcow2c
+- stat: path=/home/{{regular_system_user}}/Downloads/svpts-7.50.0021-vpl-1-centos7-amd64-disk1.qcow2c
   register: svpts_image_register
 
-- name: uploading svpts-7.40.0164-vpl-1-centos7-amd64-disk1.qcow2c
+- name: uploading svpts-7.50.0021-vpl-1-centos7-amd64-disk1.qcow2c
   environment: "{{admin_openrc_env}}"
   os_image:
-    name: svpts-7.40.0164-vpl-1-centos7-amd64
+    name: pts-7.50.0021-vpl-1-centos7-amd64
     is_public: yes
     container_format: bare
     disk_format: qcow2
     state: present
-    filename: /home/{{regular_system_user}}/Downloads/svpts-7.40.0164-vpl-1-centos7-amd64-disk1.qcow2c
+    filename: /home/{{regular_system_user}}/Downloads/svpts-7.50.0021-vpl-1-centos7-amd64-disk1.qcow2c
     properties:
       cpu_arch: x86_64
   when: svpts_image_register.stat.exists == True
 
 
-- stat: path=/home/{{regular_system_user}}/Downloads/svsde-7.50.0230-vpl-1-centos7-amd64-disk1.qcow2c
+- stat: path=/home/{{regular_system_user}}/Downloads/svsde-7.70.0017-vpl-1-centos7-amd64-disk1.qcow2c
   register: svsde_image_register
 
-- name: uploading svsde-7.50.0230-vpl-1-centos7-amd64-disk1.qcow2c
+- name: uploading svsde-7.70.0017-vpl-1-centos7-amd64-disk1.qcow2c
   environment: "{{admin_openrc_env}}"
   os_image:
-    name: svsde-7.50.0230-vpl-1-centos7-amd64
+    name: sde-7.70.0017-vpl-1-centos7-amd64
     is_public: yes
     container_format: bare
     disk_format: qcow2
     state: present
-    filename: /home/{{regular_system_user}}/Downloads/svsde-7.50.0230-vpl-1-centos7-amd64-disk1.qcow2c
+    filename: /home/{{regular_system_user}}/Downloads/svsde-7.70.0017-vpl-1-centos7-amd64-disk1.qcow2c
     properties:
       cpu_arch: x86_64
   when: svsde_image_register.stat.exists == True
 
 
-- stat: path=/home/{{regular_system_user}}/Downloads/svspb-6.65.0078-vpl-1-centos6-amd64-disk1.qcow2c
+- stat: path=/home/{{regular_system_user}}/Downloads/svspb-6.65.0136-vpl-1-centos6-amd64-disk1.qcow2c
   register: svspb_image_register
 
-- name: uploading svspb-6.65.0078-vpl-1-centos6-amd64-disk1.qcow2c
+- name: uploading svspb-6.65.0136-vpl-1-centos6-amd64-disk1.qcow2c
   environment: "{{admin_openrc_env}}"
   os_image:
-    name: svspb-6.65.0078-vpl-1-centos6-amd64
+    name: spb-6.65.0136-vpl-1-centos6-amd64
     is_public: yes
     container_format: bare 
     disk_format: qcow2
     state: present
-    filename: /home/{{regular_system_user}}/Downloads/svspb-6.65.0078-vpl-1-centos6-amd64-disk1.qcow2c
+    filename: /home/{{regular_system_user}}/Downloads/svspb-6.65.0136-vpl-1-centos6-amd64-disk1.qcow2c
     properties:
       cpu_arch: x86_64
   when: svspb_image_register.stat.exists == True
@@ -97,21 +97,21 @@
   when: ubuntu14_image_register.stat.exists == True
 
 
-- stat: path=/home/{{regular_system_user}}/Downloads/debian-8.7.3-20170323-openstack-amd64.qcow2
-  register: debian8_image_register
+- stat: path=/home/{{regular_system_user}}/Downloads/debian-9-openstack-amd64.qcow2
+  register: debian9_image_register
 
-- name: uploading "debian-8.7.3-amd64"
+- name: uploading "debian-9-amd64"
   environment: "{{admin_openrc_env}}"
   os_image:
-    name: debian-8.7.3-amd64
+    name: debian-9-amd64
     is_public: yes
     container_format: bare 
     disk_format: qcow2
     state: present
-    filename: /home/{{regular_system_user}}/Downloads/debian-8.7.3-20170323-openstack-amd64.qcow2
+    filename: /home/{{regular_system_user}}/Downloads/debian-9-openstack-amd64.qcow2
     properties:
       cpu_arch: x86_64
-  when: debian8_image_register.stat.exists == True
+  when: debian9_image_register.stat.exists == True
 
 
 - stat: path=/home/{{regular_system_user}}/Downloads/CentOS-7-x86_64-GenericCloud.qcow2c
