@@ -36,6 +36,7 @@
     - zip
     - git
     - zsh
+    - atop
     - lftp
     - tmux
     - curl
