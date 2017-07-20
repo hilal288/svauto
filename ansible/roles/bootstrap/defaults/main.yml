@@ -21,6 +21,9 @@ ubuntu_install: "server"
 # Vagrant run?
 vagrant_run: "no"
 
+sandvine_ppa: "no"
+ansible_ppa: "no"
+
 # bootstrap: Enable Sandvine's Main Yum Repository:
 sandvine_main_yum_repo: "no"
 
