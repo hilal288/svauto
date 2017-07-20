@@ -33,3 +33,6 @@ svauto_yum_host: "null"
 # Sandvine's Release Code Name:
 release_code_name: "yukon"
 release_code_number: "17.02"
+
+# NTP or Chrony... To be, or not to be...
+ntp_or_chrony: "chrony"

@@ -33,7 +33,6 @@
     - jq
     - pv
     - mc
-    - ntp
     - gpm
     - zip
     - git
@@ -111,6 +110,16 @@
     - ubuntu-cloud-keyring
     - linux-cloud-tools-generic
     - software-properties-common
+
+
+- name: ubuntu - apt installing NTP
+  apt: name=ntp state=latest update_cache=yes
+  when: ntp_or_chrony == 'ntp'
+
+
+- name: ubuntu - apt installing Chrony
+  apt: name=chrony state=latest update_cache=yes
+  when: ntp_or_chrony == 'chrony'
 
 
 - name: ubuntu - apt installing Server tools
